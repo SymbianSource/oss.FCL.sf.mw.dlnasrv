@@ -1,0 +1,180 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Localization strings for GS plugin
+*
+*/
+
+
+//d:Setting list item primary text
+//d:Scheduled syncronisation setting
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_item_sync "Synchronization"
+
+//d:Source devices setting item primary text
+//d:Devices where data search is done
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_item_source_devices "Source devices"
+
+//d:Store setting item primary text
+//d:Location where files will be copied
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_item_target_devices "Target devices"
+
+//d:Memory setting item primary text
+//d:Used memory card
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_item_used_memory "Memory in use"
+
+//d:Setting list item primary text
+//d:Memory manager setting
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_item_memory_manager "Memory manager"
+
+//d:Setting page heading text
+//d:Syncronization mode setting
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_sett_sync_act "Synchronization"
+
+//d:Sync setting page item text
+//d:Sync is done manually by user
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_sett_sync_manually "Manual"
+
+//d:Sync setting page item text
+//d:Sync is done automatically by certain period
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_sett_sync_automatic "Automatic"
+
+//d:Sync setting item secondary text
+//d:Sync is done automatically by certain period
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_item_sync_automatically "Automatic"
+
+//d:Setting page heading text
+//d:Source devices where data search is done
+//l:heading_pane_t1/opt2
+//r:1.0
+//
+#define qtn_mserv_sett_source_devices "Source device(s)"
+
+//d:Wait dialog text
+//l:popup_note_wait_window
+//r:2.1
+//
+#define qtn_mserv_searching_devices "Searching for compatible devices"
+
+//d:Setting page heading text
+//d:Sets target devices for file copying
+//l:list_setting_pane_t1
+//r:1.0
+#define qtn_mserv_sett_target_devices "Target devices"
+
+//d:Setting page heading text
+//d:Memomory manager state
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_sett_used_memory "Memory in use"
+
+//d:Setting item secondary text
+//d:Memory manager is turned off
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_item_manager_disabled "Disabled"
+
+//d:Setting item secondary text
+//d:Memory manager is turned on
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_item_ask_full "Ask when full"
+
+//d:Setting list item secondary text
+//d:No memory card selected
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_none_memory_in_use "None"
+
+//d:Setting list item secondary text
+//d:N drives selected
+//d:Parameter maximum length: 2 characters
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_item_nof_of_memories "%N drives"
+
+//d:Setting list item secondary text
+//d:MMC default name
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_default_mmc_name "Noname"
+
+//d:Source and target devices setting item secondary text
+//d:Devices count where data search is done
+//d:Parameter maximum length: 2 characters
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_item_nof_servers "%N devices"
+
+//d:Source devices setting item secondary text
+//d:No devices selected
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_none_serv "None"
+
+//d:Navi pane text
+//d:Preprocesses files so that updated information can be seen on screen
+//l:navi_text_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wait_preprocessing "Updating lists"
+
+//d:Item primary text on listbox
+//d:Name of the plugin
+//l:list_double_large_graphic_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_grid_media_servant_home_media "Media Sync"
+
+//d:settings view title
+//d:General synchronization settings
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_mserv_title_sync_settings "Sync settings"
+
+// End of File

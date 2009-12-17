@@ -1,0 +1,271 @@
+/*
+* Copyright (c) 2006-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      multiselectionui resource description
+*
+*/
+
+
+
+
+
+
+
+//  RESOURCE IDENTIFIER
+NAME    VORO // 4 letter ID
+
+//  INCLUDES
+#include <eikon.rh>
+#include <avkon.rsg>
+#include <avkon.rh>
+#include <avkon.mbg>
+#include <avkon.loc>
+#include <data_caging_paths_strings.hrh>
+#include <appinfo.rh>
+#include <upnpsettings.loc>
+
+#include "cupnpmultiselectionui.hrh"
+
+//  RESOURCE DEFINITIONS 
+
+// --------------------------------------------------------------------------
+//    RSS_SIGNATURE
+// --------------------------------------------------------------------------
+RESOURCE RSS_SIGNATURE 
+    {
+    }
+
+// --------------------------------------------------------------------------
+// TBUF
+// --------------------------------------------------------------------------
+RESOURCE TBUF 
+    { 
+    buf = "";
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_upnp_softkeys_ok_back__ok
+//
+//----------------------------------------------------------------------------
+//   
+RESOURCE CBA r_upnp_softkeys_ok_back__ok
+    {
+    flags = 0;
+    buttons =
+        {
+        CBA_BUTTON {id = EAknSoftkeyOk; txt = qtn_iupnp_softkey_next;},
+        CBA_BUTTON {id = EAknSoftkeyBack; txt = text_softkey_back;},
+        CBA_BUTTON {id = EAknSoftkeyForwardKeyEvent;}
+        };
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_upnp_softkeys_ok_back__ok_dialog
+//
+//----------------------------------------------------------------------------
+//  
+RESOURCE CBA r_upnp_softkeys_ok_back__ok_dialog
+    {
+    flags = 0;
+    buttons =
+        {
+        CBA_BUTTON {id = EAknSoftkeyOk; txt = text_softkey_ok;},
+        CBA_BUTTON {id = EAknSoftkeyBack; txt = text_softkey_back;},
+        CBA_BUTTON {id = EAknSoftkeySelect;}
+        };
+    }
+
+//---------------------------------------------------------------------------
+//   
+//    r_upnp_multiselection_dialog
+//
+//---------------------------------------------------------------------------
+RESOURCE DIALOG r_upnp_multiselection_dialog
+    {
+    flags = EAknDialogMultiselectionList;
+    buttons = r_upnp_softkeys_ok_back__ok_dialog;
+    items =
+        {
+        DLG_LINE
+            {            
+            type = EAknCtSingleGraphicListBox;
+            id = EMultiSelectionListBoxId; 
+            control = LISTBOX
+                {
+                flags = EAknListBoxMultiselectionList;
+                };
+            },
+        DLG_LINE
+            {
+            itemflags = EEikDlgItemNonFocusing;
+            id = EFindControl;
+            type = EAknCtSelectionListPopupFind;
+            }
+        };
+    }
+
+//---------------------------------------------------------------------------
+//   
+//    r_upnp_multiselection_popup
+// 
+//---------------------------------------------------------------------------
+RESOURCE AVKON_MULTISELECTION_LIST_QUERY r_upnp_multiselection_popup
+    {
+    flags = EGeneralQueryFlags;
+    softkeys = r_upnp_softkeys_ok_back__ok;
+    items =
+        {
+        AVKON_MULTISELECTION_LIST_QUERY_DLG_LINE
+            {
+            control = AVKON_LIST_QUERY_CONTROL
+                {
+                listtype = EAknCtSingleGraphicPopupMenuListBox;
+                listbox = AVKON_MULTISELECTION_LIST_QUERY_LIST
+                    {
+                    };
+                heading = "Select items:";
+                };
+            },
+        DLG_LINE
+            {
+            itemflags = EEikDlgItemNonFocusing;
+            id = EFindControl;
+            type = EAknCtListQuerySearchControl;
+            }
+        };
+    }
+ 
+//---------------------------------------------------------------------------
+//   
+//    r_upnp_multiselection_collecting_files_note
+//
+//---------------------------------------------------------------------------
+//    
+RESOURCE DIALOG r_upnp_multiselection_collecting_files_note
+    { 
+    flags = EAknWaitNoteFlags;
+    buttons = R_AVKON_SOFTKEYS_EMPTY;
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtNote;
+            id = EGeneralNote;
+            control = AVKON_NOTE
+                {
+                layout = EProgressLayout;
+                singular_label = qtn_iupnp_saving_changes_note;
+                imageid = EMbmAvkonQgn_note_progress;
+                imagemask = EMbmAvkonQgn_note_progress_mask;
+                animation = R_QGN_GRAF_WAIT_BAR_ANIM;
+                };
+            }
+        };
+    }
+
+//---------------------------------------------------------------------------
+//   
+//    r_upnp_multiselection_searching_files_note
+//
+//---------------------------------------------------------------------------
+//    
+RESOURCE DIALOG r_upnp_multiselection_searching_files_note
+    { 
+    flags = EAknWaitNoteFlags;
+    buttons = R_AVKON_SOFTKEYS_EMPTY;
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtNote;
+            id = EGeneralNote;
+            control = AVKON_NOTE
+                {
+                layout = EProgressLayout;
+                singular_label = qtn_iupnp_searching_files_note;
+                imageid = EMbmAvkonQgn_note_progress;
+                imagemask = EMbmAvkonQgn_note_progress_mask;
+                animation = R_QGN_GRAF_WAIT_BAR_ANIM;
+                };
+            }
+        };
+    }
+
+
+//---------------------------------------------------------------------------
+//   
+//    r_upnp_multiselection_sharing_visual_title_text
+//
+//---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnp_multiselection_sharing_visual_title_text 
+    { 
+    buf = qtn_iupnp_title_visual;
+    }
+
+//---------------------------------------------------------------------------
+//   
+//    r_upnp_multiselection_sharing_music_title_text
+//
+//---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnp_multiselection_sharing_music_title_text 
+    { 
+    buf = qtn_iupnp_title_music;
+    }
+
+//---------------------------------------------------------------------------
+//   
+//    r_upnp_multiselection_share_all_text
+//
+//---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnp_multiselection_share_all_text 
+    { 
+    buf = qtn_iupnp_set_share_all;
+    }
+
+//---------------------------------------------------------------------------
+//   
+//    r_upnp_multiselection_do_not_share_text
+//
+//---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnp_multiselection_do_not_share_text 
+    { 
+    buf = qtn_iupnp_set_do_not_share;
+    }
+
+//---------------------------------------------------------------------------
+//   
+//    r_upnp_multiselection_select_text
+//
+//---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnp_multiselection_select_text 
+    { 
+    buf = qtn_msk_select;
+    }
+
+//---------------------------------------------------------------------------
+//   
+//    r_upnp_multiselection_unselect_text
+//
+//---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnp_multiselection_unselect_text 
+    { 
+    buf = qtn_iupnp_msk_unselect;
+    }

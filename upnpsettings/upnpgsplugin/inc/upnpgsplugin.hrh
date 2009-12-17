@@ -1,0 +1,51 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Resource headers for project Home Network
+*
+*/
+
+
+
+
+
+
+#ifndef UPNPSETTINGS_HRH
+#define UPNPSETTINGS_HRH
+
+// DATA TYPES
+
+#define KUPnPGSPluginDllUid                   0x20009CAF
+#define KUPnPGSPluginImplementationUid        0x20009CB0
+
+/**
+ * List of button ids used by UPnPGSPlugin.
+ */
+enum TUPnPGSPluginCbaButton
+    {
+    EUPnPGSPluginCbaButtonContinue = 1
+    };
+
+/**
+ * List of item ids supported by the UPnPGSPlugin. 
+ */
+enum TUPnPGSPluginItem
+    {
+    EUPnPGSPluginItemIAP = 0,
+    EUPnPGSPluginItemMyDeviceName,
+    EUPnPGSPluginItemCopyLocation
+    };
+    
+#endif      // UPNPSETTINGS_HRH
+
+// End of File

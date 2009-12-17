@@ -1,0 +1,89 @@
+EXPORTS
+	_ZN21CUpnpContentDirectory11SendActionLEP11CUpnpAction14TUpnpErrorCode @ 1 NONAME
+	_ZN21CUpnpContentDirectory12SendMessageLEP16CUpnpHttpMessage @ 2 NONAME
+	_ZN21CUpnpContentDirectory15NewTransactionLERK6TDesC8S2_RK9TInetAddrRP26CUpnpHttpServerTransaction @ 3 NONAME
+	_ZN21CUpnpContentDirectory25UnknownHttpEventReceivedLER16CUpnpHttpMessage @ 4 NONAME
+	_ZN21CUpnpContentDirectory26HttpTransferEventReceivedLER16CUpnpHttpMessage @ 5 NONAME
+	_ZN21CUpnpContentDirectory9SetSenderEP14MUpnpCdsSender @ 6 NONAME
+	_ZN28CUpnpContentDirectoryService10GetAddressEv @ 7 NONAME
+	_ZN28CUpnpContentDirectoryService12GetItemListLEiP19CUpnpBrowseCriteriaPiP13CUpnpItemList @ 8 NONAME
+	_ZN28CUpnpContentDirectoryService12ShareObjectLEP11CUpnpObject @ 9 NONAME
+	_ZN28CUpnpContentDirectoryService12UnshareItemLEi @ 10 NONAME
+	_ZN28CUpnpContentDirectoryService14AddressChangeLEv @ 11 NONAME
+	_ZN28CUpnpContentDirectoryService14GetSharedItemLEi @ 12 NONAME
+	_ZN28CUpnpContentDirectoryService14ShareItemListLEP13CUpnpItemListPi @ 13 NONAME
+	_ZN28CUpnpContentDirectoryService15ShareReferenceLEP9CUpnpItem @ 14 NONAME
+	_ZN28CUpnpContentDirectoryService16UnshareItemListLER6RArrayIiEPi @ 15 NONAME
+	_ZN28CUpnpContentDirectoryService17GetContainerListLEiP19CUpnpBrowseCriteriaPiP18CUpnpContainerList @ 16 NONAME
+	_ZN28CUpnpContentDirectoryService17UnshareContainerLEi @ 17 NONAME
+	_ZN28CUpnpContentDirectoryService19GetContentDirectoryEv @ 18 NONAME
+	_ZN28CUpnpContentDirectoryService19GetSingleContainerLEi @ 19 NONAME
+	_ZN28CUpnpContentDirectoryService19ShareReferenceListLEP13CUpnpItemListPi @ 20 NONAME
+	_ZN28CUpnpContentDirectoryService21SetDownloadDirectoryLERK7TDesC16 @ 21 NONAME
+	_ZN28CUpnpContentDirectoryService22SetThumbnailDirectoryLERK7TDesC16 @ 22 NONAME
+	_ZN28CUpnpContentDirectoryService4NewLE15TUpnpCdSettings @ 23 NONAME
+	_ZN28CUpnpContentDirectoryService4NewLEv @ 24 NONAME
+	_ZN28CUpnpContentDirectoryService5NewLCE15TUpnpCdSettings @ 25 NONAME
+	_ZN28CUpnpContentDirectoryService5NewLCEv @ 26 NONAME
+	_ZTI14CUpnpCdsSender @ 27 NONAME ; #<TI>#
+	_ZTI14CUpnpTableBean @ 28 NONAME ; #<TI>#
+	_ZTI15CUpnpMapElement @ 29 NONAME ; #<TI>#
+	_ZTI15CUpnpMimeMapper @ 30 NONAME ; #<TI>#
+	_ZTI15CUpnpObjectBean @ 31 NONAME ; #<TI>#
+	_ZTI16CUpnpCdDbFactory @ 32 NONAME ; #<TI>#
+	_ZTI16CUpnpElementBean @ 33 NONAME ; #<TI>#
+	_ZTI17CUpnpFileTransfer @ 34 NONAME ; #<TI>#
+	_ZTI17CUpnpLocalStorage @ 35 NONAME ; #<TI>#
+	_ZTI17CUpnpStateHandler @ 36 NONAME ; #<TI>#
+	_ZTI17CUpnpTransferBase @ 37 NONAME ; #<TI>#
+	_ZTI18CUpnpAttributeBean @ 38 NONAME ; #<TI>#
+	_ZTI18CUpnpFilterElement @ 39 NONAME ; #<TI>#
+	_ZTI18CUpnpResourcesBean @ 40 NONAME ; #<TI>#
+	_ZTI19CUpnpElementFactory @ 41 NONAME ; #<TI>#
+	_ZTI20CUpnpMetadataStorage @ 42 NONAME ; #<TI>#
+	_ZTI20CUpnpTransferHandler @ 43 NONAME ; #<TI>#
+	_ZTI21CUpnpContentDirectory @ 44 NONAME ; #<TI>#
+	_ZTI21CUpnpTransferUploader @ 45 NONAME ; #<TI>#
+	_ZTI21CUpnpXmlContentFilter @ 46 NONAME ; #<TI>#
+	_ZTI22CUpnpAutoDestroyObject @ 47 NONAME ; #<TI>#
+	_ZTI23CUpnpContentDirectoryDb @ 48 NONAME ; #<TI>#
+	_ZTI23CUpnpTransferController @ 49 NONAME ; #<TI>#
+	_ZTI23CUpnpTransferDownloader @ 50 NONAME ; #<TI>#
+	_ZTI26CUpnpAutoDestroyObjectList @ 51 NONAME ; #<TI>#
+	_ZTI28CUpnpContentDirectoryService @ 52 NONAME ; #<TI>#
+	_ZTI29CUpnpHttpFileServeTransaction @ 53 NONAME ; #<TI>#
+	_ZTI30CUpnpFileTransferTimerObserver @ 54 NONAME ; #<TI>#
+	_ZTI31CUpnpHttpFileReceiveTransaction @ 55 NONAME ; #<TI>#
+	_ZTI8CUpnpMapI7HBufC16E @ 56 NONAME ; #<TI>#
+	_ZTV14CUpnpCdsSender @ 57 NONAME ; #<VT>#
+	_ZTV14CUpnpTableBean @ 58 NONAME ; #<VT>#
+	_ZTV15CUpnpMapElement @ 59 NONAME ; #<VT>#
+	_ZTV15CUpnpMimeMapper @ 60 NONAME ; #<VT>#
+	_ZTV15CUpnpObjectBean @ 61 NONAME ; #<VT>#
+	_ZTV16CUpnpCdDbFactory @ 62 NONAME ; #<VT>#
+	_ZTV16CUpnpElementBean @ 63 NONAME ; #<VT>#
+	_ZTV17CUpnpFileTransfer @ 64 NONAME ; #<VT>#
+	_ZTV17CUpnpLocalStorage @ 65 NONAME ; #<VT>#
+	_ZTV17CUpnpStateHandler @ 66 NONAME ; #<VT>#
+	_ZTV17CUpnpTransferBase @ 67 NONAME ; #<VT>#
+	_ZTV18CUpnpAttributeBean @ 68 NONAME ; #<VT>#
+	_ZTV18CUpnpFilterElement @ 69 NONAME ; #<VT>#
+	_ZTV18CUpnpResourcesBean @ 70 NONAME ; #<VT>#
+	_ZTV19CUpnpElementFactory @ 71 NONAME ; #<VT>#
+	_ZTV20CUpnpMetadataStorage @ 72 NONAME ; #<VT>#
+	_ZTV20CUpnpTransferHandler @ 73 NONAME ; #<VT>#
+	_ZTV21CUpnpContentDirectory @ 74 NONAME ; #<VT>#
+	_ZTV21CUpnpTransferUploader @ 75 NONAME ; #<VT>#
+	_ZTV21CUpnpXmlContentFilter @ 76 NONAME ; #<VT>#
+	_ZTV22CUpnpAutoDestroyObject @ 77 NONAME ; #<VT>#
+	_ZTV23CUpnpContentDirectoryDb @ 78 NONAME ; #<VT>#
+	_ZTV23CUpnpTransferController @ 79 NONAME ; #<VT>#
+	_ZTV23CUpnpTransferDownloader @ 80 NONAME ; #<VT>#
+	_ZTV26CUpnpAutoDestroyObjectList @ 81 NONAME ; #<VT>#
+	_ZTV28CUpnpContentDirectoryService @ 82 NONAME ; #<VT>#
+	_ZTV29CUpnpHttpFileServeTransaction @ 83 NONAME ; #<VT>#
+	_ZTV30CUpnpFileTransferTimerObserver @ 84 NONAME ; #<VT>#
+	_ZTV31CUpnpHttpFileReceiveTransaction @ 85 NONAME ; #<VT>#
+	_ZTV8CUpnpMapI7HBufC16E @ 86 NONAME ; #<VT>#
+	_ZThn144_N21CUpnpContentDirectory15NewTransactionLERK6TDesC8S2_RK9TInetAddrRP26CUpnpHttpServerTransaction @ 87 NONAME ; #<thunk>#
+

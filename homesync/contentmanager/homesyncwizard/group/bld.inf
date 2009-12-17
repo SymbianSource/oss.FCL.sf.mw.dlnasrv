@@ -1,0 +1,49 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Build information file for project setup wizard
+*
+*/
+
+
+#include "../../../../group/upnpplatformvar.hrh"
+
+PRJ_EXPORTS
+../inc/cmsappwizard.h    |../../../../inc/cmsappwizard.h
+// LOC export
+UPNP_LOC_EXPORT(cmsappwizard.loc)
+
+PRJ_MMPFILES
+./cmsappwizard.mmp
+
+PRJ_EXTENSIONS
+
+START EXTENSION s60/mifconv
+OPTION TARGETFILE msappwizard.mif
+OPTION HEADERFILE msappwizard.mbg
+OPTION SOURCEDIR ../bitmaps
+OPTION SOURCES -c8,8 qgn_graf_upnp_ext_renderer \
+			   -c8,8 qgn_prop_im_server \
+			   -c8,8 qgn_prop_folder_locked_small \
+			   -c8,8 qgn_prop_folder_current \
+			   -c8,8 qgn_indi_upnp_search_1 \
+			   -c8,8 qgn_indi_upnp_search_2 \
+			   -c8,8 qgn_indi_upnp_search_3 \
+			   -c8,8 qgn_indi_upnp_search_4 \
+			   -c8,8 qgn_indi_upnp_search_5 \
+			   -c8,8 qgn_indi_upnp_search_6 \
+			   -c8,8 qgn_indi_upnp_search_7 \
+			   -c8,8 qgn_indi_upnp_search_8 \
+			   -c8,8 qgn_indi_upnp_search_9
+END
+// End of file

@@ -1,0 +1,449 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Upnp settings plugin resource file
+*
+*/
+
+
+
+
+
+
+
+//  RESOURCE IDENTIFIER
+NAME    UPGS // 4 letter ID
+
+//  INCLUDES
+#include <eikon.rh>
+#include <avkon.rsg>
+#include <avkon.rh>
+#include <avkon.loc>
+#include <upnpsettings.loc>
+
+// USER INCLUDES
+#include "upnpsettingsengine.hrh"
+#include "upnpgsplugin.hrh"
+
+// CONSTANTS
+
+//  RESOURCE DEFINITIONS
+
+RESOURCE RSS_SIGNATURE
+    {
+    }
+
+//----------------------------------------------------
+//  r_gs_datacall_view_caption
+//
+// Data call view caption for plugin
+//----------------------------------------------------
+//
+RESOURCE TBUF r_upnp_gs_settings_view_caption
+    {
+    buf = qtn_iupnp_gs_caption;
+    }
+
+//----------------------------------------------------
+//  r_gs_datacall_view_caption
+//
+// Data call view caption for plugin
+//----------------------------------------------------
+//
+RESOURCE TBUF r_upnp_gs_settings_view_title
+    {
+    buf = qtn_iupnp_title_sharing;
+    }
+
+//----------------------------------------------------
+//
+//    r_gs_dcall_view
+//    Data call view.
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_VIEW r_gs_upnp_view
+    {
+    menubar = r_homeconnect_settings_menubar;
+    cba = r_settingsui_softkeys_options_back__change;
+    }
+  
+//----------------------------------------------------------------------------
+//   
+//    r_homeconnect_settings_menubar
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE MENU_BAR r_homeconnect_settings_menubar
+    {
+    titles =
+        {
+        MENU_TITLE { menu_pane = r_homeconnect_settings_menu;}
+        };
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_homeconnect_settings_menu
+//
+//----------------------------------------------------------------------------
+
+RESOURCE MENU_PANE r_homeconnect_settings_menu
+    {
+    items =
+        {
+        MENU_ITEM
+            { 
+            command = EAknSoftkeyChange; 
+            txt = qtn_options_change;
+            },
+        MENU_ITEM
+            { 
+            command = EAknCmdHelp;
+            txt = qtn_options_help;
+            },
+        MENU_ITEM
+            { 
+            command = EAknCmdExit;
+            txt = qtn_options_exit;
+            }
+        };
+    }
+
+
+//  RESOURCE DEFINITIONS 
+
+//----------------------------------------------------------------------------
+//   
+//    r_homeconnect_settings_dialog
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_ITEM_LIST r_upnp_gs_settings_list
+    {
+    items =
+        {
+        AVKON_SETTING_ITEM
+            {
+            identifier = EUPnPGSPluginItemIAP;
+            setting_page_resource = r_iap_setting_page;
+            associated_resource = r_iap_selection_page_texts;
+            name = qtn_iupnp_home_ap;
+            },
+        AVKON_SETTING_ITEM
+            {
+            identifier = EUPnPGSPluginItemMyDeviceName;
+            setting_page_resource = r_my_device_name_setting_page;
+            name = qtn_iupnp_device_name;
+            },
+        AVKON_SETTING_ITEM
+            {
+            identifier = EUPnPGSPluginItemCopyLocation;
+            name = qtn_iupnp_copy_location;
+            }
+        };
+
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_iap_setting_page
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_iap_setting_page
+    {
+    label = qtn_iupnp_ap_head_set;
+    type = EAknCtPopupSettingList;
+    editor_resource_id = r_iap_selection_page_edit_controls;
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_iap_selection_page_edit_controls
+//
+//----------------------------------------------------------------------------
+//    
+RESOURCE POPUP_SETTING_LIST r_iap_selection_page_edit_controls
+    {
+    }
+//----------------------------------------------------------------------------
+//   
+//    r_iap_selection_page_texts
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE AVKON_POPUP_SETTING_TEXTS r_iap_selection_page_texts
+
+    {
+    setting_texts_resource = r_iap_selection_item_texts;
+    }
+    
+//----------------------------------------------------------------------------
+//   
+//    r_iap_selection_item_texts
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE ARRAY r_iap_selection_item_texts
+    {
+    items =
+        {
+        AVKON_ENUMERATED_TEXT 
+            { 
+            value = EUPnPSettingsEngineIAPItemNone; 
+            text = qtn_iupnp_ap_none_set; 
+            },
+        AVKON_ENUMERATED_TEXT 
+            { 
+            value = EUPnPSettingsEngineIAPItemAlwaysAsk; 
+            text = qtn_iupnp_ap_ask_set; 
+            },
+        AVKON_ENUMERATED_TEXT 
+            { 
+            value = EUPnPSettingsEngineIAPItemUserDefined; 
+            text = qtn_iupnp_ap_user_defined; 
+            }
+        };
+    }
+
+
+
+//----------------------------------------------------------------------------
+//   
+//    r_my_device_name_setting_page
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_my_device_name_setting_page
+    {
+    type = EEikCtEdwin;
+    editor_resource_id = r_my_device_name_edwin;
+    }
+    
+
+//----------------------------------------------------------------------------
+//   
+//    home network IAP selection item texts
+//
+//----------------------------------------------------------------------------
+//    
+RESOURCE TBUF r_qtn_iupnp_item_home_iap_always_ask { buf = qtn_iupnp_ap_ask_set; }
+RESOURCE TBUF r_qtn_iupnp_item_home_iap_user_defined { buf = qtn_iupnp_ap_user_defined; }
+RESOURCE TBUF r_qtn_iupnp_item_home_iap_none { buf = qtn_iupnp_ap_none_set; }
+
+//----------------------------------------------------------------------------
+//   
+//    home network IAP selection setting page texts
+//
+//----------------------------------------------------------------------------
+//    
+RESOURCE TBUF r_qtn_iupnp_home_iap_always_ask { buf = qtn_iupnp_ap_ask_set; }
+RESOURCE TBUF r_qtn_iupnp_home_iap_create_new { buf = qtn_iupnp_ap_new_set; }
+RESOURCE TBUF r_qtn_iupnp_home_iap_none { buf = qtn_iupnp_ap_none_set; }
+
+//----------------------------------------------------------------------------
+//   
+//    r_my_device_name_edwin
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE EDWIN r_my_device_name_edwin
+    {
+    width = 64;
+    lines = 5;
+    maxlength = 64;
+    }
+    
+//----------------------------------------------------------------------------
+//   
+//    r_settingsui_softkeys_options_back__change
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE CBA r_settingsui_softkeys_options_back__change
+    {
+    buttons =
+        {
+        CBA_BUTTON {id=EAknSoftkeyOptions; txt = text_softkey_option;},
+        CBA_BUTTON {id=EAknSoftkeyBack; txt = text_softkey_back; },
+        CBA_BUTTON {id=EAknSoftkeyChange; txt= qtn_msk_change; }
+        };
+    }
+    
+//----------------------------------------------------------------------------
+//   
+//    r_upnp_settings_menubar
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE MENU_BAR r_upnp_settings_menubar
+    {
+    titles =
+        {
+        MENU_TITLE { menu_pane = r_upnp_settings_menu;}
+        };
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_upnp_settings_menu
+//
+//----------------------------------------------------------------------------
+
+RESOURCE MENU_PANE r_upnp_settings_menu
+    {
+    items =
+        {
+        MENU_ITEM
+            { 
+            command = EAknSoftkeyChange;
+            txt = qtn_options_change;
+            },
+        MENU_ITEM
+            { 
+            command = EAknCmdHelp;
+            txt = qtn_options_help;
+            },
+        MENU_ITEM
+            { 
+            command = EAknCmdExit;
+            txt = qtn_options_exit;
+            }
+        };
+    }
+    
+//----------------------------------------------------------------------------
+//   
+//    r_unsecured_connections_confirmation_query
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_unsecured_connections_confirmation_query
+    {
+    flags = EGeneralQueryFlags;
+    buttons = r_softkeys_continue_cancel;
+    items =
+        {
+        DLG_LINE
+            {   
+            type = EAknCtQuery;
+            id = EGeneralQuery;
+            control = AVKON_CONFIRMATION_QUERY
+                {
+                layout = EConfirmationQueryLayout;
+                label = qtn_iupnp_conf_unsecure;
+                };
+            }
+        };
+    }
+ 
+//----------------------------------------------------------------------------
+//   
+//    r_softkeys_continue_cancel
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE CBA r_softkeys_continue_cancel
+    {
+    buttons =
+        {
+        CBA_BUTTON
+            {
+            id = EUPnPGSPluginCbaButtonContinue;
+            txt = qtn_iupnp_conf_continue;
+            },
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyCancel;
+            txt = text_softkey_cancel;
+            }
+        };
+    }
+        
+//----------------------------------------------------------------------------
+//   
+//    r_ibu_gallery_update_note_title_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ibu_gallery_update_note_title_text 
+    { 
+    buf = qtn_iupnp_ibu_gallery_update_note_title_2;
+    }    
+    
+//----------------------------------------------------------------------------
+//   
+//    r_ibu_gallery_update_note_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ibu_gallery_update_note_text 
+    {
+    buf = qtn_iupnp_ibu_gallery_update_note_2;
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_ibu_gallery_update_notavail_note_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ibu_gallery_update_notavail_note_text 
+    { 
+    buf = qtn_iupnp_ibu_gallery_notavail_note_2;
+    }
+    
+//----------------------------------------------------------------------------
+//   
+//    r_qtn_iupnp_iap_turn_sharing_off
+//
+//----------------------------------------------------------------------------
+//    
+RESOURCE TBUF r_qtn_iupnp_iap_turn_sharing_off 
+    {
+    buf = qtn_iupnp_ibu_gallery_connectionactive_note; 
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_homeconnect_info_query
+//
+//----------------------------------------------------------------------------
+//        
+RESOURCE DIALOG r_homeconnect_info_query
+{
+   flags = EGeneralQueryFlags | EEikDialogFlagNoTitleBar | EEikDialogFlagNoBorder | EEikDialogFlagNoShadow;
+   buttons = R_AVKON_SOFTKEYS_OK_EMPTY;
+   items=
+   {
+       DLG_LINE
+       {
+          type = EAknCtPopupHeadingPane;
+          id = EAknMessageQueryHeaderId;
+          control = AVKON_HEADING
+          {
+          };
+       },
+       DLG_LINE
+       {
+          type = EAknCtMessageQuery;
+          id = EAknMessageQueryContentId;
+          control = AVKON_MESSAGE_QUERY
+          {
+          };
+        }
+   };
+}
+
+//End of File

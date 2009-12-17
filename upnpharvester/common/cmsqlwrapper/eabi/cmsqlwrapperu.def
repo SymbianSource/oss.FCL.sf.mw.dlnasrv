@@ -1,0 +1,12 @@
+EXPORTS
+	_ZN17CCmSqlMainFactory13NewCmSqlMainLER3RFs @ 1 NONAME
+	_ZN17CCmSqlMainFactory14NewCmSqlMainLCER3RFs @ 2 NONAME
+	_ZTI10CCmSqlMain @ 3 NONAME ; #<TI>#
+	_ZTI14CCmSqlDbClause @ 4 NONAME ; #<TI>#
+	_ZTI16CCmSqlConnection @ 5 NONAME ; #<TI>#
+	_ZTI19CCmSqlDbMaintenance @ 6 NONAME ; #<TI>#
+	_ZTV10CCmSqlMain @ 7 NONAME ; #<VT>#
+	_ZTV14CCmSqlDbClause @ 8 NONAME ; #<VT>#
+	_ZTV16CCmSqlConnection @ 9 NONAME ; #<VT>#
+	_ZTV19CCmSqlDbMaintenance @ 10 NONAME ; #<VT>#
+

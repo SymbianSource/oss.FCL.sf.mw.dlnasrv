@@ -1,0 +1,56 @@
+/*
+* Copyright (c) 2006-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: Project definition file for UpnpSecurity implementation
+*
+*/
+
+#include "../../../group/upnpplatformvar.hrh"
+#include "upnpsecurityuids.h"
+#include <data_caging_paths.hrh>
+
+// Build target
+TARGET          upnpsecurity.dll
+TARGETTYPE      DLL
+UID             KGenericDllUid2 KUpnpSecurityDllUid3
+
+// Platform security
+CAPABILITY      CAP_GENERAL_DLL
+VENDORID        VID_DEFAULT
+
+// SIS installation + IAD support
+VERSION 10.1
+paged
+
+// Include paths
+USERINCLUDE     ../inc
+USERINCLUDE     ../../../inc
+USERINCLUDE     ../inc/client
+
+MW_LAYER_SYSTEMINCLUDE
+
+// Sources
+SOURCEPATH      ../src
+SOURCE          upnpsecaccesscontroller.cpp
+
+// General Libraries
+LIBRARY         euser.lib
+
+// S60 UPnP libraries
+LIBRARY         upnpsecuritymanagerclient.lib
+LIBRARY         avmediaserverclient.lib 
+
+// Logging
+DEBUGLIBRARY    flogger.lib
+
+// End of file

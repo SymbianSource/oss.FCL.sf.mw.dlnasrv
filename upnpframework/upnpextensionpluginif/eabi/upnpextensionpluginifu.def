@@ -1,0 +1,10 @@
+EXPORTS
+	_ZN17CUPnPPluginLoader12DeletePluginEi @ 1 NONAME
+	_ZN17CUPnPPluginLoader14CreatePluginsLEv @ 2 NONAME
+	_ZN17CUPnPPluginLoader4NewLER25MUPnPPluginLoaderObserver @ 3 NONAME
+	_ZN17CUPnPPluginLoaderD0Ev @ 4 NONAME
+	_ZN17CUPnPPluginLoaderD1Ev @ 5 NONAME
+	_ZN17CUPnPPluginLoaderD2Ev @ 6 NONAME
+	_ZThn4_N17CUPnPPluginLoaderD0Ev @ 7 NONAME ; #<thunk>#
+	_ZThn4_N17CUPnPPluginLoaderD1Ev @ 8 NONAME ; #<thunk>#
+

@@ -1,0 +1,61 @@
+/*
+* Copyright (c) 2006-2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  upnpframework subsystem ROM include file
+*
+*/
+
+#ifndef __UPNPFRAMEWORK_IBY__
+#define __UPNPFRAMEWORK_IBY__
+
+#ifdef FF_UPNP_FRAMEWORK_2_0 // UPnP feature flag
+
+    // UPNP utilities
+    file=ABI_DIR\BUILD_DIR\upnputilities.dll \sys\bin\upnputilities.dll
+
+    
+    // UPNP (Home Media) Extension plugin interface
+    file=ABI_DIR\BUILD_DIR\upnpextensionpluginif.dll \sys\bin\upnpextensionpluginif.dll
+
+    // musicadapter
+    file=ABI_DIR\BUILD_DIR\upnpmusicadapter.dll \sys\bin\upnpmusicadapter.dll
+
+    // CommonUI
+    file=ABI_DIR\BUILD_DIR\upnpcommonui.dll \sys\bin\UPnPCommonUI.dll
+    data=DATAZ_\resource\apps\upnpcommonui.mif \resource\apps\upnpcommonui.mif
+
+    // UPnP AIW Engine
+    file=ABI_DIR\BUILD_DIR\upnpaiwengine.dll \sys\bin\upnpaiwengine.dll
+
+    // UPnP AIW Provider (AIW Provider)
+    ECOM_PLUGIN(upnpaiwprovider.dll,upnpaiwprovider.rsc)
+
+    // UPnP File Transfer Engine
+    file=ABI_DIR\BUILD_DIR\upnpfiletransferengine.dll \sys\bin\upnpfiletransferengine.dll
+
+    // UpnpCommand ECom plugin
+    ECOM_PLUGIN( upnpcommandplugin.dll, upnpcommandplugin.rsc )
+
+#endif // FF_UPNP_FRAMEWORK_2_0
+
+    // UPnPCommand static linked library
+    file=ABI_DIR\BUILD_DIR\upnpcommand.dll \sys\bin\upnpcommand.dll
+
+#ifdef FF_UPNP_FRAMEWORK_2_0 // UPnP feature flag	
+
+    // The stub sis file
+    data=ZSYSTEM\install\upnpframework_stub.sis system\install\upnpframework_stub.sis
+
+#endif // FF_UPNP_FRAMEWORK_2_0
+
+#endif // __UPNPFRAMEWORK_IBY__

@@ -1,0 +1,15 @@
+EXPORTS
+	??0RUpnpContentServerClient@@QAE@XZ @ 1 NONAME ; RUpnpContentServerClient::RUpnpContentServerClient(void)
+	?ChangeSharedContentL@RUpnpContentServerClient@@QAEXW4TUpnpMediaType@UpnpContentServer@@ABV?$CArrayFix@H@@AAVTRequestStatus@@@Z @ 2 NONAME ; void RUpnpContentServerClient::ChangeSharedContentL(enum UpnpContentServer::TUpnpMediaType, class CArrayFix<int> const &, class TRequestStatus &)
+	?Close@RUpnpContentServerClient@@QAEXXZ @ 3 NONAME ; void RUpnpContentServerClient::Close(void)
+	?GetSelectionContentL@RUpnpContentServerClient@@QAEXW4TUpnpMediaType@UpnpContentServer@@AAVTRequestStatus@@@Z @ 4 NONAME ; void RUpnpContentServerClient::GetSelectionContentL(enum UpnpContentServer::TUpnpMediaType, class TRequestStatus &)
+	?GetSelectionContentResultL@RUpnpContentServerClient@@QAEXAAVCDesC16Array@@@Z @ 5 NONAME ; void RUpnpContentServerClient::GetSelectionContentResultL(class CDesC16Array &)
+	?GetSelectionIndexesL@RUpnpContentServerClient@@QAEXW4TUpnpMediaType@UpnpContentServer@@AAVTRequestStatus@@@Z @ 6 NONAME ; void RUpnpContentServerClient::GetSelectionIndexesL(enum UpnpContentServer::TUpnpMediaType, class TRequestStatus &)
+	?GetSelectionIndexesResultL@RUpnpContentServerClient@@QAEXAAV?$CArrayFix@H@@@Z @ 7 NONAME ; void RUpnpContentServerClient::GetSelectionIndexesResultL(class CArrayFix<int> &)
+	?OpenL@RUpnpContentServerClient@@QAEXXZ @ 8 NONAME ; void RUpnpContentServerClient::OpenL(void)
+	?RefreshSharedContentL@RUpnpContentServerClient@@QAEXW4TUpnpMediaType@UpnpContentServer@@AAVTRequestStatus@@@Z @ 9 NONAME ; void RUpnpContentServerClient::RefreshSharedContentL(enum UpnpContentServer::TUpnpMediaType, class TRequestStatus &)
+	?StartConnectionMonitorL@RUpnpContentServerClient@@QAEXHAAVTRequestStatus@@@Z @ 10 NONAME ; void RUpnpContentServerClient::StartConnectionMonitorL(int, class TRequestStatus &)
+	?StartUploadListenerL@RUpnpContentServerClient@@QAEXXZ @ 11 NONAME ; void RUpnpContentServerClient::StartUploadListenerL(void)
+	?StopConnectionMonitorL@RUpnpContentServerClient@@QAEXAAVTRequestStatus@@@Z @ 12 NONAME ; void RUpnpContentServerClient::StopConnectionMonitorL(class TRequestStatus &)
+	?StopUploadListenerL@RUpnpContentServerClient@@QAEXXZ @ 13 NONAME ; void RUpnpContentServerClient::StopUploadListenerL(void)
+

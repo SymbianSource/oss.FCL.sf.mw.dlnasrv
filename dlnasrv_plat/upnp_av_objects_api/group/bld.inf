@@ -1,0 +1,40 @@
+/** @file
+* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies  this distribution, and is available 
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  File that exports the files belonging to 
+:                UPnP AV Objects API
+*
+*/
+
+
+#include "../../../group/upnpplatformvar.hrh"
+
+PRJ_PLATFORMS
+DEFAULT
+
+PRJ_EXPORTS
+
+../inc/upnpobject.h     MW_LAYER_PLATFORM_EXPORT_PATH(upnpobject.h)
+../inc/upnpattribute.h     MW_LAYER_PLATFORM_EXPORT_PATH(upnpattribute.h)
+../inc/upnpbrowsecriteria.h     MW_LAYER_PLATFORM_EXPORT_PATH(upnpbrowsecriteria.h)
+../inc/upnpcontainer.h     MW_LAYER_PLATFORM_EXPORT_PATH(upnpcontainer.h)
+../inc/upnpobjectlist.h     MW_LAYER_PLATFORM_EXPORT_PATH(upnpobjectlist.h)
+../inc/upnpelement.h     MW_LAYER_PLATFORM_EXPORT_PATH(upnpelement.h)
+../inc/upnpcontainerlist.h     MW_LAYER_PLATFORM_EXPORT_PATH(upnpcontainerlist.h)
+../inc/upnpitem.h     MW_LAYER_PLATFORM_EXPORT_PATH(upnpitem.h)
+../inc/upnpfiletransferevent.h     MW_LAYER_PLATFORM_EXPORT_PATH(upnpfiletransferevent.h)
+../inc/upnpmediaserverevent.h     MW_LAYER_PLATFORM_EXPORT_PATH(upnpmediaserverevent.h)
+../inc/upnpitemlist.h     MW_LAYER_PLATFORM_EXPORT_PATH(upnpitemlist.h)
+../inc/upnpdlnaprotocolinfo.h     MW_LAYER_PLATFORM_EXPORT_PATH(upnpdlnaprotocolinfo.h)
+../inc/upnpdlnaprotocolinfocons.h     MW_LAYER_PLATFORM_EXPORT_PATH(upnpdlnaprotocolinfocons.h)
+../inc/upnpprotocolinfo.h     MW_LAYER_PLATFORM_EXPORT_PATH(upnpprotocolinfo.h)

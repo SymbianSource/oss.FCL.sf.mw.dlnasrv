@@ -1,0 +1,53 @@
+/*
+* Copyright (c) 2006-2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Build information file for project SettingsEngine
+*
+*/
+
+
+
+
+
+
+PRJ_PLATFORMS
+DEFAULT
+
+PRJ_EXPORTS
+
+// Central repository default keys
+../cenrep/20009CAE.txt    /epoc32/release/winscw/udeb/z/private/10202be9/20009cae.txt
+../cenrep/20009CAE.txt    /epoc32/release/winscw/urel/z/private/10202be9/20009cae.txt
+../cenrep/20009CAE.txt    /epoc32/release/armv5/udeb/z/private/10202be9/20009cae.txt
+../cenrep/20009CAE.txt    /epoc32/release/armv5/urel/z/private/10202be9/20009cae.txt
+../conf/upnpsettingsengine.confml              APP_LAYER_CONFML(upnpsettingsengine.confml)
+../conf/upnpsettingsengine_20009CAE.crml       APP_LAYER_CRML(upnpsettingsengine_20009CAE.crml)
+
+// Backup registration file
+#ifndef __COMMDB_PROTECTION
+backup_registration.xml  /epoc32/data/z/private/20009CAE/backup_registration.xml  
+backup_registration.xml  /epoc32/release/winscw/udeb/z/private/20009CAE/backup_registration.xml 
+backup_registration.xml  /epoc32/release/winscw/urel/z/private/20009CAE/backup_registration.xml
+#endif
+
+
+// ADO internal interfaces
+../inc/upnpsettingsengine.h        |../../../inc/upnpsettingsengine.h
+../inc/upnpsettingsengine.hrh      |../../../inc/upnpsettingsengine.hrh
+../inc/upnpapplicationcrkeys.h     |../../../inc/upnpapplicationcrkeys.h
+
+PRJ_MMPFILES
+upnpsettingsengine.mmp
+
+
+// End of file

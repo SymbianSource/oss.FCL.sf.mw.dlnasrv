@@ -1,0 +1,321 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Main resource file
+*
+*/
+
+
+
+
+
+
+//  RESOURCE IDENTIFIER
+NAME HOME    // 4 letter ID
+
+
+//  INCLUDES
+#include <uikon.rh>
+#include <eikon.rh>
+#include <avkon.rsg>
+#include <avkon.rh>
+#include <avkon.mbg>
+#include <avkon.loc>
+#include <appinfo.rh>
+#include <homemedia.loc>
+#include <aknsconstants.hrh>
+#include "homemedia.hrh"
+
+RESOURCE RSS_SIGNATURE
+    {
+    }
+
+// --------------------------------------------------------------------------
+//
+//    Default Document Name
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_default_document_name
+    {
+    buf=qtn_iupnp_title_home_media;
+    }
+
+// --------------------------------------------------------------------------
+//
+//    Define default menu and CBA key.
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE EIK_APP_INFO r_localisable_app_info
+    {
+    menubar = r_homemedia_menubar;
+    custom_app_info_extension = r_info_extension;
+    }
+
+RESOURCE EIK_APP_INFO_EXT r_info_extension
+    {
+    popup_toolbar = r_fixed_toolbar;
+    }
+
+RESOURCE AVKON_TOOLBAR r_fixed_toolbar
+    {
+    flags = KAknToolbarFixed|KAknToolbarTransparent|KAknToolbarWithoutCba;
+    items =
+        {
+        TBAR_CTRL
+            {
+            type = EAknCtButton;
+            id = ECmdDummy;
+            control = AVKON_BUTTON
+                {
+                flags = 0;
+                states =
+                    {
+                    AVKON_BUTTON_STATE
+                        {
+                        txt = "Dummy";
+                        }  
+                    };
+                };
+            }
+        };
+    }
+
+// --------------------------------------------------------------------------
+//
+//    Localization application info.
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE LOCALISABLE_APP_INFO r_homemedia_localisable_app_info
+    {
+    short_caption = qtn_iupnp_grid_home_media;
+    caption_and_icon =
+    CAPTION_AND_ICON_INFO
+        {
+        caption = qtn_iupnp_title_home_media;
+        number_of_icons = 1;
+        icon_file = "\\resource\\apps\\homemedia_aif.mif";
+        };
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_homemedia_softkeys_options_exit__open
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE CBA r_homemedia_softkeys_options_exit__open
+    {
+    buttons =
+        {
+        CBA_BUTTON {id=EAknSoftkeyOptions; txt = text_softkey_option;},
+        CBA_BUTTON {id=EAknSoftkeyExit; txt = text_softkey_exit; },
+        CBA_BUTTON {id=EAknSoftkeyOpen; txt= qtn_msk_open; }
+        };
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_homemedia_menubar
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE MENU_BAR r_homemedia_menubar
+    {
+    titles=
+        {
+        MENU_TITLE { menu_pane = r_homemedia_menu;}
+        };
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_homemedia_menu
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE MENU_PANE r_homemedia_menu
+    {
+    items =
+        {
+        MENU_ITEM
+            { 
+            command = EAknCmdHelp;
+            txt = qtn_options_help;
+            },
+        MENU_ITEM
+            {   
+            command = EAknSoftkeyExit; 
+            txt = qtn_options_exit;
+            }
+        };
+    }
+    
+//----------------------------------------------------
+//
+//    r_homemedia_main_view
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_VIEW r_homemedia_main_view
+    {
+    menubar = r_homemedia_main_view_menubar;
+    // required to define something here but cba will be
+    // changed dynamically
+    cba = r_homemedia_softkeys_options_exit__open;
+    }
+    
+//----------------------------------------------------------------------------
+//   
+//    r_homemedia_main_view_menubar
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE MENU_BAR r_homemedia_main_view_menubar
+    {
+    titles=
+        {
+        MENU_TITLE { menu_pane = r_homemedia_menu;},
+        MENU_TITLE { menu_pane = r_homemedia_main_view_menu;}
+        };
+    }
+
+
+//----------------------------------------------------------------------------
+//   
+//    r_homemedia_main_view_menu
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE MENU_PANE r_homemedia_main_view_menu
+    {
+    items =
+        {
+        MENU_ITEM 
+            { 
+            command = EAknSoftkeyOpen;
+            txt = qtn_options_open; 
+            },
+        MENU_ITEM 
+            { 
+            command = EHomeMediaCmdRunWizard;
+            txt = qtn_iupnp_options_run_wizard; 
+            },
+        MENU_ITEM 
+            { 
+            command = EHomeMediaCmdSettings;
+            txt = qtn_iupnp_options_settings_main;
+            }
+        };
+    }
+    
+    
+    
+//----------------------------------------------------------------------------
+//   
+//    r_homemedia_connecting_dialog
+//
+//----------------------------------------------------------------------------
+//    
+RESOURCE DIALOG r_homemedia_connecting_dialog
+    { 
+    flags = EAknWaitNoteFlags;
+    buttons = R_AVKON_SOFTKEYS_EMPTY;
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtNote;
+            id = EGeneralNote;
+            control = AVKON_NOTE
+                {
+                layout = EWaitLayout;
+                singular_label = qtn_iupnp_wait_connecting;
+                imageid = EMbmAvkonQgn_note_progress;
+                imagemask = EMbmAvkonQgn_note_progress_mask;
+                animation = R_QGN_GRAF_WAIT_BAR_ANIM;
+                };
+            }
+        };
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_homemedia_browsehome_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF32 r_homemedia_browsehome_text { buf=qtn_iupnp_browse_home; }
+
+//----------------------------------------------------------------------------
+//   
+//    r_homemedia_sharecontent_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF32 r_homemedia_sharecontent_text { buf=qtn_iupnp_share; }
+
+// --------------------------------------------------------------------------
+//
+//    r_homemedia_error_con_failed_text
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_homemedia_error_con_failed_text
+    { 
+    buf = qtn_iupnp_err_con_failed;
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_homemedia_share_active_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF32 r_homemedia_share_active_text { buf=qtn_iupnp_share_active; }
+
+//----------------------------------------------------------------------------
+//   
+//    r_homemedia_share_inactive_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF32 r_homemedia_share_inactive_text { buf=qtn_iupnp_share_inactive; }
+
+//----------------------------------------------------------------------------
+//   
+//    r_homemedia_navi_not_connected_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF32 r_homemedia_navi_not_connected_text { buf=qtn_iupnp_navi_not_connected; }
+
+//----------------------------------------------------------------------------
+//   
+//    r_homemedia_navi_connected_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF32 r_homemedia_navi_connected_text { buf=qtn_iupnp_navi_connected; }
+
+//----------------------------------------------------------------------------
+//   
+//    r_homemedia_title_pane_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_homemedia_title_pane_text { buf=qtn_iupnp_title_home_media; }
+
+// End of File

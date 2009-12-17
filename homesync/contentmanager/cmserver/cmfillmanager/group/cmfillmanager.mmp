@@ -1,0 +1,82 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project definition file for project Media servant
+*
+*/
+
+
+#include <platform_paths.hrh>
+
+TARGET          cmfillmanager.dll
+TARGETTYPE      dll
+UID             0x1000008d 0x10281FAC
+
+VENDORID        VID_DEFAULT
+
+CAPABILITY CAP_GENERAL_DLL
+
+TARGETPATH     /sys/bin
+
+USERINCLUDE     ../inc
+
+MW_LAYER_SYSTEMINCLUDE
+USERINCLUDE   ../../../../../inc
+
+SOURCEPATH      ../src
+
+SOURCE          cmfillmanagerfactory.cpp
+SOURCE          cmfmmain.cpp
+SOURCE          cmfmfilldrivemngr.cpp
+SOURCE          cmfmmpxnotifier.cpp
+SOURCE          cmfmglxnotifier.cpp
+SOURCE          cmfmupnpmngr.cpp
+SOURCE          cmfmdownloadmngr.cpp
+SOURCE          cmfmdownloadproxy.cpp
+SOURCE          cmfmduplicatedetector.cpp
+SOURCE          cmfmmdeduplicatedetector.cpp
+SOURCE          cmfmmpxduplicatedetector.cpp
+SOURCE          cmfmfillrulefilleddatamngr.cpp
+SOURCE          cmfmao.cpp
+
+LIBRARY         euser.lib                   // Basic types
+LIBRARY         efsrv.lib                   // File server
+LIBRARY         charconv.lib                // Character conversion
+LIBRARY         bafl.lib
+LIBRARY         inetprotutil.lib            // EscapeUtils
+// Media servant specific libraries
+LIBRARY         cmcommon.lib                // Media servant common
+LIBRARY         cmdatabasemanager.lib       // Database manager
+LIBRARY         cmsettingsengine.lib        // Settings engine
+LIBRARY         cmmemorymanager.lib         // Memory manager
+LIBRARY         cmsqlwrapper.lib            // Sqlite wrapper
+// Upnp specific libs
+LIBRARY         upnpavcontrollerclient.lib  // Av controller client
+LIBRARY         upnpavcontrollerhelper.lib  // Av controller helper
+LIBRARY         upnpavobjects.lib           // Upnp Av objects
+LIBRARY         ws32.lib                    // RWsSession, CWsScreenDevice
+LIBRARY         upnpxmlparser.lib           // Xml parser
+// Metadata engine client
+LIBRARY         mdeclient.lib        
+// MPX framework
+LIBRARY         mpxcommon.lib
+LIBRARY         mpxcollectionutility.lib
+LIBRARY         mpxharvesterutility.lib
+LIBRARY         mpxcollectionmediator.lib
+LIBRARY         contentlistingframework.lib
+// Path infos
+LIBRARY         PlatformEnv.lib
+// Debug
+DEBUGLIBRARY    flogger.lib
+
+//  End of File

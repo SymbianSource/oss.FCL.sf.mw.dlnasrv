@@ -1,0 +1,5 @@
+EXPORTS
+	?ExecuteSharingDialogLD@CUPnPAppFileSharingDialog@@QAEHXZ @ 1 NONAME ; int CUPnPAppFileSharingDialog::ExecuteSharingDialogLD(void)
+	?NewL@CUPnPAppFileSharingDialog@@SAPAV1@HAAVCUPnPFileSharingEngine@@@Z @ 2 NONAME ; class CUPnPAppFileSharingDialog * CUPnPAppFileSharingDialog::NewL(int, class CUPnPFileSharingEngine &)
+	?UpdateFileSharingListL@CUPnPAppFileSharingDialog@@QAEXXZ @ 3 NONAME ; void CUPnPAppFileSharingDialog::UpdateFileSharingListL(void)
+

@@ -1,0 +1,37 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      upnpavcontroller subsystem ROM include file
+*
+*/
+
+
+
+
+
+#ifndef __UPNPAVCONTROLLER_IBY__
+#define __UPNPAVCONTROLLER_IBY__
+
+#ifdef FF_UPNP_FRAMEWORK_2_0 // UPnP feature flag
+
+    // AV Controller
+    file=ABI_DIR\BUILD_DIR\upnpavcontrollerclient.dll \sys\bin\upnpavcontrollerclient.dll
+    file=ABI_DIR\BUILD_DIR\upnpavcontrollerserver.exe \sys\bin\upnpavcontrollerserver.exe
+    file=ABI_DIR\BUILD_DIR\upnpavcontrollerhelper.dll \sys\bin\upnpavcontrollerhelper.dll
+
+    // Upnp XML Parser
+    file=ABI_DIR\BUILD_DIR\upnpxmlparser.dll \sys\bin\upnpxmlparser.dll
+
+#endif // FF_UPNP_FRAMEWORK_2_0
+
+#endif // __UPNPAVCONTROLLER_IBY__

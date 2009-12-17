@@ -1,0 +1,33 @@
+EXPORTS
+	??0RContentManager@@QAE@XZ @ 1 NONAME ; RContentManager::RContentManager(void)
+	?AppWizardState@RContentManager@@QBEHXZ @ 2 NONAME ; int RContentManager::AppWizardState(void) const
+	?ApplicationExit@RContentManager@@QAEXXZ @ 3 NONAME ; void RContentManager::ApplicationExit(void)
+	?Cancel@RContentManager@@QAEXXZ @ 4 NONAME ; void RContentManager::Cancel(void)
+	?Close@RContentManager@@QAEHXZ @ 5 NONAME ; int RContentManager::Close(void)
+	?Connect@RContentManager@@QAEHXZ @ 6 NONAME ; int RContentManager::Connect(void)
+	?DeleteDeletedMediaserversL@RContentManager@@QAEXXZ @ 7 NONAME ; void RContentManager::DeleteDeletedMediaserversL(void)
+	?DeleteMetadataL@RContentManager@@QAEXAAVTRequestStatus@@@Z @ 8 NONAME ; void RContentManager::DeleteMetadataL(class TRequestStatus &)
+	?DriveSelectionStatus@RContentManager@@QAEHXZ @ 9 NONAME ; int RContentManager::DriveSelectionStatus(void)
+	?ExecuteService@RContentManager@@QAEHW4TCmService@@AAVTRequestStatus@@@Z @ 10 NONAME ; int RContentManager::ExecuteService(enum TCmService, class TRequestStatus &)
+	?FillRulesL@RContentManager@@QAEPAVCCmFillRuleContainer@@XZ @ 11 NONAME ; class CCmFillRuleContainer * RContentManager::FillRulesL(void)
+	?GetDrivesL@RContentManager@@QAEXAAV?$RPointerArray@VCCmDriveInfo@@@@@Z @ 12 NONAME ; void RContentManager::GetDrivesL(class RPointerArray<class CCmDriveInfo> &)
+	?GetFilteredMetadataL@RContentManager@@QAEHW4TCmService@@AAPAVCCmSqlPropertyCollector@@AAVTRequestStatus@@@Z @ 13 NONAME ; int RContentManager::GetFilteredMetadataL(enum TCmService, class CCmSqlPropertyCollector * &, class TRequestStatus &)
+	?GetItemCountsL@RContentManager@@QBEHW4TCmService@@ABVTDesC8@@AAHAA_J@Z @ 14 NONAME ; int RContentManager::GetItemCountsL(enum TCmService, class TDesC8 const &, int &, long long &) const
+	?GetTransferInfo@RContentManager@@QBEXW4TCmService@@AAH1@Z @ 15 NONAME ; void RContentManager::GetTransferInfo(enum TCmService, int &, int &) const
+	?LastSyncTime@RContentManager@@QBE?AVTTime@@XZ @ 16 NONAME ; class TTime RContentManager::LastSyncTime(void) const
+	?ListItemsL@RContentManager@@QAEPAV?$RPointerArray@VCCmBaseListItem@@@@ABVTDesC8@@W4TCmService@@@Z @ 17 NONAME ; class RPointerArray<class CCmBaseListItem> * RContentManager::ListItemsL(class TDesC8 const &, enum TCmService)
+	?MediaserversL@RContentManager@@QBEPAV?$RPointerArray@VCCmMediaServerFull@@@@XZ @ 18 NONAME ; class RPointerArray<class CCmMediaServerFull> * RContentManager::MediaserversL(void) const
+	?PreProcessFillList@RContentManager@@QAEHABVTDesC8@@AAVTRequestStatus@@@Z @ 19 NONAME ; int RContentManager::PreProcessFillList(class TDesC8 const &, class TRequestStatus &)
+	?ServerState@RContentManager@@QBE?AW4TCmServerState@@XZ @ 20 NONAME ; enum TCmServerState RContentManager::ServerState(void) const
+	?ServiceState@RContentManager@@QBE?AW4TCmServiceState@@W4TCmService@@@Z @ 21 NONAME ; enum TCmServiceState RContentManager::ServiceState(enum TCmService) const
+	?SetAppWizardState@RContentManager@@QAEHXZ @ 22 NONAME ; int RContentManager::SetAppWizardState(void)
+	?SetDrivesL@RContentManager@@QAEXV?$RPointerArray@VCCmDriveInfo@@@@@Z @ 23 NONAME ; void RContentManager::SetDrivesL(class RPointerArray<class CCmDriveInfo>)
+	?SetFillFileStatusesL@RContentManager@@QAEXABV?$RPointerArray@VCCmBaseListItem@@@@@Z @ 24 NONAME ; void RContentManager::SetFillFileStatusesL(class RPointerArray<class CCmBaseListItem> const &)
+	?SetFillRulesL@RContentManager@@QAEXABVCCmFillRuleContainer@@@Z @ 25 NONAME ; void RContentManager::SetFillRulesL(class CCmFillRuleContainer const &)
+	?SetMediaserversL@RContentManager@@QAEHAAV?$RPointerArray@VCCmMediaServerFull@@@@@Z @ 26 NONAME ; int RContentManager::SetMediaserversL(class RPointerArray<class CCmMediaServerFull> &)
+	?SetServiceState@RContentManager@@QAEHW4TCmService@@W4TCmServiceState@@@Z @ 27 NONAME ; int RContentManager::SetServiceState(enum TCmService, enum TCmServiceState)
+	?SetStoreRulesL@RContentManager@@QAEXABVCCmStoreRuleContainer@@@Z @ 28 NONAME ; void RContentManager::SetStoreRulesL(class CCmStoreRuleContainer const &)
+	?StoreRulesL@RContentManager@@QAEPAVCCmStoreRuleContainer@@XZ @ 29 NONAME ; class CCmStoreRuleContainer * RContentManager::StoreRulesL(void)
+	?UpdateFillListsL@RContentManager@@QAEXAAVTRequestStatus@@@Z @ 30 NONAME ; void RContentManager::UpdateFillListsL(class TRequestStatus &)
+	?GetFilledFilesSize@RContentManager@@QBEXAA_JH@Z @ 31 NONAME ; void RContentManager::GetFilledFilesSize(long long &, int) const
+

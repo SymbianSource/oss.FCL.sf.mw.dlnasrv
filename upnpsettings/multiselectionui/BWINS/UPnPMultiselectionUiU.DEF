@@ -1,0 +1,6 @@
+EXPORTS
+	?ExecuteDlgLD@CUPnPMultiselectionUi@@QAEHXZ @ 1 NONAME ; int CUPnPMultiselectionUi::ExecuteDlgLD(void)
+	?ExecutePopupLD@CUPnPMultiselectionUi@@QAEHXZ @ 2 NONAME ; int CUPnPMultiselectionUi::ExecutePopupLD(void)
+	?NewL@CUPnPMultiselectionUi@@SAPAV1@W4THomeConnectMediaType@@PAVCUPnPFileSharingEngine@@AAHPAV?$CArrayFix@H@@W4TUiStyle@1@PBVHBufC16@@@Z @ 3 NONAME ; class CUPnPMultiselectionUi * CUPnPMultiselectionUi::NewL(enum THomeConnectMediaType, class CUPnPFileSharingEngine *, int &, class CArrayFix<int> *, enum CUPnPMultiselectionUi::TUiStyle, class HBufC16 const *)
+	?SetMarkedItemsL@CUPnPMultiselectionUi@@QAEXAAV?$CArrayFix@H@@@Z @ 4 NONAME ; void CUPnPMultiselectionUi::SetMarkedItemsL(class CArrayFix<int> &)
+

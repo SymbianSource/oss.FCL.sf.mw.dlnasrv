@@ -1,0 +1,5 @@
+EXPORTS
+	?NewL@CUPnPAppWizard@@SAPAV1@ABVTDesC16@@PAVCUPnPFileSharingEngine@@@Z @ 1 NONAME ; class CUPnPAppWizard * CUPnPAppWizard::NewL(class TDesC16 const &, class CUPnPFileSharingEngine *)
+	?StartL@CUPnPAppWizard@@QAEHXZ @ 2 NONAME ; int CUPnPAppWizard::StartL(void)
+
+

@@ -1,0 +1,49 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Project specification file for CM Metadata Harvester client
+*
+*/
+
+
+
+
+
+
+#include <platform_paths.hrh>
+#include "../inc/mdhuids.hrh"
+
+TARGET          cmmdhclient.dll
+TARGETTYPE      dll
+UID             0x1000008D KCmMdhClientUid
+
+CAPABILITY CAP_GENERAL_DLL
+
+SOURCEPATH      ../src/client
+SOURCE          mdhclientsession.cpp
+SOURCE          mdhclient.cpp
+SOURCE          mdhclientfactory.cpp
+
+USERINCLUDE     ../inc/client
+USERINCLUDE     ../inc
+USERINCLUDE     ../../../inc
+
+MW_LAYER_SYSTEMINCLUDE
+
+LIBRARY         euser.lib
+LIBRARY         estor.lib
+LIBRARY         efsrv.lib
+
+DEBUGLIBRARY    flogger.lib
+
+//  End of File

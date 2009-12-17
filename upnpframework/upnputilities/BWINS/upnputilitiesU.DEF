@@ -1,0 +1,40 @@
+EXPORTS
+	??1CUPnPMetaDataUtility@@UAE@XZ @ 1 NONAME ; CUPnPMetaDataUtility::~CUPnPMetaDataUtility(void)
+	?AddResElementL@UpnpCdsResElementUtility@@SAXAAVCUpnpItem@@ABVTDesC16@@@Z @ 2 NONAME ; void UpnpCdsResElementUtility::AddResElementL(class CUpnpItem &, class TDesC16 const &)
+	?Album@CUPnPMetaDataUtility@@QBEABVTDesC16@@XZ @ 3 NONAME ; class TDesC16 const & CUPnPMetaDataUtility::Album(void) const
+	?Artist@CUPnPMetaDataUtility@@QBEABVTDesC16@@XZ @ 4 NONAME ; class TDesC16 const & CUPnPMetaDataUtility::Artist(void) const
+	?CreateItemFromFileL@UPnPMetadataFetcher@@SAPAVCUpnpItem@@ABVTDesC16@@@Z @ 5 NONAME ; class CUpnpItem * UPnPMetadataFetcher::CreateItemFromFileL(class TDesC16 const &)
+	?CreateItemFromFileLC@UPnPMetadataFetcher@@SAPAVCUpnpItem@@ABVTDesC16@@@Z @ 6 NONAME ; class CUpnpItem * UPnPMetadataFetcher::CreateItemFromFileLC(class TDesC16 const &)
+	?Date@CUPnPMetaDataUtility@@QBEABVTDesC16@@XZ @ 7 NONAME ; class TDesC16 const & CUPnPMetaDataUtility::Date(void) const
+	?DeleteTempFilesL@UPnPCommonUtils@@SAXXZ @ 8 NONAME ; void UPnPCommonUtils::DeleteTempFilesL(void)
+	?DesC8ToInt@UPnPCommonUtils@@SAHABVTDesC8@@@Z @ 9 NONAME ; int UPnPCommonUtils::DesC8ToInt(class TDesC8 const &)
+	?FetchMetadataL@UPnPMetadataFetcher@@SAXAAVCUpnpObject@@ABVTDesC16@@@Z @ 10 NONAME ; void UPnPMetadataFetcher::FetchMetadataL(class CUpnpObject &, class TDesC16 const &)
+	?FetchMetadataL@UPnPMetadataFetcher@@SAXAAVCUpnpObject@@ABVTDesC16@@ABVTDesC8@@@Z @ 11 NONAME ; void UPnPMetadataFetcher::FetchMetadataL(class CUpnpObject &, class TDesC16 const &, class TDesC8 const &)
+	?FindContainerByTitle@UPnPCommonUtils@@SAPAVCUpnpContainer@@ABVCUpnpContainerList@@ABVTDesC8@@@Z @ 12 NONAME ; class CUpnpContainer * UPnPCommonUtils::FindContainerByTitle(class CUpnpContainerList const &, class TDesC8 const &)
+	?Genre@CUPnPMetaDataUtility@@QBEABVTDesC16@@XZ @ 13 NONAME ; class TDesC16 const & CUPnPMetaDataUtility::Genre(void) const
+	?GetMimeTypeByExtensionL@UPnPCommonUtils@@SAPAVHBufC8@@ABVTDesC16@@@Z @ 14 NONAME ; class HBufC8 * UPnPCommonUtils::GetMimeTypeByExtensionL(class TDesC16 const &)
+	?IntToDesC8LC@UPnPCommonUtils@@SAPAVHBufC8@@ABH@Z @ 15 NONAME ; class HBufC8 * UPnPCommonUtils::IntToDesC8LC(int const &)
+	?IsPlaylistContainerL@UPnPCommonUtils@@SAHABVCUpnpObject@@@Z @ 16 NONAME ; int UPnPCommonUtils::IsPlaylistContainerL(class CUpnpObject const &)
+	?IsUriAbsolute@UpnpCdsResElementUtility@@SAHABVTDesC8@@@Z @ 17 NONAME ; int UpnpCdsResElementUtility::IsUriAbsolute(class TDesC8 const &)
+	?LoadMetaDataL@CUPnPMetaDataUtility@@QAEXABVTDesC16@@@Z @ 18 NONAME ; void CUPnPMetaDataUtility::LoadMetaDataL(class TDesC16 const &)
+	?MemoryCardStateL@UPnPCommonUtils@@SAHXZ @ 19 NONAME ; int UPnPCommonUtils::MemoryCardStateL(void)
+	?NewL@CUPnPConnectionMonitor@@SAPAV1@AAVMUPnPConnectionMonitorObserver@@H@Z @ 20 NONAME ; class CUPnPConnectionMonitor * CUPnPConnectionMonitor::NewL(class MUPnPConnectionMonitorObserver &, int)
+	?NewL@CUPnPMetaDataUtility@@SAPAV1@XZ @ 21 NONAME ; class CUPnPMetaDataUtility * CUPnPMetaDataUtility::NewL(void)
+	?RenameFileL@UPnPCommonUtils@@SAPAVHBufC16@@ABVTDesC16@@@Z @ 22 NONAME ; class HBufC16 * UPnPCommonUtils::RenameFileL(class TDesC16 const &)
+	?ReplaceIllegalFilenameCharactersL@UPnPCommonUtils@@SAPAVHBufC16@@ABVTDesC16@@@Z @ 23 NONAME ; class HBufC16 * UPnPCommonUtils::ReplaceIllegalFilenameCharactersL(class TDesC16 const &)
+	?ReplaceIllegalFilenameCharactersL@UPnPCommonUtils@@SAPAVHBufC8@@ABVTDesC8@@@Z @ 24 NONAME ; class HBufC8 * UPnPCommonUtils::ReplaceIllegalFilenameCharactersL(class TDesC8 const &)
+	?ReplacePlaceHolderInURIL@UPnPCommonUtils@@SAXAAVCUpnpItem@@ABVTInetAddr@@@Z @ 25 NONAME ; void UPnPCommonUtils::ReplacePlaceHolderInURIL(class CUpnpItem &, class TInetAddr const &)
+	?ResolveFileTypeL@UPnPCommonUtils@@SA?AW4TUPnPItemType@@ABVTDesC16@@@Z @ 26 NONAME ; enum TUPnPItemType UPnPCommonUtils::ResolveFileTypeL(class TDesC16 const &)
+	?ResolveMimeTypeL@UPnPCommonUtils@@SAPAVHBufC8@@ABVTDesC16@@@Z @ 27 NONAME ; class HBufC8 * UPnPCommonUtils::ResolveMimeTypeL(class TDesC16 const &)
+	?TTimeToUPnPDateL@UPnPCommonUtils@@SAPAVHBufC16@@VTTime@@@Z @ 28 NONAME ; class HBufC16 * UPnPCommonUtils::TTimeToUPnPDateL(class TTime)
+	?Title@CUPnPMetaDataUtility@@QBEABVTDesC16@@XZ @ 29 NONAME ; class TDesC16 const & CUPnPMetaDataUtility::Title(void) const
+	?IsAudioSupported@UPnPCommonUtils@@SAHABVTDesC8@@@Z @ 30 NONAME ; int UPnPCommonUtils::IsAudioSupported(class TDesC8 const &)
+	?IsImageSupported@UPnPCommonUtils@@SAHABVTDesC8@@@Z @ 31 NONAME ; int UPnPCommonUtils::IsImageSupported(class TDesC8 const &)
+	?IsVideoSupported@UPnPCommonUtils@@SAHABVTDesC8@@@Z @ 32 NONAME ; int UPnPCommonUtils::IsVideoSupported(class TDesC8 const &)
+	?FileExtensionByMimeTypeL@UPnPCommonUtils@@SAPAVHBufC16@@ABVTDesC8@@@Z @ 33 NONAME ; class HBufC16 * UPnPCommonUtils::FileExtensionByMimeTypeL(class TDesC8 const &)
+	?NotifyMediaGalleryL@UpnpGalleryNotifier@@SAXXZ @ 34 NONAME ; void UpnpGalleryNotifier::NotifyMediaGalleryL(void)
+	?DebugSimulateConnectionLostL@CUPnPConnectionMonitor@@SAXXZ @ 35 NONAME ; void CUPnPConnectionMonitor::DebugSimulateConnectionLostL(void)
+	?LoadTitleL@CUPnPMetaDataUtility@@QAEXABVTDesC16@@@Z @ 36 NONAME ; void CUPnPMetaDataUtility::LoadTitleL(class TDesC16 const &)
+	?FixListboxItemTextL@UPnPCommonUtils@@SAPAVHBufC8@@ABVTDesC8@@@Z @ 37 NONAME ; class HBufC8 * UPnPCommonUtils::FixListboxItemTextL(class TDesC8 const &)
+	?NewL@CUPnPPeriodic@@SAPAV1@H@Z @ 38 NONAME ; class CUPnPPeriodic * CUPnPPeriodic::NewL(int)
+

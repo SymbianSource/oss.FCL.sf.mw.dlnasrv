@@ -1,0 +1,68 @@
+/*
+* Copyright (c) 2006-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project definition file for project Memory Manager
+*
+*/
+
+#include <platform_paths.hrh>
+
+TARGET          cmmemorymanager.dll
+TARGETTYPE      dll
+UID             0x1000008d 0x10282344
+
+VENDORID        VID_DEFAULT
+
+CAPABILITY CAP_GENERAL_DLL
+
+TARGETPATH     /sys/bin
+
+USERINCLUDE     ../inc
+USERINCLUDE     ../loc
+
+MW_LAYER_SYSTEMINCLUDE
+USERINCLUDE   ../../../../../inc
+
+SOURCEPATH      ../src
+
+SOURCE          cmmmmain.cpp
+SOURCE          cmmmquotalistener.cpp
+SOURCE          cmmmshrinker.cpp
+SOURCE          cmmmimagemetadataresolver.cpp
+
+LIBRARY         euser.lib
+LIBRARY         efsrv.lib // f32file.h
+LIBRARY         aknnotify.lib // CAknGlobalNote, CAknGlobalProgressDialog
+LIBRARY         eiksrv.lib // CAknGlobalNote, CAknGlobalProgressDialog
+LIBRARY         bafl.lib // CDesCArray, RResourceFile
+LIBRARY         imageconversion.lib // CImageDecoder
+LIBRARY         bitmaptransforms.lib // CBitmapScaler
+LIBRARY         fbscli.lib // CFbsBitmap
+LIBRARY         mpxharvesterutility.lib // Mpx harvester
+LIBRARY         mpxcollectionhelper.lib //MMPXCollectionHelper
+LIBRARY         cmcommon.lib // TCmLowPriorityFilled, TCmShrinkResolution
+LIBRARY         cmdatabasemanager.lib
+LIBRARY         ws32.lib // RWsSession, CWsScreenDevice
+LIBRARY         PlatformEnv.lib // PathInfo
+LIBRARY         avkon.lib // CompeteWithAppPath
+LIBRARY         upnpipserversutils.lib
+LIBRARY         exiflib.lib
+LIBRARY         contentlistingframework.lib
+
+DEBUGLIBRARY    flogger.lib
+
+START RESOURCE      ../data/memorymanager.rss
+HEADER
+TARGETPATH          /resource/apps
+LANGUAGE_IDS
+END

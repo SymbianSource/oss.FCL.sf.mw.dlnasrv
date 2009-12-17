@@ -1,0 +1,99 @@
+/*
+* Copyright (c) 2006-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Resource definitions for project UpnpFileTransferEngine
+*
+*/
+
+
+// RESOURCE IDENTIFIER
+NAME UPTE
+
+// INCLUDES
+#include <avkon.rh>
+#include <avkon.rsg>
+#include <avkon.loc>
+#include <avkon.mbg>
+#include <eikon.rh>
+#include <upnpframework.loc>
+
+#include "upnpfiletransferengine.rh"
+
+// RESOURCE DEFINITIONS
+
+RESOURCE RSS_SIGNATURE { }
+RESOURCE TBUF { buf=""; }
+
+// --------------------------------------------------------------------------
+// R_FT_COPY_PROGRESS_NOTE_DIALOG
+// A progress dialog, showed during copying and moving files.
+// --------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_ft_copy_progress_note_dialog
+    {
+    flags = EAknProgressNoteFlags | EEikDialogFlagWait;
+    buttons=R_AVKON_SOFTKEYS_CANCEL;
+    items=
+        {
+        DLG_LINE
+            {
+            type=EAknCtNote;
+            id=EUpnpFileTransferProgressNote;
+            control=AVKON_NOTE
+                {
+                layout         = EProgressLayout;
+                singular_label = qtn_gen_note_copying;
+                imageid        = EMbmAvkonQgn_note_progress;
+                imagemask      = EMbmAvkonQgn_note_progress_mask;
+                };
+            }
+        };
+    }
+
+// --------------------------------------------------------------------------
+// R_FT_MOVE_PROGRESS_NOTE_DIALOG
+// A progress dialog, showed during copying and moving files.
+// --------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_ft_move_progress_note_dialog
+    {
+    flags = EAknProgressNoteFlags | EEikDialogFlagWait;
+    buttons=R_AVKON_SOFTKEYS_CANCEL;
+    items=
+        {
+        DLG_LINE
+            {
+            type=EAknCtNote;
+            id=EUpnpFileTransferProgressNote;
+            control=AVKON_NOTE
+                {
+                layout         = EProgressLayout;
+                singular_label = qtn_fldr_moving_wait_note;
+                imageid        = EMbmAvkonQgn_note_progress;
+                imagemask      = EMbmAvkonQgn_note_progress_mask;
+                };
+            }
+        };
+    }
+
+// --------------------------------------------------------------------------
+// R_FT_DRM_FILE_TEXT
+// "Skipping DRM protected files." - note
+// Used to indicate that DRM protected files will be skipped.
+// --------------------------------------------------------------------------
+RESOURCE TBUF r_ft_drm_file_text
+    { 
+    buf = qtn_iupnp_drm_file_text;
+    }
+
+// End of file

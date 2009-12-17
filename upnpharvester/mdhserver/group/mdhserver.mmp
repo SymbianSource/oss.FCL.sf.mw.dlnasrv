@@ -1,0 +1,80 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Project file 
+*
+*/
+
+
+
+
+
+
+#include <platform_paths.hrh>
+#include "../inc/mdhuids.hrh"
+
+TARGET              cmmdh.exe
+
+TARGETTYPE          exe
+
+TARGETPATH          /system/programs
+UID                 0x1000008d KCmMdhServerUid
+
+CAPABILITY          CAP_SERVER
+VENDORID            VID_DEFAULT
+
+// Minimum heap size 2MB, maximum heap size 8MB, stack size 32kB
+EPOCHEAPSIZE   4096 16388608
+EPOCSTACKSIZE  65536
+
+
+SOURCEPATH          ../src/server
+SOURCE              mdhservermain.cpp
+SOURCE              mdhserver.cpp
+SOURCE              mdhserversession.cpp
+SOURCE              mdhavcpadapter.cpp
+SOURCE              mdhmediaservercontainer.cpp
+SOURCE              mdhmetadatacollector.cpp
+SOURCE              mdhconnectionmonitor.cpp
+
+
+USERINCLUDE         ../inc
+USERINCLUDE         ../../../inc
+USERINCLUDE         ../inc/server
+USERINCLUDE         ../../cdssync/cdssynclib/inc
+
+MW_LAYER_SYSTEMINCLUDE
+
+// UPnP stack
+LIBRARY         AVControlFramework.lib
+LIBRARY         upnpserviceframework.lib
+LIBRARY         upnpipserversutils.lib
+
+LIBRARY         cdssync.lib
+LIBRARY         cmdatabasemanager.lib 
+LIBRARY         cmcommon.lib
+LIBRARY         cmsettingsengine.lib
+
+
+// Central Repository
+LIBRARY         centralrepository.lib
+
+LIBRARY             euser.lib
+LIBRARY             ecom.lib
+LIBRARY             estor.lib
+LIBRARY             efsrv.lib
+LIBRARY             connmon.lib
+LIBRARY             hash.lib
+DEBUGLIBRARY        flogger.lib
+
+// End of File

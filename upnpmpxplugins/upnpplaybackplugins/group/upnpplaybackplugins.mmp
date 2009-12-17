@@ -1,0 +1,93 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Project definition file for upnpplaybackplugins
+*
+*/
+
+
+
+
+
+
+#include "../../../group/upnpplatformvar.hrh"
+
+TARGET upnpplaybackplugins.dll
+
+TARGETTYPE PLUGIN
+
+CAPABILITY CAP_ECOM_PLUGIN
+VENDORID VID_DEFAULT
+
+// SIS installation + IAD support
+VERSION 10.1
+paged
+
+EPOCALLOWDLLDATA
+
+// ECom Dll recognition UID followed by the unique UID for this dll
+UID                 0x10009D8D 0x20007568 
+
+SOURCEPATH          ../src
+SOURCE              upnpmusicplayer.cpp
+SOURCE              upnpmusicpluginsproxy.cpp
+SOURCE              upnpmusicperiodizer.cpp
+SOURCE              upnpsingleton.cpp
+SOURCE              upnptrack.cpp
+SOURCE              upnpplaybackstatemachine.cpp
+SOURCE              upnpvaluestatemachine.cpp
+SOURCE              upnpaudiopolicy.cpp
+SOURCE              upnppluginserrortranslation.cpp
+SOURCE              upnpmusicdownloadproxy.cpp
+
+USERINCLUDE         ../inc
+USERINCLUDE         ../../../inc
+
+// include paths (system)
+MW_LAYER_SYSTEMINCLUDE
+SYSTEMINCLUDE       /epoc32/include/mmf/common		 //before SF header reloaction, to avoid build breaks
+SYSTEMINCLUDE  			/epoc32/include/mw/mmf/common  //after SF header relocation
+
+START RESOURCE      20007568.rss
+TARGET              upnpplaybackplugins.rsg
+END
+
+// SYSTEM
+LIBRARY             euser.lib ecom.lib
+LIBRARY             bafl.lib
+LIBRARY             efsrv.lib
+LIBRARY             inetprotutil.lib // EscapeUtils / string conversion
+LIBRARY             estor.lib // some MPX inline methods
+
+// UPNP STACK
+LIBRARY             upnpavobjects.lib
+LIBRARY             upnpipserversutils.lib
+
+// UPNP FRAMEWORK
+LIBRARY             upnpavcontrollerclient.lib
+LIBRARY             upnpavcontrollerhelper.lib
+LIBRARY             upnpsettingsengine.lib
+
+// XML
+LIBRARY             upnpxmlparser.lib
+
+// MPX FRAMEWORK
+LIBRARY             mpxcommon.lib
+
+// MMF
+LIBRARY             mmfdevsound.lib // for audio policy feature
+
+// DEBUG
+DEBUGLIBRARY        flogger.lib
+
+// End of file

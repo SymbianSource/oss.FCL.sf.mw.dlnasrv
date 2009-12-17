@@ -1,0 +1,37 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      homemedia subsystem ROM include file
+*
+*/
+
+
+
+
+
+
+#ifndef __HOMEMEDIA_IBY__
+#define __HOMEMEDIA_IBY__
+
+#ifdef FF_UPNP_FRAMEWORK_2_0 // UPnP feature flag
+
+    // HomeMedia
+    S60_APP_EXE(HomeMedia)
+    S60_UPGRADABLE_APP_REG_RSC(HomeMedia)
+
+    // The stub sis file
+    data=ZSYSTEM\install\upnpapplications_stub.sis system\install\upnpapplications_stub.sis
+
+#endif // FF_UPNP_FRAMEWORK_2_0
+
+#endif // __HOMEMEDIA_IBY__

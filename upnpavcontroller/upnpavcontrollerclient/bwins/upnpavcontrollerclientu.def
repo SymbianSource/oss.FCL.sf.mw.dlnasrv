@@ -1,0 +1,57 @@
+EXPORTS
+	??0CUpnpAVDevice@@IAE@XZ @ 1 NONAME ; CUpnpAVDevice::CUpnpAVDevice(void)
+	??1CUpnpAVDevice@@UAE@XZ @ 2 NONAME ; CUpnpAVDevice::~CUpnpAVDevice(void)
+	??ACUpnpAVDeviceList@@QBEPAVCUpnpAVDevice@@H@Z @ 3 NONAME ; class CUpnpAVDevice * CUpnpAVDeviceList::operator[](int) const
+	?AppendDeviceL@CUpnpAVDeviceList@@QAEXAAVCUpnpAVDevice@@@Z @ 4 NONAME ; void CUpnpAVDeviceList::AppendDeviceL(class CUpnpAVDevice &)
+	?AudioCapability@CUpnpAVDevice@@QBEHXZ @ 5 NONAME ; int CUpnpAVDevice::AudioCapability(void) const
+	?CopyCapability@CUpnpAVDevice@@QBEHXZ @ 6 NONAME ; int CUpnpAVDevice::CopyCapability(void) const
+	?CopyFromL@CUpnpAVDevice@@QAEXABV1@@Z @ 7 NONAME ; void CUpnpAVDevice::CopyFromL(class CUpnpAVDevice const &)
+	?Count@CUpnpAVDeviceList@@QBEHXZ @ 8 NONAME ; int CUpnpAVDeviceList::Count(void) const
+	?DeviceType@CUpnpAVDevice@@QBE?AW4TUpnpAVDeviceType@1@XZ @ 9 NONAME ; enum CUpnpAVDevice::TUpnpAVDeviceType CUpnpAVDevice::DeviceType(void) const
+	?ExternalizeL@CUpnpAVDevice@@QBEXAAVRWriteStream@@@Z @ 10 NONAME ; void CUpnpAVDevice::ExternalizeL(class RWriteStream &) const
+	?ExternalizeL@CUpnpAVDeviceList@@QBEXAAVRWriteStream@@@Z @ 11 NONAME ; void CUpnpAVDeviceList::ExternalizeL(class RWriteStream &) const
+	?FriendlyName@CUpnpAVDevice@@QBEABVTDesC8@@XZ @ 12 NONAME ; class TDesC8 const & CUpnpAVDevice::FriendlyName(void) const
+	?ImageCapability@CUpnpAVDevice@@QBEHXZ @ 13 NONAME ; int CUpnpAVDevice::ImageCapability(void) const
+	?InternalizeL@CUpnpAVDevice@@QAEXAAVRReadStream@@@Z @ 14 NONAME ; void CUpnpAVDevice::InternalizeL(class RReadStream &)
+	?InternalizeL@CUpnpAVDeviceList@@QAEXAAVRReadStream@@@Z @ 15 NONAME ; void CUpnpAVDeviceList::InternalizeL(class RReadStream &)
+	?LinkOffset@CUpnpAVDevice@@SAHXZ @ 16 NONAME ; int CUpnpAVDevice::LinkOffset(void)
+	?MSServicesInUse@UPnPAVControllerFactory@@SAHXZ @ 17 NONAME ; int UPnPAVControllerFactory::MSServicesInUse(void)
+	?MaxVolume@CUpnpAVDevice@@QBEHXZ @ 18 NONAME ; int CUpnpAVDevice::MaxVolume(void) const
+	?MuteCapability@CUpnpAVDevice@@QBEHXZ @ 19 NONAME ; int CUpnpAVDevice::MuteCapability(void) const
+	?NewL@CUpnpAVDevice@@SAPAV1@ABV1@@Z @ 20 NONAME ; class CUpnpAVDevice * CUpnpAVDevice::NewL(class CUpnpAVDevice const &)
+	?NewL@CUpnpAVDevice@@SAPAV1@XZ @ 21 NONAME ; class CUpnpAVDevice * CUpnpAVDevice::NewL(void)
+	?NewL@CUpnpAVDeviceList@@SAPAV1@XZ @ 22 NONAME ; class CUpnpAVDeviceList * CUpnpAVDeviceList::NewL(void)
+	?NewLC@CUpnpAVDevice@@SAPAV1@XZ @ 23 NONAME ; class CUpnpAVDevice * CUpnpAVDevice::NewLC(void)
+	?NewLC@CUpnpAVDeviceList@@SAPAV1@XZ @ 24 NONAME ; class CUpnpAVDeviceList * CUpnpAVDeviceList::NewLC(void)
+	?NewUPnPAVControllerL@UPnPAVControllerFactory@@SAPAVMUPnPAVController@@XZ @ 25 NONAME ; class MUPnPAVController * UPnPAVControllerFactory::NewUPnPAVControllerL(void)
+	?NewUPnPAVControllerLC@UPnPAVControllerFactory@@SAPAVMUPnPAVController@@XZ @ 26 NONAME ; class MUPnPAVController * UPnPAVControllerFactory::NewUPnPAVControllerLC(void)
+	?NextAVTransportUri@CUpnpAVDevice@@QBEHXZ @ 27 NONAME ; int CUpnpAVDevice::NextAVTransportUri(void) const
+	?PauseCapability@CUpnpAVDevice@@QBEHXZ @ 28 NONAME ; int CUpnpAVDevice::PauseCapability(void) const
+	?Remove@CUpnpAVDeviceList@@QAEXH@Z @ 29 NONAME ; void CUpnpAVDeviceList::Remove(int)
+	?RemoveAndDestroy@CUpnpAVDeviceList@@QAEXH@Z @ 30 NONAME ; void CUpnpAVDeviceList::RemoveAndDestroy(int)
+	?Reset@CUpnpAVDeviceList@@QAEXXZ @ 31 NONAME ; void CUpnpAVDeviceList::Reset(void)
+	?ResetAndDestroy@CUpnpAVDeviceList@@QAEXXZ @ 32 NONAME ; void CUpnpAVDeviceList::ResetAndDestroy(void)
+	?SearchCapability@CUpnpAVDevice@@QBEHXZ @ 33 NONAME ; int CUpnpAVDevice::SearchCapability(void) const
+	?SetAudioCapability@CUpnpAVDevice@@QAEXH@Z @ 34 NONAME ; void CUpnpAVDevice::SetAudioCapability(int)
+	?SetCapabilitiesBySupportedMimeTypesL@CUpnpAVDevice@@QAEXABVTDesC8@@@Z @ 35 NONAME ; void CUpnpAVDevice::SetCapabilitiesBySupportedMimeTypesL(class TDesC8 const &)
+	?SetCopyCapability@CUpnpAVDevice@@QAEXH@Z @ 36 NONAME ; void CUpnpAVDevice::SetCopyCapability(int)
+	?SetDeviceType@CUpnpAVDevice@@QAEXW4TUpnpAVDeviceType@1@@Z @ 37 NONAME ; void CUpnpAVDevice::SetDeviceType(enum CUpnpAVDevice::TUpnpAVDeviceType)
+	?SetFriendlyNameL@CUpnpAVDevice@@QAEXABVTDesC8@@@Z @ 38 NONAME ; void CUpnpAVDevice::SetFriendlyNameL(class TDesC8 const &)
+	?SetImageCapability@CUpnpAVDevice@@QAEXH@Z @ 39 NONAME ; void CUpnpAVDevice::SetImageCapability(int)
+	?SetMaxVolume@CUpnpAVDevice@@QAEXH@Z @ 40 NONAME ; void CUpnpAVDevice::SetMaxVolume(int)
+	?SetMuteCapability@CUpnpAVDevice@@QAEXH@Z @ 41 NONAME ; void CUpnpAVDevice::SetMuteCapability(int)
+	?SetNextAVTransportUri@CUpnpAVDevice@@QAEXH@Z @ 42 NONAME ; void CUpnpAVDevice::SetNextAVTransportUri(int)
+	?SetPauseCapability@CUpnpAVDevice@@QAEXH@Z @ 43 NONAME ; void CUpnpAVDevice::SetPauseCapability(int)
+	?SetSearchCapability@CUpnpAVDevice@@QAEXH@Z @ 44 NONAME ; void CUpnpAVDevice::SetSearchCapability(int)
+	?SetUuidL@CUpnpAVDevice@@QAEXABVTDesC8@@@Z @ 45 NONAME ; void CUpnpAVDevice::SetUuidL(class TDesC8 const &)
+	?SetVideoCapability@CUpnpAVDevice@@QAEXH@Z @ 46 NONAME ; void CUpnpAVDevice::SetVideoCapability(int)
+	?SetVolumeCapability@CUpnpAVDevice@@QAEXH@Z @ 47 NONAME ; void CUpnpAVDevice::SetVolumeCapability(int)
+	?ToDes8L@CUpnpAVDevice@@QBEPAVHBufC8@@XZ @ 48 NONAME ; class HBufC8 * CUpnpAVDevice::ToDes8L(void) const
+	?ToDes8L@CUpnpAVDeviceList@@QBEPAVHBufC8@@XZ @ 49 NONAME ; class HBufC8 * CUpnpAVDeviceList::ToDes8L(void) const
+	?Uuid@CUpnpAVDevice@@QBEABVTDesC8@@XZ @ 50 NONAME ; class TDesC8 const & CUpnpAVDevice::Uuid(void) const
+	?VideoCapability@CUpnpAVDevice@@QBEHXZ @ 51 NONAME ; int CUpnpAVDevice::VideoCapability(void) const
+	?VolumeCapability@CUpnpAVDevice@@QBEHXZ @ 52 NONAME ; int CUpnpAVDevice::VolumeCapability(void) const
+	?DlnaCompatible@CUpnpAVDevice@@QBEHXZ @ 53 NONAME ; int CUpnpAVDevice::DlnaCompatible(void) const
+	?SetDlnaCompatible@CUpnpAVDevice@@QAEXH@Z @ 54 NONAME ; void CUpnpAVDevice::SetDlnaCompatible(int)
+	?Status@UPnPAVControllerFactory@@SAHAAW4TAVControllerServerStatus@1@@Z @ 55 NONAME ; int UPnPAVControllerFactory::Status(enum UPnPAVControllerFactory::TAVControllerServerStatus &)
+

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE SystemDefinition SYSTEM "sysdef_1_4_0.dtd" [
+  <!ENTITY layer_real_source_path "sf/mw/dlnasrv" >
+]>
+
+<SystemDefinition name="dlnasrv" schema="1.4.0">
+  <systemModel>
+    <layer name="mw_layer">
+      <module name="dlnasrv">
+        <unit name="dlnasrv" unitID="hcdo.dlnasrv" bldFile="&layer_real_source_path;/group" mrp="" />
+      </module>
+    </layer>
+
+    <layer name="api_test_layer">
+      <module name="hcdo_api_tests">
+<!--
+        <unit unitID="hcdo.avcontrolframework.test" name="avcontrolframework.test" bldFile="&layer_real_source_path;/upnpavcontrolpoint/avcontrolframework/tsrc/public/basic/group" mrp="" />
+        <unit unitID="hcdo.avobjects.test" name="avobjects.test" bldFile="&layer_real_source_path;/upnpmediaserver/avobjects/tsrc/public/basic/group" mrp="" />
+        <unit unitID="hcdo.mediaserverclient.test" name="mediaserverclient.test" bldFile="&layer_real_source_path;/upnpmediaserver/mediaserverclient/tsrc/public/basic/group" mrp="" />
+        <unit unitID="hcdo.controlpointbase.test" name="controlpointbase.test" bldFile="&layer_real_source_path;/upnpstack/controlpointbase/tsrc/public/basic/group" mrp="" />
+        <unit unitID="hcdo.serviceframework.test" name="serviceframework.test" bldFile="&layer_real_source_path;/upnpstack/serviceframework/tsrc/public/basic/group" mrp="" />
+        <unit unitID="hcdo.upnputils.test" name="upnputils.test" bldFile="&layer_real_source_path;/upnpstack/upnputils/tsrc/public/basic/group" mrp="" />
+        <unit unitID="hcdo.testplugin.test" name="testplugin.test" bldFile="&layer_real_source_path;/dlnasrv_plat/upnp_plugin_api/tsrc/testplugin/group" mrp="" />
+        <unit unitID="hcdo.upnpextensionpluginiftest.test" name="upnpextensionpluginiftest.test" bldFile="&layer_real_source_path;/dlnasrv_plat/upnp_plugin_api/tsrc/upnpextensionpluginiftest/group" mrp="" />
+        <unit unitID="hcdo.upnpxmlparsertes.test" name="upnpxmlparsertest.test" bldFile="&layer_real_source_path;/upnpavcontroller/upnpxmlparser/tsrc/upnpxmlparsertest/group" mrp="" />
+        <unit unitID="hcdo.upnpsecuritytest.test" name="upnpsecuritytest.test" bldFile="&layer_real_source_path;/upnpsharing/upnpsecurity/tsrc/upnpsecuritytest/group" mrp="" />
+-->
+        <unit unitID="hcdo.api.test" name="api.test" bldFile="&layer_real_source_path;/tsrc/group" mrp="" />
+    </module>
+    </layer>
+
+  </systemModel>
+</SystemDefinition>
+

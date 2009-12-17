@@ -1,0 +1,56 @@
+/*
+* Copyright (c) 2006-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Build information file for project Application Engine
+*
+*/
+
+
+
+
+
+
+PRJ_PLATFORMS
+DEFAULT
+
+PRJ_EXPORTS
+
+// Mediaserver icons
+../data/upnp_ms_jpeg_lrg.jpg /epoc32/release/winscw/udeb/Z/system/apps/upnp/upnp_ms_jpeg_lrg.jpg
+../data/upnp_ms_jpeg_lrg.jpg /epoc32/release/winscw/urel/Z/system/apps/upnp/upnp_ms_jpeg_lrg.jpg
+../data/upnp_ms_jpeg_lrg.jpg /epoc32/release/armv5/udeb/Z/system/apps/upnp/upnp_ms_jpeg_lrg.jpg
+../data/upnp_ms_jpeg_lrg.jpg /epoc32/release/armv5/urel/Z/system/apps/upnp/upnp_ms_jpeg_lrg.jpg
+
+../data/upnp_ms_jpeg_sm.jpg /epoc32/release/winscw/udeb/Z/system/apps/upnp/upnp_ms_jpeg_sm.jpg
+../data/upnp_ms_jpeg_sm.jpg /epoc32/release/winscw/urel/Z/system/apps/upnp/upnp_ms_jpeg_sm.jpg
+../data/upnp_ms_jpeg_sm.jpg /epoc32/release/armv5/udeb/Z/system/apps/upnp/upnp_ms_jpeg_sm.jpg
+../data/upnp_ms_jpeg_sm.jpg /epoc32/release/armv5/urel/Z/system/apps/upnp/upnp_ms_jpeg_sm.jpg
+
+../data/upnp_ms_png_lrg.png /epoc32/release/winscw/udeb/Z/system/apps/upnp/upnp_ms_png_lrg.png
+../data/upnp_ms_png_lrg.png /epoc32/release/winscw/urel/Z/system/apps/upnp/upnp_ms_png_lrg.png
+../data/upnp_ms_png_lrg.png /epoc32/release/armv5/udeb/Z/system/apps/upnp/upnp_ms_png_lrg.png
+../data/upnp_ms_png_lrg.png /epoc32/release/armv5/urel/Z/system/apps/upnp/upnp_ms_png_lrg.png
+
+../data/upnp_ms_png_sm.png /epoc32/release/winscw/udeb/Z/system/apps/upnp/upnp_ms_png_sm.png
+../data/upnp_ms_png_sm.png /epoc32/release/winscw/urel/Z/system/apps/upnp/upnp_ms_png_sm.png
+../data/upnp_ms_png_sm.png /epoc32/release/armv5/udeb/Z/system/apps/upnp/upnp_ms_png_sm.png
+../data/upnp_ms_png_sm.png /epoc32/release/armv5/urel/Z/system/apps/upnp/upnp_ms_png_sm.png
+
+
+../inc/upnpfilesharingengine.h            |../../../inc/upnpfilesharingengine.h
+../inc/upnpfilesharingengineobserver.h    |../../../inc/upnpfilesharingengineobserver.h
+
+PRJ_MMPFILES
+upnpapplicationengine.mmp
+
+// End of file

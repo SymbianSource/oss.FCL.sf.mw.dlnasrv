@@ -1,0 +1,118 @@
+;
+; Copyright (c) 2006-2007 Nokia Corporation and/or its subsidiary(-ies).
+; All rights reserved.
+; This component and the accompanying materials are made available
+; under the terms of "Eclipse Public License v1.0"
+; which accompanies this distribution, and is available
+; at the URL "http://www.eclipse.org/legal/epl-v10.html".
+;
+; Initial Contributors:
+; Nokia Corporation - initial contribution.
+;
+; Contributors:
+;
+; Description:   pkg file for udeb version of upnp framework
+;
+
+
+; upnpframework_udeb.pkg
+;
+;Language - standard language definitions
+&EN
+
+; standard SIS file header
+#{"UPnPFramework"},(0x10006CCA),1,0,0, TYPE=SA, RU
+
+;Localized Vendor name
+%{"Nokia"}
+
+;Unique Vendor name
+:"Nokia"
+
+;Supports Series 60 v 3.0
+[0x101F7961], 0, 0, 0, {"S60ProductID"}
+
+; UpnpSettings
+"\epoc32\release\armv5\udeb\upnpsettingsengine.dll"-"!:\sys\bin\upnpsettingsengine.dll"
+
+;UPnP utilities
+"\epoc32\release\armv5\udeb\upnputilities.dll"-"!:\sys\bin\upnputilities.dll"
+
+; UPnP (Home Media) Extension Plugin interface
+"\epoc32\release\armv5\udeb\upnpextensionpluginif.dll"-"!:\sys\bin\upnpextensionpluginif.dll"
+
+;UPnP AV Controller
+"\epoc32\release\armv5\udeb\upnpavcontrollerclient.dll"-"!:\sys\bin\upnpavcontrollerclient.dll"
+"\epoc32\release\armv5\udeb\upnpavcontrollerserver.exe"-"!:\sys\bin\upnpavcontrollerserver.exe"
+"\epoc32\release\armv5\udeb\upnpavcontrollerhelper.dll"-"!:\sys\bin\upnpavcontrollerhelper.dll"
+
+;UPnP Security
+"\epoc32\release\armv5\udeb\upnpsecuritymanagerclient.dll"-"!:\sys\bin\upnpsecuritymanagerclient.dll"
+"\epoc32\release\armv5\udeb\upnpsecuritymanagerserver.exe"-"!:\sys\bin\upnpsecuritymanagerserver.exe"
+"\epoc32\data\Z\resource\UPnPNotifier.RSC"-"!:\resource\UPnPNotifier.RSC"
+"\epoc32\release\armv5\udeb\upnpsecurity.dll"-"!:\sys\bin\upnpsecurity.dll"
+"\epoc32\release\armv5\udeb\upnpsecuritymanagerplugin.dll"-"!:\sys\bin\upnpsecuritymanagerplugin.dll"
+"\epoc32\data\Z\resource\plugins\upnpsecuritymanagerplugin.rsc"-"!:\resource\plugins\upnpsecuritymanagerplugin.rsc"
+
+;UPnP musicadapter
+"\epoc32\release\armv5\udeb\upnpmusicadapter.dll"-"!:\sys\bin\upnpmusicadapter.dll"
+
+;UPnP CommonUI
+"\epoc32\release\armv5\udeb\UPnPCommonUI.dll"-"!:\sys\bin\UPnPCommonUI.dll"
+"\epoc32\data\Z\resource\apps\upnpcommonui.mif"-"!:\resource\apps\upnpcommonui.mif"
+"\epoc32\data\Z\resource\UPnPCommonUI.rsc"-"!:\resource\UPnPCommonUI.rsc"
+
+;UPnP AIW Engine
+"\epoc32\release\armv5\udeb\upnpaiwengine.dll"-"!:\sys\bin\upnpaiwengine.dll"
+
+;UPnP File Transfer Engine
+"\epoc32\release\armv5\udeb\upnpfiletransferengine.dll"-"!:\sys\bin\upnpfiletransferengine.dll"
+"\epoc32\data\Z\resource\UPnPFileTransferEngineResources.rsc"-"!:\resource\UPnPFileTransferEngineResources.rsc"
+
+;UPnP AIW Provider
+"\epoc32\release\armv5\udeb\upnpaiwprovider.dll"-"!:\sys\bin\upnpaiwprovider.dll"
+"\epoc32\data\Z\resource\plugins\upnpaiwprovider.rsc"-"!:\resource\plugins\upnpaiwprovider.rsc"
+"\epoc32\data\Z\resource\UPnPAiwEngineResources.rsc"-"!:\resource\UPnPAiwEngineResources.rsc"
+"\epoc32\data\Z\resource\UPnPAiwMenuResources.rsc"-"!:\resource\UPnPAiwMenuResources.rsc"
+
+;UPnP Command
+"\epoc32\release\armv5\udeb\upnpcommand.dll"-"!:\sys\bin\upnpcommand.dll"
+"\epoc32\data\Z\resource\upnpcommandresources.rsc"-"!:\resource\upnpcommandresources.rsc"
+"\epoc32\release\armv5\udeb\upnpcommandplugin.dll"-"!:\sys\bin\upnpcommandplugin.dll"
+"\epoc32\data\Z\resource\plugins\upnpcommandplugin.rsc"-"!:\resource\plugins\upnpcommandplugin.rsc"
+
+;UPnP Sharing Application Engine
+"\epoc32\release\armv5\udeb\upnpapplicationengine.dll"-"!:\sys\bin\upnpapplicationengine.dll"
+"\epoc32\release\armv5\udeb\z\system\apps\upnp\upnp_ms_jpeg_lrg.jpg"-"!:\system\apps\upnp\upnp_ms_jpeg_lrg.jpg"
+"\epoc32\release\armv5\udeb\z\system\apps\upnp\upnp_ms_jpeg_sm.jpg"-"!:\system\apps\upnp\upnp_ms_jpeg_sm.jpg"
+"\epoc32\release\armv5\udeb\z\system\apps\upnp\upnp_ms_png_lrg.png"-"!:\system\apps\upnp\upnp_ms_png_lrg.png"
+"\epoc32\release\armv5\udeb\z\system\apps\upnp\upnp_ms_png_sm.png"-"!:\system\apps\upnp\upnp_ms_png_sm.png"
+
+;UPnP Settings UI
+"\epoc32\release\armv5\udeb\upnpmultiselectionui.dll"-"!:\sys\bin\upnpmultiselectionui.dll"
+"\epoc32\data\Z\resource\CUPnPMultiselectionUi.RSC"-"!:\resource\CUPnPMultiselectionUi.RSC"
+"\epoc32\release\armv5\udeb\upnpsharingui.dll"-"!:\sys\bin\upnpsharingui.dll"
+"\epoc32\data\Z\resource\upnpsharingui.rsc"-"!:\resource\upnpsharingui.rsc"
+
+;UPnP Wizard
+"\epoc32\release\armv5\udeb\upnpappwizard.dll"-"!:\sys\bin\upnpappwizard.dll"
+"\epoc32\data\Z\resource\cupnpappwizard.rsc"-"!:\resource\cupnpappwizard.rsc"
+
+;UPnP content sharing server
+"\epoc32\release\armv5\udeb\upnpcontentserver.exe"-"!:\sys\bin\upnpcontentserver.exe"
+"\epoc32\release\armv5\udeb\upnpcontentserverclient.dll"-"!:\sys\bin\upnpcontentserverclient.dll"
+
+;DLNA Profiler
+"\epoc32\release\armv5\udeb\dlnaprofiler.dll"-"!:\sys\bin\dlnaprofiler.dll"
+
+;UPnP XML Parser
+"\epoc32\release\armv5\udeb\upnpxmlparser.dll"-"!:\sys\bin\upnpxmlparser.dll"
+
+;UPnP Playback plugins
+"\epoc32\release\armv5\udeb\upnpplaybackplugins.dll"-"!:\sys\bin\upnpplaybackplugins.dll"
+"\epoc32\data\Z\resource\plugins\upnpplaybackplugins.rsc"-"!:\resource\plugins\upnpplaybackplugins.rsc"
+
+; cenrtral repository
+;@"cenrep.sisx", (0x10202BE9)
+
+; End of file

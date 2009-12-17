@@ -1,0 +1,4 @@
+EXPORTS
+	?NewFillManagerL@CmFillManagerFactory@@SAPAVMCmFmManager@@PAVMCmServiceObserver@@AAVCMdESession@@PAVCCmDmMain@@PAVCCmMmMain@@@Z @ 1 NONAME ; class MCmFmManager * CmFillManagerFactory::NewFillManagerL(class MCmServiceObserver *, class CMdESession &, class CCmDmMain *, class CCmMmMain *)
+	?NewFillManagerLC@CmFillManagerFactory@@SAPAVMCmFmManager@@PAVMCmServiceObserver@@AAVCMdESession@@PAVCCmDmMain@@PAVCCmMmMain@@@Z @ 2 NONAME ; class MCmFmManager * CmFillManagerFactory::NewFillManagerLC(class MCmServiceObserver *, class CMdESession &, class CCmDmMain *, class CCmMmMain *)
+

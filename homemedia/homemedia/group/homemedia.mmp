@@ -1,0 +1,101 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Project specification for HomeMedia application
+*
+*/
+
+
+
+
+
+
+// For compatibility with S60 3.2 and IAD branch
+#include "../../../group/upnpplatformvar.hrh" 
+
+#include <data_caging_paths.hrh>
+
+TARGET              homemedia.exe
+TARGETTYPE          exe
+UID                 0x100039CE 0x2000F8D6
+
+// Minimum heap size 16kB, maximum heap size 8MB
+EPOCHEAPSIZE        16384 8388608
+EPOCSTACKSIZE       0x8000
+VENDORID            VID_DEFAULT
+SECUREID            0x2000F8D6
+CAPABILITY          CAP_APPLICATION
+
+SOURCEPATH          ../src
+SOURCE              homemedia.cpp
+SOURCE              homemediaapplication.cpp
+SOURCE              homemediaappview.cpp 
+SOURCE              homemediaappui.cpp
+SOURCE              homemediadocument.cpp 
+SOURCE              homemediacontainer.cpp 
+SOURCE              homemediabaselistbox.cpp
+
+SOURCEPATH          ../data
+
+START RESOURCE      homemedia.rss
+HEADER
+TARGET              homemedia
+TARGETPATH          APP_RESOURCE_DIR
+LANGUAGE_IDS
+END //RESOURCE
+
+START RESOURCE      homemedia_reg.rss
+DEPENDS homemedia.rsg
+TARGET homemedia_reg
+TARGETPATH          /private/10003a3f/apps
+LANGUAGE_IDS
+END //RESOURCE
+
+//SYSTEM INCLUDE
+APP_LAYER_SYSTEMINCLUDE
+
+//USER INCLUDE
+UPNP_LOC_INCLUDE_PATH_COMPONENT
+USERINCLUDE   			../../../inc
+USERINCLUDE         ../inc
+USERINCLUDE         ../help/inc
+
+LIBRARY             euser.lib
+LIBRARY             apparc.lib
+LIBRARY             cone.lib
+LIBRARY             eikcore.lib
+LIBRARY             avkon.lib
+LIBRARY             CommonEngine.lib
+LIBRARY             hlplch.lib
+LIBRARY             GSEcomPlugin.lib
+LIBRARY             egul.lib 
+LIBRARY             AKNSKINS.lib 
+LIBRARY             eikcoctl.lib 
+LIBRARY             eikctl.lib 
+LIBRARY             bafl.lib 
+LIBRARY             AknIcon.lib
+LIBRARY             featmgr.lib
+LIBRARY             ecom.lib
+LIBRARY             upnpappwizard.lib
+LIBRARY             upnpsettingsengine.lib
+LIBRARY             upnpapplicationengine.lib
+LIBRARY             upnpextensionpluginif.lib
+LIBRARY             upnputilities.lib
+LIBRARY             upnpsharingui.lib
+LIBRARY             upnpavcontrollerclient.lib
+LIBRARY             upnpcommonui.lib
+
+DEBUGLIBRARY        flogger.lib
+
+// End of File
+

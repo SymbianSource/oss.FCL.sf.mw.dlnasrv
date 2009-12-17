@@ -1,0 +1,156 @@
+/*
+* Copyright (c) 2005 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Header file for the Common UI
+*
+*/
+
+
+#ifndef UPNPCOMMONUI_HRH
+#define UPNPCOMMONUI_HRH
+
+// DATA TYPES
+enum TUPnPCommonUICommandIds
+    {
+    EUPnPOpen = 0x7000,
+    EUPnPFind,
+    EUPnPHelp,
+    EUPnPShow,
+    EUPnPShowExt,
+    EUPnPPlay,
+    EUPnPPlayExt,
+    EUPnPPlayLocal,
+    EUPnPShowLocal,
+    EUPnPCopy,
+    EUPnPUnmark,
+    EUPnPMark,
+    EUPnPSubMark,
+    EUPnPMarkAll,
+    EUPnPunMark,
+    EUPnPSubunMark,
+    EUPnPunMarkAll,
+    EUPnPMute,
+    EUPnPUnmute,
+    EUPnPRepeatPlay,
+    EUPnPRandom,
+    EUPnPRepeatOn,
+    EUPnPRepeatOff,
+    EUPnPRandomOn,
+    EUPnPRandomOff
+    };
+    
+enum TUPnPExternDeviceDlgLineId
+    {
+    EUPnPExternDevicesListBoxId = 1
+    };
+    
+enum TUPnPBrowseDlgLineId
+    {
+    EUPnPBrowseListBoxId = 1
+    };
+    
+enum TUPnPVideoPlayerDlgLineId
+    {
+    EUPnPVideoPlayerListBoxId = 1,
+    EUPnPVideoDialogWaitNote
+    };
+   
+enum TUPnPCustomControlDialog
+    {
+    ECustomCtrlDlgCtCustomControl = 1000
+    };
+// MultiViews enumerate command codes
+enum TUPnPMediaPlayerCommandIds
+    {
+    EUPnPPauseCmd = 1,  // start value must not be 0
+    EUPnPContinueCmd,
+    EUPnPReplayCmd,
+    EUPnPStopCmd,
+    EUPnPBackCmd,
+    EUPnPPlayCmd
+    };
+
+
+// MultiViews application view ids.
+enum TUPnPMediaPlayerViewNumber
+    {
+    EUPnPVideoPlayerViewId = 1,
+    EUPnPMusicPlayerViewId
+    };
+
+enum TUPnPWaitingNote
+    {
+    EUPnPWaitingNote=1,
+    EUPnPBrowseDialogProgressNote
+    };
+
+enum TImageControlDlgLineId // dialog line ids
+    {
+    EImageResultBoxId = 1
+    };    
+
+enum THomeConnectMultiSelectionDlgLineId
+    {
+    EMultiSelectionListBoxId = 1
+    };
+
+enum TCbaButtons
+    {
+    EAknSoftkeyContinue = 1        
+    };
+        
+enum THomeConnectAdvancedFindList
+    {
+    EAdvancedFindMediaType = 0, //menee .rss fileen indikaattoriksi
+    EAdvancedFindFileName,
+    EAdvancedFindArtist,
+    EAdvancedFindAlbum,
+    EAdvancedFindGenre,
+    EAdvancedFindDateFrom,
+    EAdvancedFindDateUntil
+    };
+
+enum THomeConnectAdvancedFindMediaTypes
+    {
+    EAdvancedFindAll = 0,
+    EAdvancedFindImages,
+    EAdvancedFindVideo,
+    EAdvancedFindMusic 
+    };
+
+enum TAdvancedFindType
+    {
+    EArtists = 0,
+    EAlbums,
+    EGenres
+    };
+
+enum THomeConnectCommandIds
+    {
+    EHomeConnectCmdAppOpen = 1,
+    EAdvancedFindCmdAppHelp,
+    EAdvancedFindCmdAppChange,
+    EHomeConnectCmdTrust,
+    EHomeConnectCmdUnTrust,
+    EHomeConnectCmdBlock,
+    EHomeConnectCmdUnBlock
+    };
+    
+enum TAdvancedFindResultDlgLineId // dialog line ids
+    {
+    EAdvFindResultBoxId = 1
+    };    
+
+#endif      // UPNPCOMMONUI_HRH
+
+// End of File

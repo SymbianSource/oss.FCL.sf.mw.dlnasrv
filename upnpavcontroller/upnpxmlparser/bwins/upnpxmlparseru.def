@@ -1,0 +1,24 @@
+EXPORTS
+	??1CUpnpObjectLite@@UAE@XZ @ 1 NONAME ; CUpnpObjectLite::~CUpnpObjectLite(void)
+	?ContainerToXmlLC@CUPnPXMLParser@@SAPAVHBufC8@@ABVCUpnpContainer@@@Z @ 2 NONAME ; class HBufC8 * CUPnPXMLParser::ContainerToXmlLC(class CUpnpContainer const &)
+	?IsTypeOf@CUpnpObjectLite@@QBEHW4TObjectType@1@@Z @ 3 NONAME ; int CUpnpObjectLite::IsTypeOf(enum CUpnpObjectLite::TObjectType) const
+	?ItemAsXmlLC@CUPnPXMLParser@@SAPAVHBufC8@@ABVCUpnpItem@@@Z @ 4 NONAME ; class HBufC8 * CUPnPXMLParser::ItemAsXmlLC(class CUpnpItem const &)
+	?NewL@CUPnPXMLEventParser@@SAPAV1@XZ @ 5 NONAME ; class CUPnPXMLEventParser * CUPnPXMLEventParser::NewL(void)
+	?NewL@CUPnPXMLParser@@SAPAV1@XZ @ 6 NONAME ; class CUPnPXMLParser * CUPnPXMLParser::NewL(void)
+	?NewL@CUPnPXMLParserLite@@SAPAV1@XZ @ 7 NONAME ; class CUPnPXMLParserLite * CUPnPXMLParserLite::NewL(void)
+	?NewL@CUpnpObjectLite@@SAPAV1@XZ @ 8 NONAME ; class CUpnpObjectLite * CUpnpObjectLite::NewL(void)
+	?NewLC@CUPnPXMLParser@@SAPAV1@XZ @ 9 NONAME ; class CUPnPXMLParser * CUPnPXMLParser::NewLC(void)
+	?NewLC@CUPnPXMLParserLite@@SAPAV1@XZ @ 10 NONAME ; class CUPnPXMLParserLite * CUPnPXMLParserLite::NewLC(void)
+	?ObjectId@CUpnpObjectLite@@QBEABVTDesC8@@XZ @ 11 NONAME ; class TDesC8 const & CUpnpObjectLite::ObjectId(void) const
+	?ParseResultDataL@CUPnPXMLEventParser@@QAEXABVTDesC8@@AAH11@Z @ 12 NONAME ; void CUPnPXMLEventParser::ParseResultDataL(class TDesC8 const &, int &, int &, int &)
+	?ParseResultDataL@CUPnPXMLParser@@QAEXAAV?$RPointerArray@VCUpnpObject@@@@ABVTDesC8@@@Z @ 13 NONAME ; void CUPnPXMLParser::ParseResultDataL(class RPointerArray<class CUpnpObject> &, class TDesC8 const &)
+	?ParseResultDataL@CUPnPXMLParserLite@@QAEXAAV?$RPointerArray@VCUpnpObjectLite@@@@ABVTDesC8@@ABVTDesC16@@@Z @ 14 NONAME ; void CUPnPXMLParserLite::ParseResultDataL(class RPointerArray<class CUpnpObjectLite> &, class TDesC8 const &, class TDesC16 const &)
+	?RemoveXmlControlCharactersL@UpnpXmlStringUtility@@SAPAVHBufC8@@ABVTDesC8@@@Z @ 15 NONAME ; class HBufC8 * UpnpXmlStringUtility::RemoveXmlControlCharactersL(class TDesC8 const &)
+	?SetObjectClass@CUpnpObjectLite@@QAEXABVTDesC8@@@Z @ 16 NONAME ; void CUpnpObjectLite::SetObjectClass(class TDesC8 const &)
+	?SetObjectIdL@CUpnpObjectLite@@QAEXABVTDesC8@@@Z @ 17 NONAME ; void CUpnpObjectLite::SetObjectIdL(class TDesC8 const &)
+	?SetObjectIdL@CUpnpObjectLite@@QAEXPAVHBufC8@@@Z @ 18 NONAME ; void CUpnpObjectLite::SetObjectIdL(class HBufC8 *)
+	?SetTitleL@CUpnpObjectLite@@QAEXABVTDesC16@@@Z @ 19 NONAME ; void CUpnpObjectLite::SetTitleL(class TDesC16 const &)
+	?SetTitleL@CUpnpObjectLite@@QAEXPAVHBufC16@@@Z @ 20 NONAME ; void CUpnpObjectLite::SetTitleL(class HBufC16 *)
+	?Title@CUpnpObjectLite@@QBEABVTDesC16@@XZ @ 21 NONAME ; class TDesC16 const & CUpnpObjectLite::Title(void) const
+	?XmlForCreateObjectLC@CUPnPXMLParser@@SAPAVHBufC8@@ABVCUpnpItem@@@Z @ 22 NONAME ; class HBufC8 * CUPnPXMLParser::XmlForCreateObjectLC(class CUpnpItem const &)
+

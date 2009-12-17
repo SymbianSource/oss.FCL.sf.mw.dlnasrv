@@ -1,0 +1,590 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  resource description
+*
+*/
+
+
+
+//  RESOURCE IDENTIFIER
+NAME    MSAW // 4 letter ID
+
+//  INCLUDES
+#include <eikon.rh>
+#include <avkon.rsg>
+#include <avkon.rh>
+#include <avkon.mbg>
+#include <avkon.loc>
+#include <AvkonIcons.hrh>
+#include <data_caging_paths_strings.hrh>
+#include <appinfo.rh>
+#include <msappwizard.mbg> // animation frames
+#include <cmsappwizard.loc>
+
+//  RESOURCE DEFINITIONS
+
+// ---------------------------------------------------------------------------
+//    RSS_SIGNATURE
+// ---------------------------------------------------------------------------
+RESOURCE RSS_SIGNATURE
+    {
+    }
+
+// ---------------------------------------------------------------------------
+// TBUF
+// ---------------------------------------------------------------------------
+RESOURCE TBUF
+    {
+    buf = "";
+    }
+
+//----------------------------------------------------------------------------
+//    r_ms_softkeys_next_cancel_next
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE CBA r_ms_softkeys_next_cancel_next
+    {
+    buttons =
+        {
+        CBA_BUTTON {id=EAknSoftkeyNext; txt=qtn_softkey_next;},
+        CBA_BUTTON {id=EAknSoftkeyCancel; txt=text_softkey_cancel;},
+        CBA_BUTTON {id=EAknSoftkeyNext; txt=qtn_softkey_next;}
+        };
+    }
+
+//----------------------------------------------------------------------------
+//    r_ms_softkeys_next_back_next
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE CBA r_ms_softkeys_next_back_next
+    {
+    buttons =
+        {
+        CBA_BUTTON {id=EAknSoftkeyNext; txt=qtn_softkey_next;},
+        CBA_BUTTON {id=EAknSoftkeyBack; txt=text_softkey_back;},
+        CBA_BUTTON {id=EAknSoftkeyNext; txt=qtn_softkey_next;}
+        };
+    }
+
+//----------------------------------------------------------------------------
+//    r_ms_softkeys_done_back
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE CBA r_ms_softkeys_done_back
+    {
+    buttons =
+        {
+        CBA_BUTTON {id=EAknSoftkeyDone; txt=text_softkey_done;},
+        CBA_BUTTON {id=EAknSoftkeyBack; txt=text_softkey_back;},
+        CBA_BUTTON {id=EAknSoftkeyDone; txt=text_softkey_done;}
+        };
+    }
+
+//----------------------------------------------------------------------------
+//    r_ms_softkeys_next_back_select
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE CBA r_ms_softkeys_next_back_select
+    {
+    buttons =
+        {
+        CBA_BUTTON {id=EAknSoftkeyNext; txt=qtn_softkey_next;},
+        CBA_BUTTON {id=EAknSoftkeyBack; txt=text_softkey_back;}
+#ifndef __SERIES60_31__
+        ,
+        CBA_BUTTON {id=EAknSoftkeyForwardKeyEvent;/* txt=text_softkey_done;*/}
+#endif
+        };
+    }
+
+// ---------------------------------------------------------------------------
+//    r_ms_wizard_info_dialog
+// ---------------------------------------------------------------------------
+RESOURCE DIALOG r_ms_wizard_info_dialog
+    {
+    flags = EGeneralQueryFlags |
+        EEikDialogFlagNoTitleBar |
+        EEikDialogFlagNoBorder |
+        EEikDialogFlagNoShadow;
+
+    buttons = r_ms_softkeys_next_cancel_next;
+
+    items=
+        {
+        DLG_LINE
+            {
+            type = EAknCtPopupHeadingPane;
+            id = EAknMessageQueryHeaderId;
+            control = AVKON_HEADING
+                {
+                bmpfile = "";
+                };
+            },
+        DLG_LINE
+            {
+            type = EAknCtMessageQuery;
+            id = EAknMessageQueryContentId;
+            control = AVKON_MESSAGE_QUERY
+                {
+                };
+            }
+        };
+    }
+
+//----------------------------------------------------------------------------
+//    r_ms_wizard_multiselection_dialog
+//----------------------------------------------------------------------------
+
+RESOURCE AVKON_MULTISELECTION_LIST_QUERY r_ms_wizard_multiselection_dialog
+    {
+    flags = EGeneralQueryFlags;
+
+    softkeys = r_ms_softkeys_next_back_select;
+
+    items =
+        {
+        AVKON_MULTISELECTION_LIST_QUERY_DLG_LINE
+            {
+            control = AVKON_LIST_QUERY_CONTROL
+                {
+                listtype = EAknCtSingleGraphicPopupMenuListBox;
+                listbox = AVKON_MULTISELECTION_LIST_QUERY_LIST
+                    {
+                    };
+                heading = " ";
+                };
+            }
+        };
+    }
+
+//----------------------------------------------------------------------------
+//    r_ms_wizard_selection_dialog_8
+//    resource for wizard step 8
+//----------------------------------------------------------------------------
+
+RESOURCE AVKON_LIST_QUERY r_ms_wizard_selection_dialog_8
+    {
+    flags = EGeneralQueryFlags;
+    softkeys = r_ms_softkeys_next_back_next;
+    items =
+        {
+        AVKON_LIST_QUERY_DLG_LINE
+            {
+            control = AVKON_LIST_QUERY_CONTROL
+                {
+                listtype = EAknCtSinglePopupMenuListBox;
+                listbox = AVKON_LIST_QUERY_LIST
+                    {
+                    };
+                heading = " ";
+                };
+            }
+        };
+    }
+
+//----------------------------------------------------------------------------
+//    r_ms_wizard_wait_dialog
+//    resource for wizard wait dialog
+//----------------------------------------------------------------------------
+
+RESOURCE DIALOG r_ms_wizard_wait_dialog
+    {
+    flags = EAknWaitNoteFlags;
+    buttons = R_AVKON_SOFTKEYS_CANCEL;
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtNote;
+            id = EGeneralNote;
+            control = AVKON_NOTE
+        {
+                layout = EWaitLayout;
+                singular_label = qtn_mserv_wizard_searching_devices;
+                animation = R_QGN_GRAF_WAIT_BAR_ANIM;
+            };
+        }
+        };
+    }
+
+
+//----------------------------------------------------------------------------
+// Animation for server selection
+//----------------------------------------------------------------------------
+//
+
+RESOURCE BMPANIM_DATA r_ms_animation_for_selection_dialog
+    {
+    frameinterval   = 300;
+    playmode        = EAknBitmapAnimationPlayModeCycle;
+    bmpfile         = ""APP_RESOURCE_DIR"\\msappwizard.mif";
+    frames          = r_ms_animation_for_selection_dialog_images;
+    }
+
+
+//----------------------------------------------------------------------------
+// Image frames for r_ms_ animation_for_selection_dialog_images
+//----------------------------------------------------------------------------
+//
+
+RESOURCE ARRAY r_ms_animation_for_selection_dialog_images
+    {
+    items=
+        {
+        BMPANIM_FRAME {bmpid=EMbmMsappwizardQgn_indi_upnp_search_1 ;
+                       maskid=EMbmMsappwizardQgn_indi_upnp_search_1_mask;},
+        BMPANIM_FRAME {bmpid=EMbmMsappwizardQgn_indi_upnp_search_2 ;
+                       maskid=EMbmMsappwizardQgn_indi_upnp_search_2_mask;},
+        BMPANIM_FRAME {bmpid=EMbmMsappwizardQgn_indi_upnp_search_3 ;
+                       maskid=EMbmMsappwizardQgn_indi_upnp_search_3_mask;},
+        BMPANIM_FRAME {bmpid=EMbmMsappwizardQgn_indi_upnp_search_4 ;
+                       maskid=EMbmMsappwizardQgn_indi_upnp_search_4_mask;},
+        BMPANIM_FRAME {bmpid=EMbmMsappwizardQgn_indi_upnp_search_5 ;
+                       maskid=EMbmMsappwizardQgn_indi_upnp_search_5_mask;},
+        BMPANIM_FRAME {bmpid=EMbmMsappwizardQgn_indi_upnp_search_6 ;
+                       maskid=EMbmMsappwizardQgn_indi_upnp_search_6_mask;},
+        BMPANIM_FRAME {bmpid=EMbmMsappwizardQgn_indi_upnp_search_7 ;
+                       maskid=EMbmMsappwizardQgn_indi_upnp_search_7_mask;},
+        BMPANIM_FRAME {bmpid=EMbmMsappwizardQgn_indi_upnp_search_8 ;
+                       maskid=EMbmMsappwizardQgn_indi_upnp_search_8_mask;},
+        BMPANIM_FRAME {bmpid=EMbmMsappwizardQgn_indi_upnp_search_9 ;
+                       maskid=EMbmMsappwizardQgn_indi_upnp_search_9_mask;}
+        };
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_automatic_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_automatic_text
+    {
+    buf = qtn_mserv_wizard_automatic;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_manual_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_manual_text
+    {
+    buf = qtn_mserv_wizard_manually;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_heading_step_1
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_heading_step_1
+    {
+    buf = qtn_mserv_wizard_head_1;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_heading_step_2
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_heading_step_2
+    {
+    buf = qtn_mserv_wizard_head_from_home_1;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_heading_step_3
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_heading_step_3
+    {
+    buf = qtn_mserv_wizard_head_from_home_2;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_heading_step_4
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_heading_step_4
+    {
+    buf = qtn_mserv_wizard_head_source_devices_1;
+    }
+    
+//----------------------------------------------------------------------------
+//
+//    r_ms_heading_step_5
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_heading_step_5
+    {
+    buf = qtn_mserv_wizard_head_source_devices_2;
+    }
+    
+//----------------------------------------------------------------------------
+//
+//    r_ms_heading_step_6
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_heading_step_6
+    {
+    buf = qtn_mserv_wizard_head_2;
+    }    
+           
+//----------------------------------------------------------------------------
+//
+//    r_ms_heading_step_7
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_heading_step_7
+    {
+    buf = qtn_mserv_wizard_head_3;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_heading_step_8
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_heading_step_8
+    {
+    buf = qtn_mserv_wizard_head_4;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_heading_step_9
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_heading_step_9
+    {
+    buf = qtn_mserv_wizard_head_5;
+    }
+    
+//----------------------------------------------------------------------------
+//
+//    r_ms_heading_step_9_2
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_heading_step_9_2
+    {
+    buf = qtn_mserv_wizard_head_5;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_heading_step_10
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_heading_step_10
+    {
+    buf = qtn_mserv_wizard_head_8;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_heading_step_11
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_heading_step_11
+    {
+    buf = qtn_mserv_wizard_head_9;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_heading_step_12
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_heading_step_12
+    {
+    buf = qtn_mserv_wizard_head_10;
+    }
+        
+//----------------------------------------------------------------------------
+//
+//    r_ms_step_1_body_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_step_1_body_text
+    {
+    buf = qtn_mserv_wizard_1;
+    }
+
+    
+//----------------------------------------------------------------------------
+//
+//    r_ms_step_2_body_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_step_2_body_text
+    {
+    buf = qtn_mserv_wizard_from_home;
+    }
+    
+//----------------------------------------------------------------------------
+//
+//    r_ms_step_4_body_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_step_4_body_text
+    {
+    buf = qtn_mserv_wizard_source_devices;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_step_6_body_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_step_6_body_text
+    {
+    buf = qtn_mserv_wizard_2;
+    }
+    
+//----------------------------------------------------------------------------
+//
+//    r_ms_step_8_body_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_step_8_body_text
+    {
+    buf = qtn_mserv_wizard_4;
+    }    
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_step_9_2_body_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_step_9_2_body_text
+    {
+    buf = qtn_mserv_wizard_no_target_devices_found;
+    } 
+    
+//----------------------------------------------------------------------------
+//
+//    r_ms_step_10_body_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_step_10_body_text
+    {
+    buf = qtn_mserv_wizard_8;
+    }   
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_last_step_body_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_last_step_body_text
+    {
+    buf = qtn_mserv_wizard_10;
+    }
+    
+//----------------------------------------------------------------------------
+//
+//    r_ms_no_target_devices_selected_info
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_no_target_devices_selected_info
+    {
+    buf = qtn_mserv_wizard_no_target_devices_selected;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_wizard_captured_images
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_wizard_captured_images
+    {
+    buf = qtn_mserv_wizard_phone_images;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_wizard_other_images
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_wizard_other_images
+    {
+    buf = qtn_mserv_wizard_other_images;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_wizard_captured_videos
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_wizard_captured_videos
+    {
+    buf = qtn_mserv_wizard_phone_videos;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_wizard_other_videos
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_wizard_other_videos
+    {
+    buf = qtn_mserv_wizard_other_videos;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_wizard_music
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_wizard_music
+    {
+    buf = qtn_mserv_wizard_music;
+    }
+    
+// End of file

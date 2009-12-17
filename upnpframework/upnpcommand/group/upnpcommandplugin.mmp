@@ -1,0 +1,110 @@
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project definition file for project UpnpCommand component
+*
+*/
+
+
+// For compatibility with S60 3.2 and IAD branch
+#include "../../../group/upnpplatformvar.hrh"
+#include <data_caging_paths.hrh>
+#include "../inc/upnpcommanduids.hrh"
+
+
+// Build target
+TARGET          upnpcommandplugin.dll
+CAPABILITY      CAP_ECOM_PLUGIN
+TARGETTYPE      PLUGIN
+UID             0x10009D8D KUpnpCommandPluginDllUid
+VENDORID        VID_DEFAULT
+
+// SIS installation + IAD support
+VERSION 10.1
+paged
+
+// Build UI resources
+SOURCEPATH      ../data
+START RESOURCE  upnpcommandresources.rss
+HEADER
+TARGET          upnpcommandresources.rsc
+TARGETPATH      RESOURCE_FILES_DIR
+LANGUAGE_IDS
+END
+
+// Build ECom plugin resources
+START RESOURCE  ../data/200075DB.rss
+TARGET          upnpcommandplugin.rsc
+TARGETPATH      resource/plugins
+END
+
+// Source files
+SOURCEPATH      ../src
+SOURCE          upnpcommandproxy.cpp
+SOURCE          upnpfilepipe.cpp
+SOURCE          upnpnotehandler.cpp
+SOURCE          upnpcommandparameters.cpp
+SOURCE          upnpcommandimplementation.cpp
+SOURCE          upnptask.cpp
+SOURCE          upnpshowtask.cpp
+SOURCE          upnpcopytask.cpp
+SOURCE          upnpmovetask.cpp
+SOURCE          upnpbrowsetask.cpp
+SOURCE          upnprunsetuptask.cpp
+SOURCE          upnpfiletransferbasetask.cpp
+SOURCE          upnptaskresourceallocator.cpp
+SOURCE          upnpimagerenderingengine.cpp
+
+// Include directories
+USERINCLUDE     ../data
+USERINCLUDE     ../inc
+USERINCLUDE     ../../inc
+USERINCLUDE     ../../../inc
+USERINCLUDE     ../../upnputilities/inc
+
+MW_LAYER_SYSTEMINCLUDE
+UPNP_LOC_INCLUDE_PATH_COMPONENT
+
+// Core
+LIBRARY         euser.lib
+LIBRARY         bafl.lib            // BaflUtils
+LIBRARY         cone.lib            // CCoeEnv
+LIBRARY         centralrepository.lib // CRepository
+
+// Dialogs
+LIBRARY         avkon.lib
+
+// StringLoader
+LIBRARY         CommonEngine.lib
+
+// ECom
+LIBRARY         ecom.lib
+
+// Logging
+DEBUGLIBRARY    flogger.lib
+
+// Char conversion
+LIBRARY         charconv.lib
+
+// Upnp Framework
+LIBRARY         upnputilities.lib
+LIBRARY         upnpavobjects.lib
+LIBRARY         upnpavcontrollerclient.lib
+LIBRARY         upnpavcontrollerhelper.lib
+LIBRARY         upnpcommonui.lib
+LIBRARY         upnpfiletransferengine.lib
+LIBRARY         upnpappwizard.lib
+LIBRARY         upnpapplicationengine.lib
+LIBRARY         upnpsettingsengine.lib
+
+// End of file

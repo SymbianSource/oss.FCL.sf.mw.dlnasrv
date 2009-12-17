@@ -1,0 +1,78 @@
+EXPORTS
+	_ZN13CUpnpAVDevice10LinkOffsetEv @ 1 NONAME
+	_ZN13CUpnpAVDevice12InternalizeLER11RReadStream @ 2 NONAME
+	_ZN13CUpnpAVDevice12SetMaxVolumeEi @ 3 NONAME
+	_ZN13CUpnpAVDevice13SetDeviceTypeENS_17TUpnpAVDeviceTypeE @ 4 NONAME
+	_ZN13CUpnpAVDevice16SetFriendlyNameLERK6TDesC8 @ 5 NONAME
+	_ZN13CUpnpAVDevice17SetCopyCapabilityEi @ 6 NONAME
+	_ZN13CUpnpAVDevice17SetMuteCapabilityEi @ 7 NONAME
+	_ZN13CUpnpAVDevice18SetAudioCapabilityEi @ 8 NONAME
+	_ZN13CUpnpAVDevice18SetImageCapabilityEi @ 9 NONAME
+	_ZN13CUpnpAVDevice18SetPauseCapabilityEi @ 10 NONAME
+	_ZN13CUpnpAVDevice18SetVideoCapabilityEi @ 11 NONAME
+	_ZN13CUpnpAVDevice19SetSearchCapabilityEi @ 12 NONAME
+	_ZN13CUpnpAVDevice19SetVolumeCapabilityEi @ 13 NONAME
+	_ZN13CUpnpAVDevice21SetNextAVTransportUriEi @ 14 NONAME
+	_ZN13CUpnpAVDevice36SetCapabilitiesBySupportedMimeTypesLERK6TDesC8 @ 15 NONAME
+	_ZN13CUpnpAVDevice4NewLERKS_ @ 16 NONAME
+	_ZN13CUpnpAVDevice4NewLEv @ 17 NONAME
+	_ZN13CUpnpAVDevice5NewLCEv @ 18 NONAME
+	_ZN13CUpnpAVDevice8SetUuidLERK6TDesC8 @ 19 NONAME
+	_ZN13CUpnpAVDevice9CopyFromLERKS_ @ 20 NONAME
+	_ZN13CUpnpAVDeviceC1Ev @ 21 NONAME
+	_ZN13CUpnpAVDeviceC2Ev @ 22 NONAME
+	_ZN13CUpnpAVDeviceD0Ev @ 23 NONAME
+	_ZN13CUpnpAVDeviceD1Ev @ 24 NONAME
+	_ZN13CUpnpAVDeviceD2Ev @ 25 NONAME
+	_ZN17CUpnpAVDeviceList12InternalizeLER11RReadStream @ 26 NONAME
+	_ZN17CUpnpAVDeviceList13AppendDeviceLER13CUpnpAVDevice @ 27 NONAME
+	_ZN17CUpnpAVDeviceList15ResetAndDestroyEv @ 28 NONAME
+	_ZN17CUpnpAVDeviceList16RemoveAndDestroyEi @ 29 NONAME
+	_ZN17CUpnpAVDeviceList4NewLEv @ 30 NONAME
+	_ZN17CUpnpAVDeviceList5NewLCEv @ 31 NONAME
+	_ZN17CUpnpAVDeviceList5ResetEv @ 32 NONAME
+	_ZN17CUpnpAVDeviceList6RemoveEi @ 33 NONAME
+	_ZN23UPnPAVControllerFactory15MSServicesInUseEv @ 34 NONAME
+	_ZN23UPnPAVControllerFactory20NewUPnPAVControllerLEv @ 35 NONAME
+	_ZN23UPnPAVControllerFactory21NewUPnPAVControllerLCEv @ 36 NONAME
+	_ZNK13CUpnpAVDevice10DeviceTypeEv @ 37 NONAME
+	_ZNK13CUpnpAVDevice12ExternalizeLER12RWriteStream @ 38 NONAME
+	_ZNK13CUpnpAVDevice12FriendlyNameEv @ 39 NONAME
+	_ZNK13CUpnpAVDevice14CopyCapabilityEv @ 40 NONAME
+	_ZNK13CUpnpAVDevice14MuteCapabilityEv @ 41 NONAME
+	_ZNK13CUpnpAVDevice15AudioCapabilityEv @ 42 NONAME
+	_ZNK13CUpnpAVDevice15ImageCapabilityEv @ 43 NONAME
+	_ZNK13CUpnpAVDevice15PauseCapabilityEv @ 44 NONAME
+	_ZNK13CUpnpAVDevice15VideoCapabilityEv @ 45 NONAME
+	_ZNK13CUpnpAVDevice16SearchCapabilityEv @ 46 NONAME
+	_ZNK13CUpnpAVDevice16VolumeCapabilityEv @ 47 NONAME
+	_ZNK13CUpnpAVDevice18NextAVTransportUriEv @ 48 NONAME
+	_ZNK13CUpnpAVDevice4UuidEv @ 49 NONAME
+	_ZNK13CUpnpAVDevice7ToDes8LEv @ 50 NONAME
+	_ZNK13CUpnpAVDevice9MaxVolumeEv @ 51 NONAME
+	_ZNK17CUpnpAVDeviceList12ExternalizeLER12RWriteStream @ 52 NONAME
+	_ZNK17CUpnpAVDeviceList5CountEv @ 53 NONAME
+	_ZNK17CUpnpAVDeviceList7ToDes8LEv @ 54 NONAME
+	_ZNK17CUpnpAVDeviceListixEi @ 55 NONAME
+	_ZTI13CUpnpAVDevice @ 56 NONAME ; #<TI>#
+	_ZTI17CUpnpAVDeviceList @ 57 NONAME ; #<TI>#
+	_ZTI18CUPnPAVEventActive @ 58 NONAME ; #<TI>#
+	_ZTI19CUPnPAVDeviceActive @ 59 NONAME ; #<TI>#
+	_ZTI22CUPnPAVRenderingActive @ 60 NONAME ; #<TI>#
+	_ZTI23CUPnPAVConnectionActive @ 61 NONAME ; #<TI>#
+	_ZTI23CUPnPAVControllerActive @ 62 NONAME ; #<TI>#
+	_ZTI26CUPnPAVBrowsingSessionImpl @ 63 NONAME ; #<TI>#
+	_ZTI27CUPnPAVRenderingSessionImpl @ 64 NONAME ; #<TI>#
+	_ZTV13CUpnpAVDevice @ 65 NONAME ; #<VT>#
+	_ZTV17CUpnpAVDeviceList @ 66 NONAME ; #<VT>#
+	_ZTV18CUPnPAVEventActive @ 67 NONAME ; #<VT>#
+	_ZTV19CUPnPAVDeviceActive @ 68 NONAME ; #<VT>#
+	_ZTV22CUPnPAVRenderingActive @ 69 NONAME ; #<VT>#
+	_ZTV23CUPnPAVConnectionActive @ 70 NONAME ; #<VT>#
+	_ZTV23CUPnPAVControllerActive @ 71 NONAME ; #<VT>#
+	_ZTV26CUPnPAVBrowsingSessionImpl @ 72 NONAME ; #<VT>#
+	_ZTV27CUPnPAVRenderingSessionImpl @ 73 NONAME ; #<VT>#
+	_ZN13CUpnpAVDevice17SetDlnaCompatibleEi @ 74 NONAME
+	_ZNK13CUpnpAVDevice14DlnaCompatibleEv @ 75 NONAME
+	_ZN23UPnPAVControllerFactory6StatusERNS_25TAVControllerServerStatusE @ 76 NONAME
+

@@ -1,0 +1,23 @@
+EXPORTS
+	_ZN22CUPnPFileSharingEngine11SetObserverEP30MUPnPFileSharingEngineObserver @ 1 NONAME
+	_ZN22CUPnPFileSharingEngine11ShareMediaLE21THomeConnectMediaType @ 2 NONAME
+	_ZN22CUPnPFileSharingEngine13SharingStateLEv @ 3 NONAME
+	_ZN22CUPnPFileSharingEngine16SetSharingStateLEi @ 4 NONAME
+	_ZN22CUPnPFileSharingEngine19RefreshSharedMediaLE21THomeConnectMediaType @ 5 NONAME
+	_ZN22CUPnPFileSharingEngine19StopUploadListenerLEv @ 6 NONAME
+	_ZN22CUPnPFileSharingEngine20SetSelectionIndexesLE21THomeConnectMediaTypeRK9CArrayFixIiE @ 7 NONAME
+	_ZN22CUPnPFileSharingEngine20StartUploadListenerLEv @ 8 NONAME
+	_ZN22CUPnPFileSharingEngine23RequestSharingProgressLEv @ 9 NONAME
+	_ZN22CUPnPFileSharingEngine24RequestSelectionContentLE21THomeConnectMediaType @ 10 NONAME
+	_ZN22CUPnPFileSharingEngine4NewLEv @ 11 NONAME
+	_ZN22CUPnPFileSharingEngine5NewLCEv @ 12 NONAME
+	_ZN22CUPnPFileSharingEngine8ObserverEv @ 13 NONAME
+	_ZN22CUPnPFileSharingEngineD0Ev @ 14 NONAME
+	_ZN22CUPnPFileSharingEngineD1Ev @ 15 NONAME
+	_ZN22CUPnPFileSharingEngineD2Ev @ 16 NONAME
+	_ZNK22CUPnPFileSharingEngine20GetSelectionContentLER12CDesC16Array @ 17 NONAME
+	_ZNK22CUPnPFileSharingEngine20GetSelectionIndexesLER9CArrayFixIiE @ 18 NONAME
+	_ZNK22CUPnPFileSharingEngine24RequestSelectionIndexesLE21THomeConnectMediaType @ 19 NONAME
+	_ZTI22CUPnPFileSharingEngine @ 20 NONAME ; #<TI>#
+	_ZTV22CUPnPFileSharingEngine @ 21 NONAME ; #<VT>#
+

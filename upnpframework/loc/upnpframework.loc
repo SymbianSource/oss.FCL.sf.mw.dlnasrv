@@ -1,0 +1,404 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Localization strings for upnpframework subsystem.
+*
+*/
+
+
+// --------------------------------------------------------------------------
+// 
+// LOCALISATION STRINGS OF SERVICES PROVIDED FOR EXTERNAL APPLICATIONS
+// (UPnPAiwEngine, UPnPAiwProvider, UPnPCommand) 
+//
+// --------------------------------------------------------------------------
+
+//d:Application interworking (AIW) menu command.
+//d:Enables usage of external UPnP Media Rendering device.
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_iupnp_aiw_enable_external_string             "Show via home net."
+
+//d:Application interworking (AIW) menu command.
+//d:Disables usage of external UPnP Media Rendering device.
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_iupnp_aiw_disable_external_string            "Stop showing"
+
+//d:Application interworking (AIW) menu command.
+//d:Copies the selected files to an external UPnP Media Server device.
+//l:list_single_popup_submenu_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_aiw_copy_to_external_string            "Copy to home network"
+
+//d:Application interworking (AIW) menu command.
+//d:Moves the selected files to an external UPnP Media Server device.
+//l:list_single_popup_submenu_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_aiw_move_to_external_string            "Move to home network"
+
+//d:Connecting wait note.
+//d:Shown while waiting for connection to get established. 
+//l:popup_note_wait_window
+//r:wk49/2008
+//
+#define qtn_iupnp_command_connecting            "Connecting"
+
+//d:Preparing playback wait note.
+//d:Shown while waiting playback on remote device to start.
+//l:popup_note_wait_window
+//r:wk49/2008
+//
+#define qtn_iupnp_command_prep_playback         "Preparing playback"
+
+//d:Note shown when one file has been copied to 
+//d:remote server device.
+//l:popup_note_window/opt2
+//r:wk49/2008
+//
+#define qtn_iupnp_info_copy_ext_one             "1 file copied to %U"
+
+//d:Note shown when multiple files have been copied to 
+//d:remote server device. Shown also when no files have been
+//d:copied to remote server device. Happens when all files 
+//d:are drm protected.
+//l:popup_note_window/opt2
+//r:wk49/2008
+//
+#define qtn_iupnp_info_copy_ext_many            "%N files copied to %U"
+
+//d:Note shown when one file has been moved to 
+//d:remote server device. 
+//l:popup_note_window/opt2
+//r:wk49/2008
+//
+#define qtn_iupnp_info_move_ext_one             "1 file moved to %U"
+
+//d:Note shown when multiple files have been copied to 
+//d:remote server device. Shown also when no files have been
+//d:moved to remote server device. Happens when all files 
+//d:are drm protected.
+//l:popup_note_window/opt2
+//r:wk49/2008
+//
+#define qtn_iupnp_info_move_ext_many            "%N files moved to %U"
+
+
+// --------------------------------------------------------------------------
+// 
+// LOCALISATION STRINGS FOR SEARCHING SERVICES
+// (UPnPAdvFind, UPnPBrowseSearchUI)
+//
+// --------------------------------------------------------------------------
+
+//d:Media type selection title
+//l:list_setting_pane_t1
+//r:wk49/2008
+//
+#define qtn_iupnp_media_type               "Media type"
+
+//d:Media type selection list title
+//l:main_pane_set_t1
+//r:wk49/2008
+//
+#define qtn_iupnp_media_type_title         "Media type"
+
+//d:media type selection item
+//d:when selected, images, video clips and music files are searched
+//l:list_set_graphic_pane_t1
+//r:wk49/2008
+//
+#define qtn_iupnp_mt_all                   "All"
+
+//d:media type selection item
+//d:when selected only images are searched
+//l:list_set_graphic_pane_t1
+//r:wk49/2008
+//
+#define qtn_iupnp_mt_image                 "Images"
+
+//d:media type selection item
+//d:when selected only videos are searched
+//l:list_set_graphic_pane_t1
+//r:wk49/2008
+//
+#define qtn_iupnp_mt_video                 "Video clips"
+
+//d:media type selection item
+//d:when selected only music files are searched
+//l:list_set_graphic_pane_t1
+//r:wk49/2008
+//
+#define qtn_iupnp_mt_music                 "Music files"
+
+//d:file name editor title
+//l:list_setting_pane_t1
+//r:wk49/2008
+//
+#define qtn_iupnp_find_file                "Title"
+
+//d:artist editor item title
+//l:list_setting_pane_t1
+//r:wk49/2008
+//
+#define qtn_iupnp_find_artist              "Artist"
+
+//d:album editor item title
+//l:list_setting_pane_t1
+//r:wk49/2008
+//
+#define qtn_iupnp_find_album               "Album name"
+
+//d:genre editor item title
+//l:list_setting_pane_t1
+//r:wk49/2008
+// 
+#define qtn_iupnp_find_genre               "Genre"
+
+//d:date from editor item title
+//l:list_setting_pane_t1
+//r:wk49/2008
+//
+#define qtn_iupnp_find_date_from           "Date from"
+
+//d:date until editor item title
+//l:list_setting_pane_t1
+//r:wk49/2008
+//
+#define qtn_iupnp_find_date_until          "Date until"
+
+//d:find results window title
+//l:title_pane_t2/opt9
+//r:wk49/2008
+//
+#define qtn_iupnp_search_results           "Find results"
+
+//d:wait note text when search is ongoing
+//l:popup_note_wait_window
+//r:wk49/2008
+//
+#define qtn_iupnp_finding_results_note     "Finding results"
+
+//d:text for navi pane. tells the user how many files were found
+//l:navi_text_pane_t1
+//r:wk49/2008
+//
+#define qtn_iupnp_nof_files                 "%N files"
+
+//d:text for navi pane. tells the user how many files were found
+//l:navi_text_pane_t1
+//r:wk49/2008
+//
+#define qtn_iupnp_nof_file                  "%N file"
+
+//d:result window error note text
+//d:error note is shown when too many result files are found
+//l:popup_note_window/opt1
+//r:wk49/2008
+//
+#define qtn_iupnp_too_big_cache_note_text   "Too many items, showing only %N"
+
+
+// --------------------------------------------------------------------------
+// 
+// LOCALISATION STRINGS FOR BROWSING AND RENDERING SERVICES
+// (UPnPCommonUI) 
+//
+// --------------------------------------------------------------------------
+
+//d:Command in options list in short term memories.
+//d:Show image or video on external device.
+//l:list_single_pane_t1_cp2/opt3
+//r:1.0
+//
+#define qtn_iupnp_show_ext_main                "Show"
+
+//d:Command in options list in short term memories.
+//d:Play music file on external device.
+//l:list_single_pane_t1_cp2/opt3
+//r:1.0
+//
+#define qtn_iupnp_play_ext_main                "Play"
+
+//d:Shows or plays an item on the handset
+//d:Item in qtn_iupnp_show_ext_main or qtn_iupnp_play_ext_main
+//l:list_single_popup_submenu_pane_t1
+//r:2.1
+//
+#define qtn_iupnp_on_device                    "On device"
+
+//d:Shows or plays an item via network - on a remote device
+//d:Item in qtn_iupnp_show_ext_main or qtn_iupnp_play_ext_main
+//l:list_single_popup_submenu_pane_t1
+//r:2.1
+//
+#define qtn_iupnp_via_homenet                  "Via home net"
+
+//d:External server dialog navi pane text when searching media servers
+//l:navi_text_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_server_search_main           "Searching" 
+
+//d:External server dialog text if folder is empty
+//l:main_list_empty_pane
+//r:1.0
+//
+#define qtn_iupnp_main_empty                   "(empty)"
+
+//d:Find dialog / container view text if folder is empty
+//l:main_list_empty_pane
+//r:1.0
+//
+#define qtn_iupnp_no_files_found               "No files found"
+
+//d:Time format on navigation pane when playing video on remote device
+//l:navi_text_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_sep_slash                     "%0U/%1U"
+
+//d:Softkey command
+//d:Continue video display
+//l:control_pane_t1/opt7
+//r:1.0
+//
+#define qtn_iupnp_sk_continue                  "Continue"
+
+//d:Softkey command
+//d:Replay video display
+//l:control_pane_t1/opt7
+//r:1.0
+//
+#define qtn_iupnp_sk_replay                    "Replay"
+
+//d:Information note header for UPnP media renderer selection
+//l:heading_pane_t1/opt2
+//r:1.0
+//
+#define qtn_iupnp_select_player                "Select player:"
+
+//d:Information note header for UPnP device selection
+//l:heading_pane_t1/opt2
+//r:1.0
+//
+#define qtn_iupnp_select_device                "Select device:"
+
+//d:Title pane text
+//l:title_pane_t2/opt9
+//r:2.1
+//
+#define qtn_iupnp_title_ext_media_2            "Home Media"   
+
+//d:submenu title when copying file from external device to handset
+//l:list_single_pane_t1_cp2
+//r:2.1
+//
+#define qtn_iupnp_copy_main                     "Copy" 
+
+//d:Dialog title when image showing on a remote renderer is active
+//l:title_pane_t2/opt9
+//r:2.1
+//
+#define qtn_iupnp_title_showing                 "Showing"
+
+//d:Used to describe the result of copying one file
+//l:popup_note_window/opt2
+//r:2.1
+//
+#define qtn_iupnp_info_copy_one                 "1 file copied"
+
+//d:Used to describe the result of copying multiple files
+//l:popup_note_window/opt2
+//r:2.1
+//
+#define qtn_iupnp_info_copy_many                "%N files copied"
+
+//d:Used to describe when UPnP device does not support the operation 
+//d:or is not compatible with given media 
+//l:popup_note_window/opt2
+//r:2.1
+//
+#define qtn_iupnp_err_not_supported             "Selected device does not support this operation"
+
+//d:Wait note shown while content list is updating
+//l:popup_note_wait_window
+//r:wk50/2008
+//
+#define qtn_iupnp_wait_list_update              "Updating list"
+
+//d:Wait note running until the playback starts
+//l:popup_note_wait_window
+//r:2.1
+//
+#define qtn_iupnp_prog_prep_playback            "Preparing playback"
+
+//d:Used when user tries to copy an empty folder 
+//l:popup_note_window/opt2
+//r:2.1
+//
+#define qtn_iupnp_no_items_to_play_text         "Container does not contain any supported items"
+
+
+// --------------------------------------------------------------------------
+// 
+// COMMON LOCALISATION STRINGS
+// Strings are used by multiple components.
+//
+// --------------------------------------------------------------------------
+
+//d:Skipping DRM files note.
+//d:Indicates that DRM protected files will be skipped
+//d:during processing of files (show, play, copy, move).
+//l:popup_note_window/opt2
+//r:1.0
+//
+#define qtn_iupnp_drm_file_text                 "Skipping DRM protected files."
+
+//d:Connection failed note
+//l:popup_note_window/opt2
+//r:1.0
+//
+#define qtn_iupnp_err_con_failed                "Connection failed"
+
+//d:Used to describe media rendering fails due to unknown error 
+//l:popup_note_window
+//r:2.1
+//
+#define qtn_iupnp_err_rendering_failed_unknown  "Playback failed on the remote device for unknown error. Try again"
+
+//d:Used to describe when an UPnP operation failed on the remote device
+//l:popup_note_window/opt2
+//r:2.1
+//
+#define qtn_iupnp_err_general_failure           "Selected device refused the operation"
+
+//d:Used to describe when the connection is lost 
+//d:while the user is copying files
+//l:popup_note_window/opt2
+//r:2.1
+//
+#define qtn_iupnp_err_conn_lost_copy            "Connection lost, some files may not be copied"
+
+//d:Used to describe when the connection is lost 
+//d:while the user is moving files
+//l:popup_note_window/opt2
+//r:2.1
+//
+#define qtn_iupnp_err_conn_lost                 "Connection lost, some files may not be moved"
+
+// End of File

@@ -1,0 +1,11 @@
+EXPORTS
+	?CopyLocalFilesToRemoteServerL@CUpnpFileTransferEngine@@QAEXPAV?$RPointerArray@VTDesC16@@@@@Z @ 1 NONAME ; void CUpnpFileTransferEngine::CopyLocalFilesToRemoteServerL(class RPointerArray<class TDesC16> *)
+	?CopyLocalPlaylistToRemoteServerL@CUpnpFileTransferEngine@@QAEXABVTDesC16@@PAV?$RPointerArray@VTDesC16@@@@@Z @ 2 NONAME ; void CUpnpFileTransferEngine::CopyLocalPlaylistToRemoteServerL(class TDesC16 const &, class RPointerArray<class TDesC16> *)
+	?CopyRemoteContainerToHandsetL@CUpnpFileTransferEngine@@QAEXPAVCUpnpContainer@@@Z @ 3 NONAME ; void CUpnpFileTransferEngine::CopyRemoteContainerToHandsetL(class CUpnpContainer *)
+	?CopyRemoteItemsToHandsetL@CUpnpFileTransferEngine@@QAEXAAV?$RPointerArray@VCUpnpItem@@@@@Z @ 4 NONAME ; void CUpnpFileTransferEngine::CopyRemoteItemsToHandsetL(class RPointerArray<class CUpnpItem> &)
+	?CopyRemotePlaylistToHandsetL@CUpnpFileTransferEngine@@QAEXPAVCUpnpContainer@@@Z @ 5 NONAME ; void CUpnpFileTransferEngine::CopyRemotePlaylistToHandsetL(class CUpnpContainer *)
+	?CopyToHandsetL@CUpnpFileTransferEngine@@QAEHPAVCDesC8ArrayFlat@@@Z @ 6 NONAME ; int CUpnpFileTransferEngine::CopyToHandsetL(class CDesC8ArrayFlat *)
+	?ItemCopiedFromContainer@CUpnpFileTransferEngine@@QAEHXZ @ 7 NONAME ; int CUpnpFileTransferEngine::ItemCopiedFromContainer(void)
+	?MoveLocalFilesToRemoteServerL@CUpnpFileTransferEngine@@QAEXPAV?$RPointerArray@VTDesC16@@@@@Z @ 8 NONAME ; void CUpnpFileTransferEngine::MoveLocalFilesToRemoteServerL(class RPointerArray<class TDesC16> *)
+	?NewL@CUpnpFileTransferEngine@@SAPAV1@PAVMUPnPAVBrowsingSession@@@Z @ 9 NONAME ; class CUpnpFileTransferEngine * CUpnpFileTransferEngine::NewL(class MUPnPAVBrowsingSession *)
+

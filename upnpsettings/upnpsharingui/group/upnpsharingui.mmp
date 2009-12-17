@@ -1,0 +1,80 @@
+/*
+* Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Project definition file for sharing UI component
+*
+*/
+
+
+
+
+
+
+// For compatibility with S60 3.2 and IAD branch
+#include "../../../group/upnpplatformvar.hrh"
+#include <data_caging_paths.hrh>
+
+TARGET          upnpsharingui.dll
+TARGETTYPE      dll
+UID             0x100000D8 0x20009CAD
+
+VENDORID        VID_DEFAULT
+CAPABILITY      CAP_GENERAL_DLL
+
+// SIS installation + IAD support
+VERSION 10.1
+paged
+
+// Include paths
+APP_LAYER_SYSTEMINCLUDE
+UPNP_LOC_INCLUDE_PATH_COMPONENT
+
+USERINCLUDE     ../inc
+USERINCLUDE     ../../../inc
+
+START RESOURCE  ../data/upnpsharingui.rss
+HEADER
+TARGETPATH      RESOURCE_FILES_DIR
+LANGUAGE_IDS
+END
+
+SOURCEPATH      ../src
+
+SOURCE          upnpappfilesharingdialog.cpp
+SOURCE          upnpappfilesharinglist.cpp
+
+//system
+LIBRARY         euser.lib // s60 basic
+LIBRARY         eikcore.lib // CEikEnv
+LIBRARY         ws32.lib // RWindowBase
+LIBRARY         cone.lib // CCoeControl
+LIBRARY         avkon.lib // basic ui
+LIBRARY         eikcoctl.lib // basic ui
+LIBRARY         eikctl.lib  // basic ui
+LIBRARY         eikdlg.lib // eikon dialogs
+LIBRARY         eikcdlg.lib // progress dialog
+LIBRARY         CommonEngine.lib // string loader
+LIBRARY         featmgr.lib // FeatureManager
+LIBRARY         hlplch.lib // help launcher
+LIBRARY         CdlEngine.lib // CdlEngine
+LIBRARY         bafl.lib // BaflUtils
+
+// upnp framework
+LIBRARY         upnpsettingsengine.lib // settings engine
+LIBRARY         upnpmultiselectionui.lib // multiselectionui
+LIBRARY         upnpapplicationengine.lib // filesharingengine
+LIBRARY         upnpappwizard.lib // setup wizard
+
+DEBUGLIBRARY    flogger.lib
+
+// End of file

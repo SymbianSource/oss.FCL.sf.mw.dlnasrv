@@ -1,0 +1,52 @@
+/*
+* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Information required for building GSMediaServantPlugin.
+*
+*/
+
+
+#include "../../../../group/upnpplatformvar.hrh"
+
+PRJ_PLATFORMS
+DEFAULT
+
+PRJ_EXPORTS
+../inc/msgsinterface.h   |../../../../inc/msgsinterface.h
+../inc/msgspluginuids.h   |../../../../inc/msgspluginuids.h
+../inc/msgs.inl   |../../../../inc/msgs.inl
+// LOC export
+UPNP_LOC_EXPORT(msgsplugin.loc)
+
+PRJ_MMPFILES
+msgsplugin.mmp
+
+PRJ_EXTENSIONS
+
+START EXTENSION s60/mifconv
+OPTION TARGETFILE msgsplugin.mif
+OPTION HEADERFILE msgsplugin.mbg
+OPTION SOURCEDIR ../bitmaps
+OPTION SOURCES -c8,8 qgn_mserv_app_menu_icon \
+			   -c8,8 qgn_indi_upnp_search_1 \
+			   -c8,8 qgn_indi_upnp_search_2 \
+			   -c8,8 qgn_indi_upnp_search_3 \
+			   -c8,8 qgn_indi_upnp_search_4 \
+			   -c8,8 qgn_indi_upnp_search_5 \
+			   -c8,8 qgn_indi_upnp_search_6 \
+			   -c8,8 qgn_indi_upnp_search_7 \
+			   -c8,8 qgn_indi_upnp_search_8 \
+			   -c8,8 qgn_indi_upnp_search_9
+END
+
+//  End of File

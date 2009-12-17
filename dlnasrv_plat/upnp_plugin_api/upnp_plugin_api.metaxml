@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<api id="7962190d3ac281ae325f7277989fae08" dataversion="1.0">
+  <name>UPnP Plugin API</name>
+  <description>UPnP Home Media Application extension plugin API</description>
+  <type>c++</type>
+  <subsystem>upnpframework</subsystem>
+  <libs>
+  </libs>
+  <release category="domain"/>
+  <attributes>
+     <!-- This indicates wether the api provedes separate html documentation -->
+     <!-- or is the additional documentation generated from headers. -->
+     <!-- If you are unsuere then the value is "no" -->
+     <htmldocprovided>no</htmldocprovided>
+     <adaptation>no</adaptation>
+  </attributes>
+</api>

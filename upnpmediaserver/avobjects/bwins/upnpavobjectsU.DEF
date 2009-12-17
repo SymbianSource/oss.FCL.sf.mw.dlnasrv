@@ -1,0 +1,144 @@
+EXPORTS
+	??0CUpnpAttribute@@AAE@XZ @ 1 NONAME ; CUpnpAttribute::CUpnpAttribute(void)
+	??1CUpnpItem@@UAE@XZ @ 2 NONAME ; CUpnpItem::~CUpnpItem(void)
+	??1CUpnpObject@@UAE@XZ @ 3 NONAME ; CUpnpObject::~CUpnpObject(void)
+	??ACUpnpContainer@@QAEPAVCUpnpObject@@H@Z @ 4 NONAME ; class CUpnpObject * CUpnpContainer::operator[](int)
+	??ACUpnpObjectList@@QBEPAVCUpnpObject@@H@Z @ 5 NONAME ; class CUpnpObject * CUpnpObjectList::operator[](int) const
+	?AddAttributeL@CUpnpElement@@QAEXPAVCUpnpAttribute@@@Z @ 6 NONAME ; void CUpnpElement::AddAttributeL(class CUpnpAttribute *)
+	?AddElementL@CUpnpObject@@QAEXPAVCUpnpElement@@@Z @ 7 NONAME ; void CUpnpObject::AddElementL(class CUpnpElement *)
+	?AddResourceL@CUpnpObject@@QAEXABVTDesC16@@ABVTDesC8@@@Z @ 8 NONAME ; void CUpnpObject::AddResourceL(class TDesC16 const &, class TDesC8 const &)
+	?AppendObjectL@CUpnpContainer@@QAEXAAVCUpnpObject@@@Z @ 9 NONAME ; void CUpnpContainer::AppendObjectL(class CUpnpObject &)
+	?AppendObjectL@CUpnpContainerList@@QAEXAAVCUpnpObject@@@Z @ 10 NONAME ; void CUpnpContainerList::AppendObjectL(class CUpnpObject &)
+	?AppendObjectL@CUpnpItemList@@QAEXAAVCUpnpObject@@@Z @ 11 NONAME ; void CUpnpItemList::AppendObjectL(class CUpnpObject &)
+	?AppendObjectL@CUpnpObjectList@@QAEXAAVCUpnpObject@@@Z @ 12 NONAME ; void CUpnpObjectList::AppendObjectL(class CUpnpObject &)
+	?CloneL@CUpnpFileTransferEvent@@QAEPAV1@XZ @ 13 NONAME ; class CUpnpFileTransferEvent * CUpnpFileTransferEvent::CloneL(void)
+	?ContentDirectoryObjectId@CUpnpFileTransferEvent@@QAEHXZ @ 14 NONAME ; int CUpnpFileTransferEvent::ContentDirectoryObjectId(void)
+	?CopyL@CUpnpBrowseCriteria@@QAEXABV1@@Z @ 15 NONAME ; void CUpnpBrowseCriteria::CopyL(class CUpnpBrowseCriteria const &)
+	?CopyL@CUpnpElement@@QAEXABV1@@Z @ 16 NONAME ; void CUpnpElement::CopyL(class CUpnpElement const &)
+	?CopyL@CUpnpObject@@QAEXABV1@@Z @ 17 NONAME ; void CUpnpObject::CopyL(class CUpnpObject const &)
+	?Direction@CUpnpFileTransferEvent@@QAE?AW4TDirection@1@XZ @ 18 NONAME ; enum CUpnpFileTransferEvent::TDirection CUpnpFileTransferEvent::Direction(void)
+	?ErrorCode@CUpnpFileTransferEvent@@QAEHXZ @ 19 NONAME ; int CUpnpFileTransferEvent::ErrorCode(void)
+	?ExternalizeL@CUpnpBrowseCriteria@@QBEXAAVRWriteStream@@@Z @ 20 NONAME ; void CUpnpBrowseCriteria::ExternalizeL(class RWriteStream &) const
+	?ExternalizeL@CUpnpContainer@@UBEXAAVRWriteStream@@@Z @ 21 NONAME ; void CUpnpContainer::ExternalizeL(class RWriteStream &) const
+	?ExternalizeL@CUpnpElement@@QBEXAAVRWriteStream@@@Z @ 22 NONAME ; void CUpnpElement::ExternalizeL(class RWriteStream &) const
+	?ExternalizeL@CUpnpFileTransferEvent@@UBEXAAVRWriteStream@@@Z @ 23 NONAME ; void CUpnpFileTransferEvent::ExternalizeL(class RWriteStream &) const
+	?ExternalizeL@CUpnpItem@@UBEXAAVRWriteStream@@@Z @ 24 NONAME ; void CUpnpItem::ExternalizeL(class RWriteStream &) const
+	?ExternalizeL@CUpnpMediaServerEventList@@QBEXAAVRWriteStream@@@Z @ 25 NONAME ; void CUpnpMediaServerEventList::ExternalizeL(class RWriteStream &) const
+	?ExternalizeL@CUpnpObjectList@@QBEXAAVRWriteStream@@@Z @ 26 NONAME ; void CUpnpObjectList::ExternalizeL(class RWriteStream &) const
+	?FilePath@CUpnpElement@@QBEABVTDesC16@@XZ @ 27 NONAME ; class TDesC16 const & CUpnpElement::FilePath(void) const
+	?FilePath@CUpnpFileTransferEvent@@QAEAAVTDesC16@@XZ @ 28 NONAME ; class TDesC16 & CUpnpFileTransferEvent::FilePath(void)
+	?Filter@CUpnpBrowseCriteria@@QBEABVTDesC8@@XZ @ 29 NONAME ; class TDesC8 const & CUpnpBrowseCriteria::Filter(void) const
+	?FindObject@CUpnpContainer@@QAEPAVCUpnpObject@@ABVTDesC8@@@Z @ 30 NONAME ; class CUpnpObject * CUpnpContainer::FindObject(class TDesC8 const &)
+	?FindObject@CUpnpObjectList@@QAEPAVCUpnpObject@@ABVTDesC8@@@Z @ 31 NONAME ; class CUpnpObject * CUpnpObjectList::FindObject(class TDesC8 const &)
+	?GetAttributes@CUpnpElement@@QAEABV?$RPointerArray@VCUpnpAttribute@@@@XZ @ 32 NONAME ; class RPointerArray<class CUpnpAttribute> const & CUpnpElement::GetAttributes(void)
+	?GetElements@CUpnpObject@@QAEABV?$RPointerArray@VCUpnpElement@@@@XZ @ 33 NONAME ; class RPointerArray<class CUpnpElement> const & CUpnpObject::GetElements(void)
+	?GetPointerArray@CUpnpMediaServerEventList@@QAEAAV?$RPointerArray@VCUpnpMediaServerEvent@@@@XZ @ 34 NONAME ; class RPointerArray<class CUpnpMediaServerEvent> & CUpnpMediaServerEventList::GetPointerArray(void)
+	?Id@CUpnpObject@@QBEABVTDesC8@@XZ @ 35 NONAME ; class TDesC8 const & CUpnpObject::Id(void) const
+	?IdsToDes8L@CUpnpObjectList@@QBEPAVHBufC8@@XZ @ 36 NONAME ; class HBufC8 * CUpnpObjectList::IdsToDes8L(void) const
+	?InternalizeL@CUpnpBrowseCriteria@@QAEXAAVRReadStream@@@Z @ 37 NONAME ; void CUpnpBrowseCriteria::InternalizeL(class RReadStream &)
+	?InternalizeL@CUpnpContainer@@UAEXAAVRReadStream@@@Z @ 38 NONAME ; void CUpnpContainer::InternalizeL(class RReadStream &)
+	?InternalizeL@CUpnpElement@@QAEXAAVRReadStream@@@Z @ 39 NONAME ; void CUpnpElement::InternalizeL(class RReadStream &)
+	?InternalizeL@CUpnpFileTransferEvent@@UAEXAAVRReadStream@@@Z @ 40 NONAME ; void CUpnpFileTransferEvent::InternalizeL(class RReadStream &)
+	?InternalizeL@CUpnpItem@@UAEXAAVRReadStream@@@Z @ 41 NONAME ; void CUpnpItem::InternalizeL(class RReadStream &)
+	?InternalizeL@CUpnpMediaServerEventList@@QAEXAAVRReadStream@@@Z @ 42 NONAME ; void CUpnpMediaServerEventList::InternalizeL(class RReadStream &)
+	?InternalizeL@CUpnpObjectList@@QAEXAAVRReadStream@@@Z @ 43 NONAME ; void CUpnpObjectList::InternalizeL(class RReadStream &)
+	?IsRequired@CUpnpElement@@QBEHXZ @ 44 NONAME ; int CUpnpElement::IsRequired(void) const
+	?Name@CUpnpAttribute@@QBEABVTDesC8@@XZ @ 45 NONAME ; class TDesC8 const & CUpnpAttribute::Name(void) const
+	?Name@CUpnpElement@@QBEABVTDesC8@@XZ @ 46 NONAME ; class TDesC8 const & CUpnpElement::Name(void) const
+	?NewL@CUpnpAttribute@@SAPAV1@ABVTDesC8@@@Z @ 47 NONAME ; class CUpnpAttribute * CUpnpAttribute::NewL(class TDesC8 const &)
+	?NewL@CUpnpBrowseCriteria@@SAPAV1@ABVTDesC8@@@Z @ 48 NONAME ; class CUpnpBrowseCriteria * CUpnpBrowseCriteria::NewL(class TDesC8 const &)
+	?NewL@CUpnpContainer@@SAPAV1@XZ @ 49 NONAME ; class CUpnpContainer * CUpnpContainer::NewL(void)
+	?NewL@CUpnpContainerList@@SAPAV1@XZ @ 50 NONAME ; class CUpnpContainerList * CUpnpContainerList::NewL(void)
+	?NewL@CUpnpElement@@SAPAV1@ABVTDesC8@@@Z @ 51 NONAME ; class CUpnpElement * CUpnpElement::NewL(class TDesC8 const &)
+	?NewL@CUpnpFileTransferEvent@@SAPAV1@XZ @ 52 NONAME ; class CUpnpFileTransferEvent * CUpnpFileTransferEvent::NewL(void)
+	?NewL@CUpnpFileTransferEventList@@SAPAV1@XZ @ 53 NONAME ; class CUpnpFileTransferEventList * CUpnpFileTransferEventList::NewL(void)
+	?NewL@CUpnpItem@@SAPAV1@XZ @ 54 NONAME ; class CUpnpItem * CUpnpItem::NewL(void)
+	?NewL@CUpnpItemList@@SAPAV1@XZ @ 55 NONAME ; class CUpnpItemList * CUpnpItemList::NewL(void)
+	?NewL@CUpnpObjectList@@SAPAV1@XZ @ 56 NONAME ; class CUpnpObjectList * CUpnpObjectList::NewL(void)
+	?NewLC@CUpnpAttribute@@SAPAV1@ABVTDesC8@@@Z @ 57 NONAME ; class CUpnpAttribute * CUpnpAttribute::NewLC(class TDesC8 const &)
+	?NewLC@CUpnpBrowseCriteria@@SAPAV1@ABVTDesC8@@@Z @ 58 NONAME ; class CUpnpBrowseCriteria * CUpnpBrowseCriteria::NewLC(class TDesC8 const &)
+	?NewLC@CUpnpContainerList@@SAPAV1@XZ @ 59 NONAME ; class CUpnpContainerList * CUpnpContainerList::NewLC(void)
+	?NewLC@CUpnpElement@@SAPAV1@ABVTDesC8@@@Z @ 60 NONAME ; class CUpnpElement * CUpnpElement::NewLC(class TDesC8 const &)
+	?NewLC@CUpnpFileTransferEvent@@SAPAV1@XZ @ 61 NONAME ; class CUpnpFileTransferEvent * CUpnpFileTransferEvent::NewLC(void)
+	?NewLC@CUpnpFileTransferEventList@@SAPAV1@XZ @ 62 NONAME ; class CUpnpFileTransferEventList * CUpnpFileTransferEventList::NewLC(void)
+	?NewLC@CUpnpItemList@@SAPAV1@XZ @ 63 NONAME ; class CUpnpItemList * CUpnpItemList::NewLC(void)
+	?NewLC@CUpnpObjectList@@SAPAV1@XZ @ 64 NONAME ; class CUpnpObjectList * CUpnpObjectList::NewLC(void)
+	?ObjectClass@CUpnpObject@@QBEABVTDesC8@@XZ @ 65 NONAME ; class TDesC8 const & CUpnpObject::ObjectClass(void) const
+	?ObjectCount@CUpnpContainer@@QAEHXZ @ 66 NONAME ; int CUpnpContainer::ObjectCount(void)
+	?ObjectCount@CUpnpObjectList@@QBEHXZ @ 67 NONAME ; int CUpnpObjectList::ObjectCount(void) const
+	?ParentId@CUpnpObject@@QBEABVTDesC8@@XZ @ 68 NONAME ; class TDesC8 const & CUpnpObject::ParentId(void) const
+	?ProgressState@CUpnpFileTransferEvent@@QAE?AW4TProgressState@1@XZ @ 69 NONAME ; enum CUpnpFileTransferEvent::TProgressState CUpnpFileTransferEvent::ProgressState(void)
+	?RefId@CUpnpItem@@QBEABVTDesC8@@XZ @ 70 NONAME ; class TDesC8 const & CUpnpItem::RefId(void) const
+	?Remove@CUpnpObjectList@@QAEPAVCUpnpObject@@ABVTDesC8@@@Z @ 71 NONAME ; class CUpnpObject * CUpnpObjectList::Remove(class TDesC8 const &)
+	?RemoveAndDestroy@CUpnpObjectList@@QAEXABVTDesC8@@@Z @ 72 NONAME ; void CUpnpObjectList::RemoveAndDestroy(class TDesC8 const &)
+	?RemoveAttributeL@CUpnpElement@@QAEXPBVCUpnpAttribute@@@Z @ 73 NONAME ; void CUpnpElement::RemoveAttributeL(class CUpnpAttribute const *)
+	?RemoveElementL@CUpnpObject@@QAEXPBVCUpnpElement@@@Z @ 74 NONAME ; void CUpnpObject::RemoveElementL(class CUpnpElement const *)
+	?RemoveObjectL@CUpnpContainer@@QAEXABVTDesC8@@@Z @ 75 NONAME ; void CUpnpContainer::RemoveObjectL(class TDesC8 const &)
+	?RequestedCount@CUpnpBrowseCriteria@@QBEHXZ @ 76 NONAME ; int CUpnpBrowseCriteria::RequestedCount(void) const
+	?Restricted@CUpnpObject@@QBEHXZ @ 77 NONAME ; int CUpnpObject::Restricted(void) const
+	?SetContentDirectoryObjectId@CUpnpFileTransferEvent@@QAEXH@Z @ 78 NONAME ; void CUpnpFileTransferEvent::SetContentDirectoryObjectId(int)
+	?SetDirection@CUpnpFileTransferEvent@@QAEXW4TDirection@1@@Z @ 79 NONAME ; void CUpnpFileTransferEvent::SetDirection(enum CUpnpFileTransferEvent::TDirection)
+	?SetErrorCode@CUpnpFileTransferEvent@@QAEXH@Z @ 80 NONAME ; void CUpnpFileTransferEvent::SetErrorCode(int)
+	?SetFilePathL@CUpnpElement@@QAEXABVTDesC16@@@Z @ 81 NONAME ; void CUpnpElement::SetFilePathL(class TDesC16 const &)
+	?SetFilePathL@CUpnpFileTransferEvent@@QAEXABVTDesC16@@@Z @ 82 NONAME ; void CUpnpFileTransferEvent::SetFilePathL(class TDesC16 const &)
+	?SetFilterL@CUpnpBrowseCriteria@@QAEXABVTDesC8@@@Z @ 83 NONAME ; void CUpnpBrowseCriteria::SetFilterL(class TDesC8 const &)
+	?SetIdL@CUpnpObject@@QAEXABVTDesC8@@@Z @ 84 NONAME ; void CUpnpObject::SetIdL(class TDesC8 const &)
+	?SetIsRequired@CUpnpElement@@QAEXH@Z @ 85 NONAME ; void CUpnpElement::SetIsRequired(int)
+	?SetNameL@CUpnpAttribute@@QAEXABVTDesC8@@@Z @ 86 NONAME ; void CUpnpAttribute::SetNameL(class TDesC8 const &)
+	?SetNameL@CUpnpElement@@QAEXABVTDesC8@@@Z @ 87 NONAME ; void CUpnpElement::SetNameL(class TDesC8 const &)
+	?SetObjectClassL@CUpnpObject@@QAEXABVTDesC8@@@Z @ 88 NONAME ; void CUpnpObject::SetObjectClassL(class TDesC8 const &)
+	?SetParentIdL@CUpnpObject@@QAEXABVTDesC8@@@Z @ 89 NONAME ; void CUpnpObject::SetParentIdL(class TDesC8 const &)
+	?SetProgressState@CUpnpFileTransferEvent@@QAEXW4TProgressState@1@@Z @ 90 NONAME ; void CUpnpFileTransferEvent::SetProgressState(enum CUpnpFileTransferEvent::TProgressState)
+	?SetRefIdL@CUpnpItem@@QAEXABVTDesC8@@@Z @ 91 NONAME ; void CUpnpItem::SetRefIdL(class TDesC8 const &)
+	?SetRequestedCount@CUpnpBrowseCriteria@@QAEXH@Z @ 92 NONAME ; void CUpnpBrowseCriteria::SetRequestedCount(int)
+	?SetRestricted@CUpnpObject@@QAEXH@Z @ 93 NONAME ; void CUpnpObject::SetRestricted(int)
+	?SetStartingIndex@CUpnpBrowseCriteria@@QAEXH@Z @ 94 NONAME ; void CUpnpBrowseCriteria::SetStartingIndex(int)
+	?SetTitleL@CUpnpObject@@QAEXABVTDesC8@@@Z @ 95 NONAME ; void CUpnpObject::SetTitleL(class TDesC8 const &)
+	?SetTransferId@CUpnpFileTransferEvent@@QAEXH@Z @ 96 NONAME ; void CUpnpFileTransferEvent::SetTransferId(int)
+	?SetValueL@CUpnpAttribute@@QAEXABVTDesC8@@@Z @ 97 NONAME ; void CUpnpAttribute::SetValueL(class TDesC8 const &)
+	?SetValueL@CUpnpElement@@QAEXABVTDesC8@@@Z @ 98 NONAME ; void CUpnpElement::SetValueL(class TDesC8 const &)
+	?SetWriteStatus@CUpnpObject@@QAEXH@Z @ 99 NONAME ; void CUpnpObject::SetWriteStatus(int)
+	?StartingIndex@CUpnpBrowseCriteria@@QBEHXZ @ 100 NONAME ; int CUpnpBrowseCriteria::StartingIndex(void) const
+	?Title@CUpnpObject@@QBEABVTDesC8@@XZ @ 101 NONAME ; class TDesC8 const & CUpnpObject::Title(void) const
+	?ToDes8L@CUpnpBrowseCriteria@@QBEPAVHBufC8@@XZ @ 102 NONAME ; class HBufC8 * CUpnpBrowseCriteria::ToDes8L(void) const
+	?ToDes8L@CUpnpMediaServerEventList@@QBEPAVHBufC8@@XZ @ 103 NONAME ; class HBufC8 * CUpnpMediaServerEventList::ToDes8L(void) const
+	?ToDes8L@CUpnpObject@@QBEPAVHBufC8@@XZ @ 104 NONAME ; class HBufC8 * CUpnpObject::ToDes8L(void) const
+	?ToDes8L@CUpnpObjectList@@QBEPAVHBufC8@@XZ @ 105 NONAME ; class HBufC8 * CUpnpObjectList::ToDes8L(void) const
+	?TransferId@CUpnpFileTransferEvent@@QAEHXZ @ 106 NONAME ; int CUpnpFileTransferEvent::TransferId(void)
+	?Value@CUpnpAttribute@@QBEABVTDesC8@@XZ @ 107 NONAME ; class TDesC8 const & CUpnpAttribute::Value(void) const
+	?Value@CUpnpElement@@QBEABVTDesC8@@XZ @ 108 NONAME ; class TDesC8 const & CUpnpElement::Value(void) const
+	?WriteStatus@CUpnpObject@@QBEHXZ @ 109 NONAME ; int CUpnpObject::WriteStatus(void) const
+	?OpParameterL@CUpnpDlnaProtocolInfo@@QAE?AVTPtrC8@@XZ @ 110 NONAME ; class TPtrC8 CUpnpDlnaProtocolInfo::OpParameterL(void)
+	?SetPnParameterL@CUpnpDlnaProtocolInfo@@QAEXABVTDesC8@@@Z @ 111 NONAME ; void CUpnpDlnaProtocolInfo::SetPnParameterL(class TDesC8 const &)
+	?GetOtherParams@CUpnpDlnaProtocolInfo@@QAE?AVTPtrC8@@XZ @ 112 NONAME ; class TPtrC8 CUpnpDlnaProtocolInfo::GetOtherParams(void)
+	?FourthField@CUpnpProtocolInfo@@UAE?AVTPtrC8@@XZ @ 113 NONAME ; class TPtrC8 CUpnpProtocolInfo::FourthField(void)
+	?SetThirdFieldL@CUpnpProtocolInfo@@QAEXABVTDesC8@@@Z @ 114 NONAME ; void CUpnpProtocolInfo::SetThirdFieldL(class TDesC8 const &)
+	?FlagsParameterL@CUpnpDlnaProtocolInfo@@QAE?AVTPtrC8@@XZ @ 115 NONAME ; class TPtrC8 CUpnpDlnaProtocolInfo::FlagsParameterL(void)
+	?NewL@CUpnpProtocolInfoLocal@@SAPAV1@ABVTDesC8@@@Z @ 116 NONAME ; class CUpnpProtocolInfoLocal * CUpnpProtocolInfoLocal::NewL(class TDesC8 const &)
+	?SetSecondFieldL@CUpnpProtocolInfo@@QAEXABVTDesC8@@@Z @ 117 NONAME ; void CUpnpProtocolInfo::SetSecondFieldL(class TDesC8 const &)
+	?SetOpParameterL@CUpnpDlnaProtocolInfo@@QAEXW4TDlnaParams@UpnpDlnaProtocolInfo@@H@Z @ 118 NONAME ; void CUpnpDlnaProtocolInfo::SetOpParameterL(enum UpnpDlnaProtocolInfo::TDlnaParams, int)
+	?ProtocolInfoL@CUpnpProtocolInfo@@QAE?AVTPtrC8@@XZ @ 119 NONAME ; class TPtrC8 CUpnpProtocolInfo::ProtocolInfoL(void)
+	?SetFirstFieldL@CUpnpProtocolInfo@@QAEXABVTDesC8@@@Z @ 120 NONAME ; void CUpnpProtocolInfo::SetFirstFieldL(class TDesC8 const &)
+	?NewL@CUpnpDlnaProtocolInfo@@SAPAV1@ABVTDesC8@@@Z @ 121 NONAME ; class CUpnpDlnaProtocolInfo * CUpnpDlnaProtocolInfo::NewL(class TDesC8 const &)
+	?NewL@CUpnpProtocolInfoLocal@@SAPAV1@ABVTDesC8@@0@Z @ 122 NONAME ; class CUpnpProtocolInfoLocal * CUpnpProtocolInfoLocal::NewL(class TDesC8 const &, class TDesC8 const &)
+	?FourthField@CUpnpDlnaProtocolInfo@@UAE?AVTPtrC8@@XZ @ 123 NONAME ; class TPtrC8 CUpnpDlnaProtocolInfo::FourthField(void)
+	?SetDlnaFlag@CUpnpDlnaProtocolInfo@@QAEXW4TDlnaFlags@UpnpDlnaProtocolInfo@@H@Z @ 124 NONAME ; void CUpnpDlnaProtocolInfo::SetDlnaFlag(enum UpnpDlnaProtocolInfo::TDlnaFlags, int)
+	?SecondField@CUpnpProtocolInfo@@QAE?AVTPtrC8@@XZ @ 125 NONAME ; class TPtrC8 CUpnpProtocolInfo::SecondField(void)
+	?CiParameter@CUpnpDlnaProtocolInfo@@QAEHXZ @ 126 NONAME ; int CUpnpDlnaProtocolInfo::CiParameter(void)
+	?PsParameter@CUpnpDlnaProtocolInfo@@QAE?AVTPtrC8@@XZ @ 127 NONAME ; class TPtrC8 CUpnpDlnaProtocolInfo::PsParameter(void)
+	?NewL@CUpnpProtocolInfo@@SAPAV1@XZ @ 128 NONAME ; class CUpnpProtocolInfo * CUpnpProtocolInfo::NewL(void)
+	?SetCiParameter@CUpnpDlnaProtocolInfo@@QAEXH@Z @ 129 NONAME ; void CUpnpDlnaProtocolInfo::SetCiParameter(int)
+	?NewL@CUpnpDlnaProtocolInfo@@SAPAV1@XZ @ 130 NONAME ; class CUpnpDlnaProtocolInfo * CUpnpDlnaProtocolInfo::NewL(void)
+	?DlnaFlag@CUpnpDlnaProtocolInfo@@QAEHW4TDlnaFlags@UpnpDlnaProtocolInfo@@@Z @ 131 NONAME ; int CUpnpDlnaProtocolInfo::DlnaFlag(enum UpnpDlnaProtocolInfo::TDlnaFlags)
+	?ThirdField@CUpnpProtocolInfo@@QAE?AVTPtrC8@@XZ @ 132 NONAME ; class TPtrC8 CUpnpProtocolInfo::ThirdField(void)
+	?NewL@CUpnpProtocolInfoLocal@@SAPAV1@ABVTDesC8@@H@Z @ 133 NONAME ; class CUpnpProtocolInfoLocal * CUpnpProtocolInfoLocal::NewL(class TDesC8 const &, int)
+	?OpParameter@CUpnpDlnaProtocolInfo@@QAEHW4TDlnaParams@UpnpDlnaProtocolInfo@@@Z @ 134 NONAME ; int CUpnpDlnaProtocolInfo::OpParameter(enum UpnpDlnaProtocolInfo::TDlnaParams)
+	?NewL@CUpnpProtocolInfo@@SAPAV1@ABVTDesC8@@@Z @ 135 NONAME ; class CUpnpProtocolInfo * CUpnpProtocolInfo::NewL(class TDesC8 const &)
+	?SetOpParameterL@CUpnpDlnaProtocolInfo@@QAEXABVTDesC8@@@Z @ 136 NONAME ; void CUpnpDlnaProtocolInfo::SetOpParameterL(class TDesC8 const &)
+	?SetOtherParamL@CUpnpDlnaProtocolInfo@@QAEXABVTDesC8@@@Z @ 137 NONAME ; void CUpnpDlnaProtocolInfo::SetOtherParamL(class TDesC8 const &)
+	?FirstField@CUpnpProtocolInfo@@QAE?AVTPtrC8@@XZ @ 138 NONAME ; class TPtrC8 CUpnpProtocolInfo::FirstField(void)
+	?SetFourthFieldL@CUpnpProtocolInfo@@QAEXABVTDesC8@@@Z @ 139 NONAME ; void CUpnpProtocolInfo::SetFourthFieldL(class TDesC8 const &)
+	?SetFlagsParameterL@CUpnpDlnaProtocolInfo@@QAEXABVTDesC8@@@Z @ 140 NONAME ; void CUpnpDlnaProtocolInfo::SetFlagsParameterL(class TDesC8 const &)
+	?SetPsParameterL@CUpnpDlnaProtocolInfo@@QAEXABVTDesC8@@@Z @ 141 NONAME ; void CUpnpDlnaProtocolInfo::SetPsParameterL(class TDesC8 const &)
+	?PnParameter@CUpnpDlnaProtocolInfo@@QAE?AVTPtrC8@@XZ @ 142 NONAME ; class TPtrC8 CUpnpDlnaProtocolInfo::PnParameter(void)
+

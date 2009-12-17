@@ -1,0 +1,33 @@
+/** @file
+* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies  this distribution, and is available 
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  
+*
+*/
+
+
+
+
+#include "../upnp_media_server_settings_api/group/bld.inf"
+
+#include "../upnp_av_objects_api/group/bld.inf"
+#include "../upnp_media_server_api/group/bld.inf"
+#include "../upnp_security_plugin_api/group/bld.inf"
+#include "../upnp_avcp_api/group/bld.inf"
+#
+#include "../upnp_media_server_metadata_api/group/bld.inf"
+
+#include "../upnp_command_api/group/bld.inf"
+#include "../upnp_plugin_api/group/bld.inf"
+
+

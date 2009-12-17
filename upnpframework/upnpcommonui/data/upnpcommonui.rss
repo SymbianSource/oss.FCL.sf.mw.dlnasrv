@@ -1,0 +1,1338 @@
+/*
+* Copyright (c) 2005 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Resource definitions for the Common UI
+*
+*/
+
+
+// RESOURCE IDENTIFIER
+NAME    UPCU
+
+// INCLUDES
+#include <avkon.rh>
+#include <avkon.rsg>
+#include <avkon.loc>
+#include <avkon.hrh>
+#include <eikon.rh>
+#include <eikon.rsg>
+#include <data_caging_paths_strings.hrh>
+#include <appinfo.rh>
+#include <avkon.mbg>
+#include <upnpcommonui.mbg>         // animation frames
+#include <upnpframework.loc>        // Loc strings for upnpframework subsystem
+
+#include "upnpcommonui.hrh"
+
+
+// CONSTANTS
+// None
+
+// MACROS
+// None
+
+// RESOURCE DEFINITIONS
+
+// --------------------------------------------------------------------------
+//
+// RSS_SIGNATURE
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE RSS_SIGNATURE 
+    {
+    }
+
+// --------------------------------------------------------------------------
+//
+// TBUF
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF 
+    { 
+    buf = "";
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_EXTERNAL_MEDIA_TITLE
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_external_media_title
+    {
+    buf = qtn_iupnp_title_ext_media_2;
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_EXTERNAL_WAITING_NOTE
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_external_waiting_note
+    {
+    buf = qtn_iupnp_main_empty; 
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_EXTERNAL_EMPTY_FOLDER
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_external_empty_folder
+    {
+    buf = qtn_iupnp_no_files_found; 
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_BROWSE_DIALOG_MENUBAR
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE MENU_BAR r_upnpcommonui_browse_dialog_menubar
+    {
+    titles =
+        {
+        MENU_TITLE 
+            { 
+            menu_pane = r_upnpcommonui_browse_option_menu;
+            }
+        };
+    }
+
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_MENUPANE_MARKABLE_LIST_IMPLEMENTATION
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE MENU_PANE r_upnpcommonui_menupane_markable_list_implementation
+    {
+    items =
+        {
+        MENU_ITEM
+            {
+            command=EAknCmdMark;
+            txt=qtn_options_list_mark_one;
+            },
+        MENU_ITEM
+            {
+            command=EAknMarkAll;
+            txt=qtn_options_list_mark_all;
+            },
+        MENU_ITEM
+            {
+            command=EAknCmdUnmark;
+            txt=qtn_options_list_unmark_one;
+            },
+        MENU_ITEM
+            {
+            command=EAknUnmarkAll;
+            txt=qtn_options_list_unmark_all;
+            }
+        };
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_MENUPANE_SHOW_SUB_MENU
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE MENU_PANE r_upnpcommonui_menupane_show_sub_menu
+    {
+    items =
+        {
+        MENU_ITEM
+            { 
+            command = EUPnPShowLocal; 
+            txt = qtn_iupnp_on_device;
+            },
+        MENU_ITEM
+            { 
+            command = EUPnPShowExt; 
+            txt = qtn_iupnp_via_homenet;
+            }
+        
+        };
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_MENUPANE_PLAY_SUB_MENU
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE MENU_PANE r_upnpcommonui_menupane_play_sub_menu
+    {
+    items =
+        {
+        MENU_ITEM
+            { 
+            command = EUPnPPlayLocal;
+            txt = qtn_iupnp_on_device;
+            },
+        MENU_ITEM
+            { 
+            command = EUPnPPlayExt; 
+            txt = qtn_iupnp_via_homenet; 
+            }
+
+        };
+    }
+
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_BROWSE_OPTION_MENU
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE MENU_PANE r_upnpcommonui_browse_option_menu
+    {
+    items =
+        {
+        MENU_ITEM 
+            { 
+            command = EUPnPOpen;
+            txt = qtn_options_open;
+            },
+        MENU_ITEM 
+            { 
+            command = EUPnPShow;
+            txt = qtn_iupnp_show_ext_main;
+            cascade = r_upnpcommonui_menupane_show_sub_menu;      
+            },
+        MENU_ITEM 
+            { 
+            command = EUPnPPlay;
+            txt = qtn_iupnp_play_ext_main;
+            cascade = r_upnpcommonui_menupane_play_sub_menu;        
+            },
+        MENU_ITEM 
+            { 
+            command = EUPnPFind;
+            txt = qtn_options_find; 
+            },
+        MENU_ITEM 
+            { 
+            command = EUPnPCopy;
+            txt = qtn_iupnp_copy_main; 
+            },
+        MENU_ITEM
+            {            
+            cascade= r_upnpcommonui_menupane_markable_list_implementation; 
+            command=EAknCmdEditListMenu; 
+            txt=qtn_options_list; 
+            },
+        MENU_ITEM 
+            { 
+            command = EUPnPHelp;
+            txt = qtn_options_help;
+            },
+        MENU_ITEM 
+            { 
+            command = EAknCmdExit; 
+            txt = qtn_options_exit; 
+            }
+        };
+    }
+
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_EXTERNAL_DEVICE_DIALOG_MENUBAR
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE MENU_BAR r_upnpcommonui_external_device_dialog_menubar
+    {
+    titles =
+        {
+        MENU_TITLE 
+            { 
+            menu_pane = r_upnpcommonui_external_device_option_menu;
+            }
+        };
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_COMMONUI_EXTERNAL_DEVICE_OPTION_MENU
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE MENU_PANE r_upnpcommonui_external_device_option_menu
+    {
+    items =
+        {
+        MENU_ITEM 
+            { 
+            command = EUPnPOpen;
+            txt = qtn_options_open; 
+            },
+        MENU_ITEM 
+            { 
+            command = EUPnPFind;
+            txt = qtn_options_find; 
+            },
+        MENU_ITEM 
+            { 
+            command = EUPnPHelp;
+            txt = qtn_options_help; 
+            },
+        MENU_ITEM 
+            { 
+            command = EAknCmdExit; 
+            txt = qtn_options_exit; 
+            }
+        };
+    }
+
+
+// --------------------------------------------------------------------------
+//
+// R_COMMONUI_SOFTKEYS_OPTION_BACK__OPEN
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE CBA r_upnpcommonui_softkeys_options_back__open
+    {
+    buttons =
+        {
+        CBA_BUTTON {id=EAknSoftkeyOptions; txt = text_softkey_option;},
+        CBA_BUTTON {id=EAknSoftkeyBack; txt = text_softkey_back; },
+        CBA_BUTTON {id=EAknSoftkeyOpen; txt= qtn_msk_open; }
+        };
+    }
+    
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_SOFTKEYS_OPTION_BACK__SHOW
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE CBA r_upnpcommonui_softkeys_options_back__show
+    {
+    buttons =
+        {
+        CBA_BUTTON {id=EAknSoftkeyOptions; txt = text_softkey_option;},
+        CBA_BUTTON {id=EAknSoftkeyBack; txt = text_softkey_back; },
+        CBA_BUTTON {id=EAknSoftkeyOk; txt= text_softkey_show; }
+        };
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_sOFTKEYS_OPTIONS_BACK__PLAY
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE CBA r_upnpcommonui_softkeys_options_back__play
+    {
+    buttons =
+        {
+        CBA_BUTTON {id=EAknSoftkeyOptions; txt = text_softkey_option;},
+        CBA_BUTTON {id=EAknSoftkeyBack; txt = text_softkey_back; },
+        CBA_BUTTON {id=EAknSoftkeyOk; txt= qtn_msk_play; }
+        };
+    }        
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_BROWSE_DIALOG
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_upnpcommonui_browse_dialog
+    { 
+    flags = EAknDialogMarkableList;
+    buttons = r_upnpcommonui_softkeys_options_back__open; 
+    items = 
+        { 
+        DLG_LINE
+            { 
+            id = EUPnPBrowseListBoxId;
+            type = EAknCtSingleGraphicListBox;
+            control = LISTBOX 
+                {
+                flags = EAknListBoxMarkableList; //EAknListBoxSelectionList; 
+                };
+            }
+        };
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_EXTERNAL_MEDIA_SELECT_DIALOG
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_upnpcommonui_external_media_select_dialog
+    { 
+    flags = EEikDialogFlagNoDrag |
+            EEikDialogFlagNoTitleBar |
+            EEikDialogFlagFillAppClientRect |
+            EEikDialogFlagCbaButtons |
+            EEikDialogFlagWait;
+    buttons = r_upnpcommonui_softkeys_empty_back; 
+    items = 
+        { 
+        DLG_LINE
+            { 
+            id = EUPnPExternDevicesListBoxId;
+            type = EAknCtSingleGraphicListBox;
+            control = LISTBOX 
+                {
+                flags = EAknListBoxSelectionList; 
+                };
+            }
+        };
+    }
+
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_VIDEO_PLAYER_DIALOG
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_upnpcommonui_video_player_dialog
+    { 
+    flags = EEikDialogFlagNoDrag |
+            EEikDialogFlagNoTitleBar |
+            EEikDialogFlagFillAppClientRect |
+            EEikDialogFlagCbaButtons |
+            EEikDialogFlagWait;
+    buttons = r_upnpcommonui_softkeys_empty_back; 
+    items = 
+        { 
+        DLG_LINE
+            { 
+            id = EUPnPVideoPlayerListBoxId;
+            type = ECustomCtrlDlgCtCustomControl;
+            }
+        };
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_VIDEO_PLAYBACK_WAIT_NOTE_DIALOG
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_upnpcommonui_video_playback_wait_note_dialog
+    {
+    flags = EAknProgressNoteFlags;
+    buttons = R_AVKON_SOFTKEYS_EMPTY;
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtNote;
+            id = EUPnPVideoDialogWaitNote;
+            control = AVKON_NOTE
+                {
+                layout         = EProgressLayout;
+                singular_label = qtn_iupnp_prog_prep_playback;
+                imageid        = EMbmAvkonQgn_note_progress;
+                imagemask      = EMbmAvkonQgn_note_progress_mask;
+                animation = R_QGN_GRAF_WAIT_BAR_ANIM;
+                };
+            }
+        };
+    }
+    
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_SOFTKEYS_PLAY_STOP
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE CBA r_upnpcommonui_softkeys_play_stop
+    { 
+    buttons = 
+        { 
+        CBA_BUTTON 
+            { 
+            id = EUPnPPlayCmd; 
+            txt = qtn_iupnp_play_ext_main;  
+            }, 
+        CBA_BUTTON 
+            { 
+            id = EUPnPStopCmd; 
+            txt = text_softkey_stop;    
+            } 
+        }; 
+    }
+    
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_SOFTKEYS_PAUSE_STOP
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE CBA r_upnpcommonui_softkeys_pause_stop 
+    { 
+    buttons = 
+        { 
+        CBA_BUTTON 
+            { 
+            id = EUPnPPauseCmd; 
+            txt = text_softkey_pause;  
+            }, 
+        CBA_BUTTON 
+            { 
+            id = EUPnPStopCmd; 
+            txt = text_softkey_stop;  
+            } 
+        }; 
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_sOFTKEYS_CONTINUE_STOP
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE CBA r_upnpcommonui_softkeys_continue_stop 
+    { 
+    buttons = 
+        { 
+        CBA_BUTTON 
+            { 
+            id = EUPnPContinueCmd; 
+            txt = qtn_iupnp_sk_continue; 
+            }, 
+        CBA_BUTTON 
+            { 
+            id = EUPnPStopCmd; 
+            txt = text_softkey_stop; 
+            } 
+        }; 
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_SOFTKEYS_REPLAY_BACK
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE CBA r_upnpcommonui_softkeys_replay_back 
+    { 
+    buttons = 
+        { 
+        CBA_BUTTON 
+            { 
+            id = EUPnPReplayCmd; 
+            txt = qtn_iupnp_sk_replay; 
+            }, 
+        CBA_BUTTON 
+            { 
+            id = EUPnPBackCmd; 
+            txt = text_softkey_back; 
+            } 
+        }; 
+    }
+
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_SOFTKEYS_EMPTY_CANCEL
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE CBA r_upnpcommonui_softkeys_empty_cancel 
+    { 
+    buttons = 
+        { 
+        CBA_BUTTON 
+            { 
+            id = EAknSoftkeyEmpty;             
+            },        
+        CBA_BUTTON 
+            { 
+            id = EAknSoftkeyCancel; 
+            txt = text_softkey_cancel;  
+            } 
+        }; 
+    }
+            
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_VIDEO_NAVI_TIME
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_video_navi_time 
+    { 
+    buf = qtn_iupnp_sep_slash; 
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_SELECT_DEVICE_TEXT
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_select_device_text
+    {
+    buf = qtn_iupnp_select_device;
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_SELECT_PLAYER_TEXT
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_select_player_text
+    {
+    buf = qtn_iupnp_select_player;
+    }
+
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_COPY_TO_TEXT
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_copy_to_text
+    { 
+    buf = qtn_fldr_copy_to_prompt;
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_MOVE_TO_TEXT
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_move_to_text
+    { 
+    buf = qtn_fldr_move_to_prmpt;
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_TITLE_SHOWING
+//
+// --------------------------------------------------------------------------     
+//
+RESOURCE TBUF r_upnpcommonui_title_showing   
+    { 
+    buf = qtn_iupnp_title_showing;
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_NOMEMORY_TEXT
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_nomemory_text    
+    { 
+    buf = qtn_memlo_ram_out_of_mem;
+    }
+
+// --------------------------------------------------------------------------
+// R_UPNPCOMMONUI_DEVICE_MEMORY_LOW
+// --------------------------------------------------------------------------
+RESOURCE TBUF r_upnpcommonui_device_memory_low    
+    {
+    buf = qtn_memlo_device_memory_full;
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_INFO_COPY_ONE_TEXT
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_info_copy_one_text
+    {
+    buf = qtn_iupnp_info_copy_one;
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_INFO_COPY_MANY_TEXT
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_info_copy_many_text
+    {
+    buf = qtn_iupnp_info_copy_many;
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_RENDERING_FAILED_UNKNOWN_ERROR_TEXT
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_rendering_failed_unknown_error_text
+    {
+    buf = qtn_iupnp_err_rendering_failed_unknown;
+    }
+    
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_NOT_SUPPORTED_ERROR_TEXT
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_not_supported_error_text
+    {
+    buf = qtn_iupnp_err_not_supported;
+    }    
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_GENERAL_FAILURE_ERROR_TEXT
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_general_failure_error_text
+    {
+    buf = qtn_iupnp_err_general_failure;
+    }    
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_CONN_LOST_COPY_ERROR_TEXT
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_conn_lost_copy_error_text
+    {
+    buf = qtn_iupnp_err_conn_lost_copy;
+    }    
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_SOFTKEYS_EMPTY_BACK
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE CBA r_upnpcommonui_softkeys_empty_back 
+    { 
+    buttons = 
+        { 
+        CBA_BUTTON 
+            { 
+            id = EAknSoftkeyEmpty;             
+            },        
+        CBA_BUTTON 
+            { 
+            id = EUPnPBackCmd; 
+            txt = text_softkey_back;  
+            } 
+        }; 
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_SOFTKEYS_EMTPY_STOP
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE CBA r_upnpcommonui_softkeys_empty_stop 
+    { 
+    buttons = 
+        { 
+        CBA_BUTTON 
+            { 
+            id = EAknSoftkeyEmpty;             
+            },        
+        CBA_BUTTON 
+            { 
+            id = EUPnPStopCmd; 
+            txt = text_softkey_stop;  
+            } 
+        }; 
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_ERROR_CON_TEXT
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_error_con_text
+    { 
+    buf=qtn_iupnp_err_con_failed;
+    }
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_BROWSE_UPDATE_WAIT_NOTE_DIALOG
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_upnpcommonui_browse_update_wait_note_dialog
+    {
+    flags = EAknProgressNoteFlags | EEikDialogFlagWait;
+    buttons = r_upnpcommonui_softkeys_empty_cancel;
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtNote;
+            id = EUPnPBrowseDialogProgressNote;
+            control = AVKON_NOTE
+                {
+                layout         = EProgressLayout;
+                singular_label = qtn_iupnp_wait_list_update;
+                imageid        = EMbmAvkonQgn_note_progress;
+                imagemask      = EMbmAvkonQgn_note_progress_mask;
+                animation = R_QGN_GRAF_WAIT_BAR_ANIM;
+                };
+            }
+        };
+    }
+    
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_ANIMATION_FOR_SELECTION_DIALOG
+//
+//----------------------------------------------------
+//
+RESOURCE BMPANIM_DATA r_upnpcommonui_animation_for_selection_dialog
+    {
+    frameinterval   = 250;
+    playmode        = EAknBitmapAnimationPlayModeCycle;
+    frames          = r_upnpcommonui_animation_for_selection_dialog_images;
+    bmpfile = "Z:"APP_RESOURCE_DIR"\\UPnPCommonUI.mif";
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_ANIMATION_FOR_SELECTION_DIALOG_IMAGES
+//
+//----------------------------------------------------
+//
+RESOURCE ARRAY r_upnpcommonui_animation_for_selection_dialog_images
+    {
+    items=
+        {
+        BMPANIM_FRAME {bmpid=EMbmUpnpcommonuiQgn_indi_upnp_search_1 ; maskid=EMbmUpnpcommonuiQgn_indi_upnp_search_1_mask;},
+        BMPANIM_FRAME {bmpid=EMbmUpnpcommonuiQgn_indi_upnp_search_2 ; maskid=EMbmUpnpcommonuiQgn_indi_upnp_search_2_mask;},
+        BMPANIM_FRAME {bmpid=EMbmUpnpcommonuiQgn_indi_upnp_search_3 ; maskid=EMbmUpnpcommonuiQgn_indi_upnp_search_3_mask;},
+        BMPANIM_FRAME {bmpid=EMbmUpnpcommonuiQgn_indi_upnp_search_4 ; maskid=EMbmUpnpcommonuiQgn_indi_upnp_search_4_mask;},    
+        BMPANIM_FRAME {bmpid=EMbmUpnpcommonuiQgn_indi_upnp_search_5 ; maskid=EMbmUpnpcommonuiQgn_indi_upnp_search_5_mask;},   
+        BMPANIM_FRAME {bmpid=EMbmUpnpcommonuiQgn_indi_upnp_search_6 ; maskid=EMbmUpnpcommonuiQgn_indi_upnp_search_6_mask;},    
+        BMPANIM_FRAME {bmpid=EMbmUpnpcommonuiQgn_indi_upnp_search_7 ; maskid=EMbmUpnpcommonuiQgn_indi_upnp_search_7_mask;},    
+        BMPANIM_FRAME {bmpid=EMbmUpnpcommonuiQgn_indi_upnp_search_8 ; maskid=EMbmUpnpcommonuiQgn_indi_upnp_search_8_mask;},
+        BMPANIM_FRAME {bmpid=EMbmUpnpcommonuiQgn_indi_upnp_search_9 ; maskid=EMbmUpnpcommonuiQgn_indi_upnp_search_9_mask;}
+        };
+    }    
+
+    
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_SERVER_SERVER_SEARCH_MAIN
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_server_search_main
+    {
+    buf = qtn_iupnp_server_search_main;
+    } 
+
+
+// --------------------------------------------------------------------------
+//
+// R_UPNPCOMMONUI_SOFTKEYS_SHOW_STOP
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE CBA r_upnpcommonui_softkeys_show_stop
+    { 
+    buttons = 
+        { 
+        CBA_BUTTON 
+            { 
+            id = EAknSoftkeyShow;
+            txt = text_softkey_show;
+            },        
+        CBA_BUTTON 
+            { 
+            id = EUPnPStopCmd; 
+            txt = text_softkey_stop;          
+            } 
+        }; 
+    }
+
+// CONSTANTS
+#define KStartingYearForDateEditor 1
+#define KEndingYearForDateEditor 9999
+#define KFileNameEditorMaxWidth 255
+#define KFileNameEditorNumOfLines 0
+#define KFileNameEditorMaxLength 255
+
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_ADVANCEDFIND_WAIT_NOTE_DIALOG
+//
+//----------------------------------------------------
+//
+
+RESOURCE DIALOG r_upnpcommonui_advancedfind_wait_note_dialog
+    {
+    flags = EAknProgressNoteFlags | EEikDialogFlagWait;
+    buttons = R_AVKON_SOFTKEYS_CANCEL;
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtNote;
+            id = EGeneralNote;
+            control = AVKON_NOTE
+                {
+                layout = EProgressLayout;
+                singular_label = qtn_iupnp_finding_results_note;
+                imageid = EMbmAvkonQgn_note_progress;
+                imagemask = EMbmAvkonQgn_note_progress_mask;
+                  animation = R_QGN_GRAF_WAIT_BAR_ANIM;
+                };
+            }
+        };
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_MEDIA_TYPE_SETTING_PAGE
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_upnpcommonui_media_type_setting_page
+    {
+    label = qtn_iupnp_media_type_title;
+    type = EAknCtPopupSettingList;
+    editor_resource_id = r_upnpcommonui_media_type_editor;
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_FILE_NAME_SETTING_PAGE
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_upnpcommonui_file_name_setting_page
+    {
+    type = EEikCtEdwin;//text editor 
+    editor_resource_id = r_upnpcommonui_file_name_editor;
+    }
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_ARTIST_SETTING_PAGE
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_upnpcommonui_artist_setting_page
+    {
+    type = EEikCtEdwin;//text editor 
+    editor_resource_id = r_upnpcommonui_file_name_editor;
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_ALBUM_NAME_SETTING_PAGE
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_upnpcommonui_album_name_setting_page
+    {
+    type = EEikCtEdwin;//text editor 
+    editor_resource_id = r_upnpcommonui_file_name_editor;
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_GENRE_SETTING_PAGE
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_upnpcommonui_genre_setting_page
+    {
+    type = EEikCtEdwin;//text editor 
+    editor_resource_id = r_upnpcommonui_file_name_editor;
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_DATE_FROM_SETTING_PAGE
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_upnpcommonui_date_from_setting_page
+    {
+    type = EEikCtDateEditor; //date editor
+    editor_resource_id = r_upnpcommonui_date_editor;
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_DATE_UNTIL_SETTING_PAGE
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_upnpcommonui_date_until_setting_page
+    {
+    type = EEikCtDateEditor; //date editor
+    editor_resource_id = r_upnpcommonui_date_editor;
+    }
+
+
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_UPNPADFIND_SOFTKEYS_OK_BACK__oK
+//
+//----------------------------------------------------
+//
+RESOURCE CBA r_upnpcommonui_upnpadvfind_softkeys_ok_back__ok
+    {
+    //flags = 0;
+    buttons =
+        {
+        CBA_BUTTON {id=EAknSoftkeyOk; txt = text_softkey_ok;},
+        CBA_BUTTON {id=EAknSoftkeyBack; txt = text_softkey_back; },
+        CBA_BUTTON {id=EAknSoftkeyOpen; txt = qtn_msk_change; }
+        };
+    }
+    
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_ADVANCED_FIND_MAIN_DIALOG
+//
+//----------------------------------------------------
+//
+RESOURCE DIALOG r_upnpcommonui_advanced_find_main_dialog
+    {
+    flags  = EAknDialogMultiselectionList;
+    
+    buttons = r_upnpcommonui_upnpadvfind_softkeys_ok_back__ok;
+    items = 
+        {
+        DLG_LINE        
+            {
+            type = KAknCtLastControlId;
+            id = EMultiSelectionListBoxId;
+            control = AVKON_SETTING_ITEM_LIST
+                {
+                flags = EAknSettingItemIncludeHiddenInOrdinal;
+                  initial_number = 1;
+                items =
+                    {
+                    AVKON_SETTING_ITEM
+                          {
+                        identifier = EAdvancedFindMediaType;
+                        setting_page_resource = r_upnpcommonui_media_type_setting_page;
+                        associated_resource = r_upnpcommonui_media_type_popup_texts;
+                        name = qtn_iupnp_media_type;
+                        },
+                    AVKON_SETTING_ITEM
+                          {
+                        identifier = EAdvancedFindFileName;
+                        setting_page_resource = r_upnpcommonui_file_name_setting_page;
+                        name = qtn_iupnp_find_file;
+                        },
+                    AVKON_SETTING_ITEM
+                          {
+                        identifier = EAdvancedFindArtist;
+                        setting_page_resource = r_upnpcommonui_artist_setting_page;
+                        name = qtn_iupnp_find_artist;
+                        },
+                    AVKON_SETTING_ITEM
+                          {
+                        identifier = EAdvancedFindAlbum;
+                        setting_page_resource = r_upnpcommonui_album_name_setting_page;
+                        name = qtn_iupnp_find_album;
+                        },
+                    AVKON_SETTING_ITEM
+                          {
+                        identifier = EAdvancedFindGenre;
+                        setting_page_resource = r_upnpcommonui_genre_setting_page;
+                        name = qtn_iupnp_find_genre;
+                        },
+                    AVKON_SETTING_ITEM
+                          {
+                        identifier = EAdvancedFindDateFrom;
+                        setting_page_resource = r_upnpcommonui_date_from_setting_page;
+                        name = qtn_iupnp_find_date_from;
+                        },
+                    AVKON_SETTING_ITEM
+                          {
+                        identifier = EAdvancedFindDateUntil;
+                        setting_page_resource = r_upnpcommonui_date_until_setting_page;
+                        name = qtn_iupnp_find_date_until;
+                        }
+                    };
+                };
+            }
+          };
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_MEDIA_TYPE_EDITOR
+//
+//----------------------------------------------------
+//
+RESOURCE POPUP_SETTING_LIST r_upnpcommonui_media_type_editor
+    {
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_MEDIA_TYPE_POPUP_TEXTS
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_POPUP_SETTING_TEXTS r_upnpcommonui_media_type_popup_texts
+    {
+    setting_texts_resource = r_upnpcommonui_advanced_find_media_types_texts;
+    popped_up_texts_resource = r_upnpcommonui_media_type_texts_popped_up;
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_ADVANCED_FIND_MEDIA_TYPES_TEXTS
+//
+//----------------------------------------------------
+//
+RESOURCE ARRAY r_upnpcommonui_advanced_find_media_types_texts
+    {
+    items =
+        {
+        AVKON_ENUMERATED_TEXT { value = EAdvancedFindAll; text = qtn_iupnp_mt_all; },
+        AVKON_ENUMERATED_TEXT { value = EAdvancedFindImages; text = qtn_iupnp_mt_image; },
+        AVKON_ENUMERATED_TEXT { value = EAdvancedFindVideo; text = qtn_iupnp_mt_video; },
+        AVKON_ENUMERATED_TEXT { value = EAdvancedFindMusic; text = qtn_iupnp_mt_music; }
+        };
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_MEDIA_TYPE_TEXTS_POPPED_UP
+//
+//----------------------------------------------------
+//
+RESOURCE ARRAY r_upnpcommonui_media_type_texts_popped_up
+    {
+    items =
+        {
+        LBUF { txt = qtn_iupnp_mt_all; },
+        LBUF { txt = qtn_iupnp_mt_image; },
+        LBUF { txt = qtn_iupnp_mt_video; },
+        LBUF { txt = qtn_iupnp_mt_music; }
+        };
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_DATE_EDITOR
+//
+//----------------------------------------------------
+//
+RESOURCE DATE_EDITOR r_upnpcommonui_date_editor
+    {
+    minDate = DATE
+        {
+        year=KStartingYearForDateEditor;
+        };
+
+    maxDate = DATE
+        {
+        year=KEndingYearForDateEditor;
+        };
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_FILE_NAME_EDITOR
+//
+//----------------------------------------------------
+//
+RESOURCE EDWIN r_upnpcommonui_file_name_editor
+    {
+    width = KFileNameEditorMaxWidth;
+    lines = KFileNameEditorNumOfLines;
+    maxlength = KFileNameEditorMaxLength;
+    default_case = EAknEditorTextCase;
+    }
+
+
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_ADVANCED_FIND_SEARCH_RESULT_TITLE
+//
+//----------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_advanced_find_search_result_title
+    {
+    buf = qtn_iupnp_search_results;
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_ADVANCED_FIND_SEARCH_RESULT_FILE
+//
+//----------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_advanced_find_search_result_file
+    {
+    buf = qtn_iupnp_nof_file;
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_ADVANCED_FIND_SEARCH_RESULT_FILES
+//
+//----------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_advanced_find_search_result_files
+    {
+    buf = qtn_iupnp_nof_files;
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_ADVANCED_FIND_SEARCH_RESULT_NO_RESULTS
+//
+//----------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_advanced_find_search_result_no_results
+    {
+    buf = qtn_iupnp_no_files_found;
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_RESULT_WINDOW_MENUBAR
+//
+//----------------------------------------------------
+//
+RESOURCE MENU_BAR r_upnpcommonui_result_window_menubar
+    {
+    titles =
+        {
+        MENU_TITLE { menu_pane = r_upnpcommonui_result_window_menu;}
+        };
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_RESULT_WINDOW_MENU
+//
+//----------------------------------------------------
+//
+RESOURCE MENU_PANE r_upnpcommonui_result_window_menu
+    {
+    items =
+        {
+        MENU_ITEM
+            {
+            command = EUPnPShow;
+            txt = qtn_iupnp_show_ext_main;
+            cascade = r_upnpcommonui_menupane_show_sub_menu;
+            },
+        MENU_ITEM
+            { 
+            command = EUPnPPlay; 
+            txt = qtn_iupnp_play_ext_main;
+            cascade = r_upnpcommonui_menupane_play_sub_menu;
+            },
+        MENU_ITEM 
+            { 
+            command = EUPnPCopy;
+            txt = qtn_iupnp_copy_main; 
+            },
+        MENU_ITEM
+            {
+            cascade = R_AVKON_MENUPANE_MARKABLE_LIST_IMPLEMENTATION;
+            command = EAknCmdEditListMenu;
+            txt = qtn_options_list;
+            },
+        MENU_ITEM 
+            {
+            command = EAknCmdHelp;
+            txt = qtn_options_help;
+            },
+        MENU_ITEM
+            { 
+            command = EAknCmdExit;
+            txt = qtn_options_exit;
+            }
+        };
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_ADVANCED_FIND_RESULT_DIALOG
+//
+//----------------------------------------------------
+//
+RESOURCE DIALOG r_upnpcommonui_advanced_find_result_dialog
+    {
+    flags = EEikDialogFlagNoDrag | EEikDialogFlagNoTitleBar | EEikDialogFlagFillAppClientRect |
+               EEikDialogFlagCbaButtons | EEikDialogFlagWait;
+
+    buttons = R_AVKON_SOFTKEYS_OPTIONS_BACK;
+    items =
+        {
+        DLG_LINE
+            {
+            id = EAdvFindResultBoxId;
+            type = EAknCtDoubleGraphicListBox;
+            control = LISTBOX
+                {
+                    flags = EAknListBoxMarkableList;            
+                };
+            }
+        };
+    }
+
+//----------------------------------------------------
+//
+// R_COMMONUI_ADVANCED_FIND_TOO_MANY_RESULTS_ERROR
+//
+//----------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_advanced_find_too_many_results_error 
+    { 
+	buf=qtn_iupnp_too_big_cache_note_text;
+    }
+
+//----------------------------------------------------
+//
+// R_UPNPCOMMONUI_NO_ITEMS_TO_PLAY_TEXT
+//
+//----------------------------------------------------
+//
+RESOURCE TBUF r_upnpcommonui_no_items_to_play_text 
+    { 
+	buf=qtn_iupnp_no_items_to_play_text;
+    }
+
+// End of file

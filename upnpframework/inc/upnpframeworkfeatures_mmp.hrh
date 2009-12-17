@@ -1,0 +1,30 @@
+/*
+* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Defines the set of features included to UPnP FW
+*
+*/
+
+
+#ifndef UPNPFRAMEWORKFEATURES_MMP_HRH
+#define UPNPFRAMEWORKFEATURES_MMP_HRH
+
+// Add changes to the default values here.
+
+// Generic upnp console module testing flag. Enables special MT features and
+// toggles console mode (user interfaces will trigger OFF)
+// MACRO __UPNP_CONSOLE_MT__
+
+#endif // UPNPFRAMEWORKFEATURES_MMP_HRH
+
+

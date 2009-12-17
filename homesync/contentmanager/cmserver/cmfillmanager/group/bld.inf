@@ -1,0 +1,31 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Build information file for Fill Manager
+*
+*/
+
+
+
+// Supported platforms
+prj_platforms
+DEFAULT
+
+// MMP files
+prj_mmpfiles
+cmfillmanager.mmp
+
+// Files to be exported
+prj_exports
+../inc/cmfillmanagerfactory.h   |../../../../../inc/cmfillmanagerfactory.h
+../inc/cmfillmanager.h          |../../../../../inc/cmfillmanager.h

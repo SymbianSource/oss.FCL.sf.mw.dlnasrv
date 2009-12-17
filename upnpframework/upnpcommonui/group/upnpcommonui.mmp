@@ -1,0 +1,116 @@
+/*
+* Copyright (c) 2005-2006 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Common UI Project specification file
+*
+*/
+
+
+// For compatibility with S60 3.2 and IAD branch
+#include "../../../group/upnpplatformvar.hrh"
+#include <data_caging_paths.hrh>
+
+TARGET          upnpcommonui.dll
+TARGETTYPE      dll
+UID             0x1000008d 0x10208A1A
+
+VENDORID        VID_DEFAULT
+CAPABILITY      CAP_GENERAL_DLL
+
+// SIS installation + IAD support
+VERSION 10.1
+paged
+
+// Include paths
+USERINCLUDE     ../inc
+USERINCLUDE     ../../inc
+USERINCLUDE     ../../../inc
+
+APP_LAYER_SYSTEMINCLUDE
+UPNP_LOC_INCLUDE_PATH_COMPONENT
+
+START RESOURCE  ../data/upnpcommonui.rss
+HEADER
+TARGETPATH      RESOURCE_FILES_DIR
+LANGUAGE_IDS
+END
+
+SOURCEPATH      ../src
+SOURCE          upnpexternaldevicedialog.cpp
+SOURCE          upnpbrowsecacheitem.cpp
+SOURCE          upnpbrowsedialog.cpp
+SOURCE          upnpselectiondialog.cpp
+SOURCE          upnpcommonui.cpp
+SOURCE          upnpvideoplayerdialog.cpp
+SOURCE          upnpnavipanecontainer.cpp
+SOURCE          upnpadvfinddialog.cpp
+SOURCE          upnpadvfindlist.cpp
+SOURCE          upnpimageplayer.cpp
+SOURCE          upnpadvfindresultwindow.cpp
+SOURCE          upnplocalplayer.cpp
+
+// Core platform and UI
+LIBRARY         euser.lib
+LIBRARY         apparc.lib
+LIBRARY         cone.lib
+LIBRARY         bafl.lib
+LIBRARY         eikcore.lib
+LIBRARY         eikcoctl.lib
+LIBRARY         avkon.lib
+LIBRARY         aknlayout.lib
+LIBRARY         AKNSKINS.lib
+LIBRARY         AknIcon.lib
+LIBRARY         AknLayout2Scalable.lib
+LIBRARY         eikctl.lib
+LIBRARY         eikdlg.lib
+LIBRARY         featmgr.lib
+LIBRARY         egul.lib
+LIBRARY         CommonEngine.lib
+LIBRARY         fbscli.lib 
+LIBRARY         efsrv.lib
+LIBRARY         hlplch.lib
+LIBRARY         gdi.lib
+LIBRARY         apsettingshandlerui.lib
+LIBRARY         apengine.lib
+LIBRARY         aknskinsrv.lib
+LIBRARY         CommonDialogs.lib
+LIBRARY         PlatformEnv.lib
+LIBRARY         commdb.lib
+LIBRARY         ServiceHandler.lib
+LIBRARY         commonui.lib
+LIBRARY         apmime.lib //TDataType
+LIBRARY         charconv.lib
+LIBRARY         remconcoreapi.lib
+LIBRARY         remconinterfacebase.lib
+
+// ECom
+library         ecom.lib
+
+// S60 Upnp Stack
+LIBRARY         upnpipserversutils.lib
+LIBRARY         upnpavobjects.lib
+LIBRARY         avmediaserverclient.lib
+
+// Upnp Framework
+LIBRARY         upnputilities.lib
+LIBRARY         upnpavcontrollerclient.lib
+LIBRARY         upnpavcontrollerhelper.lib
+LIBRARY         upnpfiletransferengine.lib
+LIBRARY         upnpmusicadapter.lib
+LIBRARY         upnpxmlparser.lib
+LIBRARY         upnpsettingsengine.lib
+
+// Logging
+DEBUGLIBRARY         flogger.lib
+
+// End of file

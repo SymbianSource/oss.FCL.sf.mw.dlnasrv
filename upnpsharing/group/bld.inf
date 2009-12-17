@@ -1,0 +1,50 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Build information file for upnpsharing
+*
+*/
+
+
+
+
+
+
+// For compatibility with S60 3.2 and IAD branch
+#include "../../group/upnpplatformvar.hrh"
+
+PRJ_PLATFORMS
+
+PRJ_EXPORTS
+// ROM build
+../rom/upnpsharing.iby               CORE_MW_LAYER_IBY_EXPORT_PATH(upnpsharing.iby)
+../rom/upnpsharingresources.iby      CORE_MW_LAYER_IBY_EXPORT_PATH(upnpsharingresources.iby)
+// LOC files
+UPNP_LOC_EXPORT(upnpsharing.loc)
+
+PRJ_MMPFILES
+// none
+
+    // The DLNA profiler
+    #include "../upnpdlnaprofiler/group/bld.inf"
+
+    // upnp security
+    #include "../upnpsecurity/group/bld.inf"
+
+    // content server and server client
+    #include "../upnpcontentserver/group/bld.inf"
+
+    // content server API
+    #include "../applicationengine/group/bld.inf"
+
+// end of file

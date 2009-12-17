@@ -1,0 +1,7 @@
+EXPORTS
+	?NewL@CCmScheduler@@SAPAV1@AAVMCmServiceObserver@@AAVMCmSettings@@@Z @ 1 NONAME ; class CCmScheduler * CCmScheduler::NewL(class MCmServiceObserver &, class MCmSettings &)
+	?ServiceExecuted@CCmScheduler@@QAEXW4TCmService@@H@Z @ 2 NONAME ; void CCmScheduler::ServiceExecuted(enum TCmService, int)
+	?SetEnabledL@CCmScheduler@@QAEXH@Z @ 3 NONAME ; void CCmScheduler::SetEnabledL(int)
+	?SetScheduledServiceState@CCmScheduler@@QAEXH@Z @ 4 NONAME ; void CCmScheduler::SetScheduledServiceState(int)
+	?SetServiceToExecute@CCmScheduler@@QAEXW4TCmService@@@Z @ 5 NONAME ; void CCmScheduler::SetServiceToExecute(enum TCmService)
+

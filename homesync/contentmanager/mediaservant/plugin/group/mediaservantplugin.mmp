@@ -1,0 +1,70 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project definition
+*
+*/
+
+#include <platform_paths.hrh>
+
+TARGET         mediaservantplugin.dll
+
+CAPABILITY CAP_ECOM_PLUGIN
+
+TARGETTYPE     PLUGIN
+
+UID            0x10009D8D 0x1028290E
+VENDORID       VID_DEFAULT
+
+SECUREID       0x1028290E
+
+
+
+SOURCEPATH      ../../src
+SOURCE          mspropertywatcher.cpp
+SOURCEPATH      ../src
+SOURCE          mediaservantplugin.cpp
+SOURCE          proxy.cpp
+
+USERINCLUDE     ../inc
+USERINCLUDE     ../../inc                   // for propertywathcer.h
+
+MW_LAYER_SYSTEMINCLUDE
+USERINCLUDE     ../../../../../inc
+
+START RESOURCE  ../data/200075DD.rss
+TARGET          mediaservantplugin.rsc
+TARGETPATH      resource/plugins
+END
+
+
+
+LIBRARY         euser.lib
+LIBRARY         ecom.lib
+LIBRARY         fbscli.lib
+LIBRARY         AKNSKINS.lib
+LIBRARY         aknskinsrv.lib
+LIBRARY         egul.lib
+LIBRARY         msengine.lib
+LIBRARY         CommonEngine.lib     // stringloader
+LIBRARY         eikcore.lib          // CoeEnv
+LIBRARY         bafl.lib
+LIBRARY         apgrfx.lib           // apasession
+LIBRARY         apparc.lib           // appinfo
+LIBRARY         cone.lib
+LIBRARY         avkon.lib
+LIBRARY         PlatformEnv.lib      // pathinfo
+
+
+DEBUGLIBRARY    flogger.lib
+

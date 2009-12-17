@@ -1,0 +1,69 @@
+/** @file
+* Copyright (c) 2005-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies  this distribution, and is available 
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project specification file for UPnPObjects library.
+*
+*/
+
+#include <platform_paths.hrh>
+
+TARGETTYPE      DLL
+// Build target
+TARGET          upnpavobjects.dll
+UID             0x1000008D 0x10208A13
+
+
+VERSION 10.1
+paged
+
+// Platform security
+CAPABILITY      CAP_GENERAL_DLL
+VENDORID        VID_DEFAULT
+
+// Include paths
+MW_LAYER_SYSTEMINCLUDE
+
+USERINCLUDE     ../inc
+
+// Sources
+SOURCEPATH      ../src
+SOURCE          upnpobject.cpp
+SOURCE          upnpcontainer.cpp
+SOURCE          upnpitem.cpp
+SOURCE          upnpitemlist.cpp
+SOURCE          upnpelement.cpp
+SOURCE          upnpattribute.cpp
+SOURCE          upnpbrowsecriteria.cpp
+SOURCE          upnpobjectlist.cpp
+SOURCE          upnpcontainerlist.cpp
+SOURCE          upnpfiletransferevent.cpp
+SOURCE          upnpfiletransfereventlist.cpp
+SOURCE          upnpmediaserverevent.cpp
+SOURCE          upnpmediaservereventlist.cpp
+SOURCE          upnpdlnaprotocolinfo.cpp
+SOURCE          upnpprotocolinfo.cpp
+SOURCE          upnpprotocolinfolocal.cpp
+
+
+// Libraries
+LIBRARY         euser.lib
+LIBRARY         estor.lib
+LIBRARY         efsrv.lib
+LIBRARY         bafl.lib
+LIBRARY         charconv.lib // for UTF8 encoding
+DEFFILE         upnpavobjects
+
+// Logging
+DEBUGLIBRARY    flogger.lib
+
+// End of file

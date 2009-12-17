@@ -1,0 +1,46 @@
+/*
+* Copyright (c) 2005-2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project definition file for project UPnP Extension plugin if
+*
+*/
+
+
+#include "../../../group/upnpplatformvar.hrh"
+#include "../../inc/upnpframeworkfeatures_mmp.hrh"
+
+TARGET          upnpextensionpluginif.dll
+TARGETTYPE      dll
+UID             0x1000008D 0x20009C9E
+
+CAPABILITY      CAP_GENERAL_DLL
+VENDORID        VID_DEFAULT
+
+// SIS installation + IAD support
+VERSION 10.1
+paged
+
+SOURCEPATH      ../src
+SOURCE          upnppluginloader.cpp
+
+MW_LAYER_SYSTEMINCLUDE
+
+USERINCLUDE     ../inc
+USERINCLUDE     ../../inc
+
+LIBRARY         euser.lib
+LIBRARY         ecom.lib
+
+DEBUGLIBRARY    flogger.lib
+
+// End of file

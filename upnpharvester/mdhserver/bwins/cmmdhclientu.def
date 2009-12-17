@@ -1,0 +1,4 @@
+EXPORTS
+	?NewCmMdhClientL@CCmMdhClientFactory@@SAPAVMCmMdhClient@@AAVMCmServiceObserver@@@Z @ 1 NONAME ; class MCmMdhClient * CCmMdhClientFactory::NewCmMdhClientL(class MCmServiceObserver &)
+	?NewCmMdhClientLC@CCmMdhClientFactory@@SAPAVMCmMdhClient@@AAVMCmServiceObserver@@@Z @ 2 NONAME ; class MCmMdhClient * CCmMdhClientFactory::NewCmMdhClientLC(class MCmServiceObserver &)
+

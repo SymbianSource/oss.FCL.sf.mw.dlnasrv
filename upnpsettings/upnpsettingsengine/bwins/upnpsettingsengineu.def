@@ -1,0 +1,23 @@
+EXPORTS
+	??1CUPnPSettingsEngine@@UAE@XZ @ 1 NONAME ; CUPnPSettingsEngine::~CUPnPSettingsEngine(void)
+	?CreateAccessPointL@CUPnPSettingsEngine@@SAXXZ @ 2 NONAME ; void CUPnPSettingsEngine::CreateAccessPointL(void)
+	?GetAccessPoint@CUPnPSettingsEngine@@QAEHAAH@Z @ 3 NONAME ; int CUPnPSettingsEngine::GetAccessPoint(int &)
+	?GetAccessPointSetting@CUPnPSettingsEngine@@QAEHAAH@Z @ 4 NONAME ; int CUPnPSettingsEngine::GetAccessPointSetting(int &)
+	?GetCopyLocationDriveL@CUPnPSettingsEngine@@QBEXAAW4TDriveNumber@@@Z @ 5 NONAME ; void CUPnPSettingsEngine::GetCopyLocationDriveL(enum TDriveNumber &) const
+	?GetCopyLocationL@CUPnPSettingsEngine@@QBEXAAVTDes16@@AAH@Z @ 6 NONAME ; void CUPnPSettingsEngine::GetCopyLocationL(class TDes16 &, int &) const
+	?GetCurrentIapNameL@CUPnPSettingsEngine@@SAPAVHBufC16@@H@Z @ 7 NONAME ; class HBufC16 * CUPnPSettingsEngine::GetCurrentIapNameL(int)
+	?GetFirstStart@CUPnPSettingsEngine@@QAEHAAH@Z @ 8 NONAME ; int CUPnPSettingsEngine::GetFirstStart(int &)
+	?GetLocalFriendlyName@CUPnPSettingsEngine@@QBEHAAVTDes8@@@Z @ 9 NONAME ; int CUPnPSettingsEngine::GetLocalFriendlyName(class TDes8 &) const
+	?GetWLANAccessPointsL@CUPnPSettingsEngine@@SAXPAVCDesC16Array@@AAV?$RArray@_J@@@Z @ 10 NONAME ; void CUPnPSettingsEngine::GetWLANAccessPointsL(class CDesC16Array *, class RArray<long long> &)
+	?GetWapId@CUPnPSettingsEngine@@QAEHAAH@Z @ 11 NONAME ; int CUPnPSettingsEngine::GetWapId(int &)
+	?IsAccessPointValidL@CUPnPSettingsEngine@@SAHH@Z @ 12 NONAME ; int CUPnPSettingsEngine::IsAccessPointValidL(int)
+	?NewL@CUPnPSettingsEngine@@SAPAV1@XZ @ 13 NONAME ; class CUPnPSettingsEngine * CUPnPSettingsEngine::NewL(void)
+	?NewLC@CUPnPSettingsEngine@@SAPAV1@XZ @ 14 NONAME ; class CUPnPSettingsEngine * CUPnPSettingsEngine::NewLC(void)
+	?SetAccessPoint@CUPnPSettingsEngine@@QAEHH@Z @ 15 NONAME ; int CUPnPSettingsEngine::SetAccessPoint(int)
+	?SetAccessPointSetting@CUPnPSettingsEngine@@QAEHH@Z @ 16 NONAME ; int CUPnPSettingsEngine::SetAccessPointSetting(int)
+	?SetCopyLocationL@CUPnPSettingsEngine@@QBEHW4TDriveNumber@@@Z @ 17 NONAME ; int CUPnPSettingsEngine::SetCopyLocationL(enum TDriveNumber) const
+	?SetFirstStart@CUPnPSettingsEngine@@QAEHH@Z @ 18 NONAME ; int CUPnPSettingsEngine::SetFirstStart(int)
+	?SetLocalFriendlyName@CUPnPSettingsEngine@@QBEHABVTDesC8@@@Z @ 19 NONAME ; int CUPnPSettingsEngine::SetLocalFriendlyName(class TDesC8 const &) const
+	?SetManufacturerParamsL@CUPnPSettingsEngine@@QBEHXZ @ 20 NONAME ; int CUPnPSettingsEngine::SetManufacturerParamsL(void) const
+	?SetWapId@CUPnPSettingsEngine@@QAEHH@Z @ 21 NONAME ; int CUPnPSettingsEngine::SetWapId(int)
+

@@ -1,0 +1,12 @@
+EXPORTS
+	??0RUpnpSecurityManagerClientSession@@QAE@XZ @ 1 NONAME ; RUpnpSecurityManagerClientSession::RUpnpSecurityManagerClientSession(void)
+	?AddAddressL@RUpnpSecurityManagerClientSession@@QAEXABVTInetAddr@@@Z @ 2 NONAME ; void RUpnpSecurityManagerClientSession::AddAddressL(class TInetAddr const &)
+	?AddFileL@RUpnpSecurityManagerClientSession@@QAEXABVTDesC16@@@Z @ 3 NONAME ; void RUpnpSecurityManagerClientSession::AddFileL(class TDesC16 const &)
+	?CheckAuthorizationL@RUpnpSecurityManagerClientSession@@QAE?AW4TAccessType@@ABVTInetAddr@@ABVTDesC16@@@Z @ 4 NONAME ; enum TAccessType RUpnpSecurityManagerClientSession::CheckAuthorizationL(class TInetAddr const &, class TDesC16 const &)
+	?Connect@RUpnpSecurityManagerClientSession@@QAEHXZ @ 5 NONAME ; int RUpnpSecurityManagerClientSession::Connect(void)
+	?QueryAuthorisationL@RUpnpSecurityManagerClientSession@@QAE?AW4TAccessType@@ABVTInetAddr@@@Z @ 6 NONAME ; enum TAccessType RUpnpSecurityManagerClientSession::QueryAuthorisationL(class TInetAddr const &)
+	?RemoveAddressL@RUpnpSecurityManagerClientSession@@QAEXABVTInetAddr@@@Z @ 7 NONAME ; void RUpnpSecurityManagerClientSession::RemoveAddressL(class TInetAddr const &)
+	?RemoveFileL@RUpnpSecurityManagerClientSession@@QAEXABVTDesC16@@@Z @ 8 NONAME ; void RUpnpSecurityManagerClientSession::RemoveFileL(class TDesC16 const &)
+	?ResetAddressListL@RUpnpSecurityManagerClientSession@@QAEXXZ @ 9 NONAME ; void RUpnpSecurityManagerClientSession::ResetAddressListL(void)
+	?ResetFileListL@RUpnpSecurityManagerClientSession@@QAEXXZ @ 10 NONAME ; void RUpnpSecurityManagerClientSession::ResetFileListL(void)
+

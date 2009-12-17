@@ -1,0 +1,47 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      upnpsettings subsystem ROM include file
+*
+*/
+
+
+
+
+
+#ifndef __UPNPSETTINGS_IBY__
+#define __UPNPSETTINGS_IBY__
+
+#ifdef FF_UPNP_FRAMEWORK_2_0 // UPnP feature flag
+
+    // UPNP settings engine
+    file=ABI_DIR\BUILD_DIR\upnpsettingsengine.dll \sys\bin\upnpsettingsengine.dll
+    data=ABI_DIR\BUILD_DIR\z\private\10202be9\20009cae.txt \private\10202be9\20009cae.txt
+    data=DATAZ_\private\20009CAE\backup_registration.xml   \private\20009CAE\backup_registration.xml
+
+    // setup wizard
+    file=ABI_DIR\BUILD_DIR\upnpappwizard.dll  \sys\bin\upnpappwizard.dll
+
+    // multiselection UI
+    file=ABI_DIR\BUILD_DIR\upnpmultiselectionui.dll \sys\bin\upnpmultiselectionui.dll
+
+    //upnp generic settings plugin
+    ECOM_PLUGIN( upnpgsplugin.dll, upnpgsplugin.rsc )         
+    data=DATAZ_\resource\apps\upnpgspluginrsc.mif \resource\apps\upnpgspluginrsc.mif    
+    
+    // sharing settings UI
+    file=ABI_DIR\BUILD_DIR\upnpsharingui.dll \sys\bin\upnpsharingui.dll
+    
+#endif // FF_UPNP_FRAMEWORK_2_0
+
+#endif // __UPNPSETTINGS_IBY__

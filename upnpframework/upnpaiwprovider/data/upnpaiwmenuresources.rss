@@ -1,0 +1,95 @@
+/*
+* Copyright (c) 2005-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  AIW menu resource definitions for UpnpAiwProvider.
+*
+*/
+
+
+// RESOURCE IDENTIFIER
+NAME UPAM
+
+// INCLUDES
+#include <eikon.rh>
+#include <AiwCommon.hrh>
+#include <upnpframework.loc>
+
+// RESOURCE DEFINITIONS
+
+// --------------------------------------------------------------------------
+// R_AIW_ENABLE_EXTERNAL_MENU
+// Menu item for the "Enable External" menu service. This menu item is shown,
+// when the UPnP External screen is OFF (not active).
+// --------------------------------------------------------------------------
+RESOURCE MENU_PANE r_aiw_enable_external_menu
+    {
+    items=
+        {
+        MENU_ITEM
+            {
+            command = KAiwCmdUPnPEnableExternal;
+            txt = qtn_iupnp_aiw_enable_external_string;
+            }
+        };
+    }
+
+// --------------------------------------------------------------------------
+// R_AIW_DISABLE_EXTERNAL_MENU
+// Menu item for the "Disable External" menu service. This menu item is shown,
+// when the UPnP External screen is ON (active).
+// --------------------------------------------------------------------------
+RESOURCE MENU_PANE r_aiw_disable_external_menu
+    {
+    items=
+        {
+        MENU_ITEM
+            {
+            command = KAiwCmdUPnPEnableExternal;
+            txt = qtn_iupnp_aiw_disable_external_string;
+            }
+        };
+    }
+
+// --------------------------------------------------------------------------
+// R_AIW_COPY_TO_EXTERNAL_MENU
+// Menu item for the "Copy to External" menu service.
+// --------------------------------------------------------------------------
+RESOURCE MENU_PANE r_aiw_copy_to_external_menu
+    {
+    items=
+        {
+        MENU_ITEM
+            {
+            command = KAiwCmdUPnPCopy;
+            txt = qtn_iupnp_aiw_copy_to_external_string;
+            }
+        };
+    }
+
+// --------------------------------------------------------------------------
+// R_AIW_MOVE_TO_EXTERNAL_MENU
+// Menu item for the "Move to External" menu service.
+// --------------------------------------------------------------------------
+RESOURCE MENU_PANE r_aiw_move_to_external_menu
+    {
+    items=
+        {
+        MENU_ITEM
+            {
+            command = KAiwCmdUPnPMove;
+            txt = qtn_iupnp_aiw_move_to_external_string;
+            }
+        };
+    }
+
+// End of file

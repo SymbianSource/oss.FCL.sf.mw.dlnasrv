@@ -1,0 +1,44 @@
+/*
+* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:     upnpharvester
+*
+*/
+
+
+
+
+#ifndef __UPNPHARVESTER_IBY__
+#define __UPNPHARVESTER_IBY__
+
+#ifdef FF_UPNP_FRAMEWORK_2_0 // UPnP feature flag
+
+#include <productvariant.hrh>
+
+// Application and setup wizard
+
+file=ABI_DIR\BUILD_DIR\cmsqlwrapper.dll \sys\bin\cmsqlwrapper.dll
+file=ABI_DIR\BUILD_DIR\cmcommon.dll \sys\bin\cmcommon.dll
+file=ABI_DIR\BUILD_DIR\cmdatabasemanager.dll \sys\bin\cmdatabasemanager.dll
+file=ABI_DIR\BUILD_DIR\cmmdhclient.dll \sys\bin\cmmdhclient.dll
+file=ABI_DIR\BUILD_DIR\cmmdh.exe \sys\bin\cmmdh.exe
+file=ABI_DIR\BUILD_DIR\cmsettingsengine.dll \sys\bin\cmsettingsengine.dll
+file=ABI_DIR\BUILD_DIR\cdssync.dll \sys\bin\cdssync.dll
+data=\epoc32\release\armv5\urel\z\private\10202be9\10281FAB.txt \private\10202be9\10281FAB.txt
+
+// export upnpharvester_stub.sis file
+data=ZSYSTEM\install\upnpharvester_stub.sis    system\install\upnpharvester_stub.sis 
+
+#endif // FF_UPNP_FRAMEWORK_2_0
+
+#endif // __UPNPHARVESTER_IBY__

@@ -1,0 +1,84 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project specification file for MediaServant plugin.
+*
+*/
+
+#include <data_caging_paths.hrh>    //this is needed for RESOURCE_FILES_DIR
+#include <platform_paths.hrh>
+
+TARGET              msgsplugin.dll
+TARGETTYPE          PLUGIN
+UID                 0x10009D8D 0x10282910
+
+CAPABILITY          CAP_ECOM_PLUGIN
+VENDORID            VID_DEFAULT
+
+SOURCEPATH          ../src
+SOURCE              msgspluginimplementationtable.cpp
+SOURCE              mssettingsview.cpp
+SOURCE              mssettingitemlist.cpp
+SOURCE              mssettingitemmemory.cpp
+SOURCE              mssettingitemdevices.cpp
+SOURCE              msmultiselectionpopup.cpp
+SOURCE              mssettingitems.cpp
+
+USERINCLUDE         ../data
+USERINCLUDE         ../inc
+USERINCLUDE         ../loc
+USERINCLUDE         ../../mediaservant/help/inc
+
+// System Includes
+APP_LAYER_SYSTEMINCLUDE
+USERINCLUDE   ../../../../inc
+
+SOURCEPATH          ../data
+
+START RESOURCE      msgsplugin.rss
+TARGET              msgsplugin.rsc
+TARGETPATH          ECOM_RESOURCE_DIR
+END
+
+START RESOURCE      msgspluginsrc.rss
+HEADER
+TARGETPATH          RESOURCE_FILES_DIR
+LANGUAGE_IDS
+END
+
+LIBRARY             AKNSKINS.lib                // AknsUtils.h
+LIBRARY             avkon.lib
+LIBRARY             bafl.lib
+LIBRARY             CommonEngine.lib            // RConeResourceLoader
+LIBRARY             cone.lib 
+LIBRARY             egul.lib                    // CGulIcon
+LIBRARY             AknIcon.lib
+LIBRARY             eikcoctl.lib 
+LIBRARY             eikcore.lib 
+LIBRARY             euser.lib
+LIBRARY             flogger.lib                 // RFileLogger
+LIBRARY             GSEcomPlugin.lib
+LIBRARY             GSFramework.lib
+LIBRARY             hlplch.lib                  // HlpLauncher
+LIBRARY             msengine.lib
+LIBRARY             cmsettingsengine.lib
+LIBRARY             cmcommon.lib
+LIBRARY             eikdlg.lib                  // multiselection dialog
+LIBRARY             charconv.lib      
+LIBRARY             upnpavcontrollerclient.lib
+LIBRARY             commdb.lib
+LIBRARY             ecom.lib
+LIBRARY             centralrepository.lib       // profile query
+LIBRARY             PlatformEnv.lib             // pathinfo
+
+// End of File

@@ -1,0 +1,60 @@
+/** @file
+* Copyright (c) 2005-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies  this distribution, and is available 
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  ?Description
+*
+*/
+#include <platform_paths.hrh>
+   
+
+TARGETTYPE      DLL
+
+TARGET          avmediaserverclient.dll
+UID             0x1000008D 0x101F977D
+
+
+VERSION 10.1
+paged
+
+CAPABILITY      CAP_GENERAL_DLL
+VENDORID        VID_DEFAULT
+
+SOURCEPATH      ../src
+SOURCE          upnpmediaserverclient.cpp
+SOURCE          upnpmediaserversettings.cpp
+SOURCE          upnpsecuritymanager.cpp
+SOURCE          upnpfilesharing.cpp
+SOURCE          upnpfilesharingbody.cpp
+SOURCE          upnpmediaservernotifier.cpp
+SOURCE          upnpmediaserverstatuswatcher.cpp
+
+MW_LAYER_SYSTEMINCLUDE
+
+USERINCLUDE     ../inc
+USERINCLUDE     ../../inc
+
+LIBRARY         euser.lib
+LIBRARY         estor.lib
+LIBRARY         efsrv.lib
+//central repository
+LIBRARY         centralrepository.lib
+LIBRARY         ecom.lib
+// UPnP
+LIBRARY         upnpipserversutils.lib
+LIBRARY         upnpavobjects.lib
+LIBRARY         upnpserviceframework.lib
+
+DEBUGLIBRARY    flogger.lib
+DEFFILE         AVMediaServerClient
+
+// End of file

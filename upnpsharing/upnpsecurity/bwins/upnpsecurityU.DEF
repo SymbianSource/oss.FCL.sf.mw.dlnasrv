@@ -1,0 +1,15 @@
+EXPORTS
+	??1CUpnpSecAccessController@@UAE@XZ @ 1 NONAME ; CUpnpSecAccessController::~CUpnpSecAccessController(void)
+	?AddAllowedAddress@CUpnpSecAccessController@@QAEHABVTInetAddr@@@Z @ 2 NONAME ; int CUpnpSecAccessController::AddAllowedAddress(class TInetAddr const &)
+	?AddAllowedFile@CUpnpSecAccessController@@QAEHABVTDesC16@@@Z @ 3 NONAME ; int CUpnpSecAccessController::AddAllowedFile(class TDesC16 const &)
+	?CheckAuthorizationL@CUpnpSecAccessController@@QAEXABVTInetAddr@@ABVTDesC16@@ABVTDesC8@@@Z @ 4 NONAME ; void CUpnpSecAccessController::CheckAuthorizationL(class TInetAddr const &, class TDesC16 const &, class TDesC8 const &)
+	?DisableMediaServerSecurityL@CUpnpSecAccessController@@SAXXZ @ 5 NONAME ; void CUpnpSecAccessController::DisableMediaServerSecurityL(void)
+	?EnableMediaServerSecurityL@CUpnpSecAccessController@@SAXXZ @ 6 NONAME ; void CUpnpSecAccessController::EnableMediaServerSecurityL(void)
+	?IsMediaServerSecurityEnabledL@CUpnpSecAccessController@@SAHXZ @ 7 NONAME ; int CUpnpSecAccessController::IsMediaServerSecurityEnabledL(void)
+	?NewL@CUpnpSecAccessController@@SAPAV1@XZ @ 8 NONAME ; class CUpnpSecAccessController * CUpnpSecAccessController::NewL(void)
+	?QueryAuthorizationL@CUpnpSecAccessController@@QAEXABVTInetAddr@@@Z @ 9 NONAME ; void CUpnpSecAccessController::QueryAuthorizationL(class TInetAddr const &)
+	?RemoveAllowedAddress@CUpnpSecAccessController@@QAEHABVTInetAddr@@@Z @ 10 NONAME ; int CUpnpSecAccessController::RemoveAllowedAddress(class TInetAddr const &)
+	?RemoveAllowedFile@CUpnpSecAccessController@@QAEHABVTDesC16@@@Z @ 11 NONAME ; int CUpnpSecAccessController::RemoveAllowedFile(class TDesC16 const &)
+	?ResetAddressList@CUpnpSecAccessController@@QAEHXZ @ 12 NONAME ; int CUpnpSecAccessController::ResetAddressList(void)
+	?ResetFileList@CUpnpSecAccessController@@QAEHXZ @ 13 NONAME ; int CUpnpSecAccessController::ResetFileList(void)
+

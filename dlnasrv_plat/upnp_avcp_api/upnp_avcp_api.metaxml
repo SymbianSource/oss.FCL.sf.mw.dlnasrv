@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<api id="2c4df520ba7b3bfdf00d0a8971c63ce3" dataversion="1.0">
+  <name>UPnP AVCP API</name>
+  <description>Functions for controlling media server and media renderer UPnP devices and their AV services (Content Directory, Connection Manager, AV Transport, Rendering Control).</description>
+  <type>c++</type>
+  <subsystem>upnpavcontrolpoint</subsystem>
+  <libs>
+    <lib name="avcontrolframework.lib" />
+  </libs>
+  <release category="domain"/>
+  <attributes>
+     <!-- This indicates wether the api provedes separate html documentation -->
+     <!-- or is the additional documentation generated from headers. -->
+     <!-- If you are unsuere then the value is "no" -->
+     <htmldocprovided>no</htmldocprovided>
+     <adaptation>no</adaptation>
+  </attributes>
+</api>

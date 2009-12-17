@@ -1,0 +1,45 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project specification file for Content Manager client
+*
+*/
+
+#include <platform_paths.hrh>
+#include "../inc/cmuids.hrh"
+
+TARGET          cmclient.dll
+TARGETTYPE      dll
+UID             0x1000008D KCmClientUid
+
+CAPABILITY CAP_GENERAL_DLL
+
+SOURCEPATH      ../src/client
+SOURCE          cmclientsession.cpp
+SOURCE          cmactive.cpp
+
+USERINCLUDE     ../inc/client
+USERINCLUDE     ../inc
+
+MW_LAYER_SYSTEMINCLUDE
+USERINCLUDE   ../../../../../inc
+
+LIBRARY         euser.lib
+LIBRARY         bafl.lib
+LIBRARY         estor.lib
+LIBRARY         efsrv.lib
+LIBRARY         cmcommon.lib
+
+DEBUGLIBRARY    flogger.lib
+
+//  End of File

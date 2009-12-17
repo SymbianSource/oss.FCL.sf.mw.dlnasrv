@@ -1,0 +1,41 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      upnpsettings subsystem resource ROMinclude file
+*
+*/
+
+
+
+
+
+#ifndef __UPNPSETTINGSRESOURCES_IBY__
+#define __UPNPSETTINGSRESOURCES_IBY__
+
+#ifdef FF_UPNP_FRAMEWORK_2_0 // UPnP feature flag
+
+    // setup wizard
+    data=DATAZ_\resource\cupnpappwizard.rsc \resource\cupnpappwizard.rsc
+
+    // multiselection UI
+    data=DATAZ_\resource\CUPnPMultiselectionUi.RSC \resource\CUPnPMultiselectionUi.RSC
+
+    //upnp generic settings plugin
+    data=DATAZ_\resource\upnpgspluginrsc.rsc \resource\upnpgspluginrsc.rsc
+    
+    // sharing settings UI
+    data=DATAZ_\resource\upnpsharingui.rsc \resource\upnpsharingui.rsc
+
+#endif // FF_UPNP_FRAMEWORK_2_0
+
+#endif // __UPNPSETTINGSRESOURCES_IBY__

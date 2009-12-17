@@ -1,0 +1,34 @@
+EXPORTS
+	_Z20UpnpCommandReserved1v @ 1 NONAME
+	_Z20UpnpCommandReserved2v @ 2 NONAME
+	_ZN16CUpnpCopyCommand10CopyFilesLEP16CDesC16ArrayFlat @ 3 NONAME
+	_ZN16CUpnpCopyCommand12IsAvailableLEv @ 4 NONAME
+	_ZN16CUpnpCopyCommand13CopyPlaylistLERK7TDesC16P16CDesC16ArrayFlat @ 5 NONAME
+	_ZN16CUpnpCopyCommand4NewLEv @ 6 NONAME
+	_ZN16CUpnpMoveCommand10MoveFilesLEP16CDesC16ArrayFlat @ 7 NONAME
+	_ZN16CUpnpMoveCommand12IsAvailableLEv @ 8 NONAME
+	_ZN16CUpnpMoveCommand4NewLEv @ 9 NONAME
+	_ZN16CUpnpShowCommand10ShowImageLERK7TDesC16 @ 10 NONAME
+	_ZN16CUpnpShowCommand10ShowVideoLERK7TDesC16 @ 11 NONAME
+	_ZN16CUpnpShowCommand12IsAvailableLEv @ 12 NONAME
+	_ZN16CUpnpShowCommand12StopShowingLEv @ 13 NONAME
+	_ZN16CUpnpShowCommand13StartShowingLEv @ 14 NONAME
+	_ZN16CUpnpShowCommand4NewLEP20MUpnpCommandObserver @ 15 NONAME
+	_ZN16CUpnpShowCommand4NewLEv @ 16 NONAME
+	_ZN18CUpnpBrowseCommand12IsAvailableLEv @ 17 NONAME
+	_ZN18CUpnpBrowseCommand18BrowseHomeNetworkLEv @ 18 NONAME
+	_ZN18CUpnpBrowseCommand4NewLEv @ 19 NONAME
+	_ZN20CUpnpRunSetupCommand12IsAvailableLEv @ 20 NONAME
+	_ZN20CUpnpRunSetupCommand4NewLEv @ 21 NONAME
+	_ZN20CUpnpRunSetupCommand9RunSetupLEv @ 22 NONAME
+	_ZTI16CUpnpCopyCommand @ 23 NONAME ; #<TI>#
+	_ZTI16CUpnpMoveCommand @ 24 NONAME ; #<TI>#
+	_ZTI16CUpnpShowCommand @ 25 NONAME ; #<TI>#
+	_ZTI18CUpnpBrowseCommand @ 26 NONAME ; #<TI>#
+	_ZTI20CUpnpRunSetupCommand @ 27 NONAME ; #<TI>#
+	_ZTV16CUpnpCopyCommand @ 28 NONAME ; #<VT>#
+	_ZTV16CUpnpMoveCommand @ 29 NONAME ; #<VT>#
+	_ZTV16CUpnpShowCommand @ 30 NONAME ; #<VT>#
+	_ZTV18CUpnpBrowseCommand @ 31 NONAME ; #<VT>#
+	_ZTV20CUpnpRunSetupCommand @ 32 NONAME ; #<VT>#
+

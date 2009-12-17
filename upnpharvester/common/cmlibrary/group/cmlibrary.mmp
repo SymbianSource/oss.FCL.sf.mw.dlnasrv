@@ -1,0 +1,77 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Project definition file for project CM Library
+*
+*/
+
+
+
+
+
+
+#include <platform_paths.hrh>
+
+TARGET          cmcommon.dll
+TARGETTYPE      dll
+UID             0x1000008d 0x10281FAA
+
+CAPABILITY CAP_GENERAL_DLL
+
+TARGETPATH     /sys/bin
+
+USERINCLUDE     ../inc
+USERINCLUDE     ../../../../inc
+
+MW_LAYER_SYSTEMINCLUDE
+
+SOURCEPATH      ../src
+
+SOURCE          cmfillrulecontainer.cpp
+SOURCE          cmfillrule.cpp
+SOURCE          cmrule.cpp
+SOURCE          cmparam.cpp
+SOURCE          cmmediaserver.cpp
+SOURCE          cmmediaserverfull.cpp
+SOURCE          cmstorerule.cpp
+SOURCE          cmstorerulecontainer.cpp
+
+SOURCE          cmbaselistitem.cpp
+SOURCE          cmfilllistitem.cpp
+SOURCE          cmstorelistitem.cpp
+SOURCE          cmsqlpropertyitem.cpp
+SOURCE          cmsqlpropertycontainer.cpp
+SOURCE          cmsqlpropertycollector.cpp
+SOURCE          cmsqlbaseitem.cpp
+SOURCE          cmsqlgenericitem.cpp
+SOURCE          cmsqlaudioitem.cpp
+SOURCE          cmsqlvideoitem.cpp
+SOURCE          cmsqlimageitem.cpp
+SOURCE          cmsqlitemresource.cpp
+SOURCE          cmsqlresolutionpropertyitem.cpp
+SOURCE          cmdriveinfo.cpp
+SOURCE          cmsearchresponsehash.cpp
+SOURCE          cmcommonutils.cpp
+
+LIBRARY         euser.lib
+LIBRARY         estor.lib
+LIBRARY         bafl.lib
+LIBRARY         avkon.lib
+LIBRARY         cone.lib 
+LIBRARY         PlatformEnv.lib
+LIBRARY         commdb.lib
+LIBRARY         ecom.lib
+
+DEBUGLIBRARY    flogger.lib
+
+

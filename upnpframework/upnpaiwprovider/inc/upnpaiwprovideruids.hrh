@@ -1,0 +1,36 @@
+/*
+* Copyright (c) 2005-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Specifies the interface and DLL UIDs used in the Upnp
+                 Framework's AIW Provider interface.
+*
+*/
+
+
+#ifndef _UPNP_AIW_PROVIDER_UIDS_HRH
+#define _UPNP_AIW_PROVIDER_UIDS_HRH
+
+// The UPnP AIW Provider Interface UID
+#define KUPnPAiwProviderDllUid                 0x10208A15
+
+// The implementation UID(s)
+#define KUPnPAiwEnableExternalMenuServiceUid   0x10208A16
+#define KUPnPAiwCopyToExternalMenuServiceUid   0x10208A17
+#define KUPnPAiwMoveToExternalMenuServiceUid   0x10208A18
+#define KUPnPAiwPlayOnExternalMenuServiceUid   0x10208A19
+#define KUPnPAiwPlayOnExternalBaseServiceUid   0x10208A0C
+#define KUPnPAiwOpenExternalBaseServiceUid     0x10208A0D
+
+#endif // _UPNP_AIW_PROVIDER_UIDS_HRH
+
+// End of file

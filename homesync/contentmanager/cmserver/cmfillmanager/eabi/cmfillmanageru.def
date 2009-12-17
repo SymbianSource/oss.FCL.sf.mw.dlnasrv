@@ -1,0 +1,6 @@
+EXPORTS
+	_ZN20CmFillManagerFactory15NewFillManagerLEP18MCmServiceObserverR11CMdESessionP9CCmDmMainP9CCmMmMain @ 1 NONAME
+	_ZN20CmFillManagerFactory16NewFillManagerLCEP18MCmServiceObserverR11CMdESessionP9CCmDmMainP9CCmMmMain @ 2 NONAME
+	_ZTI9CCmFmMain @ 3 NONAME ; #<TI>#
+	_ZTV9CCmFmMain @ 4 NONAME ; #<VT>#
+

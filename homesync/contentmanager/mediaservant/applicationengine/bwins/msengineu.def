@@ -1,0 +1,38 @@
+EXPORTS
+	?DeleteDeletedMediaserversL@CMSEngine@@QAEXXZ @ 1 NONAME ; void CMSEngine::DeleteDeletedMediaserversL(void)
+	?DeleteFilledFilesL@CMSEngine@@QAEHXZ @ 2 NONAME ; int CMSEngine::DeleteFilledFilesL(void)
+	?DeleteMetadataL@CMSEngine@@QBEXXZ @ 3 NONAME ; void CMSEngine::DeleteMetadataL(void) const
+	?DriveSelectionStatus@CMSEngine@@QAEHXZ @ 4 NONAME ; int CMSEngine::DriveSelectionStatus(void)
+	?ExecuteFillPreProcessingL@CMSEngine@@QAEHXZ @ 5 NONAME ; int CMSEngine::ExecuteFillPreProcessingL(void)
+	?ExecuteStorePreProcessingL@CMSEngine@@QAEHXZ @ 6 NONAME ; int CMSEngine::ExecuteStorePreProcessingL(void)
+	?ExecuteSyncL@CMSEngine@@QAEHXZ @ 7 NONAME ; int CMSEngine::ExecuteSyncL(void)
+	?FillRulesL@CMSEngine@@QAEPAVCCmFillRuleContainer@@XZ @ 8 NONAME ; class CCmFillRuleContainer * CMSEngine::FillRulesL(void)
+	?GetAppWizardState@CMSEngine@@QAEHAAH@Z @ 9 NONAME ; int CMSEngine::GetAppWizardState(int &)
+	?GetDrivesL@CMSEngine@@QAEXAAV?$RPointerArray@VCCmDriveInfo@@@@@Z @ 10 NONAME ; void CMSEngine::GetDrivesL(class RPointerArray<class CCmDriveInfo> &)
+	?GetFillListItemsL@CMSEngine@@QAEPAV?$RPointerArray@VCCmBaseListItem@@@@AAVTDesC8@@@Z @ 11 NONAME ; class RPointerArray<class CCmBaseListItem> * CMSEngine::GetFillListItemsL(class TDesC8 &)
+	?GetFilteredMetadataL@CMSEngine@@QAEXAAPAVCCmSqlPropertyCollector@@@Z @ 12 NONAME ; void CMSEngine::GetFilteredMetadataL(class CCmSqlPropertyCollector * &)
+	?GetItemCountsL@CMSEngine@@QBEHW4TCmService@@ABVTDesC8@@AAHAA_J@Z @ 13 NONAME ; int CMSEngine::GetItemCountsL(enum TCmService, class TDesC8 const &, int &, long long &) const
+	?GetMediaServersL@CMSEngine@@QAEPAV?$RPointerArray@VCCmMediaServerFull@@@@XZ @ 14 NONAME ; class RPointerArray<class CCmMediaServerFull> * CMSEngine::GetMediaServersL(void)
+	?GetStoreListItemsL@CMSEngine@@QAEPAV?$RPointerArray@VCCmBaseListItem@@@@AAVTDesC8@@@Z @ 15 NONAME ; class RPointerArray<class CCmBaseListItem> * CMSEngine::GetStoreListItemsL(class TDesC8 &)
+	?GetTransferInfo@CMSEngine@@QBEXW4TCmService@@AAH1@Z @ 16 NONAME ; void CMSEngine::GetTransferInfo(enum TCmService, int &, int &) const
+	?LastSyncTime@CMSEngine@@QBE?AVTTime@@XZ @ 17 NONAME ; class TTime CMSEngine::LastSyncTime(void) const
+	?NewL@CMSEngine@@SAPAV1@XZ @ 18 NONAME ; class CMSEngine * CMSEngine::NewL(void)
+	?NewLC@CMSEngine@@SAPAV1@XZ @ 19 NONAME ; class CMSEngine * CMSEngine::NewLC(void)
+	?PreProcessFillListL@CMSEngine@@QBEHABVTDesC8@@@Z @ 20 NONAME ; int CMSEngine::PreProcessFillListL(class TDesC8 const &) const
+	?ScanMediaServersL@CMSEngine@@QAEHXZ @ 21 NONAME ; int CMSEngine::ScanMediaServersL(void)
+	?ServerState@CMSEngine@@QAEXAAW4TCmServerState@@@Z @ 22 NONAME ; void CMSEngine::ServerState(enum TCmServerState &)
+	?ServiceState@CMSEngine@@QAE?AW4TCmServiceState@@W4TCmService@@@Z @ 23 NONAME ; enum TCmServiceState CMSEngine::ServiceState(enum TCmService)
+	?SetAppWizardState@CMSEngine@@QAEHXZ @ 24 NONAME ; int CMSEngine::SetAppWizardState(void)
+	?SetDrivesL@CMSEngine@@QAEXV?$RPointerArray@VCCmDriveInfo@@@@@Z @ 25 NONAME ; void CMSEngine::SetDrivesL(class RPointerArray<class CCmDriveInfo>)
+	?SetFillFileStatusesL@CMSEngine@@QAEXPBV?$RPointerArray@VCCmBaseListItem@@@@@Z @ 26 NONAME ; void CMSEngine::SetFillFileStatusesL(class RPointerArray<class CCmBaseListItem> const *)
+	?SetFillRulesL@CMSEngine@@QAEXPAVCCmFillRuleContainer@@@Z @ 27 NONAME ; void CMSEngine::SetFillRulesL(class CCmFillRuleContainer *)
+	?SetMediaServersL@CMSEngine@@QAEHAAV?$RPointerArray@VCCmMediaServerFull@@@@@Z @ 28 NONAME ; int CMSEngine::SetMediaServersL(class RPointerArray<class CCmMediaServerFull> &)
+	?SetObserver@CMSEngine@@QAEXPAVMMSEngineObserver@@@Z @ 29 NONAME ; void CMSEngine::SetObserver(class MMSEngineObserver *)
+	?SetObserver@CMSEngineAO@@QAEXPAVMMSEngineObserver@@@Z @ 30 NONAME ; void CMSEngineAO::SetObserver(class MMSEngineObserver *)
+	?SetServiceState@CMSEngine@@QAEHW4TCmService@@W4TCmServiceState@@@Z @ 31 NONAME ; int CMSEngine::SetServiceState(enum TCmService, enum TCmServiceState)
+	?SetStoreRulesL@CMSEngine@@QAEXPAVCCmStoreRuleContainer@@@Z @ 32 NONAME ; void CMSEngine::SetStoreRulesL(class CCmStoreRuleContainer *)
+	?StopOperation@CMSEngine@@QAEXXZ @ 33 NONAME ; void CMSEngine::StopOperation(void)
+	?StoreRulesL@CMSEngine@@QAEPAVCCmStoreRuleContainer@@XZ @ 34 NONAME ; class CCmStoreRuleContainer * CMSEngine::StoreRulesL(void)
+	?UpdateFillListsL@CMSEngine@@QBEXXZ @ 35 NONAME ; void CMSEngine::UpdateFillListsL(void) const
+	?GetFilledFilesSize@CMSEngine@@QAEXAA_JH@Z @ 36 NONAME ; void CMSEngine::GetFilledFilesSize(long long &, int)
+

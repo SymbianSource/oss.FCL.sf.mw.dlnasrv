@@ -1,0 +1,64 @@
+EXPORTS
+	_ZN16CUpnpFileSharing10ShareItemLERK6TDesC8R9CUpnpItemR14TRequestStatus @ 1 NONAME
+	_ZN16CUpnpFileSharing12UnshareItemLEiR14TRequestStatus @ 2 NONAME
+	_ZN16CUpnpFileSharing14GetSharedItemLEiR9CUpnpItemR14TRequestStatus @ 3 NONAME
+	_ZN16CUpnpFileSharing14ShareItemListLERK6TDesC8R13CUpnpItemListRiR14TRequestStatus @ 4 NONAME
+	_ZN16CUpnpFileSharing15DropAllContentLER14TRequestStatus @ 5 NONAME
+	_ZN16CUpnpFileSharing15ShareContainerLERK6TDesC8R14CUpnpContainerR14TRequestStatus @ 6 NONAME
+	_ZN16CUpnpFileSharing15ShareReferenceLEiiR9CUpnpItemR14TRequestStatus @ 7 NONAME
+	_ZN16CUpnpFileSharing16UnshareItemListLER13CUpnpItemListRiR14TRequestStatus @ 8 NONAME
+	_ZN16CUpnpFileSharing17MediaServerClientEv @ 9 NONAME
+	_ZN16CUpnpFileSharing17UnshareContainerLEiR14TRequestStatus @ 10 NONAME
+	_ZN16CUpnpFileSharing18GetSharedItemListLEiR19CUpnpBrowseCriteriaR13CUpnpItemListRiR14TRequestStatus @ 11 NONAME
+	_ZN16CUpnpFileSharing19GetSharedContainerLEiR14CUpnpContainerR14TRequestStatus @ 12 NONAME
+	_ZN16CUpnpFileSharing19ShareReferenceListLER13CUpnpItemListRiR14TRequestStatus @ 13 NONAME
+	_ZN16CUpnpFileSharing23GetSharedContainerListLEiR19CUpnpBrowseCriteriaR18CUpnpContainerListRiR14TRequestStatus @ 14 NONAME
+	_ZN16CUpnpFileSharing4NewLEv @ 15 NONAME
+	_ZN20CUpnpFileSharingBody4NewLEv @ 16 NONAME
+	_ZN20CUpnpSecurityManager28NewInstanceFromUpnpSettingsLEv @ 17 NONAME
+	_ZN20CUpnpSecurityManager4NewLERK6TDesC8 @ 18 NONAME
+	_ZN20CUpnpSecurityManagerD0Ev @ 19 NONAME
+	_ZN20CUpnpSecurityManagerD1Ev @ 20 NONAME
+	_ZN20CUpnpSecurityManagerD2Ev @ 21 NONAME
+	_ZN22RUpnpMediaServerClient10GetAddressER9TInetAddr @ 22 NONAME
+	_ZN22RUpnpMediaServerClient10RemoveIconER5TDes8R14TRequestStatus @ 23 NONAME
+	_ZN22RUpnpMediaServerClient10UpdateIconER5TDes8P9CUpnpIconR14TRequestStatus @ 24 NONAME
+	_ZN22RUpnpMediaServerClient11GetAddressLER9TInetAddrR14TRequestStatus @ 25 NONAME
+	_ZN22RUpnpMediaServerClient11RemoveIconsER14TRequestStatus @ 26 NONAME
+	_ZN22RUpnpMediaServerClient12StartOfflineEv @ 27 NONAME
+	_ZN22RUpnpMediaServerClient19SetUploadDirectoryLERK7TDesC16R14TRequestStatus @ 28 NONAME
+	_ZN22RUpnpMediaServerClient4StopENS_15TServerStopModeE @ 29 NONAME
+	_ZN22RUpnpMediaServerClient4StopEv @ 30 NONAME
+	_ZN22RUpnpMediaServerClient5CloseEv @ 31 NONAME
+	_ZN22RUpnpMediaServerClient5StartER14TRequestStatus @ 32 NONAME
+	_ZN22RUpnpMediaServerClient5StartEv @ 33 NONAME
+	_ZN22RUpnpMediaServerClient6StatusERi @ 34 NONAME
+	_ZN22RUpnpMediaServerClient7AddIconEP9CUpnpIconR14TRequestStatus @ 35 NONAME
+	_ZN22RUpnpMediaServerClient7ConnectEv @ 36 NONAME
+	_ZN22RUpnpMediaServerClient7RestartEv @ 37 NONAME
+	_ZN22RUpnpMediaServerClientC1Ev @ 38 NONAME
+	_ZN22RUpnpMediaServerClientC2Ev @ 39 NONAME
+	_ZN24CUpnpMediaServerNotifier4NewLEP24MUpnpMediaServerObserver @ 40 NONAME
+	_ZN24CUpnpMediaServerNotifier5NewLCEP24MUpnpMediaServerObserver @ 41 NONAME
+	_ZN24CUpnpMediaServerSettings3GetEjR6TDes16 @ 42 NONAME
+	_ZN24CUpnpMediaServerSettings3GetEjRi @ 43 NONAME
+	_ZN24CUpnpMediaServerSettings3SetEjRK7TDesC16 @ 44 NONAME
+	_ZN24CUpnpMediaServerSettings3SetEjRKi @ 45 NONAME
+	_ZN24CUpnpMediaServerSettings4GetLEj @ 46 NONAME
+	_ZN24CUpnpMediaServerSettings4NewLEv @ 47 NONAME
+	_ZN24CUpnpMediaServerSettings4SetLEjRK6TDesC8 @ 48 NONAME
+	_ZN24CUpnpMediaServerSettings9SubscribeEjP20MUpnpSettingObserver @ 49 NONAME
+	_ZN29CUpnpMediaServerStatusWatcher4NewLER22RUpnpMediaServerClientR30MUpnpMediaServerStatusObserver @ 50 NONAME
+	_ZN29CUpnpMediaServerStatusWatcher4NewLER30MUpnpMediaServerStatusObserver @ 51 NONAME
+	_ZN29CUpnpMediaServerStatusWatcher9SubscribeEv @ 52 NONAME
+	_ZTI16CUpnpFileSharing @ 53 NONAME ; #<TI>#
+	_ZTI20CUpnpFileSharingBody @ 54 NONAME ; #<TI>#
+	_ZTI20CUpnpSecurityManager @ 55 NONAME ; #<TI>#
+	_ZTI24CUpnpMediaServerNotifier @ 56 NONAME ; #<TI>#
+	_ZTI24CUpnpMediaServerSettings @ 57 NONAME ; #<TI>#
+	_ZTV16CUpnpFileSharing @ 58 NONAME ; #<VT>#
+	_ZTV20CUpnpFileSharingBody @ 59 NONAME ; #<VT>#
+	_ZTV20CUpnpSecurityManager @ 60 NONAME ; #<VT>#
+	_ZTV24CUpnpMediaServerNotifier @ 61 NONAME ; #<VT>#
+	_ZTV24CUpnpMediaServerSettings @ 62 NONAME ; #<VT>#
+

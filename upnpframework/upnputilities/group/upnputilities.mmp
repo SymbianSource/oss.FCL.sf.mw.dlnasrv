@@ -1,0 +1,89 @@
+/*
+* Copyright (c) 2006-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  UPnP utilities project definition file
+*
+*/
+
+
+#include "../../../group/upnpplatformvar.hrh"
+#include "../../../inc/upnpframeworkfeatures_mmp.hrh"
+
+
+// Build target
+TARGET          upnputilities.dll
+TARGETTYPE      DLL
+UID             0x1000008D 0x10208A13
+
+// Platform security
+CAPABILITY      CAP_GENERAL_DLL
+VENDORID        VID_DEFAULT
+
+// SIS installation + IAD support
+VERSION 10.1
+paged
+
+// Include paths
+USERINCLUDE     ../../inc
+USERINCLUDE     ../inc
+
+MW_LAYER_SYSTEMINCLUDE
+SYSTEMINCLUDE   ../../../inc
+
+// Sources
+SOURCEPATH      ../src
+SOURCE          upnpcommonutils.cpp
+SOURCE          upnpmetadatautility.cpp
+SOURCE          upnpmetadatafetcher.cpp
+SOURCE          upnpcdsreselementutility.cpp
+SOURCE          upnpconnectionmonitor.cpp
+SOURCE          upnpgallerynotifier.cpp
+SOURCE          upnpperiodic.cpp
+
+// Core platform
+LIBRARY         euser.lib
+LIBRARY         estor.lib
+LIBRARY         efsrv.lib
+LIBRARY         bafl.lib
+LIBRARY         charconv.lib
+LIBRARY         esock.lib
+LIBRARY         insock.lib
+LIBRARY         commdb.lib
+LIBRARY         PlatformEnv.lib
+LIBRARY         connmon.lib
+
+// Meta data
+LIBRARY         MetaDataUtility.lib
+
+// MIME 
+LIBRARY         apmime.lib
+LIBRARY         apgrfx.lib
+
+// CAF (WM-DRM)
+LIBRARY         caf.lib
+LIBRARY         cafutils.lib
+
+// CLF
+LIBRARY         ContentListingFramework.lib
+
+// S60 Upnp Stack
+LIBRARY         upnpavobjects.lib
+LIBRARY         upnpipserversutils.lib
+
+// Upnp FW
+LIBRARY         dlnaprofiler.lib
+
+// debug logging facilities
+DEBUGLIBRARY    flogger.lib
+
+// End of file

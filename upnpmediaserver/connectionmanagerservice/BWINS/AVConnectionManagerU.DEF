@@ -1,0 +1,3 @@
+EXPORTS
+	?NewL@CUpnpCM@@SAPAV1@AAVCUpnpDevice@@ABVTDesC8@@ABVTDesC16@@@Z @ 1 NONAME ; class CUpnpCM * CUpnpCM::NewL(class CUpnpDevice &, class TDesC8 const &, class TDesC16 const &)
+

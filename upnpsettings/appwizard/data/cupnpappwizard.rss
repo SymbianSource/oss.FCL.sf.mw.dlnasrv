@@ -1,0 +1,589 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      upnp setup wizard resource description file
+*
+*/
+
+
+
+
+
+
+
+//  RESOURCE IDENTIFIER
+NAME    HORO // 4 letter ID
+
+//  INCLUDES
+#include <eikon.rh>
+#include <avkon.rsg>
+#include <avkon.rh>
+#include <avkon.mbg>
+#include <avkon.loc>
+#include <data_caging_paths_strings.hrh>
+#include <appinfo.rh>
+#include <upnpsettings.loc>
+
+
+//  RESOURCE DEFINITIONS
+
+// --------------------------------------------------------------------------
+//    RSS_SIGNATURE
+// --------------------------------------------------------------------------
+RESOURCE RSS_SIGNATURE
+    {
+    }
+
+// --------------------------------------------------------------------------
+// TBUF
+// --------------------------------------------------------------------------
+RESOURCE TBUF
+    {
+    buf = "";
+    }
+
+
+
+// --------------------------------------------------------------------------
+//
+// R_UPNP_WIZARD_SOFTKEYS_NEXT_CANCEL__SELECT
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE CBA r_upnp_wizard_softkeys_next_cancel__select 
+    { 
+    buttons = 
+	{
+        CBA_BUTTON {id = EAknSoftkeyOk; txt = qtn_iupnp_softkey_next;},
+        CBA_BUTTON {id = EAknSoftkeyCancel; txt = text_softkey_cancel;},
+        CBA_BUTTON {id = EAknSoftkeyOk;}
+        }; 
+    }
+
+
+// --------------------------------------------------------------------------
+//
+// R_UPNP_WIZARD_SOFTKEYS_NEXT_BACK__SELECT
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE CBA r_upnp_wizard_softkeys_next_back__select 
+    { 
+    buttons = 
+	{
+        CBA_BUTTON {id = EAknSoftkeyOk; txt = qtn_iupnp_softkey_next;},
+        CBA_BUTTON {id = EAknSoftkeyBack; txt = text_softkey_back;},
+        CBA_BUTTON {id = EAknSoftkeyOk;}
+        }; 
+    }
+
+
+// --------------------------------------------------------------------------
+//
+// R_UPNP_WIZARD_SOFTKEYS_DONE_BACK__SELECT
+//
+// --------------------------------------------------------------------------
+//
+RESOURCE CBA r_upnp_wizard_softkeys_done_back__select 
+    { 
+    buttons = 
+	{
+        CBA_BUTTON {id = EAknSoftkeyOk; txt = text_softkey_done;},
+        CBA_BUTTON {id = EAknSoftkeyBack; txt = text_softkey_back;},
+        CBA_BUTTON {id = EAknSoftkeyOk;}
+        }; 
+    }
+// --------------------------------------------------------------------------
+//    r_wizard_popup_dialog_1
+//    resource for wizard step 1
+// --------------------------------------------------------------------------
+RESOURCE DIALOG r_upnp_wizard_popup_dialog_1
+    {
+    flags = EGeneralQueryFlags |
+        EEikDialogFlagNoTitleBar |
+        EEikDialogFlagNoBorder |
+        EEikDialogFlagNoShadow;
+    buttons = r_upnp_wizard_softkeys_next_cancel__select;
+
+
+    items=
+        {
+        DLG_LINE
+            {
+            type = EAknCtPopupHeadingPane;
+            id = EAknMessageQueryHeaderId;
+            control = AVKON_HEADING
+                {
+                bmpfile = "";
+                };
+            },
+        DLG_LINE
+            {
+            type = EAknCtMessageQuery;
+            id = EAknMessageQueryContentId;
+            control = AVKON_MESSAGE_QUERY
+                {
+                };
+            }
+        };
+    }
+
+RESOURCE TBUF r_upnp_wizard_head_1_text
+    {
+    buf = qtn_iupnp_wizard_head_1;
+    }
+
+RESOURCE TBUF r_upnp_wizard_1_text
+    {
+    buf = qtn_iupnp_wizard_1;
+    }
+    
+// --------------------------------------------------------------------------
+//    r_wizard_popup_dialog_2
+//    resource for wizard step 2
+// --------------------------------------------------------------------------
+RESOURCE DIALOG r_upnp_wizard_popup_dialog_2
+    {
+    flags = EGeneralQueryFlags |
+        EEikDialogFlagNoTitleBar |
+        EEikDialogFlagNoBorder |
+        EEikDialogFlagNoShadow;
+    buttons = r_upnp_wizard_softkeys_next_back__select;
+
+    items=
+        {
+        DLG_LINE
+            {
+            type = EAknCtPopupHeadingPane;
+            id = EAknMessageQueryHeaderId;
+            control = AVKON_HEADING
+                {   
+                bmpfile = "";
+                };
+            },
+        DLG_LINE
+            {
+            type = EAknCtMessageQuery;
+            id = EAknMessageQueryContentId;
+            control = AVKON_MESSAGE_QUERY
+                {
+                };
+            }
+        };
+    }
+
+RESOURCE TBUF r_upnp_wizard_head_2_text
+    {
+    buf = qtn_iupnp_wizard_head_2;
+    }
+
+RESOURCE TBUF r_upnp_wizard_2_text
+    {
+    buf = qtn_iupnp_wizard_2;
+    }
+    
+// --------------------------------------------------------------------------
+//    r_wizard_popup_dialog_3
+//    resource for wizard step 3
+// --------------------------------------------------------------------------
+RESOURCE DIALOG r_upnp_wizard_popup_dialog_3
+    {
+    flags = EGeneralQueryFlags;
+    buttons = r_upnp_wizard_softkeys_next_back__select;
+
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtQuery;
+            id = EGeneralQuery;
+            control = AVKON_DATA_QUERY
+                {
+                layout = EDataLayout;
+                label = " ";
+                control = EDWIN
+                    {
+                    width = 5;
+                    lines = 1;
+                    maxlength = 64;
+                    };
+                };
+            }
+        };
+    }
+
+RESOURCE TBUF r_upnp_wizard_head_3_text
+    {
+    buf = qtn_iupnp_wizard_head_3;
+    }
+    
+// --------------------------------------------------------------------------
+//    r_wizard_popup_dialog_4
+//    resource for wizard step 4
+// --------------------------------------------------------------------------
+RESOURCE DIALOG r_upnp_wizard_popup_dialog_4
+    {
+    flags = EGeneralQueryFlags |
+        EEikDialogFlagNoTitleBar |
+        EEikDialogFlagNoBorder |
+        EEikDialogFlagNoShadow;
+    buttons = r_upnp_wizard_softkeys_next_back__select;
+
+    items=
+        {
+        DLG_LINE
+            {
+            type = EAknCtPopupHeadingPane;
+            id = EAknMessageQueryHeaderId;
+            control = AVKON_HEADING
+                {
+                bmpfile = "";
+                };
+            },
+        DLG_LINE
+            {
+            type = EAknCtMessageQuery;
+            id = EAknMessageQueryContentId;
+            control = AVKON_MESSAGE_QUERY
+                {
+                };
+            }
+        };
+    }
+
+RESOURCE TBUF r_upnp_wizard_head_4_text
+    {
+    buf = qtn_iupnp_wizard_head_4;
+    }
+
+// --------------------------------------------------------------------------
+//    r_wizard_popup_dialog_5
+//    resource for wizard step 5
+// --------------------------------------------------------------------------
+RESOURCE AVKON_LIST_QUERY r_upnp_wizard_popup_dialog_5
+    {
+    flags = EGeneralQueryFlags;
+    softkeys = r_upnp_wizard_softkeys_next_back__select;
+
+    items =
+        {
+        AVKON_LIST_QUERY_DLG_LINE
+            {
+            control = AVKON_LIST_QUERY_CONTROL
+                {
+                listtype = EAknCtSinglePopupMenuListBox;
+                listbox = AVKON_LIST_QUERY_LIST
+                    {
+                    };
+                heading = " ";    
+                };
+            }
+        };
+    }
+
+RESOURCE TBUF r_upnp_wizard_head_5_text
+    {
+    buf = qtn_iupnp_wizard_head_5;
+    }
+
+// --------------------------------------------------------------------------
+//    r_wizard_popup_dialog_6
+//    resource for wizard step 6
+// --------------------------------------------------------------------------
+RESOURCE DIALOG r_upnp_wizard_popup_dialog_6
+    {
+    flags = EGeneralQueryFlags |
+        EEikDialogFlagNoTitleBar |
+        EEikDialogFlagNoBorder |
+        EEikDialogFlagNoShadow;
+    buttons = r_upnp_wizard_softkeys_next_back__select;
+
+    items=
+        {
+        DLG_LINE
+            {
+            type = EAknCtPopupHeadingPane;
+            id = EAknMessageQueryHeaderId;
+            control = AVKON_HEADING
+                {
+                bmpfile = "";
+                };
+            },
+        DLG_LINE
+            {
+            type = EAknCtMessageQuery;
+            id = EAknMessageQueryContentId;
+            control = AVKON_MESSAGE_QUERY
+                {
+                };
+            }
+        };
+    }
+
+RESOURCE TBUF r_upnp_wizard_head_6_text
+    {
+    buf = qtn_iupnp_wizard_head_6;
+    }
+
+//----------------------------------------------------------------------------
+//    r_upnp_wizard_6_2_text
+//    text for r_upnp_wizard_popup_dialog_6
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnp_wizard_6_2_text
+    {
+    buf = qtn_iupnp_wizard_6_2;
+    }
+
+
+RESOURCE TBUF r_upnp_wizard_head_7_text
+    {
+    buf = qtn_iupnp_wizard_head_7;
+    }
+    
+
+RESOURCE TBUF r_upnp_wizard_head_8_text
+    {
+    buf = qtn_iupnp_wizard_head_8;
+    }
+    
+//----------------------------------------------------------------------------
+//    r_upnp_wizard_9a_text
+//    text for r_upnp_wizard_popup_dialog_9a
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnp_wizard_9a_text
+    {
+    buf = qtn_iupnp_wizard_9a_2;
+    }
+
+//----------------------------------------------------------------------------
+//    r_upnp_wizard_9b_text
+//    text for r_upnp_wizard_popup_dialog_9b
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnp_wizard_9b_text
+{
+    buf = qtn_iupnp_wizard_9b_2;
+}
+
+
+// --------------------------------------------------------------------------
+//    r_wizard_popup_dialog_9a
+//    resource for wizard step 9a
+// --------------------------------------------------------------------------
+RESOURCE DIALOG r_upnp_wizard_popup_dialog_9a
+    {
+    flags = EGeneralQueryFlags |
+        EEikDialogFlagNoTitleBar |
+        EEikDialogFlagNoBorder |
+        EEikDialogFlagNoShadow;
+
+    buttons = r_upnp_wizard_softkeys_done_back__select;
+
+    items=
+        {
+        DLG_LINE
+            {
+            type = EAknCtPopupHeadingPane;
+            id = EAknMessageQueryHeaderId;
+            control = AVKON_HEADING
+                {
+                bmpfile = "";
+                };
+            },
+        DLG_LINE
+            {
+            type = EAknCtMessageQuery;
+            id = EAknMessageQueryContentId;
+            control = AVKON_MESSAGE_QUERY
+                {
+                };
+            }
+        };
+    }
+
+RESOURCE TBUF r_upnp_wizard_head_9_text
+    {
+    buf = qtn_iupnp_wizard_head_9;
+    }
+    
+// --------------------------------------------------------------------------
+//    r_wizard_popup_dialog_9b
+//    resource for wizard step 9b
+// --------------------------------------------------------------------------
+RESOURCE DIALOG r_upnp_wizard_popup_dialog_9b
+    {
+    flags = EGeneralQueryFlags |
+        EEikDialogFlagNoTitleBar |
+        EEikDialogFlagNoBorder |
+        EEikDialogFlagNoShadow;
+
+    buttons = r_upnp_wizard_softkeys_done_back__select;
+
+    items=
+        {
+        DLG_LINE
+            {
+            type = EAknCtPopupHeadingPane;
+            id = EAknMessageQueryHeaderId;
+            control = AVKON_HEADING
+                {
+                bmpfile = "";
+                };
+            },
+        DLG_LINE
+            {
+            type = EAknCtMessageQuery;
+            id = EAknMessageQueryContentId;
+            control = AVKON_MESSAGE_QUERY
+                {
+                };
+            }
+        };
+    }
+
+//---------------------------------------------------------------------------
+//    r_upnp_wizard_starting_file_sharing_note
+//    text included from homeconnect.loc
+//    resource for starting filesharing wait note
+//---------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_upnp_wizard_starting_file_sharing_note
+    {
+    flags = EAknWaitNoteFlags;
+    buttons = R_AVKON_SOFTKEYS_EMPTY;
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtNote;
+            id = EGeneralNote;
+            control = AVKON_NOTE
+                {
+                layout = EWaitLayout;
+                singular_label = qtn_iupnp_wait_sharing;
+                imageid = EMbmAvkonQgn_note_progress;
+                imagemask = EMbmAvkonQgn_note_progress_mask;
+                animation = R_QGN_GRAF_WAIT_BAR_ANIM;
+                };
+            }
+        };
+    }
+
+//---------------------------------------------------------------------------
+//    r_upnp_wizard_always_ask_text
+//    text for always ask item in iap selection
+//---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnp_wizard_always_ask_text
+    {
+    buf = qtn_iupnp_always_ask;
+    }
+
+//---------------------------------------------------------------------------
+//    r_upnp_wizard_create_new_text
+//    text for create new item in iap selection
+//---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnp_wizard_create_new_text
+    {
+    buf = qtn_iupnp_create_new;
+    }
+
+//---------------------------------------------------------------------------
+//    r_settings_start_sharing_error_text
+//    included from homeconnect.loc
+//    text to infrom used that sharing activation failed
+//---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnp_wizard_start_sharing_error_text
+    {
+    buf = qtn_iupnp_start_sharing_error;
+    }
+
+//---------------------------------------------------------------------------
+//    r_upnp_wizard_4_text
+//    Text for wizard step 4
+//---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnp_wizard_4_text
+    {
+    buf = qtn_iupnp_wizard_4;
+    }
+
+//---------------------------------------------------------------------------
+//    r_upnp_wizard_iap_turn_sharing_off
+//    note to show if sharing is on when trying to change iap or device name
+//---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnp_wizard_iap_turn_sharing_off
+    {
+    buf = qtn_iupnp_ibu_gallery_connectionactive_note;
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_upnp_wizard_updating_content_note_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnp_wizard_updating_content_note_text 
+    { 
+    buf = qtn_iupnp_wait_updating_content;
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_upnp_wizard_updating_content_header
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_upnp_wizard_updating_content_header
+    { 
+    buf = qtn_iupnp_updating_content_header;
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_upnp_wizard_info_query
+//
+//----------------------------------------------------------------------------
+//        
+RESOURCE DIALOG r_upnp_wizard_info_query
+{
+   flags = EGeneralQueryFlags | EEikDialogFlagNoTitleBar | EEikDialogFlagNoBorder | EEikDialogFlagNoShadow;
+   buttons = R_AVKON_SOFTKEYS_OK_EMPTY;
+   items=
+   {
+       DLG_LINE
+       {
+          type = EAknCtPopupHeadingPane;
+          id = EAknMessageQueryHeaderId;
+          control = AVKON_HEADING
+          {
+          };
+       },
+       DLG_LINE
+       {
+          type = EAknCtMessageQuery;
+          id = EAknMessageQueryContentId;
+          control = AVKON_MESSAGE_QUERY
+          {
+          };
+        }
+   };
+}
+
+// End of file
+

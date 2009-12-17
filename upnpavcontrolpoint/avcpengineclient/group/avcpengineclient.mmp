@@ -1,0 +1,61 @@
+/** @file
+* Copyright (c) 2002-2004 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies  this distribution, and is available 
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project specification for AVCPEngineClient
+*
+*/
+
+#include "../../../group/upnpplatformvar.hrh"
+
+TARGET          avcpengineclient.dll
+TARGETTYPE      dll
+UID             0x1000008d 0x101F977B
+CAPABILITY      CAP_CLIENT_DLL
+VENDORID        VID_DEFAULT
+
+VERSION         10.1
+paged
+
+SOURCEPATH      ../src
+
+SOURCE          upnpavcpengineclient.cpp
+SOURCE          upnpavcpenginemsclient.cpp
+SOURCE          upnpavcpenginerfsclient.cpp
+SOURCE          upnpmetadata.cpp
+
+MW_LAYER_SYSTEMINCLUDE
+USERINCLUDE   ../../../inc
+USERINCLUDE   ../../inc
+USERINCLUDE     ../inc
+
+LIBRARY         euser.lib
+LIBRARY         efsrv.lib
+LIBRARY         bafl.lib
+LIBRARY         insock.lib
+LIBRARY         estlib.lib
+
+LIBRARY         inetprotutil.lib
+LIBRARY         upnpipserversutils.lib
+//LibXml2
+LIBRARY         xmlengineutils.lib
+LIBRARY         xmlenginedom.lib
+
+// remote storage
+LIBRARY         rsfwcommon.lib
+LIBRARY         rsfwmountman.lib
+
+//to be removed when mountentry moved to mountman
+LIBRARY         rsfwmountstore.lib
+DEFFILE         AVCPEngineClient
+
+// End of file

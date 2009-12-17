@@ -1,0 +1,8 @@
+EXPORTS
+	_ZN21CmStoreManagerFactory16NewStoreManagerLEP18MCmServiceObserverR11CMdESessionP9CCmDmMainP9CCmMmMain @ 1 NONAME
+	_ZN21CmStoreManagerFactory17NewStoreManagerLCEP18MCmServiceObserverR11CMdESessionP9CCmDmMainP9CCmMmMain @ 2 NONAME
+	_ZTI26CCmSmContentChangeObserver @ 3 NONAME ; #<TI>#
+	_ZTI9CCmSmMain @ 4 NONAME ; #<TI>#
+	_ZTV26CCmSmContentChangeObserver @ 5 NONAME ; #<VT>#
+	_ZTV9CCmSmMain @ 6 NONAME ; #<VT>#
+

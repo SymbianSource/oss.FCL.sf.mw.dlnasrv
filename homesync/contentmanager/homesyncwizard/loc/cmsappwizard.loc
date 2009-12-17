@@ -1,0 +1,238 @@
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  This file includes localization strings
+*
+*/
+
+
+// LOCALISATION STRINGS
+
+//d:Header for wizard step
+//d:Parameter maximum length: 2 characters
+//l:heading_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wizard_head_1 "Setup wizard 1/%N"
+
+//d:Message for wizard step
+//l:popup_info_list_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wizard_1 "Media Sync application can be used for synchronizing media from and to home devices. Please run the wizard within range of your WLAN."
+
+//d:Header for wizard step
+//d:Parameter maximum length: 2 characters
+//l:heading_pane_t1
+//r:2.1
+//
+#define qtn_mserv_wizard_head_from_home_1 "Sync from home 2/%N"
+
+//d:Message for wizard step
+//l:popup_info_list_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wizard_from_home "Select the media you want to synchronize from home. You can edit the choices later in \"From home\" view."
+
+//d:Header for wizard step
+//d:Parameter maximum length: 2 characters
+//l:heading_pane_t1
+//r:2.1
+//
+#define qtn_mserv_wizard_head_from_home_2 "Sync from home 3/%N"
+
+//d:Header for wizard step
+//d:Parameter maximum length: 2 characters
+//l:heading_pane_t1
+//r:2.1
+//
+#define qtn_mserv_wizard_head_source_devices_1 "Source device(s) 4/%N"
+
+//d:Message for wizard step
+//l:popup_info_list_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wizard_source_devices "Select the device(s) from which to synchronise media. You can later add and remove sync devices in settings."
+
+//d:Header for wizard step
+//d:Parameter maximum length: 2 characters
+//l:heading_pane_t1
+//r:2.1
+//
+#define qtn_mserv_wizard_head_source_devices_2 "Source device(s) 5/%N"
+
+//d:Header for wizard step
+//d:Parameter maximum length: 2 characters
+//l:heading_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wizard_head_2 "Sync to home 6/%N"
+
+//d:Message for wizard step
+//l:popup_info_list_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wizard_2 "Select the media categories you want to synchronize to home.  You can edit the choices later in \"To home\" view."
+
+//d:Header for wizard step
+//d:Parameter maximum length: 2 characters
+//l:heading_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wizard_head_3 "Sync to home 7/%N"
+
+//d:Header for wizard step
+//d:Parameter maximum length: 2 characters
+//l:heading_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wizard_head_4 "Target device(s) 8/%N"
+
+//d:Message for wizard step
+//l:popup_info_list_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wizard_4 "Select the device(s) to which to synchronise media. You can later add and remove sync devices in settings."
+
+
+//d:Header for wizard step
+//d:Parameter maximum length: 2 characters
+//l:heading_pane_t1/opt2
+//r:1.0
+//
+#define qtn_mserv_wizard_head_5 "Target device(s) 9/%N"
+
+//d:Message for wizard step
+//l:popup_info_list_pane_t1
+//r:2.1
+//
+#define qtn_mserv_wizard_no_target_devices_found "There were no devices supporting upload found. Your selections of media categories to be synchronized to home are no longer valid."
+
+//d:Target devices not selected
+//l:popup_info_list_pane_t1
+//r:2.1
+//
+#define qtn_mserv_wizard_no_target_devices_selected "You didn’t select any target devices. Your selections of media categories to be synchronized to home are no longer valid."
+
+//d:Header for wizard step
+//d:Parameter maximum length: 2 characters
+//l:heading_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wizard_head_8 "Synchronization 10/%N"
+
+//d:Message for wizard step
+//l:popup_info_list_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wizard_8 "Select whether you want to start synchronizing manually or let it run periodically while you are within the range of your WLAN."
+
+//d:Header for wizard step
+//d:Parameter maximum length: 2 characters
+//l:heading_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wizard_head_9 "Synchronization 11/%N"
+
+//d:Syncronization setting value ( automatic mode )
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_wizard_automatic "Automatically"
+
+//d:Syncronization setting value ( manual mode )
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_wizard_manually "Manually"
+
+//d:Header for wizard step
+//d:Parameters maximum length: 2 characters
+//l:heading_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wizard_head_10 "Setup wizard %0N/%1N"
+
+//d:Message for wizard step
+//l:popup_info_list_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wizard_10 "Initial refresh of your home media library will start now. Exiting the application will not stop the refreshing."
+
+//d:Search devices
+//l:popup_note_wait_window
+//r:2.1
+//
+#define qtn_mserv_wizard_searching_devices "Searching for compatible devices"
+
+//d:Category to be synced from server to home
+//l:list_single_graphic_pane_t1_cp2
+//r:2.1
+//
+#define qtn_mserv_wizard_latest_images "Latest images"
+
+//d:Category to be synced from server to home
+//l:list_single_graphic_pane_t1_cp2
+//r:2.1
+//
+#define qtn_mserv_wizard_latest_music "Latest music"
+
+//d:Category to be synced from server to home
+//l:list_single_graphic_pane_t1_cp2
+//r:2.1
+//
+#define qtn_mserv_wizard_latest_videos "Latest videos"
+
+//d:Header for wizard step 8
+//d:Parameter maximum length: 2 characters
+//l:heading_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wizard_head_8_2 "Synchronization 6/%N"
+
+//d:List item
+//d:Captures image category
+//l:list_single_graphic_pane_t1_cp2
+//r:2.0
+//
+#define qtn_mserv_wizard_phone_images "Captured images"
+
+//d:List item
+//d:Other images category
+//l:list_single_graphic_pane_t1_cp2
+//r:2.0
+//
+#define qtn_mserv_wizard_other_images "Other images"
+
+//d:List item
+//d:Captures videos category
+//l:list_single_graphic_pane_t1_cp2
+//r:2.0
+//
+#define qtn_mserv_wizard_phone_videos "Captured videos"
+
+//d:List item
+//d:Other videos category
+//l:list_single_graphic_pane_t1_cp2
+//r:2.0
+//
+#define qtn_mserv_wizard_other_videos "Other videos"
+
+//d:List item
+//d:Music category
+//l:list_single_graphic_pane_t1_cp2
+//r:2.0
+//
+#define qtn_mserv_wizard_music "Music"
+
+// End of File

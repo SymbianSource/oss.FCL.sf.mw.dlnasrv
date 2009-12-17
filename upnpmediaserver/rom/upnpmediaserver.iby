@@ -1,0 +1,46 @@
+/** @file
+* Copyright (c) 2005-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies  this distribution, and is available 
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  IBY file for the UPnP Media Server subsystem
+*
+*/
+
+
+#ifndef __UPNPMEDIASERVER_IBY__
+#define __UPNPMEDIASERVER_IBY__
+
+#ifdef __UPNP_STACK
+
+#ifdef __UPNP_MEDIASERVER
+file=ABI_DIR\BUILD_DIR\avconnectionmanager.dll \sys\bin\avconnectionmanager.dll 
+file=ABI_DIR\BUILD_DIR\avcontentdirectory.dll \sys\bin\avcontentdirectory.dll
+file=ABI_DIR\BUILD_DIR\avmediaserverclient.dll \sys\bin\avmediaserverclient.dll
+file=ABI_DIR\BUILD_DIR\upnpavobjects.dll \sys\bin\upnpavobjects.dll
+file=ABI_DIR\BUILD_DIR\avmediaserver.exe \sys\bin\avmediaserver.exe
+
+data=DATAZ_\private\101f977c\objects.xml  \private\101f977c\objects.xml 
+data=DATAZ_\private\101f977c\public\MediaServer1\ConnectionManager1.xml  \private\101f977c\public\MediaServer1\ConnectionManager1.xml
+data=DATAZ_\private\101f977c\public\MediaServer1\ContentDirectory1.xml \private\101f977c\public\MediaServer1\ContentDirectory1.xml 
+data=DATAZ_\private\101f977c\public\MediaServer1\MediaServer1.xml \private\101f977c\public\MediaServer1\MediaServer1.xml
+
+
+//Backup registartion
+data=DATAZ_\private\101f977c\backup_registration.xml \private\101f977c\backup_registration.xml
+data=DATAZ_\private\101f977d\backup_registration.xml \private\101f977d\backup_registration.xml
+#endif // __UPNP_MEDIASERVER
+
+#endif // __UPNP_STACK
+
+#endif // __UPNPMEDIASERVER_IBY__
+
+//  End of File  

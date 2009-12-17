@@ -1,0 +1,8 @@
+EXPORTS
+	_ZN21CUPnPMultiselectionUi12ExecuteDlgLDEv @ 1 NONAME
+	_ZN21CUPnPMultiselectionUi14ExecutePopupLDEv @ 2 NONAME
+	_ZN21CUPnPMultiselectionUi15SetMarkedItemsLER9CArrayFixIiE @ 3 NONAME
+	_ZN21CUPnPMultiselectionUi4NewLE21THomeConnectMediaTypeP22CUPnPFileSharingEngineRiP9CArrayFixIiENS_8TUiStyleEPK7HBufC16 @ 4 NONAME
+	_ZTI21CUPnPMultiselectionUi @ 5 NONAME ; #<TI>#
+	_ZTV21CUPnPMultiselectionUi @ 6 NONAME ; #<VT>#
+

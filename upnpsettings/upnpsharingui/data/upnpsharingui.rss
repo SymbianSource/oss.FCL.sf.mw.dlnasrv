@@ -1,0 +1,449 @@
+/*
+* Copyright (c) 2005-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Resource definitions for project Home Network
+*
+*/
+
+
+
+
+
+
+
+//  RESOURCE IDENTIFIER
+NAME    SHUI // 4 letter ID
+
+//  INCLUDES
+#include <eikon.rh>
+#include <avkon.rsg>
+#include <avkon.rh>
+#include <avkon.mbg>
+#include <avkon.loc>
+#include <data_caging_paths_strings.hrh>
+#include <appinfo.rh>
+#include <CommonDialogs.hrh> // CommonDialogs Enumerations
+#include <CommonDialogs.rh>  // CommonDialogs Resource structures
+#include <upnpsettings.loc>
+
+#include "upnpsharingui.hrh"
+
+
+//  RESOURCE DEFINITIONS 
+
+// --------------------------------------------------------------------------
+// RSS_SIGNATURE
+// Mandatory utility struct in resource file. Used by UIKON internally.
+// --------------------------------------------------------------------------
+RESOURCE RSS_SIGNATURE 
+    {
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_sharingui_title_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_sharingui_title_text 
+    { 
+    buf = qtn_iupnp_title_share;
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_sharingui_softkeys_options_back__change
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE CBA r_sharingui_softkeys_options_back__change
+    {
+    buttons =
+        {
+        CBA_BUTTON {id=EAknSoftkeyOptions; txt = text_softkey_option;},
+        CBA_BUTTON {id=EAknSoftkeyBack; txt = text_softkey_back; },
+        CBA_BUTTON {id=EAknSoftkeyChange; txt= qtn_msk_change; }
+        };
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_sharingui_menubar
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE MENU_BAR r_sharingui_menubar
+    {
+    titles =
+        {
+        MENU_TITLE { menu_pane = r_sharingui_menu;}
+        };
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_sharingui_menu
+//
+//----------------------------------------------------------------------------
+
+RESOURCE MENU_PANE r_sharingui_menu
+    {
+    items =
+        {
+        MENU_ITEM
+            { 
+            command = ESharingUiCmdAppChange; 
+            txt = qtn_options_change;
+            },
+        MENU_ITEM
+            { 
+            command = ESharingUiCmdRefresh; 
+            txt = qtn_iupnp_options_update_content;
+            },
+        MENU_ITEM
+            { 
+            command = EAknCmdHelp;
+            txt = qtn_options_help;
+            },
+        MENU_ITEM
+            { 
+            command = EAknCmdExit;
+            txt = qtn_options_exit;
+            }
+        };
+    }
+
+
+//----------------------------------------------------------------------------
+//   
+//    r_sharingui_dialog
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_sharingui_dialog
+    { 
+    title = qtn_iupnp_title_share;
+    flags = EAknDialogSelectionList;
+    buttons = r_sharingui_softkeys_options_back__change;
+    items = 
+        {
+        DLG_LINE
+            {
+            type = KAknCtLastControlId;
+            id = ESharingUiListBoxId;
+            control = AVKON_SETTING_ITEM_LIST
+                {
+                flags = EAknSettingItemIncludeHiddenInOrdinal;
+                initial_number = 1;
+                items =
+                    {
+                    AVKON_SETTING_ITEM
+                        {
+                        identifier = ESharingUiSettingItemVisibility;
+                        associated_resource = r_sharingui_visibility_popup_texts;
+                        name = qtn_iupnp_set_sharing;
+                        },
+                    AVKON_SETTING_ITEM
+                        {
+                        identifier = ESharingUiSettingItemVisual;
+                        name = qtn_iupnp_visual_albums;
+                        },
+                    AVKON_SETTING_ITEM
+                        {
+                        identifier = ESharingUiSettingItemMusic;
+                        name = qtn_iupnp_music_pl;
+                        }
+                    };    
+                };
+            }
+        };
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_sharingui_visibility_editor
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE POPUP_SETTING_LIST r_sharingui_visibility_editor
+    {
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_sharingui_visibility_popup_texts
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE AVKON_POPUP_SETTING_TEXTS r_sharingui_visibility_popup_texts
+    {
+    setting_texts_resource = r_sharingui_visibility_on_off_texts;
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_sharingui_visibility_on_off_texts
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE ARRAY r_sharingui_visibility_on_off_texts
+    {
+    items =
+        {
+        AVKON_ENUMERATED_TEXT 
+            { 
+            value = ESharingUiVisibilityOn; 
+            text = qtn_iupnp_set_sharing_on;
+            },
+        AVKON_ENUMERATED_TEXT 
+            { 
+            value = ESharingUiVisibilityOff; 
+            text = qtn_iupnp_set_sharing_off;
+            }
+        };
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_sharingui_starting_file_sharing_note_dialog
+//
+//----------------------------------------------------------------------------
+//    
+RESOURCE DIALOG r_sharingui_starting_file_sharing_note_dialog
+    { 
+    flags = EAknWaitNoteFlags;
+    buttons = R_AVKON_SOFTKEYS_EMPTY;
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtNote;
+            id = EGeneralNote;
+            control = AVKON_NOTE
+                {
+                layout = EWaitLayout;
+                singular_label = qtn_iupnp_wait_sharing;
+                imageid = EMbmAvkonQgn_note_progress;
+                imagemask = EMbmAvkonQgn_note_progress_mask;
+                animation = R_QGN_GRAF_WAIT_BAR_ANIM;
+                };
+            }
+        };
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_sharingui_stopping_file_sharing_note_dialog
+//
+//----------------------------------------------------------------------------
+//    
+RESOURCE DIALOG r_sharingui_stopping_file_sharing_note_dialog
+    { 
+    flags = EAknWaitNoteFlags;
+    buttons = R_AVKON_SOFTKEYS_EMPTY;
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtNote;
+            id = EGeneralNote;
+            control = AVKON_NOTE
+                {
+                layout = EWaitLayout;
+                singular_label = qtn_iupnp_wait_sharing_off;
+                imageid = EMbmAvkonQgn_note_progress;
+                imagemask = EMbmAvkonQgn_note_progress_mask;
+                animation = R_QGN_GRAF_WAIT_BAR_ANIM;
+                };
+            }
+        };
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_visual_albums_share_nothing_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_visual_albums_share_nothing_text 
+    {
+    buf = qtn_iupnp_visual_nothing;
+    }
+
+
+//----------------------------------------------------------------------------
+//   
+//    r_visual_albums_share_one_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_visual_albums_share_one_text 
+    { 
+    buf = qtn_iupnp_visual_one;
+    }
+
+
+//----------------------------------------------------------------------------
+//   
+//    r_visual_albums_share_many_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_visual_albums_share_many_text 
+    { 
+    buf = qtn_iupnp_visual_many;
+    }
+
+
+//----------------------------------------------------------------------------
+//   
+//    r_music_share_nothing_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_music_share_nothing_text 
+    {
+    buf = qtn_iupnp_music_nothing;
+    }
+
+
+//----------------------------------------------------------------------------
+//   
+//    r_music_share_one_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_music_share_one_text 
+    { 
+    buf = qtn_iupnp_music_one;
+    }
+
+
+//----------------------------------------------------------------------------
+//   
+//    r_music_share_many_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_music_share_many_text 
+    { 
+    buf = qtn_iupnp_music_many;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_settings_start_sharing_phone_error_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_settings_start_sharing_phone_error_text
+    {
+    buf = qtn_memlo_not_enough_device_memory;
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_settings_start_sharing_error_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_settings_start_sharing_error_text
+    {
+    buf = qtn_iupnp_start_sharing_error;
+    }
+
+// --------------------------------------------------------------------------
+//   
+//    r_upnp_phone_visible_text
+//   
+// --------------------------------------------------------------------------
+RESOURCE TBUF r_upnp_phone_hidden_text
+    { 
+    buf = qtn_iupnp_phone_hidden;
+    }
+    
+// --------------------------------------------------------------------------
+//   
+//    r_upnp_phone_visible_text
+//   
+// --------------------------------------------------------------------------
+RESOURCE TBUF r_upnp_phone_visible_text
+    { 
+    buf = qtn_iupnp_phone_visible;
+    }        
+
+//----------------------------------------------------------------------------
+//   
+//    r_sharingui_info_query
+//
+//----------------------------------------------------------------------------
+//        
+RESOURCE DIALOG r_sharingui_info_query
+{
+   flags = EGeneralQueryFlags | EEikDialogFlagNoTitleBar | EEikDialogFlagNoBorder | EEikDialogFlagNoShadow;
+   buttons = R_AVKON_SOFTKEYS_OK_EMPTY;
+   items=
+   {
+       DLG_LINE
+       {
+          type = EAknCtPopupHeadingPane;
+          id = EAknMessageQueryHeaderId;
+          control = AVKON_HEADING
+          {
+          };
+       },
+       DLG_LINE
+       {
+          type = EAknCtMessageQuery;
+          id = EAknMessageQueryContentId;
+          control = AVKON_MESSAGE_QUERY
+          {
+          };
+        }
+   };
+}
+
+//----------------------------------------------------------------------------
+//   
+//    r_sharingui_updating_content_header
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_sharingui_updating_content_header
+    { 
+    buf = qtn_iupnp_updating_content_header;
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_sharingui_updating_content_note_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_sharingui_updating_content_note_text 
+    { 
+    buf = qtn_iupnp_wait_updating_content;
+    }
+
+//----------------------------------------------------------------------------
+//   
+//    r_sharingui_secondary_in_progress
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_sharingui_secondary_in_progress
+    { 
+    buf = qtn_iupnp_updating_progress;
+    }
+
+// End of File

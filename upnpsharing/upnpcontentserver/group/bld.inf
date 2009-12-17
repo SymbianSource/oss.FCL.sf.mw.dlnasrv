@@ -1,0 +1,39 @@
+/*
+* Copyright (c) 2006-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Project definition file for project upnpcontentserver
+*
+*/
+
+
+
+
+
+PRJ_EXPORTS
+
+// Central repository default keys
+../cenrep/20007564.txt  /epoc32/release/winscw/udeb/z/private/10202be9/20007564.txt
+../cenrep/20007564.txt  /epoc32/release/winscw/urel/z/private/10202be9/20007564.txt
+../cenrep/20007564.txt  /epoc32/release/armv5/udeb/z/private/10202be9/20007564.txt
+../cenrep/20007564.txt  /epoc32/release/armv5/urel/z/private/10202be9/20007564.txt
+../conf/upnpcontentserver.confml              APP_LAYER_CONFML(upnpcontentserver.confml)
+../conf/upnpcontentserver_20007564.crml       APP_LAYER_CRML(upnpcontentserver_20007564.crml)
+
+../inc/upnpcontentservercrkeys.h    |../../../inc/upnpcontentservercrkeys.h
+../inc/upnpcontentserverdefs.h      |../../../inc/upnpcontentserverdefs.h
+../inc/upnpcontentserverclient.h    |../../../inc/upnpcontentserverclient.h
+
+PRJ_MMPFILES
+upnpcontentserver.mmp
+upnpcontentserverclient.mmp
+

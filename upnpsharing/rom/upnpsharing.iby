@@ -1,0 +1,48 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      upnpsharing subsystem resource ROM include file
+*
+*/
+
+#ifndef __UPNPSHARING_IBY__
+#define __UPNPSHARING_IBY__
+
+#ifdef FF_UPNP_FRAMEWORK_2_0 // UPnP feature flag
+
+    // UPnP Security
+    file=ABI_DIR\BUILD_DIR\upnpsecuritymanagerserver.exe \sys\bin\upnpsecuritymanagerserver.exe
+    file=ABI_DIR\BUILD_DIR\upnpsecuritymanagerclient.dll \sys\bin\upnpsecuritymanagerclient.dll
+    file=ABI_DIR\BUILD_DIR\upnpsecurity.dll \sys\bin\upnpsecurity.dll
+    ECOM_PLUGIN( upnpsecuritymanagerplugin.dll, upnpsecuritymanagerplugin.rsc )
+
+    // DLNA Profiler
+    file=ABI_DIR\BUILD_DIR\dlnaprofiler.dll \sys\bin\dlnaprofiler.dll
+
+    // sharing engine
+    file=ABI_DIR\BUILD_DIR\upnpapplicationengine.dll \sys\bin\upnpapplicationengine.dll
+
+    // mediaserver icons
+    data=ABI_DIR\BUILD_DIR\z\system\apps\upnp\upnp_ms_jpeg_lrg.jpg  \system\apps\upnp\upnp_ms_jpeg_lrg.jpg
+    data=ABI_DIR\BUILD_DIR\z\system\apps\upnp\upnp_ms_jpeg_sm.jpg  \system\apps\upnp\upnp_ms_jpeg_sm.jpg
+    data=ABI_DIR\BUILD_DIR\z\system\apps\upnp\upnp_ms_png_lrg.png  \system\apps\upnp\upnp_ms_png_lrg.png
+    data=ABI_DIR\BUILD_DIR\z\system\apps\upnp\upnp_ms_png_sm.png  \system\apps\upnp\upnp_ms_png_sm.png
+
+    // content sharing server
+    data=ABI_DIR\BUILD_DIR\z\private\10202be9\20007564.txt \private\10202be9\20007564.txt
+    file=ABI_DIR\BUILD_DIR\upnpcontentserver.exe \sys\bin\upnpcontentserver.exe
+    file=ABI_DIR\BUILD_DIR\upnpcontentserverclient.dll \sys\bin\upnpcontentserverclient.dll
+
+#endif // FF_UPNP_FRAMEWORK_2_0
+
+#endif // __UPNPSHARING_IBY__

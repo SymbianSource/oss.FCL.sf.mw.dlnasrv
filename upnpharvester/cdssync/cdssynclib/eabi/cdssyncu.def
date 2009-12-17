@@ -1,0 +1,16 @@
+EXPORTS
+	_ZN8CCdsSync10ChunkCountEv @ 1 NONAME
+	_ZN8CCdsSync14SetSearchIndexEi @ 2 NONAME
+	_ZN8CCdsSync18ProcessedItemCountEv @ 3 NONAME
+	_ZN8CCdsSync22NotifySourceDataAddedLEi @ 4 NONAME
+	_ZN8CCdsSync4NewLEv @ 5 NONAME
+	_ZN8CCdsSync5InitLER13RPointerArrayI6HBufC8ERKiR16MCdsSyncObserveri @ 6 NONAME
+	_ZN8CCdsSync5NewLCEv @ 7 NONAME
+	_ZN8CCdsSync6ResetLEv @ 8 NONAME
+	_ZTI12CCdsSyncImpl @ 9 NONAME ; #<TI>#
+	_ZTI13CCdsSyncSqlAo @ 10 NONAME ; #<TI>#
+	_ZTI8CCdsSync @ 11 NONAME ; #<TI>#
+	_ZTV12CCdsSyncImpl @ 12 NONAME ; #<VT>#
+	_ZTV13CCdsSyncSqlAo @ 13 NONAME ; #<VT>#
+	_ZTV8CCdsSync @ 14 NONAME ; #<VT>#
+

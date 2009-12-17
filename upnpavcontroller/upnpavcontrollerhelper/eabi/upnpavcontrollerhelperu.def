@@ -1,0 +1,56 @@
+EXPORTS
+	_ZN15UPnPDlnaUtility19IsSupportedMimeTypeERK6TDesC8 @ 1 NONAME
+	_ZN15UPnPDlnaUtility21GetSupportedProfilesLENS_9TDlnaModeE @ 2 NONAME
+	_ZN15UPnPDlnaUtility22IsSupportedDlnaProfileERK6TDesC8 @ 3 NONAME
+	_ZN15UPnPFileUtility12FitsInMemoryERK12CUpnpElement @ 4 NONAME
+	_ZN15UPnPFileUtility16IsFileProtectedLERK7TDesC16 @ 5 NONAME
+	_ZN15UPnPItemUtility14BelongsToClassERK11CUpnpObjectRK6TDesC8 @ 6 NONAME
+	_ZN15UPnPItemUtility14GetResElementsERK11CUpnpObjectR13RPointerArrayI12CUpnpElementE @ 7 NONAME
+	_ZN15UPnPItemUtility15UPnPDateAsTTimeERK6TDesC8R5TTime @ 8 NONAME
+	_ZN15UPnPItemUtility17FindElementByNameERK11CUpnpObjectRK6TDesC8 @ 9 NONAME
+	_ZN15UPnPItemUtility17ResourceFromItemLERK9CUpnpItem @ 10 NONAME
+	_ZN15UPnPItemUtility18FindElementByNameLERK11CUpnpObjectRK6TDesC8 @ 11 NONAME
+	_ZN15UPnPItemUtility19FindAttributeByNameERK12CUpnpElementRK6TDesC8 @ 12 NONAME
+	_ZN15UPnPItemUtility20FindAttributeByNameLERK12CUpnpElementRK6TDesC8 @ 13 NONAME
+	_ZN15UPnPItemUtility26UPnPDurationAsMillisecondsERK6TDesC8Ri @ 14 NONAME
+	_ZN23UPnPItemResolverFactory21NewLocalItemResolverLERK7TDesC16R17MUPnPAVControllerR21MUPnPResourceSelectori @ 15 NONAME
+	_ZN23UPnPItemResolverFactory22NewRemoteItemResolverLERK6TDesC8R22MUPnPAVBrowsingSessionR21MUPnPResourceSelectorS2_i @ 16 NONAME
+	_ZN23UPnPItemResolverFactory24NewDownloadItemResolverLERK6TDesC8R17MUPnPAVControllerR22MUPnPAVBrowsingSessionR21MUPnPResourceSelectorS2_i @ 17 NONAME
+	_ZN24TUPnPSelectFirstResource15SelectResourceLERK9CUpnpItem @ 18 NONAME
+	_ZN26TUPnPSelectDefaultResource15SelectResourceLERK9CUpnpItem @ 19 NONAME
+	_ZN36CUPnPAbstractBrowsingSessionObserver10SetSessionER22MUPnPAVBrowsingSession @ 20 NONAME
+	_ZN36CUPnPAbstractBrowsingSessionObserver21EnableSessionObserverEv @ 21 NONAME
+	_ZN36CUPnPAbstractBrowsingSessionObserver22DisableSessionObserverEv @ 22 NONAME
+	_ZN36CUPnPAbstractBrowsingSessionObserver24IsSessionObserverEnabledEv @ 23 NONAME
+	_ZN36CUPnPAbstractBrowsingSessionObserverC1Ev @ 24 NONAME
+	_ZN36CUPnPAbstractBrowsingSessionObserverC2Ev @ 25 NONAME
+	_ZN36CUPnPAbstractBrowsingSessionObserverD0Ev @ 26 NONAME
+	_ZN36CUPnPAbstractBrowsingSessionObserverD1Ev @ 27 NONAME
+	_ZN36CUPnPAbstractBrowsingSessionObserverD2Ev @ 28 NONAME
+	_ZN37CUPnPAbstractRenderingSessionObserver10SetSessionER23MUPnPAVRenderingSession @ 29 NONAME
+	_ZN37CUPnPAbstractRenderingSessionObserver21EnableSessionObserverEv @ 30 NONAME
+	_ZN37CUPnPAbstractRenderingSessionObserver22DisableSessionObserverEv @ 31 NONAME
+	_ZN37CUPnPAbstractRenderingSessionObserver24IsSessionObserverEnabledEv @ 32 NONAME
+	_ZN37CUPnPAbstractRenderingSessionObserverC1Ev @ 33 NONAME
+	_ZN37CUPnPAbstractRenderingSessionObserverC2Ev @ 34 NONAME
+	_ZN37CUPnPAbstractRenderingSessionObserverD0Ev @ 35 NONAME
+	_ZN37CUPnPAbstractRenderingSessionObserverD1Ev @ 36 NONAME
+	_ZN37CUPnPAbstractRenderingSessionObserverD2Ev @ 37 NONAME
+	_ZTI22CUPnPLocalItemResolver @ 38 NONAME ; #<TI>#
+	_ZTI23CUPnPRemoteItemResolver @ 39 NONAME ; #<TI>#
+	_ZTI24TUPnPSelectFirstResource @ 40 NONAME ; #<TI>#
+	_ZTI25CUPnPDownloadItemResolver @ 41 NONAME ; #<TI>#
+	_ZTI26TUPnPSelectDefaultResource @ 42 NONAME ; #<TI>#
+	_ZTI36CUPnPAbstractBrowsingSessionObserver @ 43 NONAME ; #<TI>#
+	_ZTI37CUPnPAbstractRenderingSessionObserver @ 44 NONAME ; #<TI>#
+	_ZTV22CUPnPLocalItemResolver @ 45 NONAME ; #<VT>#
+	_ZTV23CUPnPRemoteItemResolver @ 46 NONAME ; #<VT>#
+	_ZTV24TUPnPSelectFirstResource @ 47 NONAME ; #<VT>#
+	_ZTV25CUPnPDownloadItemResolver @ 48 NONAME ; #<VT>#
+	_ZTV26TUPnPSelectDefaultResource @ 49 NONAME ; #<VT>#
+	_ZTV36CUPnPAbstractBrowsingSessionObserver @ 50 NONAME ; #<VT>#
+	_ZTV37CUPnPAbstractRenderingSessionObserver @ 51 NONAME ; #<VT>#
+	_ZN25CUPnPDownloadItemResolver24DeleteTempDownloadFilesLEv @ 52 NONAME
+	_ZN23UPnPInternalFileUtility18CreateTmpFileNameLERK9CUpnpItem @ 53 NONAME
+	_ZN23UPnPInternalFileUtility28GetSelectedDownloadLocationLEv @ 54 NONAME
+

@@ -1,0 +1,116 @@
+/** @file
+* Copyright (c) 2002-2004 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies  this distribution, and is available 
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*     This is the project specification file for Upnp.
+*
+*/
+
+#include <platform_paths.hrh>
+#include <data_caging_paths.hrh>
+
+TARGETTYPE      DLL
+
+TARGET          avcontentdirectory.dll
+UID             0x1000008d 0x10204159
+
+
+VERSION 10.1
+paged
+
+CAPABILITY      CAP_GENERAL_DLL
+VENDORID        VID_DEFAULT
+
+SOURCEPATH      ../src
+SOURCE          upnpcontentdirectory.cpp
+SOURCE          upnpelementfactory.cpp
+SOURCE          upnpcontainerupdateid.cpp
+SOURCE          upnpcontentdirectorydb.cpp
+SOURCE          upnpfiletransfer.cpp
+SOURCE          upnpelementbean.cpp
+SOURCE          upnpattributebean.cpp
+SOURCE          upnpobjectbean.cpp
+SOURCE          upnpfilterelement.cpp
+SOURCE          upnpthumbnailcreator.cpp
+SOURCE          upnptablebean.cpp
+SOURCE          upnperror.cpp
+SOURCE          upnpresourcesbean.cpp
+SOURCE          upnpcdutils.cpp
+SOURCE          upnpcddbfactory.cpp
+SOURCE          upnpcontentdirectoryservice.cpp
+SOURCE          upnpmetadatastorage.cpp
+SOURCE          upnplocalstorage.cpp
+SOURCE          upnpfiletransfertimerobserver.cpp
+SOURCE          upnpautodestroyobjectlist.cpp
+SOURCE          upnpautodestroyobject.cpp
+SOURCE          upnpsender.cpp
+SOURCE          upnpmapbase.cpp
+SOURCE          upnpmapelement.cpp
+SOURCE          upnpxmlcontentfilter.cpp
+SOURCE          upnpstatehandler.cpp
+SOURCE          upnpmimemapper.cpp
+SOURCE          upnpmspathutility.cpp
+
+SOURCE          upnptransferbase.cpp
+SOURCE          upnptransferdownloader.cpp
+SOURCE          upnptransferuploader.cpp
+
+SOURCE          upnptransfercontroller.cpp
+SOURCE          upnptransferhandler.cpp
+
+SOURCE          dlna/upnpdlnafilter.cpp 
+SOURCE          dlna/upnphttpfileservetransaction.cpp
+SOURCE          dlna/upnphttpfilereceivetransaction.cpp
+SOURCE          dlna/upnpdlnafilterheaders.cpp
+
+
+MW_LAYER_SYSTEMINCLUDE
+
+USERINCLUDE     ../inc
+USERINCLUDE     ../../inc
+USERINCLUDE     ../../../inc
+USERINCLUDE     ../inc/dlna
+
+//central repository
+LIBRARY         centralrepository.lib
+LIBRARY         upnpipserversutils.lib
+LIBRARY         upnpserviceframework.lib
+LIBRARY         upnpavobjects.lib
+LIBRARY         httptransfer.lib
+LIBRARY         dlnawebserver.lib
+LIBRARY         avmediaserverclient.lib
+LIBRARY         xmlenginedom.lib
+LIBRARY         xmlengineutils.lib
+LIBRARY         euser.lib
+LIBRARY         efsrv.lib
+LIBRARY         insock.lib 
+LIBRARY         esock.lib 
+LIBRARY         bafl.lib
+LIBRARY         estor.lib   
+LIBRARY         edbms.lib 
+LIBRARY         ecom.lib
+LIBRARY         sysutil.lib
+LIBRARY         PlatformEnv.lib
+LIBRARY         estlib.lib 
+LIBRARY         inetprotutil.lib
+LIBRARY         imageconversion.lib
+LIBRARY         bitmaptransforms.lib
+LIBRARY         fbscli.lib
+LIBRARY         charconv.lib
+LIBRARY         cafutils.lib
+LIBRARY         caf.lib
+
+DEBUGLIBRARY    flogger.lib
+DEFFILE         AVContentDirectory
+
+// End of file

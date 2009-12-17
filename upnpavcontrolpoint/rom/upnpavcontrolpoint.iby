@@ -1,0 +1,39 @@
+/** @file
+* Copyright (c) 2005-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies  this distribution, and is available 
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  IBY file for the UPnP UPnP AVControl Point subsystem
+*
+*/
+
+
+#ifndef __UPNPAVCONTROLPOINT_IBY__
+#define __UPNPAVCONTROLPOINT_IBY__
+
+#ifdef __UPNP_STACK
+#ifdef __UPNP_AVCP
+
+file=ABI_DIR\BUILD_DIR\avcontrolframework.dll \sys\bin\avcontrolframework.dll 
+#ifdef __UPNP_REMOTE_STORAGE
+#ifdef __REMOTE_STORAGE_FW
+file=ABI_DIR\BUILD_DIR\avcpengine.exe \Sys\Bin\avcpengine.exe 
+file=ABI_DIR\BUILD_DIR\avcpengineclient.dll \sys\bin\avcpengineclient.dll
+ECOM_PLUGIN(upnpaccess.dll, upnpaccess.rsc)
+#endif // __REMOTE_STORAGE_FW
+#endif // __UPNP_REMOTE_STORAGE 
+
+#endif // __UPNP_AVCP
+#endif // __UPNP_STACK
+
+#endif // __UPNPAVCONTROLPOINT_IBY__
+
+//  End of File  

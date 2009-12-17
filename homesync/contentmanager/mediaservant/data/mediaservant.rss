@@ -1,0 +1,3287 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Resource definitions for project MediaServant
+*
+*/
+
+
+NAME    MESE // 4 letter ID
+
+#include <eikon.rh>
+#include <avkon.rsg>
+#include <avkon.rh>
+#include <avkon.mbg>
+#include <avkon.loc>
+#include <data_caging_paths_strings.hrh>
+#include <appinfo.rh>
+
+#include <mediaservant.loc>
+#include "cmcommontypes.h"
+#include "mediaservant.rh"
+#include "mediaservant.hrh"
+
+RESOURCE RSS_SIGNATURE { }
+RESOURCE TBUF { buf="MediaServant"; }
+
+RESOURCE EIK_APP_INFO
+    {
+    }
+
+//----------------------------------------------------
+//
+//    r_localisable_app_info
+//
+//----------------------------------------------------
+//
+RESOURCE LOCALISABLE_APP_INFO r_localisable_app_info
+    {
+    short_caption = qtn_mserv_title_media_servant;
+    caption_and_icon =
+    CAPTION_AND_ICON_INFO
+        {
+        caption = qtn_mserv_title_media_servant;
+#ifdef __SCALABLE_ICONS
+        number_of_icons = 1;
+ #ifdef RD_APPS_TO_EXES
+        icon_file = "\\resource\\apps\\MediaServant_aif.mif";
+ #endif  //RD_APPS_TO_EXES
+#else
+ #ifdef RD_APPS_TO_EXES
+        number_of_icons = 2;
+        icon_file = "\\resource\\apps\\MediaServant_aif.mbm";
+ #endif //RD_APPS_TO_EXES
+#endif
+
+        };
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_main_view
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_VIEW r_ms_main_view
+    {
+    menubar = r_ms_menubar_main_view;
+    // required to define something here but cba will be
+    // changed dynamically
+    cba     = R_AVKON_SOFTKEYS_OPTIONS_BACK__SELECT;
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_fill_view
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_VIEW r_ms_fill_view
+    {
+    menubar = r_ms_menubar_fill_view;
+    // required to define something here but cba will be
+    // changed dynamically
+    cba = R_AVKON_SOFTKEYS_SELECTION_LIST;
+    }
+
+//----------------------------------------------------
+//
+//    r_fill_edit_view
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_VIEW r_ms_fill_edit_view
+    {
+    menubar = r_ms_menubar_fill_edit_view;
+    cba     = r_ms_softkeys_options_done__change;
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_store_list_view
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_VIEW r_ms_store_list_view
+    {
+    menubar = r_ms_menubar_store_list_view;
+    cba     = r_ms_softkeys_options_back__toggle;
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_store_settings_view
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_VIEW r_ms_store_settings_view
+    {
+    menubar = r_ms_menubar_store_settings_view;
+    cba     = r_ms_softkeys_options_done__change;
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_browse_view
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_VIEW r_ms_browse_view
+    {
+    menubar = r_ms_menubar_store_browse_view;
+    cba     = R_AVKON_SOFTKEYS_SELECTION_LIST;
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_fill_browse_view
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_VIEW r_ms_fill_browse_view
+    {
+    menubar = r_ms_menubar_browse_view;
+    cba     = R_AVKON_SOFTKEYS_SELECTION_LIST;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_ms_multiselection_dialog
+//
+//----------------------------------------------------------------------------
+
+RESOURCE DIALOG r_ms_multiselection_dialog
+    {
+    flags = EAknDialogMultiselectionList;
+    buttons = r_ms_softkeys_ok_cancel__change;
+
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtSingleGraphicListBox;
+            id = EMultiSelectionListBoxId;
+            control = LISTBOX
+                {
+                flags = EAknListBoxMultiselectionList;
+                };
+            },
+        DLG_LINE
+            {
+            itemflags = EEikDlgItemNonFocusing;
+            id = EFindControl;
+            type = EAknCtSelectionListPopupFind;
+            }
+        };
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_menubar_main_view
+//
+//----------------------------------------------------
+//
+RESOURCE MENU_BAR r_ms_menubar_main_view
+    {
+    titles =
+        {
+        MENU_TITLE { menu_pane = r_app_menu; },
+        MENU_TITLE { menu_pane = r_main_view_menu; }
+        };
+    }
+
+
+//----------------------------------------------------
+//
+//    r_ms_menubar_fill_view
+//
+//----------------------------------------------------
+//
+RESOURCE MENU_BAR r_ms_menubar_store_list_view
+    {
+    titles =
+        {
+        MENU_TITLE { menu_pane = r_app_menu; },
+        MENU_TITLE { menu_pane = r_ms_store_list_menu; }
+        };
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_menubar_fill_view
+//
+//----------------------------------------------------
+//
+RESOURCE MENU_BAR r_ms_menubar_fill_view
+    {
+    titles =
+        {
+        MENU_TITLE { menu_pane = r_app_menu; },
+        MENU_TITLE { menu_pane = r_fill_view_menu; }
+        };
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_menubar_fill_edit_view
+//
+//----------------------------------------------------
+//
+RESOURCE MENU_BAR r_ms_menubar_fill_edit_view
+    {
+    titles =
+        {
+        MENU_TITLE { menu_pane = r_app_menu; },
+        MENU_TITLE { menu_pane = r_ms_fill_edit_menu; }
+        };
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_menubar_store_settings_view
+//
+//----------------------------------------------------
+//
+RESOURCE MENU_BAR r_ms_menubar_store_settings_view
+    {
+    titles =
+        {
+        MENU_TITLE { menu_pane = r_app_menu; },
+        MENU_TITLE { menu_pane = r_ms_store_list_edit_menu; }
+        };
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_menubar_store_browse_view
+//
+//----------------------------------------------------
+//
+RESOURCE MENU_BAR r_ms_menubar_store_browse_view
+    {
+    titles =
+        {
+        MENU_TITLE { menu_pane = r_app_menu; }
+        };
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_menubar_browse_view
+//
+//----------------------------------------------------
+//
+RESOURCE MENU_BAR r_ms_menubar_browse_view
+    {
+    titles =
+        {
+        MENU_TITLE { menu_pane = r_app_menu; },
+        MENU_TITLE { menu_pane = r_ms_fill_browse_menu; }
+        };
+    }
+
+//----------------------------------------------------
+//
+//    r_app_menu
+//
+//----------------------------------------------------
+//
+RESOURCE MENU_PANE r_app_menu
+    {
+    items =
+        {
+        MENU_ITEM { command = EAknCmdHelp; txt = qtn_options_help; },
+        MENU_ITEM { command = EEikCmdExit; txt = qtn_options_exit; }
+
+        };
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_fill_browse_menu
+//
+//----------------------------------------------------
+//
+RESOURCE MENU_PANE r_ms_fill_browse_menu
+    {
+    items =
+        {
+        MENU_ITEM
+            {
+            command = EMSCmdLock;
+            txt = qtn_mserv_options_lock_on_phone;
+            },
+        MENU_ITEM
+            {
+            command = EMSCmdUnLock;
+            txt = qtn_mserv_options_unlock;
+            },
+        MENU_ITEM
+            {
+            command = EMSCmdRandomize;
+            txt = qtn_mserv_options_randomiza;
+            },
+        MENU_ITEM
+            {
+            command = EMSCmdMark;
+            cascade = r_ms_mark_menupane;
+            txt = qtn_options_list;
+            }
+        };
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_fill_edit_menu
+//
+//----------------------------------------------------
+//
+RESOURCE MENU_PANE r_ms_fill_edit_menu
+    {
+    items =
+        {
+        MENU_ITEM { command = EAknCmdOpen; txt = qtn_options_change; },
+        MENU_ITEM
+            {
+            command = EMSCmdRemoveRule;
+            txt = qtn_mserv_options_remove_rule;
+            }
+        };
+    }
+
+//----------------------------------------------------
+//
+//    r_view_main_menu
+//
+//----------------------------------------------------
+//
+RESOURCE MENU_PANE r_main_view_menu
+    {
+    items =
+        {
+        MENU_ITEM { command = EMSCmdSelect; txt = qtn_mserv_options_select; },
+        MENU_ITEM { command = EAknCmdOpen; txt = qtn_options_open; },
+        MENU_ITEM { command = EMSCmdStartHarvest; txt = qtn_mserv_options_refresh; },
+        MENU_ITEM { command = EMSCmdStopHarvest; txt = qtn_mserv_options_refresh_stop; },
+        MENU_ITEM { command = EMSCmdSettings; txt = qtn_mserv_options_sync_settings; },
+        MENU_ITEM { command = EMSCmdRunWizard; txt = qtn_mserv_options_run_wizard; }
+        };
+    }
+
+//----------------------------------------------------
+//
+//    r_fill_view_menu
+//
+//----------------------------------------------------
+//
+RESOURCE MENU_PANE r_fill_view_menu
+    {
+    items =
+        {
+        MENU_ITEM { command = EMSCmdActivate; txt = qtn_mserv_options_select; },
+        MENU_ITEM { command = EMSCmdDeActivate; txt = qtn_mserv_options_unselect; },
+        MENU_ITEM { command = EMSCmdEditRule; txt = qtn_mserv_options_edit; },
+        MENU_ITEM { command = EMSCmdBrowse; txt = qtn_mserv_options_browse; },
+        MENU_ITEM
+            {
+            cascade = r_ms_new_list;
+            command = EAknDummyForProcessCommands;
+            txt = qtn_mserv_options_new_list;
+            },
+        MENU_ITEM { command = EMSCmdReorder; txt = qtn_mserv_options_reorder; },
+        MENU_ITEM { command = EMSCmdDelete; txt = qtn_mserv_options_delete; }
+        };
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_new_list
+//
+//----------------------------------------------------
+//
+RESOURCE MENU_PANE r_ms_new_list
+    {
+    items =
+        {
+        MENU_ITEM { command = EMSCmdNewImageList; txt = qtn_mserv_options_new_image; },
+        MENU_ITEM { command = EMSCmdNewVideoList; txt = qtn_mserv_options_new_video; },
+        MENU_ITEM { command = EMSCmdNewMusicList; txt = qtn_mserv_options_new_music; }
+        };
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_mark_menupane
+//    Menu for marking
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE MENU_PANE r_ms_mark_menupane
+    {
+    items =
+        {
+        MENU_ITEM
+            {
+            command = EAknCmdMark;
+            txt = qtn_options_list_mark_one;
+            },
+        MENU_ITEM
+            {
+            command = EAknCmdUnmark;
+            txt = qtn_options_list_unmark_one;
+            },
+        MENU_ITEM
+            {
+            command = EAknMarkAll;
+            txt = qtn_options_list_mark_all;
+            },
+        MENU_ITEM
+            {
+            command = EAknUnmarkAll;
+            txt = qtn_options_list_unmark_all;
+            }
+        };
+    }
+
+//---------------------------------------------------------------------------
+//
+//    r_ms_store_list_menu
+//
+//---------------------------------------------------------------------------
+//
+RESOURCE MENU_PANE r_ms_store_list_menu
+    {
+    items =
+        {
+        MENU_ITEM
+            {
+            command = EMSStoreCmdActivate;
+            txt = qtn_mserv_options_select;
+            },
+        MENU_ITEM
+            {
+            command = EMSStoreCmdDeActivate;
+            txt = qtn_mserv_options_unselect;
+            },
+        MENU_ITEM
+            {
+            command = EMSStoreCmdEdit;
+            txt = qtn_mserv_options_edit;
+            },
+        MENU_ITEM
+            {
+            command = EMSCmdBrowse;
+            txt = qtn_mserv_options_browse;
+            }
+        };
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_store_list_edit_menu
+//
+//----------------------------------------------------
+//
+RESOURCE MENU_PANE r_ms_store_list_edit_menu
+    {
+    items =
+        {
+        MENU_ITEM { command = EAknCmdOpen; txt = qtn_options_change; }
+        };
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_setting_menu
+//
+//----------------------------------------------------
+//
+RESOURCE MENU_PANE r_ms_setting_menu
+    {
+    items =
+        {
+        MENU_ITEM { command = EAknCmdOpen; txt = qtn_options_change; }
+        };
+    }
+
+
+RESOURCE LISTBOX r_main_view_listbox
+    {
+    flags = EAknListBoxSelectionList;
+    }
+
+RESOURCE LISTBOX r_fill_view_listbox
+    {
+    flags = EAknListBoxSelectionList;
+    }
+
+RESOURCE LISTBOX r_fill_edit_view_listbox
+    {
+    flags = EAknListBoxSelectionList;
+    }
+
+RESOURCE LISTBOX r_store_list_view_listbox
+    {
+    flags = EAknListBoxMultiselectionList;
+    }
+
+RESOURCE LISTBOX r_browse_view_listbox
+    {
+    flags = EAknListBoxSelectionList | EAknListBoxMarkableList;
+    }
+
+/************************** FILL RULE SETTINGS *****************************/
+
+//----------------------------------------------------
+//
+//    r_ms_image_fill_rules
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_SETTING_ITEM_LIST r_ms_image_fill_rules
+    {
+    flags= EAknSettingItemIncludeHiddenInOrdinal;
+    initial_number = 1;
+    items =
+        {
+        AVKON_SETTING_ITEM
+            {
+            identifier = EMSListName;
+            setting_page_resource = r_ms_fill_rule_list_name_setting_page;
+            name = qtn_mserv_rule_list_name;
+            },
+        AVKON_SETTING_ITEM
+            {
+            identifier = EMSAmount;
+            setting_page_resource = r_ms_fill_rule_amount_setting_page;
+            name = qtn_mserv_rule_amount;
+            },
+        AVKON_SETTING_ITEM
+            {
+            identifier = EMSStartingWith;
+            setting_page_resource = r_ms_starting_with_setting_page;
+            associated_resource = r_ms_starting_with_popup_texts;
+            name = qtn_mserv_rule_start_with;
+            },
+        AVKON_SETTING_ITEM
+            {
+            identifier = EMSShrinkImages;
+            setting_page_resource = r_ms_shrink_images_setting_page;
+            associated_resource = r_ms_shrink_images_popup_texts;
+            name = qtn_mserv_rule_shrink_image;
+            },
+        AVKON_SETTING_ITEM
+            {
+            identifier = EMSDateFrom;
+            setting_page_resource = r_ms_fill_rule_date_from_setting_page;
+            name = qtn_mserv_rule_from;
+            },
+        AVKON_SETTING_ITEM
+            {
+            identifier = EMSDateUntil;
+            setting_page_resource = r_ms_fill_rule_date_until_setting_page;
+            name = qtn_mserv_rule_until;
+            },
+        AVKON_SETTING_ITEM
+            {
+            identifier = EMSServers;
+            setting_page_resource = r_ms_fill_rule_servers_setting_page;
+            name = qtn_mserv_rule_storage;
+            },
+        AVKON_SETTING_ITEM
+            {
+            identifier = EMSFreeText;
+            setting_page_resource = r_ms_fill_rule_free_text_setting_page;
+            name = qtn_mserv_rule_free_text;
+            },
+        AVKON_SETTING_ITEM
+            {
+            identifier = EMSAddMoreRules;
+            setting_page_resource = r_ms_fill_rule_free_text_setting_page;
+            name = qtn_mserv_rule_add;
+            }
+        };
+    }
+
+
+//----------------------------------------------------
+//
+//    r_ms_video_fill_rules
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_SETTING_ITEM_LIST r_ms_video_fill_rules
+  {
+  flags= EAknSettingItemIncludeHiddenInOrdinal;
+  initial_number = 1;
+  items =
+    {
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSListName;
+      setting_page_resource = r_ms_fill_rule_list_name_setting_page;
+      name = qtn_mserv_rule_list_name;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSAmount;
+      setting_page_resource = r_ms_fill_rule_amount_setting_page;
+      name = qtn_mserv_rule_amount;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSStartingWith;
+      setting_page_resource = r_ms_starting_with_setting_page;
+      associated_resource = r_ms_starting_with_popup_texts;
+      name = qtn_mserv_rule_start_with;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSTitleName;
+      setting_page_resource = r_ms_fill_rule_servers_setting_page;
+      name = qtn_mserv_rule_name;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSMinFileSize;
+      setting_page_resource = r_ms_min_file_size_setting_page;
+      name = qtn_mserv_rule_file_size_min;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSMaxFileSize;
+      setting_page_resource = r_ms_max_file_size_setting_page;
+      name = qtn_mserv_rule_file_size_max;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSDateFrom;
+      setting_page_resource = r_ms_fill_rule_date_from_setting_page;
+      name = qtn_mserv_rule_from;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSDateUntil;
+      setting_page_resource = r_ms_fill_rule_date_until_setting_page;
+      name = qtn_mserv_rule_until;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSServers;
+      setting_page_resource = r_ms_fill_rule_servers_setting_page;
+      name = qtn_mserv_rule_storage;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSFreeText;
+      setting_page_resource = r_ms_fill_rule_free_text_setting_page;
+      name = qtn_mserv_rule_free_text;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSAddMoreRules;
+      setting_page_resource = r_ms_fill_rule_free_text_setting_page;
+      name = qtn_mserv_rule_add;
+      }
+    };
+  }
+
+//----------------------------------------------------
+//
+//    r_ms_audio_fill_rules
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_SETTING_ITEM_LIST r_ms_audio_fill_rules
+  {
+  flags= EAknSettingItemIncludeHiddenInOrdinal;
+  initial_number = 1;
+  items =
+    {
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSListName;
+      setting_page_resource = r_ms_fill_rule_list_name_setting_page;
+      name = qtn_mserv_rule_list_name;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSAmount;
+      setting_page_resource = r_ms_fill_rule_amount_setting_page;
+      name = qtn_mserv_rule_amount;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSStartingWith;
+      setting_page_resource = r_ms_starting_with_setting_page;
+      associated_resource = r_ms_starting_with_popup_texts;
+      name = qtn_mserv_rule_start_with;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSGenre;
+      setting_page_resource = r_ms_fill_rule_servers_setting_page;
+      name = qtn_mserv_rule_genre;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSArtist;
+      setting_page_resource = r_ms_fill_rule_servers_setting_page;
+      name = qtn_mserv_rule_artist;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSAlbum;
+      setting_page_resource = r_ms_fill_rule_servers_setting_page;
+      name = qtn_mserv_rule_album;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSTrack;
+      setting_page_resource = r_ms_fill_rule_servers_setting_page;
+      name = qtn_mserv_rule_track;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSServers;
+      setting_page_resource = r_ms_fill_rule_servers_setting_page;
+      name = qtn_mserv_rule_storage;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSFreeText;
+      setting_page_resource = r_ms_fill_rule_free_text_setting_page;
+      name = qtn_mserv_rule_free_text;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSTrackLength;
+      setting_page_resource = r_ms_track_length_setting_page;
+      associated_resource = r_ms_track_length_popup_texts;
+      name = qtn_mserv_rule_track_length;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSFileSize;
+      setting_page_resource = r_ms_file_size_setting_page;
+      associated_resource = r_ms_file_size_popup_texts;
+      name = qtn_mserv_rule_file_size;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSAddMoreRules;
+      setting_page_resource = r_ms_fill_rule_free_text_setting_page;
+      name = qtn_mserv_rule_add;
+      }
+    };
+  }
+
+/*************************** LIST NAME SETTING *****************************/
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_fill_rule_free_text_setting_page
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_ms_fill_rule_list_name_setting_page
+    {
+    label = qtn_mserv_rule_list_name;
+    type = EEikCtEdwin;
+    editor_resource_id = r_ms_fill_rule_free_text_editor;
+    }
+
+/**************************** AMOUNT SETTING *******************************/
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_fill_rule_amount_setting_page
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_ms_fill_rule_amount_setting_page
+    {
+    label = qtn_mserv_sett_amount;
+    type = EAknCtPopupSettingList;
+    editor_resource_id = r_ms_fill_rule_amount_editor;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_fill_rule_amount_editor
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE POPUP_SETTING_LIST r_ms_fill_rule_amount_editor
+    {
+    }
+
+/************************** SHRINK IMAGES SETTING ****************************/
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_shrink_images_setting_page
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_ms_shrink_images_setting_page
+    {
+    type = EAknCtPopupSettingList;
+    label = qtn_mserv_sett_shrink_image;
+    editor_resource_id = r_ms_shrink_images_editor;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_shrink_images_popup_texts
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_POPUP_SETTING_TEXTS r_ms_shrink_images_popup_texts
+    {
+    setting_texts_resource = r_ms_shrink_images_texts;
+    popped_up_texts_resource = r_ms_shrink_images_on_off_texts;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_shrink_images_editor
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE POPUP_SETTING_LIST r_ms_shrink_images_editor
+    {
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_shrink_images_texts
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE ARRAY r_ms_shrink_images_texts
+    {
+    items =
+        {
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSShrinkScreenSize;
+            text = qtn_mserv_value_screen_size;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSShrinkingOff;
+            text = qtn_mserv_value_no_shrinking;
+            }
+        };
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_shrink_images_on_off_texts
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE ARRAY r_ms_shrink_images_on_off_texts
+    {
+    items =
+        {
+        LBUF { txt = qtn_mserv_value_screen_size; },
+        LBUF { txt = qtn_mserv_value_no_shrinking; }
+
+        };
+    }
+
+/************************** STARTING_WITH SETTING ****************************/
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_starting_with_setting_page
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_ms_starting_with_setting_page
+    {
+    type = EAknCtPopupSettingList;
+    label = qtn_mserv_sett_start_with;
+    editor_resource_id = r_ms_starting_with_editor;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_starting_with_popup_texts
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_POPUP_SETTING_TEXTS r_ms_starting_with_popup_texts
+    {
+    setting_texts_resource = r_ms_starting_with_texts;
+    popped_up_texts_resource = r_ms_starting_with_item_texts;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_starting_with_editor
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE POPUP_SETTING_LIST r_ms_starting_with_editor
+    {
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_starting_with_texts
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE ARRAY r_ms_starting_with_texts
+    {
+    items =
+        {
+        AVKON_ENUMERATED_TEXT
+            {
+            value = ECmLatest;
+            text = qtn_mserv_value_start_latest;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = ECmOldest;
+            text = qtn_mserv_value_start_oldest;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = ECmRandom;
+            text = qtn_mserv_value_random;
+            }
+        };
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_starting_with_item_texts
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE ARRAY r_ms_starting_with_item_texts
+    {
+    items =
+        {
+
+        LBUF { txt = qtn_mserv_value_start_latest; },
+        LBUF { txt = qtn_mserv_value_start_oldest; },
+        LBUF { txt = qtn_mserv_value_random; }
+        };
+    }
+
+/**************************** Date FROM *******************************/
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_fill_rule_date_from_setting_page
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_ms_fill_rule_date_from_setting_page
+    {
+    label = qtn_mserv_sett_from;
+    type = EEikCtDateEditor;
+    editor_resource_id = r_ms_fill_rule_date_editor;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_fill_rule_date_editor
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE DATE_EDITOR r_ms_fill_rule_date_editor
+    {
+    minDate = DATE { year=1900; };
+    maxDate = DATE { year=2050; };
+    flags=0;
+    }
+
+/**************************** Date UNTIL *******************************/
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_fill_rule_date_until_setting_page
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_ms_fill_rule_date_until_setting_page
+    {
+    label = qtn_mserv_sett_until;
+    type = EEikCtDateEditor;
+    editor_resource_id = r_ms_fill_rule_date_editor;
+    }
+
+
+/**************************** SERVER SETTING *******************************/
+
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_fill_rule_servers_setting_page
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_ms_fill_rule_servers_setting_page
+    {
+    label = qtn_mserv_sett_source_devices;
+    type = EAknSetListBox;
+    editor_resource_id = r_ms_fill_rule_servers_editor;
+    softkey_resource = r_ms_softkeys_ok_cancel__select;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_fill_rule_servers_editor
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE LISTBOX r_ms_fill_rule_servers_editor
+    {
+    flags = EEikListBoxMultipleSelection;
+    }
+
+
+/**************************** FREE TEXT *******************************/
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_fill_rule_free_text_setting_page
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_ms_fill_rule_free_text_setting_page
+    {
+    label = qtn_mserv_sett_free_text;
+    type = EEikCtEdwin;
+    editor_resource_id = r_ms_fill_rule_free_text_editor;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_fill_rule_free_text_editor
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE EDWIN r_ms_fill_rule_free_text_editor
+    {
+    maxlength = 128;
+    lines = 2;
+    }
+
+/**************************** TRACK LENGTH *******************************/
+
+///-----------------------------------------------------------------------------
+//
+//    r_ms_track_length_setting_page
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_ms_track_length_setting_page
+    {
+    type = EAknCtPopupSettingList;
+    label = qtn_mserv_sett_track_length;
+    editor_resource_id = r_ms_track_length_editor;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_track_length_editor
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE POPUP_SETTING_LIST r_ms_track_length_editor
+    {
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_track_length_popup_texts
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_POPUP_SETTING_TEXTS r_ms_track_length_popup_texts
+    {
+    setting_texts_resource = r_ms_track_length_texts;
+    popped_up_texts_resource = r_ms_track_length_item_texts;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_track_length_texts
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE ARRAY r_ms_track_length_texts
+    {
+    items =
+        {
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSTrackLenAny;
+            text = qtn_mserv_value_any_track_length;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSTrackLenLess_1;
+            text = qtn_mserv_value_less_1;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSTrackLen_16;
+            text = qtn_mserv_value_16_min;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSTrackLen_68;
+            text = qtn_mserv_value_68_min;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSTrackLen_830;
+            text = qtn_mserv_value_830_min;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSTrackLenMore_4;
+            text = qtn_mserv_value_more_4;
+            }
+        };
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_track_length_item_texts
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE ARRAY r_ms_track_length_item_texts
+    {
+    items =
+        {
+        LBUF { txt = qtn_mserv_value_any_track_length; },
+        LBUF { txt = qtn_mserv_value_less_1; },
+        LBUF { txt = qtn_mserv_value_16_min; },
+        LBUF { txt = qtn_mserv_value_68_min; },
+        LBUF { txt = qtn_mserv_value_830_min; },
+        LBUF { txt = qtn_mserv_value_more_4; }
+        };
+    }
+
+/**************************** FILE SIZE *******************************/
+
+///-----------------------------------------------------------------------------
+//
+//    r_ms_file_size_setting_page
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_ms_file_size_setting_page
+    {
+    type = EAknCtPopupSettingList;
+    label = qtn_mserv_sett_file_size;
+    editor_resource_id = r_ms_file_size_editor;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_file_size_editor
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE POPUP_SETTING_LIST r_ms_file_size_editor
+    {
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_file_size_popup_texts
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_POPUP_SETTING_TEXTS r_ms_file_size_popup_texts
+    {
+    setting_texts_resource = r_ms_file_size_texts;
+    popped_up_texts_resource = r_ms_file_size_item_texts;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_file_size_texts
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE ARRAY r_ms_file_size_texts
+    {
+    items =
+        {
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSTrackLenAny;
+            text = qtn_mserv_value_any_file_size;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSFileSizeLess_1_mb;
+            text = qtn_mserv_value_less_1_mb;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSFileSize_15_mb;
+            text = qtn_mserv_value_15_mb;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSFileSize_510_mb;
+            text = qtn_mserv_value_510_mb;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSFileSize_1050_mb;
+            text = qtn_mserv_value_1050_mb;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSFileSizeMore_10;
+            text = qtn_mserv_value_more_50;
+            }
+        };
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_file_size_item_texts
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE ARRAY r_ms_file_size_item_texts
+    {
+    items =
+        {
+        LBUF { txt = qtn_mserv_value_any_file_size; },
+        LBUF { txt = qtn_mserv_value_less_1_mb; },
+        LBUF { txt = qtn_mserv_value_15_mb; },
+        LBUF { txt = qtn_mserv_value_510_mb; },
+        LBUF { txt = qtn_mserv_value_1050_mb; },
+        LBUF { txt = qtn_mserv_value_more_50; }
+        };
+    }
+
+/**************************** MIN FILE SIZE *****************************/
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_fill_rule_min_file_size_setting_page
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_ms_min_file_size_setting_page
+    {
+    label = qtn_mserv_sett_file_size_min;
+    type = EAknCtPopupSettingList;
+    editor_resource_id = r_ms_fill_rule_file_size_editor;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_fill_rule_file_size_editor
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE POPUP_SETTING_LIST r_ms_fill_rule_file_size_editor
+    {
+    }
+
+/**************************** MAX FILE SIZE *********************************/
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_fill_rule_max_file_size_setting_page
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_ms_max_file_size_setting_page
+    {
+    label = qtn_mserv_sett_file_size_max;
+    type = EAknCtPopupSettingList;
+    editor_resource_id = r_ms_fill_rule_file_size_editor;
+    }
+
+/**************************** STORE LIST RULES ****************************/
+/**************************************************************************/
+
+
+/**************************** STORE SERVERS  ****************************/
+
+//----------------------------------------------------
+//
+//    r_ms_store_settings_list
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_SETTING_ITEM_LIST r_ms_store_settings_list
+  {
+  flags= EAknSettingItemIncludeHiddenInOrdinal;
+  initial_number = 1;
+  items =
+    {
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSSourceServers;
+      setting_page_resource = r_ms_store_settings_location_setting_page;
+      name = qtn_mserv_item_target_devices;
+      },
+    AVKON_SETTING_ITEM
+      {
+      identifier = EMSKeepOnPhone;
+      setting_page_resource = r_ms_store_list_keep_on_phone_setting_page;
+      associated_resource = r_ms_store_list_keep_on_phone_popup_texts;
+      name = qtn_mserv_item_local_copy;
+      }
+    };
+  }
+
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_store_settings_location_setting_page
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_ms_store_settings_location_setting_page
+    {
+    label = qtn_mserv_sett_target_devices;
+    type = EAknSetListBox;
+    editor_resource_id = r_ms_store_settings_source_editor;
+    softkey_resource = r_ms_softkeys_ok_cancel__select;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_store_settings_source_editor
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE LISTBOX r_ms_store_settings_source_editor
+    {
+    flags = EEikListBoxMultipleSelection;
+    }
+
+
+/**************************** KEEP ON PHONE ****************************/
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_store_list_keep_on_phone_setting_page
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_ms_store_list_keep_on_phone_setting_page
+    {
+    label = qtn_mserv_item_local_copy;
+    type = EAknCtPopupSettingList;
+    editor_resource_id = r_ms_store_list_keep_on_phone_editor;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_store_list_keep_on_phone_popup_texts
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_POPUP_SETTING_TEXTS r_ms_store_list_keep_on_phone_popup_texts
+    {
+    setting_texts_resource = r_ms_keep_on_phone_texts;
+    popped_up_texts_resource = r_ms_keep_on_phone_item_texts;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_keep_on_phone_texts
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE ARRAY r_ms_keep_on_phone_texts
+    {
+    items =
+        {
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSDontKeep;
+            text = qtn_mserv_item_no_local;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSKeep;
+            text = qtn_mserv_item_yes_local;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSKeepOriginalSize;
+            text = qtn_mserv_item_original_size;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSKeepScreenSize;
+            text = qtn_mserv_item_screen_size;
+            }
+        };
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_sync_item_texts
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE ARRAY r_ms_keep_on_phone_item_texts
+    {
+    items =
+        {
+        LBUF { txt = qtn_mserv_item_no_local; },
+        LBUF { txt = qtn_mserv_item_yes_local; },
+        LBUF { txt = qtn_mserv_item_original_size; },
+        LBUF { txt = qtn_mserv_item_screen_size; }
+        };
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_store_list_keep_on_phone_editor
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE POPUP_SETTING_LIST r_ms_store_list_keep_on_phone_editor
+    {
+    }
+
+
+/**************************** QUERIES *********************************/
+/**********************************************************************/
+
+
+//-----------------------------------------------------------------------------
+//
+//    r_mserv_template_query
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_LIST_QUERY r_mserv_template_query
+    {
+    items =
+        {
+        AVKON_LIST_QUERY_DLG_LINE
+            {
+            control = AVKON_LIST_QUERY_CONTROL
+                {
+                listtype = EAknCtSinglePopupMenuListBox;
+                heading = " "; // defined dynamically
+                listbox = AVKON_LIST_QUERY_LIST
+                    {
+                    // array items defined dynamically
+                    };
+                };
+            }
+        };
+    }
+
+
+//-----------------------------------------------------------------------------
+//
+//    r_mserv_delete_files_query
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_mserv_delete_files_query
+    {
+    flags = EGeneralQueryFlags;
+    buttons = R_AVKON_SOFTKEYS_OK_CANCEL;
+
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtQuery;
+            id = EGeneralQuery;
+            control = AVKON_CONFIRMATION_QUERY
+                {
+                layout = EConfirmationQueryLayout;
+                label = qtn_mserv_lists_edited;
+                };
+            }
+        };
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_mserv_delete_list_query
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_mserv_delete_list_query
+    {
+    flags = EGeneralQueryFlags;
+    buttons = R_AVKON_SOFTKEYS_YES_NO;
+
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtQuery;
+            id = EGeneralQuery;
+            control = AVKON_CONFIRMATION_QUERY
+                {
+                layout = EConfirmationQueryLayout;
+                label = qtn_mserv_conf_delete_list;
+                };
+            }
+        };
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_mserv_data_query
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_mserv_data_query
+    {
+    flags = EGeneralQueryFlags;
+    buttons = R_AVKON_SOFTKEYS_OK_CANCEL;
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtQuery;
+            id = EMSDataQueryId;
+            control = AVKON_DATA_QUERY
+                {
+                layout = ENumberLayout;
+                control = AVKON_INTEGER_EDWIN
+                    {
+                    min = 0;
+                    max = 32767;
+                    };
+                };
+            }
+        };
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_mserv_time_query
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_mserv_time_query
+    {
+    flags = EGeneralQueryFlags;
+    buttons = R_AVKON_SOFTKEYS_OK_CANCEL;
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtQuery;
+            id = EGeneralQuery;
+            control = AVKON_DATA_QUERY
+                {
+                layout = ETimeLayout;
+                control = TIME_EDITOR
+                    {
+                    minTime = TIME{minute=0;hour=0;};
+                    maxTime = TIME{minute=59;hour=23;};
+                    };
+                };
+            }
+        };
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_mserv_mmc_query
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_mserv_mmc_query
+    {
+    flags = EGeneralQueryFlags;
+    buttons = R_AVKON_SOFTKEYS_YES_NO;
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtQuery;
+            id = EGeneralQuery;
+            control = AVKON_CONFIRMATION_QUERY
+                {
+                layout = EConfirmationQueryLayout;
+                label = qtn_mserv_conf_used_memory;
+                };
+            }
+        };
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_mserv_video_rule_query
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_mserv_video_rule_query
+    {
+    flags = EGeneralQueryFlags;
+    buttons = R_AVKON_SOFTKEYS_YES_NO;
+
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtQuery;
+            id = EGeneralQuery;
+            control = AVKON_CONFIRMATION_QUERY
+                {
+                layout = EConfirmationQueryLayout;
+                label = qtn_mserv_qry_add_video_date;
+                };
+            }
+        };
+    }
+	
+//-----------------------------------------------------------------------------
+//
+//    r_main_sync_now_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_main_sync_now_text
+    {
+    buf = qtn_mserv_sync_now;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_main_stop_sync_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_main_stop_sync_text
+    {
+    buf = qtn_mserv_sync_stop;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_main_to_home_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_main_to_home_text
+    {
+    buf = qtn_mserv_to_home;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_main_from_home_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_main_from_home_text
+    {
+    buf = qtn_mserv_from_home;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_fill_view_title
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_fill_view_title
+    {
+    buf = qtn_mserv_title_from_home;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_store_list_view_title
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_store_list_view_title
+    {
+    buf = qtn_mserv_title_to_home;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_navi_sync_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_navi_sync_text
+    {
+    buf = qtn_mserv_navi_sync;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_navi_refreshing_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_navi_refreshing_text
+    {
+    buf = qtn_mserv_navi_refreshing;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_add_rule_query_heading
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_add_rule_query_heading
+    {
+    buf = qtn_mserv_head_add_rule;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_edit_image_rule_view_title
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_edit_image_rule_view_title
+    {
+    buf = qtn_mserv_title_edit_rules_image;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_edit_video_rule_view_title
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_edit_video_rule_view_title
+    {
+    buf = qtn_mserv_title_edit_rules_video;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_edit_music_rule_view_title
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_edit_music_rule_view_title
+    {
+    buf = qtn_mserv_title_edit_rules_music;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_amount_query_heading
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_amount_query_heading
+    {
+    buf = qtn_mserv_head_amount_count;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_size_query_heading
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_size_query_heading
+    {
+    buf = qtn_mserv_head_amount_mb;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_amount_unlimited
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_amount_unlimited
+    {
+    buf = qtn_mserv_value_amount_unlimited;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_amount_mb_number
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_amount_mb_number
+    {
+    buf = qtn_mserv_value_amount_mb_list;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_amount_mb_page
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_amount_mb_page
+    {
+    buf = qtn_mserv_value_amount_mb;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_amount_count_page
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_amount_count_page
+    {
+    buf = qtn_mserv_value_amount_count;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_amount_one_item
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_amount_one_item
+    {
+    buf = qtn_mserv_value_amount_item_1_list;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_amount_0_items
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_amount_0_items
+    {
+    buf = qtn_mserv_value_amount_item_0_list;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_amount_count_number
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_amount_count_number
+    {
+    buf = qtn_mserv_value_amount_item_list;
+    }
+
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_rule_name_setting
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_rule_name_setting
+    {
+    buf = qtn_mserv_sett_name;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_rule_genre_setting
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_rule_genre_setting
+    {
+    buf = qtn_mserv_sett_genre;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_rule_artist_setting
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_rule_artist_setting
+    {
+    buf = qtn_mserv_sett_artist;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_rule_album_setting
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_rule_album_setting
+    {
+    buf = qtn_mserv_sett_album;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_rule_track_setting
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_rule_track_setting
+    {
+    buf = qtn_mserv_sett_track;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_file_size_item_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_file_size_item_text
+    {
+    buf = qtn_mserv_min_list;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_min_file_size_page_item_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_min_file_size_page_item_text
+    {
+    buf = qtn_mserv_value_min_mb;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_max_file_size_page_item_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_max_file_size_page_item_text
+    {
+    buf = qtn_mserv_value_max_mb;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_all_in_sync_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_all_in_sync_text
+    {
+    buf = qtn_mserv_in_sync;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_sync_one_new_item_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_sync_one_new_item_text
+    {
+    buf = qtn_mserv_one_item;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_sync_new_items_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_sync_new_items_text
+    {
+    buf = qtn_mserv_new_items;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_sync_time_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_sync_time_text
+    {
+    buf = qtn_mserv_sync_time;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_sync_time_one_min_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_sync_time_one_min_text
+    {
+    buf = qtn_mserv_sync_time_one;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_sync_waiting_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_sync_waiting_text
+    {
+    buf = qtn_mserv_waiting_sync;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_rule_title_item_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_rule_title_item_text
+    {
+    buf = qtn_mserv_n_names;
+    }
+
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_rule_genre_item_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_rule_genre_item_text
+    {
+    buf = qtn_mserv_n_genre;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_rule_genre_item_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_rule_artist_item_text
+    {
+    buf = qtn_mserv_n_artists;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_rule_genre_album_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_rule_album_item_text
+    {
+    buf = qtn_mserv_n_album;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_rule_genre_track_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_rule_track_item_text
+    {
+    buf = qtn_mserv_n_tracks;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_list_any_name
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_list_any_name
+    {
+    buf = qtn_mserv_value_list_any_name;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_any_name
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_any_name
+    {
+    buf = qtn_mserv_value_any_name;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_any_file_size
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_any_file_size
+    {
+    buf = qtn_mserv_value_any_file_size;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_list_any_genre
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_list_any_genre
+    {
+    buf = qtn_mserv_value_list_any_genre;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_any_genre
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_any_genre
+    {
+    buf = qtn_mserv_value_any_genre;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_list_any_artist
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_list_any_artist
+    {
+    buf = qtn_mserv_value_list_any_artist;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_any_artist
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_any_artist
+    {
+    buf = qtn_mserv_value_any_artist;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_list_any_album
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_list_any_album
+    {
+    buf = qtn_mserv_value_list_any_album;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_any_album
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_any_album
+    {
+    buf = qtn_mserv_value_any_album;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_list_any_track
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_list_any_track
+    {
+    buf = qtn_mserv_value_list_any_track;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_any_track
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_any_track
+    {
+    buf = qtn_mserv_value_any_track;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_list_any_source_device
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_list_any_source_device
+    {
+    buf = qtn_mserv_value_list_any_source_device;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_value_any_source_device
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_value_any_source_device
+    {
+    buf = qtn_mserv_value_any_source_device;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_n_items_to_be_synced
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_n_items_to_be_synced
+    {
+    buf = qtn_mserv_navi_new_items;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_1_item_to_be_synced
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_1_item_to_be_synced
+    {
+    buf = qtn_mserv_navi_one_new_item;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_no_items_to_be_synced
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_no_items_to_be_synced
+    {
+    buf = qtn_mserv_navi_no_new_items;
+    }
+        
+//-----------------------------------------------------------------------------
+//
+//    r_ms_navi_list_size
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_navi_list_size
+    {
+    buf = qtn_mserv_navi_list_size;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_store_browse_navi_items
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_store_browse_navi_items
+    {
+    buf = qtn_mserv_navi_items_store_browse;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_store_browse_navi_1_item
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_store_browse_navi_1_item
+    {
+    buf = qtn_mserv_navi_items_store_browse1;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_store_browse_navi_0_items
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_store_browse_navi_0_items
+    {
+    buf = qtn_mserv_navi_items_store_browse_none;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_fill_list_browse_navi_items
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_fill_list_browse_navi_items
+    {
+    buf = qtn_mserv_navi_items_fill_list;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_fill_list_browse_navi_1_item
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_fill_list_browse_navi_1_item
+    {
+    buf = qtn_mserv_navi_items_fill_list1;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_fill_list_browse_navi_0_items
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_fill_list_browse_navi_0_items
+    {
+    buf = qtn_mserv_navi_items_fill_list_no_items;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_rule_navi_many_items
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_rule_navi_many_items
+    {
+    buf = qtn_mserv_navi_rules_amount;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_rule_navi_1_item
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_rule_navi_1_item
+    {
+    buf = qtn_mserv_navi_rules_amount1;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_rule_navi_0_items
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_rule_navi_0_items
+    {
+    buf = qtn_mserv_navi_rules_amount0;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_wait_randomize
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_wait_randomize
+    {
+    buf = qtn_mserv_wait_randomize;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_wait_getting_data_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_wait_getting_data_text
+    {
+    buf = qtn_mserv_wait_getting_data;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_default_store_list_1
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_default_store_list_1
+    {
+    buf = qtn_mserv_store_check_phone_images;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_default_store_list_2
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_default_store_list_2
+    {
+    buf = qtn_mserv_store_check_other_images;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_default_store_list_3
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_default_store_list_3
+    {
+    buf = qtn_mserv_store_check_phone_videos;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_default_store_list_4
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_default_store_list_4
+    {
+    buf = qtn_mserv_store_check_other_videos;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_default_store_list_5
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_default_store_list_5
+    {
+    buf = qtn_mserv_store_check_music;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_store_title_phone_images
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_store_title_phone_images
+    {
+    buf = qtn_mserv_title_phone_images;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_store_title_images
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_store_title_images
+    {
+    buf = qtn_mserv_title_other_images;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_store_title_phone_videos
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_store_title_phone_videos
+    {
+    buf = qtn_mserv_title_phone_videos;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_store_title_videos
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_store_title_videos
+    {
+    buf = qtn_mserv_title_other_videos;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_store_title_music
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_store_title_music
+    {
+    buf = qtn_mserv_title_music;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_no_selected_items
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_no_selected_items
+    {
+    buf = qtn_selec_sett_val_field_none;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_item_devices
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_item_devices
+    {
+    buf = qtn_mserv_n_servers;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_access_error_note
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_access_error_note
+    {
+    buf = qtn_mserv_access_error;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_access_error_note_sync
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_access_error_note_sync
+    {
+    buf = qtn_mserv_access_error_sync;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_error_memory_full
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_error_memory_full
+    {
+    buf = qtn_memlo_not_enough_memory;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_text_target_device_needed
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_text_target_device_needed
+    {
+    buf = qtn_mserv_no_target_devices;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_last_sync_min
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_last_sync_min
+    {
+    buf = qtn_mserv_navi_last_sync_min_one;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_last_sync_mins
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_last_sync_mins
+    {
+    buf = qtn_mserv_navi_last_sync_min;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_last_sync_hour
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_last_sync_hour
+    {
+    buf = qtn_mserv_navi_last_sync_hour_one;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_last_sync_hours
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_last_sync_hours
+    {
+    buf = qtn_mserv_navi_last_sync_hour;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_last_sync_day
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_last_sync_day
+    {
+    buf = qtn_mserv_navi_last_sync_day_one;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_last_sync_days
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_last_sync_days
+    {
+    buf = qtn_mserv_navi_last_sync_day;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_fill_view_title_reorder_mode
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_fill_view_title_reorder_mode
+    {
+    buf = qtn_mserv_title_reorder;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_preprocessing_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_preprocessing_text
+    {
+    buf = qtn_mserv_wait_preprocessing;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_default_fill_list_1
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_default_fill_list_1
+    {
+    buf = qtn_mserv_def_latest_org;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_default_fill_list_2
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_default_fill_list_2
+    {
+    buf = qtn_mserv_def_latest_videos;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_default_fill_list_3
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_default_fill_list_3
+    {
+    buf = qtn_mserv_def_recent_music;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_memory_card_needed_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_memory_card_needed_text
+    {
+    buf = qtn_mserv_memory_card_needed;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_insert_memory_card_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_insert_memory_card_text
+    {
+    buf = qtn_mserv_mcard_error;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_error_devices_not_found
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_error_devices_not_found
+    {
+    buf = qtn_mserv_error_not_found;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_error_sync_interrupted
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_error_sync_interrupted
+    {
+    buf = qtn_mserv_error_sync_interrupted;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_file_size_mb
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_file_size_mb
+    {
+    buf = qtn_size_mb;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_file_size_kb
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_file_size_kb
+    {
+    buf = qtn_size_kb;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_plugin_listbox_primary_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_plugin_listbox_primary_text
+    {
+    buf = qtn_mserv_grid_media_servant_home_media;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_plugin_text_auto_sync
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_plugin_text_auto_sync
+    {
+    buf = qtn_mserv_main_sync_auto;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_plugin_synchronizing
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_plugin_synchronizing
+    {
+    buf = qtn_mserv_main_sync;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_plugin_harvesting
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_plugin_harvesting
+    {
+    buf = qtn_mserv_main_refreshing;
+    }
+        
+//-----------------------------------------------------------------------------
+//
+//    r_ms_plugin_listbox_secondary_text_1
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_plugin_text_manual_sync
+    {
+    buf = qtn_mserv_main_sync_manual;
+    }
+	
+//-----------------------------------------------------------------------------
+//
+//    r_ms_custom_list_image_name
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_custom_list_image_name
+    {
+    buf = qtn_mserv_options_new_image;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_custom_list_video_name
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_custom_list_video_name
+    {
+    buf = qtn_mserv_options_new_video;
+    }	
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_custom_list_music_name
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_custom_list_music_name
+    {
+    buf = qtn_mserv_options_new_music;
+    }
+	
+//-----------------------------------------------------------------------------
+//
+//    r_ms_list_nothing_selected
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_list_nothing_selected
+    {
+    buf = qtn_mserv_nothing_selected;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_navi_content_refreshed
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_navi_content_refreshed
+    {
+    buf = qtn_mserv_navi_refresh_completed;
+    }
+        	
+// CBA definitions
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_softkeys_options_done__change
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE CBA r_ms_softkeys_options_done__change
+    {
+    buttons =
+        {
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyOptions;    // left sk
+            txt = text_softkey_option;
+            },
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyDone;       // right sk
+            txt = text_softkey_done;
+            },
+        CBA_BUTTON
+            {
+            id = EAknCmdOpen;           // middle sk
+            txt = qtn_options_change;
+            }
+        };
+    }
+
+// ---------------------------------------------------------------------------
+//    r_softkeys_drop_empty
+// ---------------------------------------------------------------------------
+RESOURCE CBA r_softkeys_drop_empty
+    {
+    buttons =
+        {
+        CBA_BUTTON
+            {
+            id = EMSCmdDrop;
+            txt = qtn_mserv_skey_drop;
+            },
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyEmpty;
+            }
+        };
+    }
+
+// ---------------------------------------------------------------------------
+//    r_softkeys_grab_done
+// ---------------------------------------------------------------------------
+RESOURCE CBA r_softkeys_grab_done
+    {
+    buttons =
+        {
+        CBA_BUTTON
+            {
+            id = EMSCmdGrab;
+            txt = qtn_mserv_skey_grab;
+            },
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyDone;
+            txt = text_softkey_done;
+            }
+        };
+    }
+
+// --------------------------------------------------------------------------
+//    r_ms_softkeys_options_empty
+// --------------------------------------------------------------------------
+RESOURCE CBA r_ms_softkeys_options_empty
+    {
+    buttons =
+        {
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyOptions;
+            txt = text_softkey_option;
+            },
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyEmpty;
+            }
+        };
+    }
+
+// --------------------------------------------------------------------------
+//    r_ms_softkeys_options_back__toggle
+// --------------------------------------------------------------------------
+RESOURCE CBA r_ms_softkeys_options_back__toggle
+    {
+    buttons =
+        {
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyOptions;    // left sk
+            txt = text_softkey_option;
+            },
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyBack;       // right sk
+            txt = text_softkey_back;
+            },
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyForwardKeyEvent; // middle softkey
+            }
+        };
+    }
+
+
+// --------------------------------------------------------------------------
+//    r_ms_softkeys_options_back__deactivate
+// --------------------------------------------------------------------------
+RESOURCE CBA r_ms_softkeys_options_back__deactivate
+    {
+    buttons =
+        {
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyOptions;            // left sk
+            txt = text_softkey_option;
+            },
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyBack;               // right sk
+            txt = text_softkey_back;
+            },
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyForwardKeyEvent;    // middle sk
+            txt = qtn_mserv_msk_unselect;
+            }
+        };
+    }
+
+// --------------------------------------------------------------------------
+//    r_ms_softkeys_options_back__activate
+// --------------------------------------------------------------------------
+RESOURCE CBA r_ms_softkeys_options_back__activate
+    {
+    buttons =
+        {
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyOptions;            // left sk
+            txt = text_softkey_option;
+            },
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyBack;               // right sk
+            txt = text_softkey_back;
+            },
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyForwardKeyEvent;    // middle sk
+            txt = qtn_msk_select;
+            }
+        };
+    }
+
+// --------------------------------------------------------------------------
+//    r_ms_softkeys_ok_cancel__change
+// --------------------------------------------------------------------------
+RESOURCE CBA r_ms_softkeys_ok_cancel__change
+    {
+    buttons =
+        {
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyOk;                 // left sk
+            txt = text_softkey_ok;
+            },
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyCancel;             // right sk
+            txt = text_softkey_cancel;
+            }
+#ifndef __SERIES60_31__
+            ,
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyChange;             // middle sk
+            bmpfile=""APP_RESOURCE_DIR"\\avkon2.mif";
+            bmpid=EMbmAvkonQgn_prop_msk_select;
+            bmpmask=EMbmAvkonQgn_prop_msk_select_mask;
+            }
+#endif
+        };
+    }
+
+// --------------------------------------------------------------------------
+//    r_ms_softkeys_ok_cancel__select
+// --------------------------------------------------------------------------
+RESOURCE CBA r_ms_softkeys_ok_cancel__select
+    {
+    buttons =
+        {
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyOk;                 // left sk
+            txt = text_softkey_ok;
+            },
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyCancel;             // right sk
+            txt = text_softkey_cancel;
+            }
+#ifndef __SERIES60_31__
+            ,
+        CBA_BUTTON
+            {
+            id = EAknSoftkeySelect;
+            }
+#endif
+        };
+    }
+
+// --------------------------------------------------------------------------
+//    r_ms_softkeys_options_back__open
+// --------------------------------------------------------------------------
+RESOURCE CBA r_ms_softkeys_options_back__open
+    {
+    buttons =
+        {
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyOptions;            // left sk
+            txt = text_softkey_option;
+            },
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyBack;               // right sk
+            txt = text_softkey_back;
+            }
+#ifndef __SERIES60_31__
+            ,
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyOpen;               // middle sk
+            txt = text_softkey_open;
+            }
+#endif
+        };
+    }
+
+/*********************** DEFAULT LIST RULES ***********************/
+
+// ---------------------------------------------------------------------------
+//    r_ms_default_image_list_rules
+// ---------------------------------------------------------------------------
+//
+RESOURCE TEMPLATE_ITEMS r_ms_default_image_list_rules
+    {
+    items =
+        {
+        FILL_RULE { item = EMSAmount; value = 50; addinfo = EMbits; },
+        FILL_RULE { item = EMSStartingWith; value = ECMLatest; },
+        FILL_RULE { item = EMSShrinkImages; value = EMSShrinkingOff; },
+		FILL_RULE { item = EMSDateFrom; },
+        FILL_RULE { item = EMSDateUntil; }
+        };
+    }
+
+// ---------------------------------------------------------------------------
+//    r_ms_default_video_list_rules
+// ---------------------------------------------------------------------------
+//
+RESOURCE TEMPLATE_ITEMS r_ms_default_video_list_rules
+    {
+    items =
+        {
+        FILL_RULE { item = EMSAmount;  value = 50; addinfo = EMbits; },
+        FILL_RULE { item = EMSStartingWith; value = ECMLatest; },
+        FILL_RULE { item = EMSTitleName; },
+        FILL_RULE { item = EMSMinFileSize; },
+        FILL_RULE { item = EMSMaxFileSize; }
+        };
+    }
+
+// ---------------------------------------------------------------------------
+//    r_ms_default_music_list_rules
+// ---------------------------------------------------------------------------
+//
+RESOURCE TEMPLATE_ITEMS r_ms_default_music_list_rules
+    {
+    items =
+        {
+        FILL_RULE { item = EMSAmount; value = 200; addinfo = EMbits;},
+        FILL_RULE { item = EMSStartingWith; value = ECMLatest; },
+        FILL_RULE { item = EMSGenre; },
+        FILL_RULE { item = EMSArtist; },
+        FILL_RULE { item = EMSAlbum; },
+        FILL_RULE { item = EMSTrack; }
+        };
+    }
+
+/*********************** RULES ***************************/
+
+// ---------------------------------------------------------------------------
+//    r_ms_image_rule_list
+// ---------------------------------------------------------------------------
+//
+RESOURCE ARRAY r_ms_image_rule_list
+    {
+    items =
+        {
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSServers;
+            text = qtn_mserv_rule_storage;
+        },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSFreeText;
+            text = qtn_mserv_rule_free_text;
+            }
+        };
+    }
+
+
+// ---------------------------------------------------------------------------
+//    r_ms_video_rule_list
+// ---------------------------------------------------------------------------
+//
+RESOURCE ARRAY r_ms_video_rule_list
+    {
+    items =
+        {
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSServers;
+            text = qtn_mserv_rule_storage;
+        },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSFreeText;
+            text = qtn_mserv_rule_free_text;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSDateFrom;
+            text = qtn_mserv_rule_from;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSDateUntil;
+            text = qtn_mserv_rule_until;
+            }
+        };
+    }
+
+// ---------------------------------------------------------------------------
+//    r_ms_music_rule_list
+// ---------------------------------------------------------------------------
+//
+RESOURCE ARRAY r_ms_music_rule_list
+    {
+    items =
+        {
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSServers;
+            text = qtn_mserv_rule_storage;
+        },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSFreeText;
+            text = qtn_mserv_rule_free_text;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSTrackLength;
+            text = qtn_mserv_rule_track_length;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSFileSize;
+            text = qtn_mserv_rule_file_size;
+            }
+        };
+    }
+
+
+/************** FOR DEBUGGING **************/
+
+//-----------------------------------------------------------------------------
+//
+//    r_active_object_error_note_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_active_error_note_text
+    {
+    buf = "Failed with error: ";
+    }
+
+// End of File

@@ -1,0 +1,51 @@
+/*
+* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: Mediaservant iby
+*
+*/
+#ifndef __MEDIASERVANT_IBY__
+#define __MEDIASERVANT_IBY__
+
+#ifdef FF_UPNP_FRAMEWORK_2_0 // UPnP feature flag
+
+#include <productvariant.hrh>
+
+// Application and setup wizard
+file=ABI_DIR\BUILD_DIR\mediaservant.exe \sys\bin\mediaservant.exe
+data=\epoc32\data\z\private\10003a3f\apps\mediaservant_reg.rsc \private\10003a3f\import\apps\mediaservant_reg.rsc
+data=\epoc32\data\z\resource\apps\mediaservant_aif.mif \resource\apps\mediaservant_aif.mif
+data=\epoc32\data\z\resource\apps\mediaservant.mif \resource\apps\mediaservant.mif
+file=ABI_DIR\BUILD_DIR\msengine.dll \sys\bin\msengine.dll
+file=ABI_DIR\BUILD_DIR\msappwizard.dll \sys\bin\msappwizard.dll
+data=\epoc32\data\z\resource\apps\msappwizard.mif \resource\apps\msappwizard.mif
+data=\epoc32\data\z\resource\apps\msgsplugin.mif \resource\apps\msgsplugin.mif
+
+// Plugins
+ECOM_PLUGIN( mediaservantplugin.dll, mediaservantplugin.rsc )
+ECOM_PLUGIN( msgsplugin.dll, msgsplugin.rsc )
+
+// Engine
+file=ABI_DIR\BUILD_DIR\cmfillmanager.dll \sys\bin\cmfillmanager.dll
+file=ABI_DIR\BUILD_DIR\cmstoremanager.dll \sys\bin\cmstoremanager.dll
+file=ABI_DIR\BUILD_DIR\cmscheduler.dll \sys\bin\cmscheduler.dll
+file=ABI_DIR\BUILD_DIR\cmmemorymanager.dll \sys\bin\cmmemorymanager.dll
+file=ABI_DIR\BUILD_DIR\cmclient.dll \sys\bin\cmclient.dll
+file=ABI_DIR\BUILD_DIR\cmserver.exe \sys\bin\cmserver.exe
+
+// export mediaservant_stub.sis file
+data=ZSYSTEM\install\mediaservant_stub.sis    system\install\mediaservant_stub.sis 
+
+#endif // FF_UPNP_FRAMEWORK_2_0
+
+#endif // __MEDIASERVANT_IBY__

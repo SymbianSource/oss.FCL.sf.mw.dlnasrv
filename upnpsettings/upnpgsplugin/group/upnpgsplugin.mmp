@@ -1,0 +1,97 @@
+/*
+* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      upnp settings plugin project specification file.
+*
+*/
+
+
+
+
+
+
+// For compatibility with S60 3.2 and IAD branch
+#include "../../../group/upnpplatformvar.hrh"
+#include <data_caging_paths.hrh>    // For RESOURCE_FILES_DIR
+
+CAPABILITY          CAP_ECOM_PLUGIN
+TARGET              upnpgsplugin.dll
+TARGETTYPE          PLUGIN
+UID                 0x10009D8D 0x20009CAF
+VENDORID            VID_DEFAULT
+
+// System include paths
+APP_LAYER_SYSTEMINCLUDE
+UPNP_LOC_INCLUDE_PATH_COMPONENT
+
+//User include paths
+USERINCLUDE     ../inc
+USERINCLUDE     ../../../inc
+
+SOURCEPATH      ../data
+START RESOURCE  20009CAF.rss
+TARGET          upnpgsplugin.rsc
+TARGETPATH      ECOM_RESOURCE_DIR
+END
+
+SOURCEPATH      ../data
+START RESOURCE  upnpgspluginrsc.rss
+HEADER
+TARGETPATH      RESOURCE_FILES_DIR
+LANGUAGE_IDS
+END
+
+SOURCEPATH      ../src
+SOURCE      upnpappsettingslist.cpp
+SOURCE      upnpappsettingitemhomeiap.cpp
+SOURCE      upnpappsettingitemmydevicename.cpp
+SOURCE      upnpsettingitemmemoryselection.cpp
+SOURCE      upnpgspluginimplementationtable.cpp
+SOURCE      upnpgspluginview.cpp
+
+LIBRARY   euser.lib
+LIBRARY   ecom.lib
+LIBRARY   efsrv.lib
+LIBRARY   avkon.lib
+LIBRARY   bafl.lib
+LIBRARY   cone.lib
+LIBRARY   eikcoctl.lib
+LIBRARY   eikcore.lib
+LIBRARY   egul.lib
+LIBRARY   eikdlg.lib            // eikon dialogs
+LIBRARY   upnpcontentserverclient.lib
+LIBRARY   upnpapplicationengine.lib
+LIBRARY   commondialogs.lib  // CAknMemorySelectionDialog
+
+LIBRARY   upnpavcontrollerclient.lib
+LIBRARY   upnpsettingsengine.lib
+LIBRARY   upnputilities.lib // IsAccesPointValidL
+LIBRARY   upnpipserversutils.lib
+LIBRARY   commdb.lib                  // used in upnpsettingitemhomeiap
+
+LIBRARY   CommonEngine.lib      // For RConeResourceLoader
+LIBRARY   featmgr.lib           // Feature manager
+LIBRARY   aknskinsrv.lib        // for enhanced skinning
+LIBRARY   AKNSKINS.lib          // for enhanced skinning
+LIBRARY   hlplch.lib            // for "Help" options menu
+LIBRARY   GSFramework.lib       // For base classes
+LIBRARY   GSListBox.lib         // For CGSListBoxItemTextArray
+LIBRARY   flogger.lib // For GSLogger
+LIBRARY   GSEcomPlugin.lib
+LIBRARY   PlatformEnv.lib
+LIBRARY   apengine.lib  
+LIBRARY   aknlayout.LIB
+LIBRARY   AknIcon.lib
+LIBRARY   cmmanager.lib
+
+// End of File

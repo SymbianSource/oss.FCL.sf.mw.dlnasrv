@@ -1,0 +1,181 @@
+EXPORTS
+	_ZN11CUpnpObject11AddElementLEP12CUpnpElement @ 1 NONAME
+	_ZN11CUpnpObject11GetElementsEv @ 2 NONAME
+	_ZN11CUpnpObject12AddResourceLERK7TDesC16RK6TDesC8 @ 3 NONAME
+	_ZN11CUpnpObject12SetParentIdLERK6TDesC8 @ 4 NONAME
+	_ZN11CUpnpObject13SetRestrictedEi @ 5 NONAME
+	_ZN11CUpnpObject14RemoveElementLEPK12CUpnpElement @ 6 NONAME
+	_ZN11CUpnpObject14SetWriteStatusEi @ 7 NONAME
+	_ZN11CUpnpObject15SetObjectClassLERK6TDesC8 @ 8 NONAME
+	_ZN11CUpnpObject5CopyLERKS_ @ 9 NONAME
+	_ZN11CUpnpObject6SetIdLERK6TDesC8 @ 10 NONAME
+	_ZN11CUpnpObject9SetTitleLERK6TDesC8 @ 11 NONAME
+	_ZN11CUpnpObjectD0Ev @ 12 NONAME
+	_ZN11CUpnpObjectD1Ev @ 13 NONAME
+	_ZN11CUpnpObjectD2Ev @ 14 NONAME
+	_ZN12CUpnpElement12InternalizeLER11RReadStream @ 15 NONAME
+	_ZN12CUpnpElement12SetFilePathLERK7TDesC16 @ 16 NONAME
+	_ZN12CUpnpElement13AddAttributeLEP14CUpnpAttribute @ 17 NONAME
+	_ZN12CUpnpElement13GetAttributesEv @ 18 NONAME
+	_ZN12CUpnpElement13SetIsRequiredEi @ 19 NONAME
+	_ZN12CUpnpElement16RemoveAttributeLEPK14CUpnpAttribute @ 20 NONAME
+	_ZN12CUpnpElement4NewLERK6TDesC8 @ 21 NONAME
+	_ZN12CUpnpElement5CopyLERKS_ @ 22 NONAME
+	_ZN12CUpnpElement5NewLCERK6TDesC8 @ 23 NONAME
+	_ZN12CUpnpElement8SetNameLERK6TDesC8 @ 24 NONAME
+	_ZN12CUpnpElement9SetValueLERK6TDesC8 @ 25 NONAME
+	_ZN13CUpnpItemList13AppendObjectLER11CUpnpObject @ 26 NONAME
+	_ZN13CUpnpItemList4NewLEv @ 27 NONAME
+	_ZN13CUpnpItemList5NewLCEv @ 28 NONAME
+	_ZN14CUpnpAttribute4NewLERK6TDesC8 @ 29 NONAME
+	_ZN14CUpnpAttribute5NewLCERK6TDesC8 @ 30 NONAME
+	_ZN14CUpnpAttribute8SetNameLERK6TDesC8 @ 31 NONAME
+	_ZN14CUpnpAttribute9SetValueLERK6TDesC8 @ 32 NONAME
+	_ZN14CUpnpAttributeC1Ev @ 33 NONAME
+	_ZN14CUpnpAttributeC2Ev @ 34 NONAME
+	_ZN14CUpnpContainer10FindObjectERK6TDesC8 @ 35 NONAME
+	_ZN14CUpnpContainer11ObjectCountEv @ 36 NONAME
+	_ZN14CUpnpContainer12InternalizeLER11RReadStream @ 37 NONAME
+	_ZN14CUpnpContainer13AppendObjectLER11CUpnpObject @ 38 NONAME
+	_ZN14CUpnpContainer13RemoveObjectLERK6TDesC8 @ 39 NONAME
+	_ZN14CUpnpContainer4NewLEv @ 40 NONAME
+	_ZN14CUpnpContainerixEi @ 41 NONAME
+	_ZN15CUpnpObjectList10FindObjectERK6TDesC8 @ 42 NONAME
+	_ZN15CUpnpObjectList12InternalizeLER11RReadStream @ 43 NONAME
+	_ZN15CUpnpObjectList13AppendObjectLER11CUpnpObject @ 44 NONAME
+	_ZN15CUpnpObjectList16RemoveAndDestroyERK6TDesC8 @ 45 NONAME
+	_ZN15CUpnpObjectList4NewLEv @ 46 NONAME
+	_ZN15CUpnpObjectList5NewLCEv @ 47 NONAME
+	_ZN15CUpnpObjectList6RemoveERK6TDesC8 @ 48 NONAME
+	_ZN18CUpnpContainerList13AppendObjectLER11CUpnpObject @ 49 NONAME
+	_ZN18CUpnpContainerList4NewLEv @ 50 NONAME
+	_ZN18CUpnpContainerList5NewLCEv @ 51 NONAME
+	_ZN19CUpnpBrowseCriteria10SetFilterLERK6TDesC8 @ 52 NONAME
+	_ZN19CUpnpBrowseCriteria12InternalizeLER11RReadStream @ 53 NONAME
+	_ZN19CUpnpBrowseCriteria16SetStartingIndexEi @ 54 NONAME
+	_ZN19CUpnpBrowseCriteria17SetRequestedCountEi @ 55 NONAME
+	_ZN19CUpnpBrowseCriteria4NewLERK6TDesC8 @ 56 NONAME
+	_ZN19CUpnpBrowseCriteria5CopyLERKS_ @ 57 NONAME
+	_ZN19CUpnpBrowseCriteria5NewLCERK6TDesC8 @ 58 NONAME
+	_ZN22CUpnpFileTransferEvent10TransferIdEv @ 59 NONAME
+	_ZN22CUpnpFileTransferEvent12InternalizeLER11RReadStream @ 60 NONAME
+	_ZN22CUpnpFileTransferEvent12SetDirectionENS_10TDirectionE @ 61 NONAME
+	_ZN22CUpnpFileTransferEvent12SetErrorCodeEi @ 62 NONAME
+	_ZN22CUpnpFileTransferEvent12SetFilePathLERK7TDesC16 @ 63 NONAME
+	_ZN22CUpnpFileTransferEvent13ProgressStateEv @ 64 NONAME
+	_ZN22CUpnpFileTransferEvent13SetTransferIdEi @ 65 NONAME
+	_ZN22CUpnpFileTransferEvent16SetProgressStateENS_14TProgressStateE @ 66 NONAME
+	_ZN22CUpnpFileTransferEvent24ContentDirectoryObjectIdEv @ 67 NONAME
+	_ZN22CUpnpFileTransferEvent27SetContentDirectoryObjectIdEi @ 68 NONAME
+	_ZN22CUpnpFileTransferEvent4NewLEv @ 69 NONAME
+	_ZN22CUpnpFileTransferEvent5NewLCEv @ 70 NONAME
+	_ZN22CUpnpFileTransferEvent6CloneLEv @ 71 NONAME
+	_ZN22CUpnpFileTransferEvent8FilePathEv @ 72 NONAME
+	_ZN22CUpnpFileTransferEvent9DirectionEv @ 73 NONAME
+	_ZN22CUpnpFileTransferEvent9ErrorCodeEv @ 74 NONAME
+	_ZN25CUpnpMediaServerEventList12InternalizeLER11RReadStream @ 75 NONAME
+	_ZN25CUpnpMediaServerEventList15GetPointerArrayEv @ 76 NONAME
+	_ZN26CUpnpFileTransferEventList4NewLEv @ 77 NONAME
+	_ZN26CUpnpFileTransferEventList5NewLCEv @ 78 NONAME
+	_ZN9CUpnpItem12InternalizeLER11RReadStream @ 79 NONAME
+	_ZN9CUpnpItem4NewLEv @ 80 NONAME
+	_ZN9CUpnpItem9SetRefIdLERK6TDesC8 @ 81 NONAME
+	_ZN9CUpnpItemD0Ev @ 82 NONAME
+	_ZN9CUpnpItemD1Ev @ 83 NONAME
+	_ZN9CUpnpItemD2Ev @ 84 NONAME
+	_ZNK11CUpnpObject10RestrictedEv @ 85 NONAME
+	_ZNK11CUpnpObject11ObjectClassEv @ 86 NONAME
+	_ZNK11CUpnpObject11WriteStatusEv @ 87 NONAME
+	_ZNK11CUpnpObject2IdEv @ 88 NONAME
+	_ZNK11CUpnpObject5TitleEv @ 89 NONAME
+	_ZNK11CUpnpObject7ToDes8LEv @ 90 NONAME
+	_ZNK11CUpnpObject8ParentIdEv @ 91 NONAME
+	_ZNK12CUpnpElement10IsRequiredEv @ 92 NONAME
+	_ZNK12CUpnpElement12ExternalizeLER12RWriteStream @ 93 NONAME
+	_ZNK12CUpnpElement4NameEv @ 94 NONAME
+	_ZNK12CUpnpElement5ValueEv @ 95 NONAME
+	_ZNK12CUpnpElement8FilePathEv @ 96 NONAME
+	_ZNK14CUpnpAttribute4NameEv @ 97 NONAME
+	_ZNK14CUpnpAttribute5ValueEv @ 98 NONAME
+	_ZNK14CUpnpContainer12ExternalizeLER12RWriteStream @ 99 NONAME
+	_ZNK15CUpnpObjectList10IdsToDes8LEv @ 100 NONAME
+	_ZNK15CUpnpObjectList11ObjectCountEv @ 101 NONAME
+	_ZNK15CUpnpObjectList12ExternalizeLER12RWriteStream @ 102 NONAME
+	_ZNK15CUpnpObjectList7ToDes8LEv @ 103 NONAME
+	_ZNK15CUpnpObjectListixEi @ 104 NONAME
+	_ZNK19CUpnpBrowseCriteria12ExternalizeLER12RWriteStream @ 105 NONAME
+	_ZNK19CUpnpBrowseCriteria13StartingIndexEv @ 106 NONAME
+	_ZNK19CUpnpBrowseCriteria14RequestedCountEv @ 107 NONAME
+	_ZNK19CUpnpBrowseCriteria6FilterEv @ 108 NONAME
+	_ZNK19CUpnpBrowseCriteria7ToDes8LEv @ 109 NONAME
+	_ZNK22CUpnpFileTransferEvent12ExternalizeLER12RWriteStream @ 110 NONAME
+	_ZNK25CUpnpMediaServerEventList12ExternalizeLER12RWriteStream @ 111 NONAME
+	_ZNK25CUpnpMediaServerEventList7ToDes8LEv @ 112 NONAME
+	_ZNK9CUpnpItem12ExternalizeLER12RWriteStream @ 113 NONAME
+	_ZNK9CUpnpItem5RefIdEv @ 114 NONAME
+	_ZTI11CUpnpObject @ 115 NONAME ; #<TI>#
+	_ZTI12CUpnpElement @ 116 NONAME ; #<TI>#
+	_ZTI13CUpnpItemList @ 117 NONAME ; #<TI>#
+	_ZTI14CUpnpAttribute @ 118 NONAME ; #<TI>#
+	_ZTI14CUpnpContainer @ 119 NONAME ; #<TI>#
+	_ZTI15CUpnpObjectList @ 120 NONAME ; #<TI>#
+	_ZTI18CUpnpContainerList @ 121 NONAME ; #<TI>#
+	_ZTI19CUpnpBrowseCriteria @ 122 NONAME ; #<TI>#
+	_ZTI21CUpnpMediaServerEvent @ 123 NONAME ; #<TI>#
+	_ZTI22CUpnpFileTransferEvent @ 124 NONAME ; #<TI>#
+	_ZTI25CUpnpMediaServerEventList @ 125 NONAME ; #<TI>#
+	_ZTI26CUpnpFileTransferEventList @ 126 NONAME ; #<TI>#
+	_ZTI9CUpnpItem @ 127 NONAME ; #<TI>#
+	_ZTV11CUpnpObject @ 128 NONAME ; #<VT>#
+	_ZTV12CUpnpElement @ 129 NONAME ; #<VT>#
+	_ZTV13CUpnpItemList @ 130 NONAME ; #<VT>#
+	_ZTV14CUpnpAttribute @ 131 NONAME ; #<VT>#
+	_ZTV14CUpnpContainer @ 132 NONAME ; #<VT>#
+	_ZTV15CUpnpObjectList @ 133 NONAME ; #<VT>#
+	_ZTV18CUpnpContainerList @ 134 NONAME ; #<VT>#
+	_ZTV19CUpnpBrowseCriteria @ 135 NONAME ; #<VT>#
+	_ZTV21CUpnpMediaServerEvent @ 136 NONAME ; #<VT>#
+	_ZTV22CUpnpFileTransferEvent @ 137 NONAME ; #<VT>#
+	_ZTV25CUpnpMediaServerEventList @ 138 NONAME ; #<VT>#
+	_ZTV26CUpnpFileTransferEventList @ 139 NONAME ; #<VT>#
+	_ZTV9CUpnpItem @ 140 NONAME ; #<VT>#
+	_ZN17CUpnpProtocolInfo10FirstFieldEv @ 141 NONAME
+	_ZN17CUpnpProtocolInfo10ThirdFieldEv @ 142 NONAME
+	_ZN17CUpnpProtocolInfo11FourthFieldEv @ 143 NONAME
+	_ZN17CUpnpProtocolInfo11SecondFieldEv @ 144 NONAME
+	_ZN17CUpnpProtocolInfo13ProtocolInfoLEv @ 145 NONAME
+	_ZN17CUpnpProtocolInfo14SetFirstFieldLERK6TDesC8 @ 146 NONAME
+	_ZN17CUpnpProtocolInfo14SetThirdFieldLERK6TDesC8 @ 147 NONAME
+	_ZN17CUpnpProtocolInfo15SetFourthFieldLERK6TDesC8 @ 148 NONAME
+	_ZN17CUpnpProtocolInfo15SetSecondFieldLERK6TDesC8 @ 149 NONAME
+	_ZN17CUpnpProtocolInfo4NewLERK6TDesC8 @ 150 NONAME
+	_ZN17CUpnpProtocolInfo4NewLEv @ 151 NONAME
+	_ZN21CUpnpDlnaProtocolInfo11CiParameterEv @ 152 NONAME
+	_ZN21CUpnpDlnaProtocolInfo11FourthFieldEv @ 153 NONAME
+	_ZN21CUpnpDlnaProtocolInfo11OpParameterEN20UpnpDlnaProtocolInfo11TDlnaParamsE @ 154 NONAME
+	_ZN21CUpnpDlnaProtocolInfo11PnParameterEv @ 155 NONAME
+	_ZN21CUpnpDlnaProtocolInfo11PsParameterEv @ 156 NONAME
+	_ZN21CUpnpDlnaProtocolInfo11SetDlnaFlagEN20UpnpDlnaProtocolInfo10TDlnaFlagsEi @ 157 NONAME
+	_ZN21CUpnpDlnaProtocolInfo12OpParameterLEv @ 158 NONAME
+	_ZN21CUpnpDlnaProtocolInfo14GetOtherParamsEv @ 159 NONAME
+	_ZN21CUpnpDlnaProtocolInfo14SetCiParameterEi @ 160 NONAME
+	_ZN21CUpnpDlnaProtocolInfo14SetOtherParamLERK6TDesC8 @ 161 NONAME
+	_ZN21CUpnpDlnaProtocolInfo15FlagsParameterLEv @ 162 NONAME
+	_ZN21CUpnpDlnaProtocolInfo15SetOpParameterLEN20UpnpDlnaProtocolInfo11TDlnaParamsEi @ 163 NONAME
+	_ZN21CUpnpDlnaProtocolInfo15SetOpParameterLERK6TDesC8 @ 164 NONAME
+	_ZN21CUpnpDlnaProtocolInfo15SetPnParameterLERK6TDesC8 @ 165 NONAME
+	_ZN21CUpnpDlnaProtocolInfo15SetPsParameterLERK6TDesC8 @ 166 NONAME
+	_ZN21CUpnpDlnaProtocolInfo18SetFlagsParameterLERK6TDesC8 @ 167 NONAME
+	_ZN21CUpnpDlnaProtocolInfo4NewLERK6TDesC8 @ 168 NONAME
+	_ZN21CUpnpDlnaProtocolInfo4NewLEv @ 169 NONAME
+	_ZN21CUpnpDlnaProtocolInfo8DlnaFlagEN20UpnpDlnaProtocolInfo10TDlnaFlagsE @ 170 NONAME
+	_ZN22CUpnpProtocolInfoLocal4NewLERK6TDesC8 @ 171 NONAME
+	_ZN22CUpnpProtocolInfoLocal4NewLERK6TDesC8S2_ @ 172 NONAME
+	_ZN22CUpnpProtocolInfoLocal4NewLERK6TDesC8i @ 173 NONAME
+	_ZTI17CUpnpProtocolInfo @ 174 NONAME ; #<TI>#
+	_ZTI21CUpnpDlnaProtocolInfo @ 175 NONAME ; #<TI>#
+	_ZTI22CUpnpProtocolInfoLocal @ 176 NONAME ; #<TI>#
+	_ZTV17CUpnpProtocolInfo @ 177 NONAME ; #<VT>#
+	_ZTV21CUpnpDlnaProtocolInfo @ 178 NONAME ; #<VT>#
+	_ZTV22CUpnpProtocolInfoLocal @ 179 NONAME ; #<VT>#
+

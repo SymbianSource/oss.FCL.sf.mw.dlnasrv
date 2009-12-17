@@ -1,0 +1,20 @@
+EXPORTS
+	_ZN9CCmMmMain11SetObserverER13MCmMmObserver @ 1 NONAME
+	_ZN9CCmMmMain12DeleteFilesLER12CDesC16Array @ 2 NONAME
+	_ZN9CCmMmMain13ShrinkImagesLER12CDesC16Array @ 3 NONAME
+	_ZN9CCmMmMain22SetQuotaListenerStateLEi @ 4 NONAME
+	_ZN9CCmMmMain4NewLER9CCmDmMain @ 5 NONAME
+	_ZN9CCmMmMain5NewLCER9CCmDmMain @ 6 NONAME
+	_ZN9CCmMmMain6CancelEv @ 7 NONAME
+	_ZN9CCmMmMainD0Ev @ 8 NONAME
+	_ZN9CCmMmMainD1Ev @ 9 NONAME
+	_ZN9CCmMmMainD2Ev @ 10 NONAME
+	_ZTI13CCmMmShrinker @ 11 NONAME ; #<TI>#
+	_ZTI18CCmMmQuotaListener @ 12 NONAME ; #<TI>#
+	_ZTI26CCmMmImageMetadataResolver @ 13 NONAME ; #<TI>#
+	_ZTI9CCmMmMain @ 14 NONAME ; #<TI>#
+	_ZTV13CCmMmShrinker @ 15 NONAME ; #<VT>#
+	_ZTV18CCmMmQuotaListener @ 16 NONAME ; #<VT>#
+	_ZTV26CCmMmImageMetadataResolver @ 17 NONAME ; #<VT>#
+	_ZTV9CCmMmMain @ 18 NONAME ; #<VT>#
+

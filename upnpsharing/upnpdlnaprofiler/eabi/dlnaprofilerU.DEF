@@ -1,0 +1,24 @@
+EXPORTS
+	_ZN16CUpnpResResolver17GetResParametersLERK7TDesC16 @ 1 NONAME
+	_ZN16CUpnpResResolver4NewLEv @ 2 NONAME
+	_ZN16CUpnpResResolver5NewLCEv @ 3 NONAME
+	_ZN17CUpnpDlnaProfiler15ProfileForFileLERK7TDesC16 @ 4 NONAME
+	_ZN17CUpnpDlnaProfiler4NewLEv @ 5 NONAME
+	_ZN17CUpnpDlnaProfiler5NewLCEv @ 6 NONAME
+	_ZN18CUpnpResParameters4NewLEv @ 7 NONAME
+	_ZN18CUpnpResParameters5NewLCEv @ 8 NONAME
+	_ZNK17CUpnpDlnaProfiler18SupportedProfilesLEP16CDesC16ArrayFlat @ 9 NONAME
+	_ZNK18CUpnpResParameters11IsImageFileEv @ 10 NONAME
+	_ZNK18CUpnpResParameters11ResolutionLEv @ 11 NONAME
+	_ZNK18CUpnpResParameters12ProtocolInfoEv @ 12 NONAME
+	_ZNK18CUpnpResParameters18IsAudioOrVideoFileEv @ 13 NONAME
+	_ZNK18CUpnpResParameters9DurationLEv @ 14 NONAME
+	_ZNK18CUpnpResParameters9FileSizeLEv @ 15 NONAME
+	_ZTI16CUpnpResResolver @ 16 NONAME ; #<TI>#
+	_ZTI17CUpnpDlnaProfiler @ 17 NONAME ; #<TI>#
+	_ZTI18CUpnpResParameters @ 18 NONAME ; #<TI>#
+	_ZTV16CUpnpResResolver @ 19 NONAME ; #<VT>#
+	_ZTV17CUpnpDlnaProfiler @ 20 NONAME ; #<VT>#
+	_ZTV18CUpnpResParameters @ 21 NONAME ; #<VT>#
+	_ZN17CUpnpDlnaProfiler15ProfileForFileLERK7TDesC16R5RFileR18CUpnpResParameters @ 22 NONAME
+

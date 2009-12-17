@@ -1,0 +1,4 @@
+EXPORTS
+	?NewCmSqlMainL@CCmSqlMainFactory@@SAPAVMCmSqlMain@@AAVRFs@@@Z @ 1 NONAME ; class MCmSqlMain * CCmSqlMainFactory::NewCmSqlMainL(class RFs &)
+	?NewCmSqlMainLC@CCmSqlMainFactory@@SAPAVMCmSqlMain@@AAVRFs@@@Z @ 2 NONAME ; class MCmSqlMain * CCmSqlMainFactory::NewCmSqlMainLC(class RFs &)
+

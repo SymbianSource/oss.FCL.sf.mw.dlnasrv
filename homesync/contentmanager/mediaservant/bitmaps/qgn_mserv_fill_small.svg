@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1 Tiny//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-tiny.dtd">
+<svg baseProfile="tiny" version="1.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 21 21">
+<g>
+<g>
+<g>
+<polygon fill="#005447" points="10.368,14.861 10.079,13.28 10.089,14.97 10.354,16.719    "/>
+<g>
+<linearGradient id="XMLID_3_" gradientUnits="userSpaceOnUse" x1="-18.1987" y1="61.4287" x2="-26.6131" y2="55.9068" gradientTransform="matrix(1.1364 0 0 -1.1364 39.6183 76.7883)">
+<stop offset="0" style="stop-color:#36FF4E"/>
+<stop offset="0.1352" style="stop-color:#35FC4E"/>
+<stop offset="0.2426" style="stop-color:#32F24D"/>
+<stop offset="0.3405" style="stop-color:#2DE14C"/>
+<stop offset="0.4327" style="stop-color:#25C94B"/>
+<stop offset="0.521" style="stop-color:#1CAB49"/>
+<stop offset="0.6063" style="stop-color:#108547"/>
+<stop offset="0.6877" style="stop-color:#035A45"/>
+<stop offset="0.7042" style="stop-color:#005044"/>
+<stop offset="0.7352" style="stop-color:#004F3E"/>
+<stop offset="0.777" style="stop-color:#004B2D"/>
+<stop offset="0.7859" style="stop-color:#004A28"/>
+<stop offset="0.8535" style="stop-color:#004A26"/>
+<stop offset="1" style="stop-color:#004200"/>
+</linearGradient>
+<path fill="url(#XMLID_3_)" d="M16.936,5.363c0,0-6.849,7.873-6.857,7.917c0.125,0.958,0.209,1.459,0.26,1.603      C10.442,14.856,19.125,12.49,16.936,5.363z"/>
+<polygon fill="#005447" points="10.2,15.188 10.35,16.763 3.002,14.45 2.843,13.012     "/>
+</g>
+<linearGradient id="XMLID_4_" gradientUnits="userSpaceOnUse" x1="-30.4287" y1="53.9561" x2="-20.1089" y2="63.2481" gradientTransform="matrix(1.1364 0 0 -1.1364 39.6183 76.7883)">
+<stop offset="0" style="stop-color:#68D70B"/>
+<stop offset="1" style="stop-color:#2B7D00"/>
+</linearGradient>
+<path fill="url(#XMLID_4_)" d="M14.247,2.784c6.08,3.451,1.879,8.234-4.16,10.452l0.123,1.981L2.852,13.04l6.901-4.39     l0.103,1.923C14.471,8.772,17.026,5.688,14.247,2.784z"/>
+</g>
+</g>
+<rect fill="none" width="21" height="21"/>
+</g>
+</svg>

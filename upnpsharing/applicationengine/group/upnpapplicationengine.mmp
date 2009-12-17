@@ -1,0 +1,80 @@
+/*
+* Copyright (c) 2006-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Project definition file for project Application Engine
+*
+*/
+
+
+
+
+
+
+#include "../../../group/upnpplatformvar.hrh"
+
+TARGET upnpapplicationengine.dll
+TARGETTYPE dll
+UID 0x1000008d 0x10208A0B
+
+// Enable UPnPSecurity
+MACRO ENABLE_UPNP_SECURITY
+
+// Capability assignment.
+CAPABILITY CAP_GENERAL_DLL
+VENDORID VID_DEFAULT
+
+// SIS installation + IAD support
+VERSION 10.1
+paged
+
+USERINCLUDE ../inc 
+USERINCLUDE ../../../inc
+
+MW_LAYER_SYSTEMINCLUDE
+
+SOURCEPATH ../src
+SOURCE upnpcontentrequestao.cpp
+SOURCE upnpcontentshareao.cpp
+SOURCE upnpfilesharingengine.cpp
+SOURCE upnpfilesharingengineao.cpp
+SOURCE upnpiconconfigurator.cpp
+SOURCE upnpprogresswatcher.cpp
+
+
+LIBRARY euser.lib
+LIBRARY bafl.lib
+LIBRARY centralrepository.lib
+LIBRARY upnpserviceframework.lib
+LIBRARY avmediaserverclient.lib
+LIBRARY upnpipserversutils.lib
+LIBRARY efsrv.lib
+LIBRARY estor.lib
+
+// content server
+LIBRARY upnpcontentserverclient.lib
+// UPnPSecurity
+LIBRARY upnpsecurity.lib
+// PathInfo
+LIBRARY PlatformEnv.lib
+// UpnpCommonUtils
+LIBRARY upnputilities.lib
+// UPnPAVControllerFactory
+LIBRARY upnpavcontrollerclient.lib
+LIBRARY upnpavcontrollerhelper.lib
+LIBRARY upnpsettingsengine.lib
+
+LIBRARY commdb.lib
+
+DEBUGLIBRARY flogger.lib
+
+// End of file

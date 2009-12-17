@@ -1,0 +1,307 @@
+<es>
+  	<e type="object">       
+		<i></i>
+		<ps type = "Attribute">
+			<p n="id" r="1" t="ui"/>
+			<p n="parentID" r="0" t="ui"/>
+			<p n="restricted" r="1" t="b"/>
+		</ps>
+		<ps type = "e">
+			<p n="dc:title" r="1" t="ls"/>
+			<p n="dc:creator" r="0" t="ls"/>
+			<p n="res" r="0" m="1" t="ls">
+				<ps type="Attribute">
+				<p n="protocolInfo" r="1" m="0" t="ls"/>
+				</ps>
+			</p>
+			<p n="upnp:class" r="1" t="ls"/>
+		</ps>
+		<ps type="res">
+                     <p n="importUri" t="ls"/>
+                     <p n="protocolInfo" t="ls"/>
+                     <p n="size" t="ul"/>
+					 <p n="duration" t="ls"/>
+                </ps>
+	</e>
+
+	<e type="container">
+		<i>object</i>
+		<ps type = "Attribute">
+			<p n="childCount" r="0"/>
+			<p n="searchable" r="0"/>
+			<p n="createClass" r="0" m="1"/>
+			<p n="searchClass" r="0" m="1"/>
+		</ps>
+	</e>
+
+	 <e type="item">
+		<i>object</i>
+		<ps type = "Attribute">
+			<p n="refID" r="0"/>
+		</ps>
+	</e>
+
+	<e type="audioItem">
+		<i>item</i>
+		<ps type = "e">
+			<p n="upnp:genre" r="0" m="1"/>
+			<p n="dc:description" r="0"/>
+			<p n="upnp:longDescription" r="0"/>
+			<p n="dc:publisher" r="0" m="1"/>
+			<p n="dc:language" r="0"/>
+			<p n="dc:relation" r="0" m="1"/>
+			<p n="dc:rights" r="0"/>
+			<p n="upnp:albumArtURI" r="0" m="1" t="ls">
+				<ps type="Attribute">
+				<p n="dlna:profileID" r="1" m="0" t="ls"/>				
+				</ps>			
+			</p>
+		</ps>
+	</e>
+
+	<e type="videoItem">
+		<i>item</i>
+		<ps type = "e">
+			<p n="upnp:genre" r="0" m="1"/>
+			<p n="upnp:longdescription" r="0"/>
+			<p n="upnp:producer" r="0" m="1"/>
+			<p n="upnp:rating" r="0"/>
+			<p n="upnp:actor" r="0" m="1"/>
+			<p n="upnp:director" r="0" m="1"/>
+			<p n="dc:description" r="0"/>
+			<p n="dc:publisher" r="0" m="1"/>
+			<p n="dc:language" r="0"/>
+			<p n="dc:relation" r="0" m="1"/>
+			<p n="dc:date" r="0"/>
+		</ps>
+	</e>
+
+	<e type="imageItem">
+		<i>item</i>
+		<ps type = "e">
+			<p n="upnp:longdescription" r="0"/>
+			<p n="upnp:storageMedium" r="0"/>
+			<p n="upnp:rating" r="0"/>
+			<p n="dc:description" r="0"/>
+			<p n="dc:publisher" r="0" m="1"/>
+			<p n="dc:date" r="0"/>
+			<p n="dc:rights" r="0"/>
+		</ps>
+	</e>
+
+	<e type="playlistItem">
+		<i>item</i>
+		<ps type = "e">
+			<p n="upnp:artist" r="0" m="1"/>
+			<p n="upnp:genre" r="0" m="1"/>
+			<p n="upnp:longDescription" r="0"/>
+			<p n="upnp:storageMedium" r="0"/>
+			<p n="dc:description" r="0"/>
+			<p n="dc:date" r="0"/>
+			<p n="dc:language" r="0"/>
+		</ps>
+	</e>
+
+	<e type="textItem">
+		<i>item</i>
+		<ps type = "e">
+			<p n="upnp:author" r="0" m="1"/>
+			<p n="upnp:protection" r="0"/>
+			<p n="upnp:longDescription" r="0"/>
+			<p n="upnp:storageMedium" r="0"/>
+			<p n="upnp:rating" r="0"/>
+			<p n="dc:description" r="0"/>
+			<p n="dc:publisher" r="0" m="1"/>
+			<p n="dc:contributor" r="0" m="1"/>
+			<p n="dc:date" r="0"/>
+			<p n="dc:relation" r="0" m="1"/>
+			<p n="dc:language" r="0"/>
+			<p n="dc:rights" r="0"/>
+		</ps>
+	</e>
+
+	<e type="musicTrack">
+		<i>audioItem</i>
+		<ps type = "e">
+			<p n="upnp:artist" r="0" m="1"/>
+			<p n="upnp:album" r="0" m="1"/>
+			<p n="upnp:originalTrackNumber" r="0"/>
+			<p n="upnp:playlist" r="0" m="1"/>
+			<p n="upnp:storageMedium" r="0"/>
+			<p n="dc:contributor" m="1" r="0"/>
+			<p n="dc:date" r="0"/>
+		</ps>
+	</e>
+
+	<e type="audioBroadcast">
+		<i>audioItem</i>
+		<ps type = "e">
+			<p n="upnp:region" r="0"/>
+			<p n="upnp:radioCallSign" r="0"/>
+			<p n="upnp:radioStationID" r="0"/>
+			<p n="upnp:radioBand" r="0"/>
+			<p n="upnp:channelNr" r="0"/>
+		</ps>
+	</e>
+
+	<e type="audioBook">
+		<i>audioItem</i>
+		<ps type = "e">
+			<p n="upnp:storageMedium" r="0"/>
+			<p n="upnp:producer" r="0" m="1"/>
+			<p n="upnp:contributor" r="0" m="1"/>
+			<p n="upnp:date" r="0"/>
+		</ps>
+	</e>
+
+	<e type="movie">
+		<i>videoItem</i>
+		<ps type = "e">
+			<p n="upnp:storageMedium" r="0"/>
+			<p n="upnp:DVDRegionCode" r="0"/>
+			<p n="upnp:channelName" r="0"/>
+			<p n="upnp:scheduledStartTime" r="0"/>
+			<p n="upnp:scheduledEndTime" r="0"/>
+			<p n="dc:date" r="0"/>
+		</ps>
+	</e>
+
+	<e type="photo">
+		<i>imageItem</i>
+		<ps type = "e">
+			<p n="upnp:album" r="0" m="1"/>
+		</ps>
+	</e>
+
+	<e type="videoBroadcast">
+		<i>videoItem</i>
+		<ps type = "e">
+			<p n="upnp:icon" r="0"/>
+			<p n="upnp:region" r="0"/>
+			<p n="upnp:channelNr" r="0"/>
+		</ps>
+	</e>
+
+	<e type="musicVideoClip">
+		<i>videoItem</i>
+		<ps type = "e">
+			<p n="upnp:artist" r="0" m="1"/>
+			<p n="upnp:storageMedium" r="0"/>
+			<p n="upnp:album" r="0" m="1"/>
+			<p n="upnp:scheduledStartTime" r="0"/>
+			<p n="upnp:scheduledStopTime" r="0"/>
+			<p n="upnp:director" r="0" m="1"/>
+			<p n="dc:contributor" r="0" m="1"/>
+			<p n="dc:date" r="0"/>
+		</ps>
+	</e>
+
+	<e type="album">
+		<i>container</i>
+		<ps type = "e">
+			<p n="upnp:storageMedium" r="0"/>
+			<p n="dc:longDescription" r="0"/>
+			<p n="dc:description" r="0"/>
+			<p n="dc:publisher" r="0" m="1"/>
+			<p n="dc:contributor" r="0" m="1"/>
+			<p n="dc:date" r="0"/>
+			<p n="dc:relation" r="0" m="1"/>
+			<p n="dc:rights" r="0"/>
+		</ps>
+	</e>
+
+	<e type="genre">
+		<i>container</i>
+		<ps type = "e">
+			<p n="upnp:longDescription" r="0"/>
+			<p n="dc:description" r="0"/>
+		</ps>
+	</e>
+
+	<e type="storageSystem">
+		<i>container</i>
+		<ps type = "e">
+			<p n="upnp:storageTotal" r="1"/>
+			<p n="upnp:storageUsed" r="1"/>
+			<p n="upnp:storageFree" r="1"/>
+			<p n="upnp:storageMaxPartition" r="1"/>
+			<p n="upnp:storageMedium" r="1"/>
+		</ps>
+	</e>
+
+	<e type="storageVolume">
+		<i>container</i>
+		<ps type = "e">
+			<p n="upnp:storageTotal" r="1"/>
+			<p n="upnp:storageUsed" r="1"/>
+			<p n="upnp:storageFree" r="1"/>
+			<p n="upnp:storageMedium" r="1"/>
+		</ps>
+	</e>
+
+	<e type="playlistContainer">
+		<i>container</i>
+		<ps type = "e">
+			<p n="upnp:artist" r="0" m="1"/>
+			<p n="upnp:genre" r="0" m="1"/>
+			<p n="upnp:longDescription" r="0"/>
+			<p n="upnp:producer" r="0" m="1"/>
+			<p n="upnp:storageMedium" r="0"/>
+			<p n="dc:description" r="0"/>
+			<p n="dc:contributor" r="0" m="1"/>
+			<p n="dc:date" r="0"/>
+			<p n="dc:language" r="0"/>
+			<p n="dc:rights" r="0"/>
+		</ps>
+	</e>
+
+	<e type="person">
+		<i>container</i>
+		<ps type = "e">
+			<p n="dc:language" r="0"/>
+		</ps>
+	</e>
+
+	<e type="storageFolder">
+		<i>container</i>
+		<ps type = "e">
+			<p n="upnp:storageUsed" r="1"/>
+		</ps>
+	</e>
+
+	<e type="musicAlbum">
+		<i>album</i>
+		<ps type = "e">
+			<p n="upnp:artist" r="0" m="1"/>
+			<p n="upnp:genre" r="0" m="1"/>
+			<p n="upnp:producer" r="0" m="1"/>
+			<p n="upnp:albumArtURI" r="0" m="1" t="ls">
+				<ps type="Attribute">
+				<p n="dlna:profileID" r="1" m="0" t="ls"/>				
+				</ps>			
+			</p>
+			<p n="upnp:toc" r="0"/>
+		</ps>
+	</e>
+
+	<e type="photoAlbum">
+		<i>album</i>
+	</e>
+
+	<e type="musicGenre">
+		<i>genre</i>
+	</e>
+
+	<e type="movieGenre">
+		<i>genre</i>
+	</e>
+
+	<e type="musicArtist">
+		<i>person</i>
+		<p n="upnp:genre" r="0" m="1"/>
+		<p n="upnp:artistDiscographyURI" r="0"/>
+	</e>
+
+
+
+</es>

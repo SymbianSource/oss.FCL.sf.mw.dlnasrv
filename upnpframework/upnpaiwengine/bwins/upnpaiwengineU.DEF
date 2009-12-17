@@ -1,0 +1,18 @@
+EXPORTS
+	?CopyPlaylistToExternalL@CUPnPAiwEngine@@QAEXABVTDesC16@@AAV?$RPointerArray@VTDesC16@@@@@Z @ 1 NONAME ; void CUPnPAiwEngine::CopyPlaylistToExternalL(class TDesC16 const &, class RPointerArray<class TDesC16> &)
+	?CopyToExternalL@CUPnPAiwEngine@@QAEXAAV?$RPointerArray@VTDesC16@@@@@Z @ 2 NONAME ; void CUPnPAiwEngine::CopyToExternalL(class RPointerArray<class TDesC16> &)
+	?DisableExternal@CUPnPAiwEngine@@QAEXXZ @ 3 NONAME ; void CUPnPAiwEngine::DisableExternal(void)
+	?EnableExternalL@CUPnPAiwEngine@@QAEXXZ @ 4 NONAME ; void CUPnPAiwEngine::EnableExternalL(void)
+	?EngineState@CUPnPAiwEngine@@QAE?AW4TUPnPEngineState@@XZ @ 5 NONAME ; enum TUPnPEngineState CUPnPAiwEngine::EngineState(void)
+	?FilterDrmL@CUpnpDrmFilter@@QAEXXZ @ 6 NONAME ; void CUpnpDrmFilter::FilterDrmL(void)
+	?MoveToExternalL@CUPnPAiwEngine@@QAEXAAV?$RPointerArray@VTDesC16@@@@@Z @ 7 NONAME ; void CUPnPAiwEngine::MoveToExternalL(class RPointerArray<class TDesC16> &)
+	?NewL@CUPnPAiwEngine@@SAPAV1@XZ @ 8 NONAME ; class CUPnPAiwEngine * CUPnPAiwEngine::NewL(void)
+	?NewL@CUpnpDrmFilter@@SAPAV1@AAV?$RPointerArray@VTDesC16@@@@0@Z @ 9 NONAME ; class CUpnpDrmFilter * CUpnpDrmFilter::NewL(class RPointerArray<class TDesC16> &, class RPointerArray<class TDesC16> &)
+	?OpenExternalMediaL@CUPnPAiwEngine@@QAEXXZ @ 10 NONAME ; void CUPnPAiwEngine::OpenExternalMediaL(void)
+	?PlayL@CUPnPAiwEngine@@QAEXABVTDesC16@@@Z @ 11 NONAME ; void CUPnPAiwEngine::PlayL(class TDesC16 const &)
+	?ReleaseInstance@CUPnPAiwEngine@@SAXXZ @ 12 NONAME ; void CUPnPAiwEngine::ReleaseInstance(void)
+	?RemoveEngineObserver@CUPnPAiwEngine@@QAEXXZ @ 13 NONAME ; void CUPnPAiwEngine::RemoveEngineObserver(void)
+	?SetEngineObserver@CUPnPAiwEngine@@QAEXPAVMUPnPAiwEngineObserver@@@Z @ 14 NONAME ; void CUPnPAiwEngine::SetEngineObserver(class MUPnPAiwEngineObserver *)
+	?ShowConnectionErrorL@CUPnPAiwEngine@@QAEXXZ @ 15 NONAME ; void CUPnPAiwEngine::ShowConnectionErrorL(void)
+	?TimerCallback@CUPnPAiwEngine@@UAEXXZ @ 16 NONAME ; void CUPnPAiwEngine::TimerCallback(void)
+

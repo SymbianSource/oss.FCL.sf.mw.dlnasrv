@@ -1,0 +1,34 @@
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Uid constant definitions for UpnpCommand component
+*
+*/
+
+
+#ifndef UPNP_COMMAND_UIDS_HRH
+#define UPNP_COMMAND_UIDS_HRH
+
+// The UpnpCommand API DLL Uid
+#define KUpnpCommandDllUid                        0x20009CA5
+
+// The UpnpCommandPlugin Interface UID
+#define KUpnpCommandPluginDllUid                  0x200075DA
+#define KUpnpCommandPluginIfUid                   0x200075DB
+
+// The UpnpCommandPlugin implementation UID(s)
+#define KUpnpCommandPluginImplementationUid       0x200075DC
+
+#endif // UPNP_COMMAND_UIDS_HRH
+
+// End of File

@@ -1,0 +1,125 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project definition file for project MediaServant
+*
+*/
+
+
+#include <platform_paths.hrh>
+#include <data_caging_paths.hrh>
+#include "../inc/mediaservantuid.h"
+
+TARGET                  mediaservant.exe
+TARGETTYPE              exe
+UID                     0x100039CE KMediaServantUID3
+
+// Minimum heap size 4kB, maximum heap size 8MB, stack size 32kB
+EPOCHEAPSIZE   4096 8388608
+EPOCSTACKSIZE  32768
+
+CAPABILITY              CAP_APPLICATION
+VENDORID                VID_DEFAULT
+
+USERINCLUDE             .
+USERINCLUDE             ../inc
+USERINCLUDE             ../help/inc
+USERINCLUDE             ../applicationengine/inc
+
+APP_LAYER_SYSTEMINCLUDE
+USERINCLUDE           ../../../../inc
+
+SOURCEPATH              ../src
+SOURCE                  msapp.cpp
+SOURCE                  msappui.cpp
+SOURCE                  msdocument.cpp
+SOURCE                  msbaseview.cpp
+SOURCE                  msmainview.cpp
+SOURCE                  msbasecontainer.cpp
+SOURCE                  msmaincontainer.cpp
+
+SOURCE                  msfillrulecontroller.cpp
+SOURCE                  msfillview.cpp
+SOURCE                  msfillcontainer.cpp
+SOURCE                  msfillruleeditview.cpp
+SOURCE                  msfillruleeditlist.cpp
+SOURCE                  msruleamountsetting.cpp
+SOURCE                  msrulemultiselectionsetting.cpp
+SOURCE                  msrulefilesizesetting.cpp
+SOURCE                  msruleserverssetting.cpp
+SOURCE                  msmultiselectiondialog.cpp
+
+SOURCE                  msstorelistcontroller.cpp
+SOURCE                  msstorelistview.cpp
+SOURCE                  msstorelistcontainer.cpp
+SOURCE                  msstoresettingsview.cpp
+SOURCE                  msstoresettingslist.cpp
+SOURCE                  msstoreserverssetting.cpp
+SOURCE                  msstorekeeponphonesetting.cpp
+
+SOURCE                  msparameteragent.cpp
+SOURCE                  mspropertywatcher.cpp
+
+SOURCE                  msitembrowser.cpp
+SOURCE                  msbrowseview.cpp
+SOURCE                  msbrowsecontainer.cpp
+SOURCE                  msfillbrowseview.cpp
+SOURCE                  msfillbrowsecontainer.cpp
+
+SOURCE                  msmultiselectionsettingpage.cpp
+SOURCE                  mssettingitems.cpp
+SOURCE                  msmemorycardmonitor.cpp
+SOURCE                  msmetadatacollector.cpp
+
+
+START RESOURCE          ../data/mediaservant.rss
+HEADER
+TARGETPATH              APP_RESOURCE_DIR
+LANGUAGE_IDS
+END // RESOURCE
+
+LIBRARY euser.lib apparc.lib cone.lib PlatformEnv.lib
+LIBRARY avkon.lib bafl.lib eikcore.lib eikcoctl.lib eikctl.lib
+LIBRARY AKNSKINS.lib
+LIBRARY egul.lib
+LIBRARY AknIcon.lib
+LIBRARY CommonEngine.lib
+LIBRARY msengine.lib
+LIBRARY cmcommon.lib
+LIBRARY efsrv.lib               // file server
+LIBRARY flogger.lib
+LIBRARY hlplch.lib              // help
+LIBRARY eikdlg.lib              // multiselection dialog
+LIBRARY upnpipserversutils.lib  // UPnPString
+LIBRARY msappwizard.lib         // for app wizard
+LIBRARY cmsettingsengine.lib    // drive settings
+LIBRARY charconv.lib            // ConvertToUnicodeFromUtf8
+
+// upnp
+LIBRARY         upnpavcontrollerclient.lib
+LIBRARY         AVControlFramework.lib
+LIBRARY         upnpserviceframework.lib
+
+// ECom
+LIBRARY         ecom.lib
+
+#ifdef __CLEANUP_SUPPORT
+
+LIBRARY SQLiteClient.lib
+#endif // __CLEANUP_SUPPORT
+
+START RESOURCE          ../data/mediaservant_reg.rss
+DEPENDS mediaservant.rsg
+// Do not change the UID 10003a3f below.
+TARGETPATH /private/10003a3f/apps
+END

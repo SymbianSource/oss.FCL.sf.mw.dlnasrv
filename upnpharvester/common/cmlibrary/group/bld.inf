@@ -1,0 +1,59 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Build information file for CM Library
+*
+*/
+
+
+
+
+
+
+
+// Supported platforms
+PRJ_PLATFORMS
+DEFAULT
+
+
+// MMP files
+PRJ_MMPFILES
+cmlibrary.mmp
+
+// Files to be exported
+PRJ_EXPORTS
+../inc/cmfillrulecontainer.h    |../../../../inc/cmfillrulecontainer.h
+../inc/cmfillrule.h             |../../../../inc/cmfillrule.h
+../inc/cmstorerulecontainer.h   |../../../../inc/cmstorerulecontainer.h 
+../inc/cmstorerule.h            |../../../../inc/cmstorerule.h
+../inc/cmmediaserverfull.h      |../../../../inc/cmmediaserverfull.h
+../inc/cmmediaserver.h          |../../../../inc/cmmediaserver.h
+../inc/cmcommontypes.h          |../../../../inc/cmcommontypes.h
+../inc/cmcommon.h               |../../../../inc/cmcommon.h
+../inc/cmbaselistitem.h         |../../../../inc/cmbaselistitem.h
+../inc/cmfilllistitem.h         |../../../../inc/cmfilllistitem.h
+../inc/cmstorelistitem.h        |../../../../inc/cmstorelistitem.h
+../inc/cmsqlgenericitem.h       |../../../../inc/cmsqlgenericitem.h
+../inc/cmsqlimageitem.h         |../../../../inc/cmsqlimageitem.h
+../inc/cmsqlvideoitem.h         |../../../../inc/cmsqlvideoitem.h
+../inc/cmsqlaudioitem.h         |../../../../inc/cmsqlaudioitem.h
+../inc/cmsqlpropertyitem.h      |../../../../inc/cmsqlpropertyitem.h
+../inc/cmsqlpropertycollector.h |../../../../inc/cmsqlpropertycollector.h
+../inc/cmsqlresolutionpropertyitem.h      |../../../../inc/cmsqlresolutionpropertyitem.h
+../inc/cmsqlitemresource.h      |../../../../inc/cmsqlitemresource.h
+../inc/cmsqlbaseitem.h          |../../../../inc/cmsqlbaseitem.h
+../inc/cmsqlpropertycontainer.h |../../../../inc/cmsqlpropertycontainer.h
+../inc/cmdriveinfo.h            |../../../../inc/cmdriveinfo.h
+../inc/cmserviceobserver.h      |../../../../inc/cmserviceobserver.h
+../inc/cmsearchresponsehash.h   |../../../../inc/cmsearchresponsehash.h
+../inc/cmcommonutils.h          |../../../../inc/cmcommonutils.h

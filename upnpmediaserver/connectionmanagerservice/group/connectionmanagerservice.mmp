@@ -1,0 +1,52 @@
+/** @file
+* Copyright (c) 2002-2004 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies  this distribution, and is available 
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*     This is the project specification file for Upnp.
+*
+*/
+#include <platform_paths.hrh>
+
+TARGETTYPE      DLL
+TARGET          avconnectionmanager.dll
+UID             0x1000008d 0x1020415A
+
+
+VERSION 10.1
+paged
+
+CAPABILITY      CAP_GENERAL_DLL
+VENDORID        VID_DEFAULT
+
+SOURCEPATH      ../src
+SOURCE          upnpcm.cpp
+
+MW_LAYER_SYSTEMINCLUDE
+
+USERINCLUDE     ../inc
+USERINCLUDE     ../../../inc
+
+LIBRARY         euser.lib
+LIBRARY         bafl.lib
+
+// UPnP
+LIBRARY         upnpserviceframework.lib
+LIBRARY         upnpipserversutils.lib
+LIBRARY         upnpavobjects.lib
+LIBRARY         avmediaserverclient.lib
+
+
+LIBRARY         flogger.lib
+DEFFILE         AVConnectionManager
+
+// End of file

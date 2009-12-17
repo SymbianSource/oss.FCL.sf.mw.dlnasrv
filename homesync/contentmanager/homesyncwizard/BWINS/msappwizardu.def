@@ -1,0 +1,5 @@
+EXPORTS
+	?NewL@CMSAppWizard@@SAPAV1@AAVCMSEngine@@@Z @ 1 NONAME ; class CMSAppWizard * CMSAppWizard::NewL(class CMSEngine &)
+	?StartL@CMSAppWizard@@QAEHXZ @ 2 NONAME ; int CMSAppWizard::StartL(void)
+	?NewLC@CMSAppWizard@@SAPAV1@AAVCMSEngine@@@Z @ 3 NONAME ; class CMSAppWizard * CMSAppWizard::NewLC(class CMSEngine &)
+

@@ -1,0 +1,680 @@
+/*
+* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Resource file for MediaServant gs plugin
+*
+*/
+
+
+
+//  RESOURCE IDENTIFIER
+NAME        MSGS // 4 letter ID
+
+// INCLUDES
+#include    <avkon.loc> // Avkon localized strings
+#include    <avkon.rsg>
+#include    <GSCommon.rh> // Common GS resource structures
+#include    <eikon.rh>
+#include    <avkon.rh>
+#include    <avkon.loc>
+#include    <msgsplugin.mbg>
+#include    <data_caging_paths_strings.hrh> // For APP_RESOURCE_DIR
+#include    <msgsplugin.loc> // Localized strings
+#include    "msgs.hrh"
+
+
+//  RESOURCE DEFINITIONS
+
+//----------------------------------------------------
+//
+//
+//    Needed or loading the resource fails!
+//
+//----------------------------------------------------
+//
+RESOURCE RSS_SIGNATURE
+    {
+    }
+
+
+//----------------------------------------------------
+//   
+//    r_gs_ms_view
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_VIEW r_gs_hs_view
+    {
+    menubar = r_ms_menubar_settings_view;  
+    cba = R_AVKON_SOFTKEYS_OPTIONS_BACK;    
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_settings_view
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_VIEW r_ms_settings_view
+    {
+    menubar = r_ms_menubar_settings_view;
+    cba     = r_ms_softkeys_options_back__change;
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_menubar_settings_view
+//
+//----------------------------------------------------
+//
+RESOURCE MENU_BAR r_ms_menubar_settings_view
+    {
+    titles =
+        {
+        MENU_TITLE { menu_pane = r_ms_setting_menu; }
+        };
+    }    
+
+//----------------------------------------------------
+//
+//    r_ms_setting_menu
+//
+//----------------------------------------------------
+//
+RESOURCE MENU_PANE r_ms_setting_menu
+    {
+    items =
+        {
+        MENU_ITEM { command = EAknCmdOpen; txt = qtn_options_change; },
+        MENU_ITEM { command = EAknCmdHelp; txt = qtn_options_help; },
+        MENU_ITEM { command = EEikCmdExit; txt = qtn_options_exit; }
+        };
+    }
+
+/***************************** GENERAL SETTINGS ****************************/
+/***************************************************************************/
+
+//----------------------------------------------------
+//
+//    r_ms_general_settings
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_SETTING_ITEM_LIST r_ms_general_settings
+    {
+    items =
+        {
+        AVKON_SETTING_ITEM
+            {
+            identifier = EMSSettingsSync;
+            setting_page_resource = r_ms_sync_setting_page;
+            associated_resource = r_ms_sync_popup_texts;
+            name = qtn_mserv_item_sync;
+            },
+        AVKON_SETTING_ITEM
+            {
+            identifier = EMSSettingsSourceDevices;
+            name = qtn_mserv_item_source_devices;
+            },
+        AVKON_SETTING_ITEM
+            {
+            identifier = EMSSettingsTargetDevices;
+            name = qtn_mserv_item_target_devices;
+            },            
+        AVKON_SETTING_ITEM
+            {
+            identifier = EMSSettingsMemory;
+            name = qtn_mserv_item_used_memory;
+            },
+        AVKON_SETTING_ITEM
+            {
+            identifier = EMSMemoryManager;
+            setting_page_resource = r_ms_memory_manager_setting_page;
+            associated_resource = r_ms_memory_manager_page_texts;
+            name = qtn_mserv_item_memory_manager;
+            }
+        };
+    }
+
+/******************************* SYNC SETTING ******************************/
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_sync_setting_page
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_ms_sync_setting_page
+    {
+    type = EAknCtPopupSettingList;
+    label = qtn_mserv_sett_sync_act;
+    editor_resource_id = r_ms_sync_editor;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_sync_popup_texts
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_POPUP_SETTING_TEXTS r_ms_sync_popup_texts
+    {
+    setting_texts_resource = r_ms_sync_texts;
+    popped_up_texts_resource = r_ms_sync_item_texts;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_sync_editor
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE POPUP_SETTING_LIST r_ms_sync_editor
+    {
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_sync_texts
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE ARRAY r_ms_sync_texts
+    {
+    items =
+        {
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSSyncDisabled;
+            text = qtn_mserv_sett_sync_manually;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSSyncAutomatic;
+            text = qtn_mserv_sett_sync_automatic;
+            }
+        };
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_sync_item_texts
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE ARRAY r_ms_sync_item_texts
+    {
+    items =
+        {
+        LBUF { txt = qtn_mserv_sett_sync_manually; },
+        LBUF { txt = qtn_mserv_sett_sync_automatic; }
+        };
+    }
+
+
+
+/*************************** SOURCE DEVICE SETTING ***************************/
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_settings_source_devices
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_ms_settings_source_devices
+    {
+    label = qtn_mserv_sett_source_devices;
+    type = EAknSetListBox;
+    editor_resource_id = r_ms_store_settings_source_editor;
+    softkey_resource = r_ms_softkeys_ok_cancel__toggle;
+    }
+
+
+//----------------------------------------------------------------------------
+//    r_ms_wait_dialog
+//    resource formediaservant wait dialog
+//----------------------------------------------------------------------------
+
+RESOURCE DIALOG r_ms_wait_dialog
+    {
+    flags = EAknWaitNoteFlags;
+    buttons = R_AVKON_SOFTKEYS_CANCEL;
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtNote;
+            id = EGeneralNote;
+            control = AVKON_NOTE
+                {
+                layout = EWaitLayout;
+                singular_label = qtn_mserv_searching_devices;
+                animation = R_QGN_GRAF_WAIT_BAR_ANIM;
+                };
+            }
+        };
+    }
+
+//----------------------------------------------------------------------------
+//    r_ms_wait_for_createavc_dialog
+//    resource for wait dialog
+//----------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_ms_wait_for_createavc_dialog
+    {
+    flags = EAknWaitNoteFlags;
+    buttons = R_AVKON_SOFTKEYS_EMPTY;
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtNote;
+            id = EGeneralNote;
+            control = AVKON_NOTE
+                {
+                layout = EWaitLayout;
+                animation = R_QGN_GRAF_WAIT_BAR_ANIM;
+                };
+            }
+        };
+    }
+
+// ---------------------------------------------------------------------------
+//    r_ms_source_device_selection_dialog
+//    resource for device search dialog
+// ---------------------------------------------------------------------------
+
+RESOURCE AVKON_MULTISELECTION_LIST_QUERY r_ms_source_device_selection_dialog
+    {
+    flags = EGeneralQueryFlags;
+
+    softkeys = r_ms_softkeys_ok_cancel__toggle;
+    items =
+        {
+        AVKON_MULTISELECTION_LIST_QUERY_DLG_LINE
+            {
+            control = AVKON_LIST_QUERY_CONTROL
+                {
+                listtype = EAknCtSingleGraphicPopupMenuListBox;
+                listbox = AVKON_MULTISELECTION_LIST_QUERY_LIST
+                    {
+                    };
+                heading = qtn_mserv_sett_source_devices;
+                };
+            }
+        };
+    }
+    
+// ---------------------------------------------------------------------------
+//    r_ms_target_device_selection_dialog
+//    resource for device search dialog
+// ---------------------------------------------------------------------------
+
+RESOURCE AVKON_MULTISELECTION_LIST_QUERY r_ms_target_device_selection_dialog
+    {
+    flags = EGeneralQueryFlags;
+
+    softkeys = r_ms_softkeys_ok_cancel__toggle;
+    items =
+        {
+        AVKON_MULTISELECTION_LIST_QUERY_DLG_LINE
+            {
+            control = AVKON_LIST_QUERY_CONTROL
+                {
+                listtype = EAknCtSingleGraphicPopupMenuListBox;
+                listbox = AVKON_MULTISELECTION_LIST_QUERY_LIST
+                    {
+                    };
+                heading = qtn_mserv_sett_target_devices;
+                };
+            }
+        };
+    }    
+
+/***************************** MEMORY SETTING ******************************/
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_memoryselection_setting
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_ms_memoryselection_setting
+    {
+    type = EAknSetListBox;
+    label = qtn_mserv_sett_used_memory;
+    editor_resource_id = r_ms_setting_page_editor;
+    softkey_resource = r_ms_softkeys_ok_cancel__select;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_setting_page_editor
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE LISTBOX  r_ms_setting_page_editor
+    {
+    flags = EAknListBoxMultipleSelection;
+    }
+
+/********************* MEMORY MANAGER SETTING ***********************/
+
+//----------------------------------------------------
+//
+//    r_ms_memory_manager_setting_page
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_SETTING_PAGE r_ms_memory_manager_setting_page
+    {
+    type = EAknCtPopupSettingList;
+    editor_resource_id = r_ms_memory_manager_editor;
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_memory_manager_page_texts
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_POPUP_SETTING_TEXTS r_ms_memory_manager_page_texts
+    {
+    setting_texts_resource = r_ms_memory_manager_settingitem_texts;
+    popped_up_texts_resource = r_ms_memory_manager_settingpage_texts;
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_memory_manager_editor
+//
+//----------------------------------------------------
+//
+RESOURCE POPUP_SETTING_LIST r_ms_memory_manager_editor
+    {
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_memory_manager_settingitem_texts
+//
+//----------------------------------------------------
+//
+RESOURCE ARRAY r_ms_memory_manager_settingitem_texts
+    {
+    items =
+        {
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSDisabled;
+            text = qtn_mserv_item_manager_disabled;
+            },
+        AVKON_ENUMERATED_TEXT
+            {
+            value = EMSAskWhenFull;
+            text = qtn_mserv_item_ask_full;
+            }
+        };
+    }
+
+//----------------------------------------------------
+//
+//    r_ms_memory_manager_settingpage_texts
+//
+//----------------------------------------------------
+//
+RESOURCE ARRAY r_ms_memory_manager_settingpage_texts
+    {
+    items =
+        {
+        LBUF { txt = qtn_mserv_item_manager_disabled; },
+        LBUF { txt = qtn_mserv_item_ask_full; }
+        };
+    }
+
+//----------------------------------------------------------------------------
+// r_msgs_animation_for_selection_dialog
+//----------------------------------------------------------------------------
+//
+
+RESOURCE BMPANIM_DATA r_msgs_animation_for_selection_dialog
+    {
+    frameinterval   = 300;
+    playmode        = EAknBitmapAnimationPlayModeCycle;
+    bmpfile         = ""APP_RESOURCE_DIR"\\msgsplugin.mif";
+    frames          = r_msgs_animation_for_selection_dialog_images;
+    }
+
+//----------------------------------------------------------------------------
+// r_msgs_animation_for_selection_dialog_images
+//----------------------------------------------------------------------------
+//
+
+RESOURCE ARRAY r_msgs_animation_for_selection_dialog_images
+    {
+    items=
+        {
+        BMPANIM_FRAME {bmpid=EMbmMsgspluginQgn_indi_upnp_search_1 ;
+                       maskid=EMbmMsgspluginQgn_indi_upnp_search_1_mask;},
+        BMPANIM_FRAME {bmpid=EMbmMsgspluginQgn_indi_upnp_search_2 ;
+                       maskid=EMbmMsgspluginQgn_indi_upnp_search_2_mask;},
+        BMPANIM_FRAME {bmpid=EMbmMsgspluginQgn_indi_upnp_search_3 ;
+                       maskid=EMbmMsgspluginQgn_indi_upnp_search_3_mask;},
+        BMPANIM_FRAME {bmpid=EMbmMsgspluginQgn_indi_upnp_search_4 ;
+                       maskid=EMbmMsgspluginQgn_indi_upnp_search_4_mask;},
+        BMPANIM_FRAME {bmpid=EMbmMsgspluginQgn_indi_upnp_search_5 ;
+                       maskid=EMbmMsgspluginQgn_indi_upnp_search_5_mask;},
+        BMPANIM_FRAME {bmpid=EMbmMsgspluginQgn_indi_upnp_search_6 ;
+                       maskid=EMbmMsgspluginQgn_indi_upnp_search_6_mask;},
+        BMPANIM_FRAME {bmpid=EMbmMsgspluginQgn_indi_upnp_search_7 ;
+                       maskid=EMbmMsgspluginQgn_indi_upnp_search_7_mask;},
+        BMPANIM_FRAME {bmpid=EMbmMsgspluginQgn_indi_upnp_search_8 ;
+                       maskid=EMbmMsgspluginQgn_indi_upnp_search_8_mask;},
+        BMPANIM_FRAME {bmpid=EMbmMsgspluginQgn_indi_upnp_search_9 ;
+                       maskid=EMbmMsgspluginQgn_indi_upnp_search_9_mask;}
+        };
+    }    
+// --------------------------------------------------------------------------
+//    r_ms_softkeys_ok_cancel__select
+// --------------------------------------------------------------------------
+RESOURCE CBA r_ms_softkeys_ok_cancel__select
+    {
+    buttons =
+        {
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyOk;                 // left sk
+            txt = text_softkey_ok;
+            },
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyCancel;             // right sk
+            txt = text_softkey_cancel;
+            }
+#ifndef __SERIES60_31__
+            ,
+        CBA_BUTTON
+            {
+            id = EAknSoftkeySelect;
+            }
+#endif
+        };
+    }        
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_softkeys_options_back__change
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE CBA r_ms_softkeys_options_back__change
+    {
+    buttons =
+        {
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyOptions;    // left sk
+            txt = text_softkey_option;
+            },
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyBack;       // right sk
+            txt = text_softkey_back;
+            },
+        CBA_BUTTON
+            {
+            id = EAknCmdOpen;           // middle sk
+            txt = qtn_msk_change;
+            }
+        };
+    }    
+    
+// --------------------------------------------------------------------------
+//    r_ms_softkeys_ok_cancel__toggle
+// --------------------------------------------------------------------------
+RESOURCE CBA r_ms_softkeys_ok_cancel__toggle
+    {
+    buttons =
+        {
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyOk;                 // left sk
+            txt = text_softkey_ok;
+            },
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyCancel;             // right sk
+            txt = text_softkey_cancel;
+            }
+#ifndef __SERIES60_31__
+            ,
+        CBA_BUTTON
+            {
+            id = EAknSoftkeyForwardKeyEvent;
+            }
+#endif
+        };
+    }
+
+    
+//-----------------------------------------------------------------------------
+//
+//    r_ms_store_settings_source_editor
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE LISTBOX r_ms_store_settings_source_editor
+    {
+    flags = EEikListBoxMultipleSelection;
+    }
+    
+//-----------------------------------------------------------------------------
+//
+//    r_ms_no_memory_in_use
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_no_memory_in_use
+    {
+    buf = qtn_mserv_none_memory_in_use;
+    }    
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_nof_memories_in_use
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_nof_memories_in_use
+    {
+    buf = qtn_mserv_item_nof_of_memories;
+    }    
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_settings_default_memory_name
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_settings_default_memory_name
+    {
+    buf = qtn_mserv_default_mmc_name;
+    }    
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_item_devices
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_item_devices
+    {
+    buf = qtn_mserv_item_nof_servers;
+    }    
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_preprocessing_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_preprocessing_text
+    {
+    buf = qtn_mserv_wait_preprocessing;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_gs_plugin_text
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_gs_plugin_text
+    {
+    buf = qtn_mserv_grid_media_servant_home_media;
+    }
+
+//-----------------------------------------------------------------------------
+//
+//    r_ms_gs_settings_view_title
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_no_server_selected
+    {
+    buf = qtn_mserv_none_serv;
+    }
+    
+//-----------------------------------------------------------------------------
+//
+//    r_ms_gs_settings_view_title
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_gs_settings_view_title
+    {
+    buf = qtn_mserv_title_sync_settings;
+    }
+        
+//-----------------------------------------------------------------------------
+//
+//    r_ms_gs_memory_full
+//
+//-----------------------------------------------------------------------------
+//
+RESOURCE TBUF r_ms_gs_memory_full
+    {
+    buf = qtn_memlo_not_enough_memory;
+    }
+
+//End of File

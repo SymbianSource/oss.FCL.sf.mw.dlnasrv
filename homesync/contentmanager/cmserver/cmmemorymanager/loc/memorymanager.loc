@@ -1,0 +1,39 @@
+/*
+* Copyright (c) 2007-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Localization strings for project MemoryManager
+*
+*/
+
+
+//d:Low memory on memory card.
+//d:Temporarily remove %d MB of your synced home media from list %S?
+//d:Parameter 1 max length: 5 characters
+//d:Parameter 2 max length: 255 characters
+//l:popup_note_window
+//r:1.0
+//
+#define qtn_mserv_conf_auto_remove "Memory low. Temporarily remove %d MB media content from list %S?"
+
+//d:Removing home media
+//l:popup_note_wait_window
+//r:1.0
+//
+#define qtn_mserv_progress_remove "Removing home media"
+
+//d:Removing home media
+//d:Parameter 2 max length: 255 characters
+//l:popup_note_wait_window
+//r:1.0
+//
+#define qtn_mserv_progress_remove_list "Removing media content from list %S"

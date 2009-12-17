@@ -1,0 +1,489 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      upnpsettings localisable strings
+*
+*/
+
+
+
+
+
+
+// LOCALISATION STRINGS
+
+/***************************************************
+ *
+ *                  upnpappwizard 
+ *
+ ***************************************************
+*/ 
+
+
+//d:Text for the wait dialog when file sharing is in progress
+//l:popup_note_wait_window
+//r:1.0
+//
+#define qtn_iupnp_wait_sharing              "Turning sharing on"
+
+//d:Text for the wait dialog shown while sharing is turned off
+//l:popup_note_wait_window
+//r:wk50/2008
+//
+#define qtn_iupnp_wait_sharing_off          "Turning sharing off"
+
+//d:Message when starting sharing
+//d:Purpose is to describe that this is a background operation
+//l:popup_info_list_pane_t1
+//r:2.0
+//
+#define qtn_iupnp_wait_updating_content     "Updating shared content on the background. This may take several minutes. The application can be closed meanwhile."
+
+//d:Message title when starting background sharing
+//l:heading_pane_t1
+//r:2.0
+//
+#define qtn_iupnp_updating_content_header   "Updating shared content"
+
+//d:Error message when file sharing activation fails
+//l:popup_note_window/opt2
+//r:1.0
+//
+#define qtn_iupnp_start_sharing_error       "Sharing activation failed"
+
+//d:Header for wizard step 1
+//l:heading_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_wizard_head_1             "Setup wizard 1/9"
+
+//d:Message for wizard step 1. 
+//l:popup_info_list_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_wizard_1                  "This wizard sets up Home Media for browsing and sharing files. Please run the wizard within range of your WLAN."
+
+//d:Header for wizard step 2
+//l:heading_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_wizard_head_2             "Device name 2/9"
+
+//d:Message for wizard step 2
+//l:popup_info_list_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_wizard_2                  "Enter a device name you want to show on your network"
+
+//d:Header for wizard step 3
+//l:heading_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_wizard_head_3             "My device name 3/9"
+
+//d:Header for wizard step 4
+//l:heading_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_wizard_head_4             "Access point 4/9"
+
+//d:Message for wizard step 4
+//l:popup_info_list_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_wizard_4                  "Define your Home access point or choose %U to select it manually each time"
+
+//d:Header for wizard step 5
+//l:heading_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_wizard_head_5             "Home access point 5/9"
+
+//d:Static list item in wizard iap selection list. 
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_iupnp_always_ask                "Always ask"
+
+//d:Static list item in wizard iap selection list.
+//d:The user can create and edit iap items.
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_iupnp_create_new                "Create / edit"
+
+//d:Header for wizard step 6
+//l:heading_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_wizard_head_6             "File sharing 6/9"
+
+//d:Message for wizard step 6.
+//l:popup_info_list_pane_t1
+//r:2.0
+//
+#define qtn_iupnp_wizard_6_2                "Select the content that is shown on the Home Network when sharing is on. You can select to share individual albums and playlists or all the files of a media type."
+
+//d:Header for wizard step 7
+//l:heading_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_wizard_head_7             "Share images & video 7/9"
+
+//d:Header for wizard step 8
+//l:heading_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_wizard_head_8             "Share music 8/9"
+
+//d:Header for wizard step 9
+//l:heading_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_wizard_head_9             "Setup wizard 9/9"
+
+//d:Message for wizard step 9a.
+//l:popup_info_list_pane_t1
+//r:2.0
+//
+#define qtn_iupnp_wizard_9a_2               "The Home Media options are available in media applications and sharing is turned on."
+
+//d:Message for wizard step 9b.
+//l:popup_info_list_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_wizard_9b_2               "The Home Media options are available in media applications but sharing is turned off."
+
+//d:Middle soft key
+//d:for wizard dialogs
+//l:control_pane_t1/opt7
+//r:wk50/2008
+//
+#define qtn_iupnp_softkey_next              "Next"
+
+
+/***************************************************
+ *
+ *                  upnpmultiselectionui 
+ *
+ ***************************************************
+*/
+
+
+//d:Title text for the multiselection dialog when
+//d:image and video albums are shown
+//d:This is visible in the title pane
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_iupnp_title_visual              "Images & videos"
+
+//d:Title text for the multiselection dialog when
+//d:playlists are shown
+//d:This is visible in the title pane
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_iupnp_title_music               "Music"
+
+//d:Text for the second item of the multiselection listbox
+//d:With this selection all files from specific folders
+//d:will be shared
+//l:list_single_graphic_pane_t1_cp2
+//r:1.0
+//
+#define qtn_iupnp_set_share_all             "Share all files"
+
+//d:Text for wait note
+//d:Indicates that phone is collecting files to share
+//l:popup_note_wait_window
+//r:1.0
+//
+#define qtn_iupnp_saving_changes_note       "Saving changes"
+
+//d:Text for wait note
+//d:Indicates that phone is searching files to display to user
+//l:popup_note_wait_window
+//r:1.0
+//
+#define qtn_iupnp_searching_files_note      "Searching files"
+
+//d:Text for the first item of the multiselection listbox
+//d:With this selection all files from specific folders
+//d:will be shared
+//l:list_single_graphic_pane_t1_cp2
+//r:1.0
+//
+#define qtn_iupnp_set_do_not_share          "Do not share"
+
+//d:Middle soft key
+//d:for unselecting the playlists & albums
+//l:control_pane_t3/opt7
+//r:wk50/2008
+//
+#define qtn_iupnp_msk_unselect              "Unselect"
+
+
+/***************************************************
+ *
+ *                  upnpgsplugin
+ *
+ ***************************************************
+*/
+
+//d:line text for the Home Media -listbox item of
+//d:Settings
+//l:list_single_large_graphic_pane_t1
+//r:wk50/2008
+//
+#define qtn_iupnp_gs_caption                "Home Media"
+
+//d:upnp gs settings view title
+//d:This is visible in the title pane
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_iupnp_title_sharing             "Settings"
+
+
+//d:First line text for the access point -listbox item of
+//d:settings dialog
+//d:Through "home access point" phone can communicate with
+//d:other devices in the network
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_home_ap                   "Home access point"
+
+//d:First line text for the device name -listbox item of
+//d:settings dialog
+//d:User can set the device name that other devices can see
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_device_name               "Device name"
+
+//d:Warning text when "all networks" selected from the allowed connections
+//d:of settings dialog
+//l:popup_note_window/opt1
+//r:1.0
+//
+#define qtn_iupnp_conf_unsecure             "Unsecured wireless LAN connections involve security hazards. Continue anyway?"
+
+//d:Left softkey text for the error dialog of sharing activation
+//l:control_pane_t1/opt7
+//r:1.0
+//
+#define qtn_iupnp_conf_continue             "Continue"
+
+//d:Text for information note 
+//d:Indicates that setting could not be set yet because connection active 
+//l:popup_note_window/opt1
+//r:1.0
+//
+#define qtn_iupnp_ibu_gallery_connectionactive_note     "Cannot change setting while connection to home media is active"
+
+//d:Heading of the IAP setting page
+//l:list_setting_pane_t1
+//r:wk51/2008
+//
+#define qtn_iupnp_ap_head_set               "Home access point"
+
+//d:Heading of the Device Name setting page
+//l:list_setting_pane_t1
+//r:wk51/2008
+//
+#define qtn_iupnp_head_set_device_name      "Device name"
+
+//d:Home Network IAP option text "User defined" in setting item
+//l:set_value_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_ap_user_defined           "User Defined"
+
+//d:Home Network IAP option text "Always ask" in setting page
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_ap_ask_set                "Always ask"
+
+//d:Home Network IAP option text "Create / edit" in setting page
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_ap_new_set                "Create / edit"
+
+//d:Home Network IAP option text "None" in setting page
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_ap_none_set               "None"
+
+//d:Text for information note 
+//d:Indicates that Gallery UI has been changed
+//l:heading_pane_t1
+//r:2.0
+//
+#define qtn_iupnp_ibu_gallery_update_note_title_2   "Availability changed"
+
+//d:Text for information note
+//d:Indicates that Home Network features are available in media gallery
+//l:popup_info_list_pane_t1
+//r:2.0
+//
+#define qtn_iupnp_ibu_gallery_update_note_2         "Home Media features are now available. Use \"Sharing\" to select what content you want to share."
+
+//d:Text for information note 
+//d:Indicates that Home Network features are removed from media gallery
+//l:popup_info_list_pane_t1
+//r:2.0
+//
+#define qtn_iupnp_ibu_gallery_notavail_note_2       "Home Media features removed from the device."
+
+//d:Supported memory setting title in settings page
+//l:list_setting_pane_t1
+//r:2.0
+//
+#define qtn_iupnp_copy_location                     "Copy location"
+
+
+/***************************************************
+ *
+ *                  upnpsharingui
+ *
+ ***************************************************
+*/
+
+//d:Text for the title of share content -dialog
+//d:This is visible in the title pane
+//d:Collection of shared files
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_iupnp_title_share               "Share content"
+
+//d:Menu text for manual refresh
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_iupnp_options_update_content    "Refresh collection"
+
+//d:First line text for the settings listbox item of
+//d:share content dialog
+//l:list_setting_pane_t1
+//r:2.0
+//
+#define qtn_iupnp_set_sharing               "Sharing"
+
+//d:Second line text for the share content listbox item
+//d:Indicates that file sharing is active
+//l:set_value_pane_t1
+//r:2.0
+//
+#define qtn_iupnp_set_sharing_on            "On"
+
+//d:Second line text for the shard content listbox
+//d:Indicates that file sharing is disabled
+//l:set_value_pane_t1
+//r:2.0
+//
+#define qtn_iupnp_set_sharing_off           "Off"
+
+//d:Information note text when sharing has been turned off.
+//d:Indicates that phone can not be seen through wlan network.
+//l:popup_note_window/opt2
+//r:wk51/2008
+//
+#define qtn_iupnp_phone_hidden              "Phone is now hidden from Home network"
+
+//d:Information note text when sharing has been turned on.
+//d:Indicates that phone can be seen through wlan network.
+//l:popup_note_window/opt2
+//r:wk51/2008
+//
+#define qtn_iupnp_phone_visible             "Phone is now visible to Home network"
+
+//d:First line text for the share content -listbox item
+//d:With this option user can select image and video files
+//d:and albums for sharing
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_visual_albums             "Images & videos"
+
+//d:First line text for the music listbox item of share content -dialog
+//d:With this option user can select music files
+//d:and playlists for sharing
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_music_pl                  "Music"
+
+//d:Alternative second line text for the images & videos -listbox item of 
+//d:share content -dialog
+//d:Indicates that sharing is in progress and displays the progress in percents
+//l:set_value_pane_t1
+//r:2.0
+//
+#define qtn_iupnp_updating_progress         "Updating %N%"
+
+//d:Alternative second line text for the images & videos -listbox item of 
+//d:share content -dialog
+//d:Indicates that nothing (images & videos) is shared
+//l:set_value_pane_t1
+//r:2.0
+//
+#define qtn_iupnp_visual_nothing            "Nothing selected"
+
+//d:Alternative second line text for the images & videos -listbox item of 
+//d:share content -dialog
+//d:Indicates that some files
+//l:set_value_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_visual_one                "Selected files"
+
+//d:Alternative second line text for the images & videos -listbox item of 
+//d:share content -dialog
+//d:Indicates that all files are shared
+//l:set_value_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_visual_many               "All files"
+
+//d:Alternative second line text for the music listbox item of
+//d:share content -dialog
+//d:Indicates that nothing (music) is shared
+//l:set_value_pane_t1
+//r:2.0
+//
+#define qtn_iupnp_music_nothing             "Nothing selected"
+
+//d:Alternative second line text for the music listbox item of 
+//d:share content -dialog
+//d:Indicates that some playlists are shared
+//l:set_value_pane_t1
+//r:2.0
+//
+#define qtn_iupnp_music_one                 "Selected playlists"
+
+//d:Alternative second line text for the music listbox item of 
+//d:share content -dialog
+//d:Indicates that all music files are shared
+//l:set_value_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_music_many                "All files"
+
+// End of File
+

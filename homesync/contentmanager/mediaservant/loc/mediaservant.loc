@@ -1,0 +1,1433 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Localization strings for project MediaServant
+*
+*/
+
+
+//d:Item primary text on Home Media listbox
+//d:Name of application
+//l:list_double_large_graphic_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_grid_media_servant_home_media "Media Sync"
+
+//d:Item secondary text on Home Media listbox
+//d:Synchronization will be done automatically
+//l:list_double_large_graphic_pane_t2_cp2
+//r:1.0
+//
+#define qtn_mserv_main_sync_auto "Automatic sync"
+
+//d:Item secondary text on Home Media listbox
+//d:Synchronization will be done manually
+//l:list_double_large_graphic_pane_t2_cp2
+//r:1.0
+//
+#define qtn_mserv_main_sync_manual "Manual sync"
+
+//d:Item secondary text on Home Media listbox
+//d:Synchronization is ongoing
+//d:Parameter maximum length: 3 characters
+//l:list_double_large_graphic_pane_t2_cp2
+//r:1.0
+//
+#define qtn_mserv_main_sync "Synchronizing %N%"
+
+//d:Item secondary text on Home Media listbox
+//d:Refresh is ongoing
+//l:list_double_large_graphic_pane_t2_cp2
+//r:1.0
+//
+#define qtn_mserv_main_refreshing "Refreshing"
+
+//d:Application title
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_mserv_title_media_servant "Media Sync"
+
+
+// NOTES
+
+//d:Info note
+//d:Target devices not selected
+//l:popup_note_window
+//r:2.1
+//
+#define qtn_mserv_no_target_devices "You first need to set a target device where to synchronize."
+
+//d:Error note
+//d:User can't enter to other views if refresh operation is ongoing
+//l:popup_note_window/opt2
+//r:1.0
+//
+#define qtn_mserv_access_error "Access is denied while refreshing is active"
+
+//d:Error note
+//d:User can't enter to other views if synronization is ongoing
+//l:popup_note_window/opt2
+//r:2.0
+//
+#define qtn_mserv_access_error_sync "Access is denied while synchronizing is active"
+
+//d:Error note
+//d:User can't enter to fill list view if memory card is not inserted
+//l:popup_note_window/opt2
+//r:1.0
+//
+#define qtn_mserv_mcard_error "Insert a memory card"
+
+//d:Fill list deactivation note
+//d:Asks user if he wants to remove files on next synchronization
+//l:popup_note_window
+//r:2.0
+//
+#define qtn_mserv_lists_edited "You unselected some lists. Their files are removed on next sync."
+
+//d:Information note
+//d:Automatic sync is not performed if there is no access point selected
+//l:popup_note_window
+//r:1.0
+//
+#define qtn_mserv_info_no_ap "Only manual sync allowed when no default access point is defined."
+
+//d:Confirmation query
+//d:New memory card inserted
+//l:popup_note_window/opt2
+//r:1.0
+//
+#define qtn_mserv_conf_used_memory "New memory card inserted. Use this for Media Sync?"
+
+//d:Confirmation query
+//d:New memory card inserted
+//l:popup_note_window
+//r:2.1
+//
+#define qtn_mserv_qry_add_video_date "Some media servers don't support search by date which concludes to an empty result. Add anyway?"
+
+//d:Confirmation query
+//d:Delete current list
+//l:popup_note_window/opt2
+//r:1.0
+//
+#define qtn_mserv_conf_delete_list "Delete list and its content on phone?"
+
+//d:Error note
+//d:Devices not found during device search
+//l:popup_note_window/opt2
+//r:1.0
+//
+#define qtn_mserv_error_not_found "Device(s) not found"
+
+//d:Error note
+//d:Syncronization interrupted
+//l:popup_note_window/opt2
+//r:1.0
+//
+#define qtn_mserv_error_sync_interrupted "Sync. interrupted"
+
+//d:Error note
+//d:All target devices not found so syncronization is done only partially
+//l:popup_note_window
+//r:2.1
+//
+#define qtn_mserv_soft_partial "All target devices were not accessible for storing."
+
+// TITLE PANE
+
+//d:Fill list view title
+//d:List reordering mode is active
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_mserv_title_reorder "Reorder list"
+
+//d:Fill list view title
+//d:Files are moved from PC to phone
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_mserv_title_from_home "From Home"
+
+//d:store list view title
+//d:Files are moved from phone  to PC
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_mserv_title_to_home "To Home"
+
+//d:Fill list edit view
+//d:List type is image
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_mserv_title_edit_rules_image "Image list"
+
+//d:Fill list edit view
+//d:List type is video
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_mserv_title_edit_rules_video "Video list"
+
+//d:Fill list edit view
+//d:List type is music
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_mserv_title_edit_rules_music "Music list"
+
+//d:Store browse view title
+//d:list type is phone videos
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_mserv_title_phone_videos "Captured videos"
+
+//d:Store browse view title
+//d:list type is other videos
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_mserv_title_other_videos "Other videos"
+
+//d:Store browse view title
+//d:list type is music
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_mserv_title_music "Music"
+
+//d:Store settings view title
+//d:list type is phone images
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_mserv_title_phone_images "Captured images"
+
+//d:Store settings view title
+//d:list type is other images
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_mserv_title_other_images "Other images"
+
+//d:Multiselection view title ( video title setting )
+//d:Video title selection
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_mserv_sett_name "Name"
+
+//d:Setting page text
+//d:Genre selection
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_mserv_sett_genre "Genre"
+
+//d:Setting page text
+//d:Artist name selection
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_mserv_sett_artist "Artist"
+
+//d:Setting page text
+//d:Album name selection
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_mserv_sett_album "Album"
+
+//d:Setting page text
+//d:Track name selection
+//l:title_pane_t2/opt9
+//r:1.0
+//
+#define qtn_mserv_sett_track "Track"
+
+
+// OPTIONS MENU
+
+//d:Menu text in main view
+//d:Starts/stops sync operation
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_options_select "Select"
+
+//d:Menu text in main view
+//d:Starts updating metadata between phone and servers
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_options_refresh "Refresh information"
+
+//d:Menu text in main view
+//d:Stops updating metadata between phone and servers
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_options_refresh_stop "Stop refreshing"
+
+//d:Menu text in main view
+//d:Opens general settings view
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_options_sync_settings "Sync Settings"
+
+//d:Menu text in main view
+//d:Opens settings wizard
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_options_run_wizard "Run Wizard"
+
+//d:Menu text in fill list view
+//d:Deselects current fill list
+//l:list_single_pane_t1_cp2
+//r:2.0
+//
+#define qtn_mserv_options_unselect "Unselect"
+
+//d:Menu text in fill view
+//d:Opens fill list editor view
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_options_edit "Edit"
+
+//d:Menu text in store list view
+//d:Opens file browse view
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_options_browse "Show files"
+
+//d:Menu text in fill rule edit view
+//d:Removes current rule
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_options_remove_rule "Remove rule"
+
+//d:Menu text in browse view
+//d:Locs file so that it can't be deleted on next synchronization
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_options_lock_on_phone "Lock on phone"
+
+//d:Menu text in browse view
+//d:Unlocks file so it can be deleted on next synchronization
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_options_unlock "Unlock"
+
+//d:Menu text in browse view
+//d:Fetches new files to the list
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_options_randomiza "Randomize again"
+
+//d:Menu text in fill view
+//d:Creates new fill list
+//l:list_single_pane_t1_cp2/opt3
+//r:1.0
+//
+#define qtn_mserv_options_new_list "New list"
+
+//d:Submenu text in fill view
+//d:New image list
+//l:list_single_popup_submenu_pane_t1
+//r:1.0
+//
+#define qtn_mserv_options_new_image "Image"
+
+//d:Submenu text in fill view
+//d:New video list
+//l:list_single_popup_submenu_pane_t1
+//r:1.0
+//
+#define qtn_mserv_options_new_video "Video"
+
+//d:Submenu text in fill view
+//d:New music list
+//l:list_single_popup_submenu_pane_t1
+//r:1.0
+//
+#define qtn_mserv_options_new_music "Music"
+
+//d:Menu text in fill view
+//d:User can reorder fill list
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_options_reorder "Change priority"
+
+//d:Menu text in fill view
+//d:Deletes fill list
+//l:list_single_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_options_delete "Delete"
+
+
+// QUERIES
+
+
+//d:Add rule
+//l:heading_pane_t1
+//r:1.0
+//
+#define qtn_mserv_head_add_rule "Add rule"
+
+//d:data query heading
+//d:data amount query ( amount setting item )
+//l:popup_query_data_window
+//r:1.0
+//
+#define qtn_mserv_head_amount_count "Set count"
+
+//d:data query heading
+//d:Data size query ( amount setting item )
+//l:popup_query_data_window
+//r:1.0
+//
+#define qtn_mserv_head_amount_mb "Set MB"
+
+
+// LISTBOX ITEMS
+
+//d:Starts synchronization operation
+//l:list_double_large_graphic_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_sync_now "Sync now"
+
+//d:Stops synchronization operation
+//l:list_double_large_graphic_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_sync_stop "Stop sync"
+
+//d:Opens fill list view
+//d:Settings for moving files from PC to phone
+//l:list_double_large_graphic_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_from_home "From home"
+
+//d:Listbox item secondary text
+//d:Memory card is not inserted to phone
+//l:list_double_large_graphic_pane_t2_cp2
+//r:1.0
+//
+#define qtn_mserv_memory_card_needed "No memory card"
+
+//d:Opens store list view
+//d:Settings for moving files from phone to PC
+//l:list_double_large_graphic_pane_t1_cp2
+//r:1.0
+//
+#define qtn_mserv_to_home "To Home"
+
+//d:Listbox item secondary text
+//d:All files are synchronized
+//l:list_double_large_graphic_pane_t2_cp2
+//r:1.0
+//
+#define qtn_mserv_in_sync "All in sync"
+
+//d:Listbox item secondary text
+//d:No fill lists selected
+//l:list_double_large_graphic_pane_t2_cp2
+//r:9.1
+//
+#define qtn_mserv_nothing_selected "Nothing selected"
+
+//d:Listbox item secondary text
+//d:N files are not synchronized
+//d:Parameter max length: 5 characters
+//l:list_double_large_graphic_pane_t2_cp2
+//r:1.0
+//
+#define qtn_mserv_new_items "%N new items"
+
+//d:Listbox item secondary text
+//d:One item is not synchronized
+//l:list_double_large_graphic_pane_t2_cp2
+//r:1.0
+//
+#define qtn_mserv_one_item "1 new item"
+
+//d:Listbox item secondary text
+//d:Estimated duration of next synchronization
+//d:Parameter max length: 4 characters
+//l:list_double_large_graphic_pane_t2_cp2
+//r:1.0
+//
+#define qtn_mserv_sync_time "Takes %N mins"
+
+//d:Listbox item secondary text
+//d:Estimated duration of next synchronization is 1 min
+//l:list_double_large_graphic_pane_t2_cp2
+//r:1.0
+//
+#define qtn_mserv_sync_time_one "Takes 1 min"
+
+//d:Listbox item secondary text
+//d:Synchronization is waiting for own turn
+//l:list_double_large_graphic_pane_t2_cp2
+//r:1.0
+//
+#define qtn_mserv_waiting_sync "Waiting"
+
+
+//d:Default fill list
+//l:list_single_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_def_latest_org "Latest images"
+
+//d:Default fill list
+//l:list_single_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_def_latest_videos "Latest videos"
+
+//d:Default fill list
+//l:list_single_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_def_recent_music "Latest music"
+
+
+// SETTING ITEMS
+
+
+// IMAGE LIST SETTINGS
+
+//d:Setting list item primary text
+//d:Image shrinking
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_rule_shrink_image "Shrink images"
+
+//d:Setting page heading text
+//d:Image shrinking setting
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_sett_shrink_image "Shrink images"
+
+//d:Setting page item text
+//d:Images are shrinked to screen size
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_screen_size "To phone screen size"
+
+//d:Setting page item text
+//d:Images are not shrinked
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_no_shrinking "No shrinking"
+
+
+
+//d:Setting item text
+//d:Amount of files to be fetched
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_rule_amount "Amount"
+
+//d:Setting item text
+//d:Amount of data
+//d:Parameter length: 5 characters
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_amount_mb_list "%N MB"
+
+//d:Setting item text
+//d:Amount of data
+//d:Parameter length: 5 characters
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_amount_item_list "%N items"
+
+//d:Setting item text
+//d:Amount of data
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_amount_item_1_list "1 item"
+
+//d:Setting item text
+//d:Amount of data
+//l:list_set_graphic_pane_t1
+//r:2.0
+//
+#define qtn_mserv_value_amount_item_0_list "0 items"
+
+//d:Setting page heading text
+//d:Amount of files to be fetched
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_sett_amount "Amount"
+
+//d:Setting page item text
+//d:Amount of data
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_amount_unlimited "Unlimited"
+
+//d:Setting page item text
+//d:Amount of data
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_amount_count "Set count"
+
+//d:Setting page item text
+//d:Amount of data
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_amount_mb "Set MB"
+
+
+
+//d:Setting list item primary text
+//d:Starts searching oldest, latest or random items
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_rule_start_with "Starting with"
+
+//d:Setting page heading text
+//d:Starts searching with oldest, latest or random items
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_sett_start_with "Starting with"
+
+//d:Setting page item text
+//d:Search latest items
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_start_latest "Latest"
+
+//d:Setting page item text
+//d:Search oldest items
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_start_oldest "Oldest"
+
+//d:Setting page item text
+//d:Search random items
+//l:list_set_graphic_pane_t1
+//r:2.0
+//
+#define qtn_mserv_value_random "Random"
+
+//d:Setting list item primary text
+//d:Starts searching from specified date
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_rule_from "From"
+
+//d:Setting page heading text
+//d:Starts searching from specified date
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_sett_from "From"
+
+//d:Setting list item primary text
+//d:Search end date
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_rule_until "Until"
+
+//d:Setting page text
+//d:Search end date
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_sett_until "Until"
+
+//d:Secondary text for video title -setting
+//d:Search criteria is "any"
+//l:list_set_graphic_pane_t1
+//r:2.0
+//
+#define qtn_mserv_value_list_any_name "Any"
+
+//d:Secondary text for music genre -setting
+//d:Search criteria is "any"
+//l:list_set_graphic_pane_t1
+//r:2.0
+//
+#define qtn_mserv_value_list_any_genre "Any"
+
+//d:Secondary text for music artist -setting
+//d:Search criteria is "any"
+//l:list_set_graphic_pane_t1
+//r:2.0
+//
+#define qtn_mserv_value_list_any_artist "Any"
+
+//d:Secondary text for music album -setting
+//d:Search criteria is "any"
+//l:list_set_graphic_pane_t1
+//r:2.0
+//
+#define qtn_mserv_value_list_any_album "Any"
+
+//d:Secondary text for music track -setting
+//d:Search criteria is "any"
+//l:list_set_graphic_pane_t1
+//r:2.0
+//
+#define qtn_mserv_value_list_any_track "Any"
+
+//d:Secondary text for source devices -setting
+//d:Search criteria is "any"
+//l:list_set_graphic_pane_t1
+//r:2.0
+//
+#define qtn_mserv_value_list_any_source_device "Any"
+
+//d:Multiselection list item text for video title
+//d:Search criteria is "any"
+//l:list_single_graphic_pane_t1
+//r:2.0
+//
+#define qtn_mserv_value_any_name "Any"
+
+//d:Multiselection list item text for file size -setting
+//d:Search criteria is "any"
+//l:list_set_graphic_pane_t1
+//r:2.0
+//
+#define qtn_mserv_value_any_file_size "Any"
+
+//d:Multiselection list item text for music genre -setting
+//d:Search criteria is "any"
+//l:list_single_graphic_pane_t1
+//r:2.0
+//
+#define qtn_mserv_value_any_genre "Any"
+
+//d:Multiselection list item text for music artist -setting
+//d:Search criteria is "any"
+//l:list_single_graphic_pane_t1
+//r:2.0
+//
+#define qtn_mserv_value_any_artist "Any"
+
+//d:Multiselection list item text for music album -setting
+//d:Search criteria is "any"
+//l:list_single_graphic_pane_t1
+//r:2.0
+//
+#define qtn_mserv_value_any_album "Any"
+
+//d:Multiselection list item text for music track -setting
+//d:Search criteria is "any"
+//l:list_single_graphic_pane_t1
+//r:2.0
+//
+#define qtn_mserv_value_any_track "Any"
+
+//d:Multiselection list item text for source devices -setting
+//d:Search criteria is "any"
+//l:list_single_graphic_pane_t1
+//r:2.0
+//
+#define qtn_mserv_value_any_source_device "Any"
+
+//d:Item text for music track length -setting
+//d:Search criteria is "any"
+//l:list_set_graphic_pane_t1
+//r:2.0
+//
+#define qtn_mserv_value_any_track_length "Any"
+
+
+//d:Setting item text
+//d:Servers where data will be searched
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_rule_storage "Source devices"
+
+//d:Setting item text
+//d:Selected server count
+//d:Parameter maximum length: 3 characters
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_n_servers "%N devices"
+
+//d:Setting page heading text
+//d:fill source devices
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_sett_storage "Storage server"
+
+
+
+//d:Setting item text
+//d:Free text search criteria
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_rule_free_text "Contains text"
+
+//d:Setting item secondary text
+//d:If no text defined
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_none "None"
+
+//d:Setting page heading text
+//d:Free text criteria
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_sett_free_text "Contains text"
+
+
+
+
+// VIDEO LIST SETTINGS
+
+//d:Setting item text
+//d:Video title search criteria
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_rule_name "Name"
+
+//d:Setting page heading text
+//d:N titles selected
+//d:Parameter maximum length: 3 characters
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_n_names "%N names"
+
+
+
+//d:Setting item text
+//d:Minimum file size
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_rule_file_size_min "Min file size"
+
+//d:Setting item text
+//d:Minimum file size setting
+//d:Parameter maximum length: 5 characters
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_min_list "%N MB"
+
+//d:Setting page heading text
+//d:Min file size setting
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_sett_file_size_min "Min file size"
+
+//d:Setting page text
+//d:Minimum file size
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_min_mb "Set min MB"
+
+//d:Setting item text
+//d:Maximum file size
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_rule_file_size_max "Max file size"
+
+//d:Setting item text
+//d:Maximum file size setting
+//d:Parameter maximum length: 5 characters
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_max_list "%N MB"
+
+//d:Setting page heading text
+//d:Max file size setting
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_sett_file_size_max "Max file size"
+
+//d:Setting page text
+//d:Minimum file size
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_max_mb "Set max MB"
+
+
+// MUSIC LIST SETTINGS
+
+//d:Setting item primary text
+//d:Music genre setting
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_rule_genre "Genre"
+
+//d:Setting item secondary text
+//d:Number of selected genres
+//d:Parameter maximum length: 5 characters
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_n_genre "%N genres"
+
+
+
+//d:Setting item text
+//d:Artist name setting
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_rule_artist "Artist"
+
+//d:Setting item secondary text
+//d:number of selected artists
+//d:Parameter maximum length: 5 characters
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_n_artists "%N artists"
+
+
+
+//d:Setting item text
+//d:Title names
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_rule_album "Album"
+
+//d:Setting item secondary text
+//d:number of selected albums
+//d:Parameter maximum length: 5 characters
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_n_album "%N albums"
+
+
+
+//d:Setting item text
+//d:Track names
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_rule_track "Track"
+
+//d:Setting item secondary text
+//d:number of selected tracks
+//d:Parameter maximum length: 5 characters
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_n_tracks "%N tracks"
+
+
+
+//d:Setting item text
+//d:Track length
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_rule_track_length "Track length"
+
+//d:Setting page heading text
+//d:Track length setting
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_sett_track_length "Track length"
+
+//d:Setting item text
+//d:Track length setting
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_less_1 "Less than 1 min."
+
+//d:Setting item text
+//d:Track length setting
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_16_min "1-6 mins."
+
+//d:Setting item text
+//d:Track length setting
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_68_min "6-8 mins."
+
+//d:Setting item text
+//d:Track length setting
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_830_min "8-30 mins."
+
+//d:Setting item text
+//d:Track length setting
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_more_4 "More than 30 mins."
+
+//d:Setting item text
+//d:File size setting
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_rule_file_size "File size"
+
+//d:Setting page heading text
+//d:File size setting
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_sett_file_size "File size"
+
+//d:Setting page text
+//d:File size setting
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_less_1_mb "Less than 1 MB"
+
+//d:Setting page text
+//d:File size setting
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_15_mb "1-5 MB"
+
+//d:Setting page text
+//d:File size setting
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_510_mb "5-10 MB"
+
+//d:Setting page text
+//d:File size setting
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_1050_mb "10-50 MB"
+
+//d:Setting page text
+//d:File size setting
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_value_more_50 "More than 50 MB"
+
+
+
+// EDIT FILL LIST SETTINGS
+
+//d:Setting list item primary text
+//d:Fill list name
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_rule_list_name "List name"
+
+//d:Setting page heading text
+//d:Fill list name
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_sett_rule_list_name "List name"
+
+//d:Setting list item primary text
+//d:User can add more rules
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_rule_add "Add more rules"
+
+
+// FILL LIST BROWSE VIEW
+
+//d:List item secondary text
+//d:File status is set "skipped"
+//l:list_double_large_graphic_pane_t2_cp2
+//r:1.0
+//
+#define qtn_mserv_status_skipped "Skipped"
+
+
+// STORE LIST VIEW
+
+//d:List item text
+//d:Captured images category
+//l:list_single_graphic_pane_t1
+//r:2.1
+//
+#define qtn_mserv_store_check_phone_images "Captured images"
+
+//d:List item text
+//d:Other images category
+//l:list_single_graphic_pane_t1
+//r:2.1
+//
+#define qtn_mserv_store_check_other_images "Other images"
+
+//d:List item text
+//d:Captured videos category
+//l:list_single_graphic_pane_t1
+//r:2.1
+//
+#define qtn_mserv_store_check_phone_videos "Captured videos"
+
+//d:List item text
+//d:Other videos category
+//l:list_single_graphic_pane_t1
+//r:2.1
+//
+#define qtn_mserv_store_check_other_videos "Other videos"
+
+//d:List item text
+//d:Music category
+//l:list_single_graphic_pane_t1
+//r:2.1
+//
+#define qtn_mserv_store_check_music "Music"
+
+
+// STORE SETTINGS VIEW
+
+//d:Store setting item primary text
+//d:Location where files will be copied
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_item_target_devices "Target devices"
+
+//d:Setting page heading text
+//d:Sets target devices for file copying
+//l:list_setting_pane_t1
+//r:1.0
+#define qtn_mserv_sett_target_devices "Target devices"
+
+//d:Setting list item primary text
+//d:Local copy setting
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_item_local_copy "Keep on phone"
+
+//d:Setting list item secondary text
+//d:File is not kept on the phone
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_item_no_local "No"
+
+//d:Setting list item secondary text
+//d:File is kept on the phone
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_item_yes_local "Yes"
+
+//d:Setting list item secondary text
+//d:File is kept on the phone ( just for images )
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_item_original_size "Original size"
+
+//d:Setting list item secondary text
+//d:Screen size version of the image file is kept on the phone
+//l:list_set_graphic_pane_t1
+//r:1.0
+//
+#define qtn_mserv_item_screen_size "Phone screen size"
+
+//d:Setting page heading text
+//d:Source devices where data search is done
+//l:list_setting_pane_t1
+//r:1.0
+//
+#define qtn_mserv_sett_source_devices "Source device(s)"
+
+// NAVI PANE
+
+//d:status information
+//d:Content refreshing completed
+//l:navi_text_pane_t1
+//r:9.1
+//
+#define qtn_mserv_navi_refresh_completed "Refresh completed"
+
+//d:Process progress info
+//d:Parameter maximum length: 3 characters
+//l:navi_text_pane_t1
+//r:1.0
+//
+#define qtn_mserv_navi_sync "Synchronizing %N%"
+
+//d:Last sync time in minutes
+//d:Parameter maximum length: 2 characters
+//l:navi_text_pane_t1
+//r:1.0
+//
+#define qtn_mserv_navi_last_sync_min "Synced %N mins ago"
+
+//d:Last sync time 1 minute ago
+//d: navi pane
+//l:navi_text_pane_t1
+//r:1.0
+//
+#define qtn_mserv_navi_last_sync_min_one "Synced 1 min ago"
+
+//d:Last sync time in hours
+//d:Parameter maximum length: 2 characters
+//l:navi_text_pane_t1
+//r:1.0
+//
+#define qtn_mserv_navi_last_sync_hour "Synced %N hours ago"
+
+//d:Last sync time 1 hour ago
+//d:navi pane
+//l:navi_text_pane_t1
+//r:1.0
+//
+#define qtn_mserv_navi_last_sync_hour_one "Synced 1 hour ago"
+
+//d:Last sync time in days
+//d:Parameter maximum length: 3 characters
+//l:navi_text_pane_t1
+//r:1.0
+//
+#define qtn_mserv_navi_last_sync_day "Synced %N days ago"
+
+//d:Last sync time 1 day ago
+//d:navi pane
+//l:navi_text_pane_t1
+//r:1.0
+//
+#define qtn_mserv_navi_last_sync_day_one "Synced 1 day ago"
+
+//d:Process progress info
+//l:navi_text_pane_t1
+//r:1.0
+//
+#define qtn_mserv_navi_refreshing "Refreshing %N%"
+
+//d:list size info
+//d:Parameters maximum length: 4 characters, 4 characters
+//l:navi_text_pane_t1
+//r:1.0
+//
+#define qtn_mserv_navi_list_size "%0N MB (%1N free)"
+
+//d:file size & count
+//d:Parameters maximum length: 4 characters, 5 characters
+//l:navi_text_pane_t1
+//r:1.0
+//
+#define qtn_mserv_navi_items_fill_list "%0N MB, %1N items"
+
+//d:file size & count
+//d:Parameters maximum length: 4 characters, 5 characters
+//l:navi_text_pane_t1
+//r:1.0
+//
+#define qtn_mserv_navi_rules_amount "%0N MB, %1N items"
+
+//d:file size & count
+//d:Parameters maximum length: 6 characters
+//l:navi_text_pane_t1
+//r:2.0
+//
+#define qtn_mserv_navi_rules_amount1 "%N MB, 1 item"
+
+//d:file size & count
+//d:Parameters maximum length: 6 characters
+//l:navi_text_pane_t1
+//r:2.0
+//
+#define qtn_mserv_navi_rules_amount0 "%N MB, 0 items"
+
+//d:Store browser view navi pane text
+//d:Amount of items
+//d:Parameter maximum length: 5 characters
+//l:navi_text_pane_t1
+//r:1.0
+//
+#define qtn_mserv_navi_items_store_browse "%N items"
+
+//d:Store browser view navi pane text
+//d:Amount of items
+//l:navi_text_pane_t1
+//r:2.0
+//
+#define qtn_mserv_navi_items_store_browse1 "1 item"
+
+//d:Fill list view navi pane text
+//d:Amount of items
+//l:navi_text_pane_t1
+//r:2.0
+//
+#define qtn_mserv_navi_items_fill_list1 "%N MB, 1 item"
+
+//d:Fill list view navi pane text
+//d:Amount of items
+//l:navi_text_pane_t1
+//r:2.1
+//
+#define qtn_mserv_navi_items_fill_list_no_items "No items"
+
+//d:Fill rule list -view's navi pane text
+//d:Amount of items
+//l:navi_text_pane_t1
+//r:2.1
+//
+#define qtn_mserv_navi_one_new_item "1 new item"
+
+//d:Fill rule list -view's navi pane text
+//d:Amount of items
+//l:navi_text_pane_t1
+//r:2.1
+//
+#define qtn_mserv_navi_rules_amount_no_items "No items"
+
+//d:Store list view's navi pane text
+//d:Amount of new items
+//l:navi_text_pane_t1
+//r:2.1
+//
+#define qtn_mserv_navi_no_new_items "No new items"
+
+//d:Store list view's navi pane text
+//d:Amount of new items
+//d:Parameter maximum length: 5 characters
+//l:navi_text_pane_t1
+//r:2.1
+//
+#define qtn_mserv_navi_new_items "%N new items"
+
+//d:Store browse view's navi pane text
+//d:Amount of items
+//l:navi_text_pane_t1
+//r:2.1
+//
+#define qtn_mserv_navi_items_store_browse_none "No items"
+
+//d:Navi pane text
+//d:Preprocesses files so that updated information can be seen on screen
+//l:navi_text_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wait_preprocessing "Updating lists"
+
+//d:Navi pane text
+//d:Updating list
+//l:navi_text_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wait_updating_list "Updating list"
+
+//d:Navi pane text
+//d:Creates new list of files with random method
+//l:navi_text_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wait_randomize "Randomizing"
+
+//d:Navi pane text
+//d:Reads data e.g artist names, video titles, genres,...
+//l:navi_text_pane_t1
+//r:1.0
+//
+#define qtn_mserv_wait_getting_data "Reading data"
+
+// SOFTKEY TEXTS
+
+//d:Left softkey text
+//d:Used with list reordering
+//l:control_pane_t1/opt7
+//r:1.0
+//
+#define qtn_mserv_skey_drop "Drop"
+
+//d:Left softkey text
+//d:Used with list reordering
+//l:control_pane_t1/opt7
+//r:1.0
+//
+#define qtn_mserv_skey_grab "Grab"
+
+//d:Right softkey text
+//d:Used to end reordering
+//l:control_pane_t1/opt7
+//r:1.0
+//
+#define qtn_mserv_skey_done "Done"
+
+//d:Middle softkey
+//d:Deselects current fill list
+//l:control_pane_t3/opt7
+//r:2.0
+//
+#define qtn_mserv_msk_unselect "Unselect"
+
+// End of File

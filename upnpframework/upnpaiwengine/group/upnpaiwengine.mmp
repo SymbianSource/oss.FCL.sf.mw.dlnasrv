@@ -1,0 +1,91 @@
+/*
+* Copyright (c) 2005-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project definition file for project UpnpAiwEngine
+*
+*/
+
+
+// For compatibility with S60 3.2 and IAD branch
+#include "../../../group/upnpplatformvar.hrh"
+#include <data_caging_paths.hrh>
+#include "../inc/upnpaiwengineuids.hrh"
+
+// Build target
+TARGET          upnpaiwengine.dll
+CAPABILITY      CAP_GENERAL_DLL
+TARGETTYPE      DLL
+UID             0x10009D8D KUPnPAiwEngineDllUid
+VENDORID        VID_DEFAULT
+
+// SIS installation + IAD support
+VERSION 10.1
+paged
+
+SOURCEPATH      ../data
+START RESOURCE  upnpaiwengineresources.rss
+HEADER
+TARGET          upnpaiwengineresources.rsc
+TARGETPATH      RESOURCE_FILES_DIR
+LANGUAGE_IDS
+END
+
+USERINCLUDE     ../../../inc
+USERINCLUDE     ../../inc
+USERINCLUDE     ../inc
+USERINCLUDE     ../data
+USERINCLUDE     ../../upnputilities/inc
+
+MW_LAYER_SYSTEMINCLUDE
+UPNP_LOC_INCLUDE_PATH_COMPONENT
+
+SOURCEPATH      ../src
+SOURCE          upnpaiwtimer.cpp
+SOURCE          upnpaiwengine.cpp
+SOURCE          upnpdrmfilter.cpp
+
+// Core
+LIBRARY         euser.lib
+LIBRARY         bafl.lib
+LIBRARY         cone.lib
+LIBRARY         efsrv.lib 
+LIBRARY         charconv.lib            // For Unicode
+LIBRARY         CommonEngine.lib        // For StringLoader
+
+// UPnP
+LIBRARY         upnpavobjects.lib
+LIBRARY         upnpavcontrollerclient.lib
+LIBRARY         upnpavcontrollerhelper.lib
+LIBRARY         upnpcommonui.lib
+LIBRARY         upnpipserversutils.lib
+LIBRARY         upnpfiletransferengine.lib
+
+// Dialogs
+LIBRARY         avkon.lib
+
+// UPnP Utilities
+LIBRARY         upnputilities.lib
+
+// DRM
+LIBRARY         drmcommon.lib
+
+// MIME 
+LIBRARY         apgrfx.lib
+LIBRARY         apmime.lib
+
+// commDB
+LIBRARY         commdb.lib
+
+DEBUGLIBRARY    flogger.lib
+
+// End of file

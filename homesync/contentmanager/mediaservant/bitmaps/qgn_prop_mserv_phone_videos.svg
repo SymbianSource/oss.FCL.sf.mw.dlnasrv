@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1 Tiny//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-tiny.dtd">
+<svg baseProfile="tiny" version="1.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 21 21">
+<g>
+<rect fill="none" width="21" height="21"/>
+<g>
+<path fill="#FFFFFF" d="M4.296,3.133C2.819,3.099,1.781,3.542,1.792,5.622v11.823c-0.01,2.044,0.855,2.451,2.505,2.489h12.521    c1.914,0.064,2.502-0.788,2.504-2.489V5.622c-0.002-1.841-0.866-2.523-2.504-2.489H4.296z"/>
+<linearGradient id="XMLID_4_" gradientUnits="userSpaceOnUse" x1="2.3159" y1="4.6543" x2="18.83" y2="18.5113">
+<stop offset="0" style="stop-color:#AFAFAE"/>
+<stop offset="1" style="stop-color:#121212"/>
+</linearGradient>
+<path fill="url(#XMLID_4_)" d="M18.776,18.077c0,0.753-0.612,1.368-1.367,1.368H3.738c-0.756,0-1.369-0.615-1.369-1.368V5.087    c0-0.753,0.612-1.366,1.369-1.366h13.671c0.755,0,1.367,0.613,1.367,1.366V18.077z"/>
+<rect x="3.738" y="12.609" fill="#FFFFFF" width="2.049" height="2.051"/>
+<rect x="3.738" y="16.712" fill="#FFFFFF" width="2.049" height="2.049"/>
+<rect x="15.358" y="8.506" fill="#FFFFFF" width="2.051" height="2.053"/>
+<rect x="15.358" y="4.404" fill="#FFFFFF" width="2.051" height="2.051"/>
+<rect x="15.358" y="12.609" fill="#FFFFFF" width="2.051" height="2.051"/>
+<rect x="15.358" y="16.712" fill="#FFFFFF" width="2.051" height="2.049"/>
+<rect x="7.155" y="3.721" fill="#CBCBCB" width="6.836" height="4.102"/>
+<rect x="7.155" y="9.189" fill="#CBCBCB" width="6.836" height="4.786"/>
+<rect x="7.155" y="15.344" fill="#CBCBCB" width="6.836" height="4.102"/>
+</g>
+<g>
+<path fill="#FFFFFF" d="M10.586,1.353H9.373c0,0,0,0.719,0,1.011c-0.652,0-3.536,0-3.536,0c-0.839,0-1.522,0.711-1.522,1.584    v7.351c0,0.874,0.683,1.584,1.522,1.584h4.644c0.838,0,1.521-0.71,1.521-1.584V3.947C12,3.268,11.58,2.707,10.989,2.486    c0-0.299,0-1.134,0-1.134H10.586z"/>
+<path d="M10.586,2.779V1.757H9.777v1.011h-3.94c-0.617,0-1.118,0.53-1.118,1.18v7.351c0,0.65,0.5,1.18,1.118,1.18h4.644    c0.615,0,1.118-0.529,1.118-1.18V3.947C11.597,3.333,11.151,2.838,10.586,2.779z"/>
+<linearGradient id="XMLID_5_" gradientUnits="userSpaceOnUse" x1="4.5752" y1="4.6162" x2="11.7426" y2="10.6304">
+<stop offset="0" style="stop-color:#3CB4FF"/>
+<stop offset="0.0085" style="stop-color:#3CB4FF"/>
+<stop offset="0.2979" style="stop-color:#278ED8"/>
+<stop offset="0.7697" style="stop-color:#004A91"/>
+<stop offset="1" style="stop-color:#002B5D"/>
+</linearGradient>
+<path fill="url(#XMLID_5_)" d="M10.479,3.375H5.837c-0.281,0-0.511,0.256-0.511,0.572v7.351c0,0.315,0.23,0.573,0.511,0.573h4.644    c0.281,0,0.51-0.258,0.51-0.573V3.947C10.989,3.631,10.762,3.375,10.479,3.375z"/>
+<linearGradient id="XMLID_6_" gradientUnits="userSpaceOnUse" x1="5.8755" y1="4.4941" x2="10.4418" y2="8.3258">
+<stop offset="0" style="stop-color:#C5FDFD"/>
+<stop offset="0.0337" style="stop-color:#C5FDFD"/>
+<stop offset="0.2186" style="stop-color:#C1FAFD"/>
+<stop offset="0.4215" style="stop-color:#B3F3FD"/>
+<stop offset="0.633" style="stop-color:#9DE7FD"/>
+<stop offset="0.849" style="stop-color:#7FD6FD"/>
+<stop offset="1" style="stop-color:#65C7FD"/>
+</linearGradient>
+<rect x="6.135" y="4.185" fill="url(#XMLID_6_)" width="4.046" height="4.45"/>
+</g>
+</g>
+</svg>

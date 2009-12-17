@@ -1,0 +1,18 @@
+EXPORTS
+	?DurationL@CUpnpResParameters@@QBEPAVHBufC8@@XZ @ 1 NONAME ; class HBufC8 * CUpnpResParameters::DurationL(void) const
+	?FileSizeL@CUpnpResParameters@@QBEPAVHBufC8@@XZ @ 2 NONAME ; class HBufC8 * CUpnpResParameters::FileSizeL(void) const
+	?GetResParametersL@CUpnpResResolver@@QAEPAVCUpnpResParameters@@ABVTDesC16@@@Z @ 3 NONAME ; class CUpnpResParameters * CUpnpResResolver::GetResParametersL(class TDesC16 const &)
+	?IsAudioOrVideoFile@CUpnpResParameters@@QBEHXZ @ 4 NONAME ; int CUpnpResParameters::IsAudioOrVideoFile(void) const
+	?IsImageFile@CUpnpResParameters@@QBEHXZ @ 5 NONAME ; int CUpnpResParameters::IsImageFile(void) const
+	?NewL@CUpnpDlnaProfiler@@SAPAV1@XZ @ 6 NONAME ; class CUpnpDlnaProfiler * CUpnpDlnaProfiler::NewL(void)
+	?NewL@CUpnpResParameters@@SAPAV1@XZ @ 7 NONAME ; class CUpnpResParameters * CUpnpResParameters::NewL(void)
+	?NewL@CUpnpResResolver@@SAPAV1@XZ @ 8 NONAME ; class CUpnpResResolver * CUpnpResResolver::NewL(void)
+	?NewLC@CUpnpDlnaProfiler@@SAPAV1@XZ @ 9 NONAME ; class CUpnpDlnaProfiler * CUpnpDlnaProfiler::NewLC(void)
+	?NewLC@CUpnpResParameters@@SAPAV1@XZ @ 10 NONAME ; class CUpnpResParameters * CUpnpResParameters::NewLC(void)
+	?NewLC@CUpnpResResolver@@SAPAV1@XZ @ 11 NONAME ; class CUpnpResResolver * CUpnpResResolver::NewLC(void)
+	?ProfileForFileL@CUpnpDlnaProfiler@@QAEPAVHBufC16@@ABVTDesC16@@@Z @ 12 NONAME ; class HBufC16 * CUpnpDlnaProfiler::ProfileForFileL(class TDesC16 const &)
+	?ProfileForFileL@CUpnpDlnaProfiler@@QAEPAVHBufC16@@ABVTDesC16@@AAVRFile@@AAVCUpnpResParameters@@@Z @ 13 NONAME ; class HBufC16 * CUpnpDlnaProfiler::ProfileForFileL(class TDesC16 const &, class RFile &, class CUpnpResParameters &)
+	?ProtocolInfo@CUpnpResParameters@@QBEABVTDesC8@@XZ @ 14 NONAME ; class TDesC8 const & CUpnpResParameters::ProtocolInfo(void) const
+	?ResolutionL@CUpnpResParameters@@QBEPAVHBufC8@@XZ @ 15 NONAME ; class HBufC8 * CUpnpResParameters::ResolutionL(void) const
+	?SupportedProfilesL@CUpnpDlnaProfiler@@QBEHPAVCDesC16ArrayFlat@@@Z @ 16 NONAME ; int CUpnpDlnaProfiler::SupportedProfilesL(class CDesC16ArrayFlat *) const
+

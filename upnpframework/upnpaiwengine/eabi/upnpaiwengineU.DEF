@@ -1,0 +1,24 @@
+EXPORTS
+	_ZN14CUPnPAiwEngine11EngineStateEv @ 1 NONAME
+	_ZN14CUPnPAiwEngine13TimerCallbackEv @ 2 NONAME
+	_ZN14CUPnPAiwEngine15CopyToExternalLER13RPointerArrayI7TDesC16E @ 3 NONAME
+	_ZN14CUPnPAiwEngine15DisableExternalEv @ 4 NONAME
+	_ZN14CUPnPAiwEngine15EnableExternalLEv @ 5 NONAME
+	_ZN14CUPnPAiwEngine15MoveToExternalLER13RPointerArrayI7TDesC16E @ 6 NONAME
+	_ZN14CUPnPAiwEngine15ReleaseInstanceEv @ 7 NONAME
+	_ZN14CUPnPAiwEngine17SetEngineObserverEP22MUPnPAiwEngineObserver @ 8 NONAME
+	_ZN14CUPnPAiwEngine18OpenExternalMediaLEv @ 9 NONAME
+	_ZN14CUPnPAiwEngine20RemoveEngineObserverEv @ 10 NONAME
+	_ZN14CUPnPAiwEngine20ShowConnectionErrorLEv @ 11 NONAME
+	_ZN14CUPnPAiwEngine23CopyPlaylistToExternalLERK7TDesC16R13RPointerArrayIS0_E @ 12 NONAME
+	_ZN14CUPnPAiwEngine4NewLEv @ 13 NONAME
+	_ZN14CUPnPAiwEngine5PlayLERK7TDesC16 @ 14 NONAME
+	_ZN14CUpnpDrmFilter10FilterDrmLEv @ 15 NONAME
+	_ZN14CUpnpDrmFilter4NewLER13RPointerArrayI7TDesC16ES3_ @ 16 NONAME
+	_ZTI13CUPnPAiwTimer @ 17 NONAME ; #<TI>#
+	_ZTI14CUPnPAiwEngine @ 18 NONAME ; #<TI>#
+	_ZTI14CUpnpDrmFilter @ 19 NONAME ; #<TI>#
+	_ZTV13CUPnPAiwTimer @ 20 NONAME ; #<VT>#
+	_ZTV14CUPnPAiwEngine @ 21 NONAME ; #<VT>#
+	_ZTV14CUpnpDrmFilter @ 22 NONAME ; #<VT>#
+	_ZThn8_N14CUPnPAiwEngine13TimerCallbackEv @ 23 NONAME ; #<thunk>#

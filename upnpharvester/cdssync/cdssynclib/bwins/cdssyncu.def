@@ -1,0 +1,10 @@
+EXPORTS
+	?ChunkCount@CCdsSync@@QAEHXZ @ 1 NONAME ; int CCdsSync::ChunkCount(void)
+	?InitL@CCdsSync@@QAEXAAV?$RPointerArray@VHBufC8@@@@ABHAAVMCdsSyncObserver@@H@Z @ 2 NONAME ; void CCdsSync::InitL(class RPointerArray<class HBufC8> &, int const &, class MCdsSyncObserver &, int)
+	?NewL@CCdsSync@@SAPAV1@XZ @ 3 NONAME ; class CCdsSync * CCdsSync::NewL(void)
+	?NewLC@CCdsSync@@SAPAV1@XZ @ 4 NONAME ; class CCdsSync * CCdsSync::NewLC(void)
+	?NotifySourceDataAddedL@CCdsSync@@QAEXH@Z @ 5 NONAME ; void CCdsSync::NotifySourceDataAddedL(int)
+	?ProcessedItemCount@CCdsSync@@QAEHXZ @ 6 NONAME ; int CCdsSync::ProcessedItemCount(void)
+	?ResetL@CCdsSync@@QAEXXZ @ 7 NONAME ; void CCdsSync::ResetL(void)
+	?SetSearchIndex@CCdsSync@@QAEXH@Z @ 8 NONAME ; void CCdsSync::SetSearchIndex(int)
+

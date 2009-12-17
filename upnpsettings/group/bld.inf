@@ -1,0 +1,53 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Build information file for upnpsettings
+*
+*/
+
+
+
+
+
+
+// For compatibility with S60 3.2 and IAD branch
+#include "../../group/upnpplatformvar.hrh"
+
+PRJ_PLATFORMS
+
+PRJ_EXPORTS
+// ROM build
+../rom/upnpsettings.iby               CORE_MW_LAYER_IBY_EXPORT_PATH(upnpsettings.iby)
+../rom/upnpsettingsresources.iby      CORE_MW_LAYER_IBY_EXPORT_PATH(upnpsettingsresources.iby)
+// LOC files
+UPNP_LOC_EXPORT(upnpsettings.loc)
+
+PRJ_MMPFILES
+// none
+
+    // settings engine
+    #include "../upnpsettingsengine/group/bld.inf"
+#ifdef FF_UPNP_FRAMEWORK_2_0  // UPnP feature flag
+    // multiselectionui
+    #include "../multiselectionui/group/bld.inf"
+
+    // upnp setup wizard
+    #include "../appwizard/group/bld.inf"
+
+    // Sharing ui
+    #include "../upnpsharingui/group/bld.inf"
+#endif // FF_UPNP_FRAMEWORK_2_0
+    // GS plugin
+    #include "../upnpgsplugin/group/bld.inf"
+
+// end of file

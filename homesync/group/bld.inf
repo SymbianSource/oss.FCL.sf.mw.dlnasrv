@@ -1,0 +1,45 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Build information file for mediaservant
+*
+*/
+
+
+#include "../../group/upnpplatformvar.hrh"
+
+PRJ_PLATFORMS
+WINSCW ARMV5
+
+
+PRJ_EXPORTS
+../group/msdebug.h                  |../../inc/msdebug.h
+../install/mediaservant_stub.SIS    /epoc32/data/z/system/install/mediaservant_stub.sis
+../rom/mediaservant.iby             CORE_MW_LAYER_IBY_EXPORT_PATH(mediaservant.iby)
+../rom/mediaservantresources.iby    LANGUAGE_MW_LAYER_IBY_EXPORT_PATH(mediaservantresources.iby)
+../conf/mediaservant.confml         APP_LAYER_CONFML(component.confml)
+../conf/mediaservant_10281fab.crml  APP_LAYER_CRML(component_10281fab.crml)
+
+
+PRJ_MMPFILES
+#include "../contentmanager/cmserver/cmmemorymanager/group/bld.inf"
+#include "../contentmanager/cmserver/cmfillmanager/group/bld.inf"
+#include "../contentmanager/cmserver/cmstoremanager/group/bld.inf"
+#include "../contentmanager/cmserver/cmscheduler/group/bld.inf"
+#include "../contentmanager/cmserver/cmserver/group/bld.inf"
+#include "../contentmanager/mediaservant/applicationengine/group/bld.inf"
+#include "../contentmanager/homesyncwizard/group/bld.inf"
+#include "../contentmanager/homesyncgsplugin/group/bld.inf"
+#include "../contentmanager/mediaservant/group/bld.inf"
+
+// end of file

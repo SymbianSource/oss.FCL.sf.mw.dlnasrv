@@ -1,0 +1,47 @@
+/*
+* Copyright (c) 2000 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Plugin resource definition
+*
+*/
+
+
+#include <ecom/registryinfo.rh>
+#include "pluginuids.h"
+
+RESOURCE REGISTRY_INFO theInfo
+    {
+    dll_uid = MSPluginUid;
+
+    interfaces =
+        {
+        INTERFACE_INFO
+            {
+            // UID of interface that is implemented
+            interface_uid = 0x200075DD;
+            implementations =
+                {
+                // Info for
+                IMPLEMENTATION_INFO
+                    {
+                    implementation_uid = MSPluginImplementationUid;
+                    version_no         = 1;
+                    display_name       = "mediaservantplugin";
+                    default_data       = "mediaservantplugin";
+                    opaque_data        = "";
+                    }
+                };
+            }
+        };
+    }
+

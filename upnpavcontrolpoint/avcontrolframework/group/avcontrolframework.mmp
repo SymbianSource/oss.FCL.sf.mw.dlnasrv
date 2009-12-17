@@ -1,0 +1,67 @@
+/** @file
+* Copyright (c) 2002-2004 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies  this distribution, and is available 
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  ?Description
+*
+*/
+
+#include <platform_paths.hrh>
+
+TARGETTYPE      dll
+
+#if defined(__HN_31__) || defined(__HN_32__)
+TARGET          hnavcontrolframework.dll
+UID             0x1000008d 0x2000F888
+#else
+TARGET          avcontrolframework.dll
+UID             0x1000008d 0x10204164
+#endif
+
+LANG            SC
+CAPABILITY      CAP_GENERAL_DLL
+VENDORID        VID_DEFAULT
+
+VERSION         10.1
+paged
+
+SOURCEPATH      ../src/ 
+SOURCE          upnpavcontrolpoint.cpp
+SOURCE          upnpstateupdatehandler.cpp
+SOURCE          upnpactionresponsehandler.cpp
+SOURCE          upnpcdsactionfactory.cpp
+SOURCE          upnpavtactionfactory.cpp
+SOURCE          upnpcmactionfactory.cpp
+SOURCE          upnprcactionfactory.cpp
+
+MW_LAYER_SYSTEMINCLUDE
+USERINCLUDE   ../../../inc
+USERINCLUDE   ../../inc
+USERINCLUDE     ../inc
+
+LIBRARY         euser.lib 
+LIBRARY         bafl.lib
+
+#if defined(__HN_31__) || defined(__HN_32__)
+LIBRARY         hncontrolpointbase.lib
+LIBRARY         hnserviceframework.lib
+LIBRARY         hnipserversutils.lib 
+#else
+LIBRARY         upnpcontrolpointbase.lib
+LIBRARY         upnpserviceframework.lib
+LIBRARY         upnpipserversutils.lib 
+#endif
+
+LIBRARY         flogger.lib 
+DEFFILE         AVControlFramework
+
+// End of file

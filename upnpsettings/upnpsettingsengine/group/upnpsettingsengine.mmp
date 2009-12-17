@@ -1,0 +1,69 @@
+/*
+* Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Project definition file for project SettingsEngine
+*
+*/
+
+
+
+
+
+
+#include "../../../group/upnpplatformvar.hrh"
+
+TARGET upnpsettingsengine.dll
+TARGETTYPE dll
+UID 0x1000008d 0x20009CAE
+
+// Enable UPnPSecurity
+MACRO ENABLE_UPNP_SECURITY
+
+// Capability assignment.
+CAPABILITY CAP_GENERAL_DLL
+VENDORID VID_DEFAULT
+
+// SIS installation + IAD support
+VERSION 10.1
+paged
+
+//User include paths
+USERINCLUDE ../inc
+USERINCLUDE ../../../inc
+
+// System include paths
+MW_LAYER_SYSTEMINCLUDE
+
+SOURCEPATH ../src
+SOURCE upnpsettingsengine.cpp
+
+LIBRARY euser.lib
+LIBRARY bafl.lib
+LIBRARY centralrepository.lib
+LIBRARY upnpserviceframework.lib
+LIBRARY avmediaserverclient.lib
+LIBRARY upnpipserversutils.lib
+LIBRARY efsrv.lib
+LIBRARY estor.lib
+
+// PathInfo
+LIBRARY PlatformEnv.lib
+LIBRARY commdb.lib
+
+// Connection Manager, new APIs for getting IAPs, etc.
+LIBRARY cmmanager.lib
+LIBRARY apengine.lib 
+
+DEBUGLIBRARY flogger.lib
+
+// End of file

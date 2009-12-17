@@ -1,0 +1,57 @@
+;
+; Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
+; All rights reserved.
+; This component and the accompanying materials are made available
+; under the terms of "Eclipse Public License v1.0"
+; which accompanies this distribution, and is available
+; at the URL "http://www.eclipse.org/legal/epl-v10.html".
+;
+; Initial Contributors:
+; Nokia Corporation - initial contribution.
+;
+; Contributors:
+;
+; Description: Mediaservant stub package
+;
+; mediaservant_stub.pkg
+;
+;Language - standard language definitions
+&EN
+
+; standard SIS file header
+#{"MediaServant"},(0x20022D5B),1,1,0, TYPE=SA
+
+;Localized Vendor name
+%{"Nokia"}
+
+;Unique Vendor name
+:"Nokia"
+
+;Supports Series 60 v 3.0
+;[0x101F7961], 0, 0, 0, {"S60ProductID"}
+
+""-"z:\sys\bin\mediaservant.exe"
+""-"z:\sys\bin\msengine.dll"
+""-"z:\sys\bin\msappwizard.dll"
+""-"z:\sys\bin\mediaservantplugin.dll"
+""-"z:\sys\bin\msgsplugin.dll"
+""-"z:\sys\bin\cmfillmanager.dll"
+""-"z:\sys\bin\cmstoremanager.dll"
+""-"z:\sys\bin\cmscheduler.dll"
+""-"z:\sys\bin\cmmemorymanager.dll"
+""-"z:\sys\bin\cmclient.dll"
+""-"z:\sys\bin\cmserver.exe"
+
+""-"z:\resource\apps\mediaservant.r*"
+""-"z:\resource\apps\mediaservant.mif"
+""-"z:\resource\apps\mediaservant_aif.mif"
+""-"z:\resource\apps\msappwizard.mif"
+""-"z:\resource\apps\cmsappwizard.r*"
+""-"z:\resource\apps\memorymanager.r*"
+""-"z:\resource\msgspluginsrc.r*"
+""-"z:\resource\plugins\msgsplugin.r*"
+""-"z:\resource\plugins\mediaservantplugin.r*"
+
+""-"z:\private\10003a3f\import\apps\mediaservant_reg.r*"
+
+; End of File

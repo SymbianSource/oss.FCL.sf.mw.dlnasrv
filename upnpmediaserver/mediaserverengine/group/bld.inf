@@ -1,0 +1,52 @@
+/** @file
+* Copyright (c) 2005-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies  this distribution, and is available 
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Build information file for UPnP Media Server Engine
+*
+*/
+
+
+PRJ_PLATFORMS
+    
+DEFAULT
+PRJ_EXPORTS
+../inc/upnpmediaserverglobals.h |../../inc/upnpmediaserverglobals.h
+
+
+../data/objects.xml /epoc32/release/winscw/udeb/z/private/101f977c/objects.xml
+../data/objects.xml /epoc32/release/winscw/urel/z/private/101f977c/objects.xml
+../data/objects.xml /epoc32/data/z/private/101f977c/objects.xml
+
+../data/MediaServer1/ConnectionManager1.xml /epoc32/release/winscw/urel/z/private/101f977c/public/MediaServer1/ConnectionManager1.xml 
+../data/MediaServer1/ConnectionManager1.xml /epoc32/release/winscw/udeb/z/private/101f977c/public/MediaServer1/ConnectionManager1.xml 
+../data/MediaServer1/ConnectionManager1.xml /epoc32/data/z/private/101f977c/public/MediaServer1/ConnectionManager1.xml 
+
+../data/MediaServer1/ContentDirectory1.xml  /epoc32/release/winscw/udeb/z/private/101f977c/public/MediaServer1/ContentDirectory1.xml 
+../data/MediaServer1/ContentDirectory1.xml  /epoc32/release/winscw/urel/z/private/101f977c/public/MediaServer1/ContentDirectory1.xml 
+../data/MediaServer1/ContentDirectory1.xml  /epoc32/data/z/private/101f977c/public/MediaServer1/ContentDirectory1.xml 
+
+../data/MediaServer1/MediaServer1.xml       /epoc32/release/winscw/udeb/z/private/101f977c/public/MediaServer1/MediaServer1.xml
+../data/MediaServer1/MediaServer1.xml       /epoc32/release/winscw/urel/z/private/101f977c/public/MediaServer1/MediaServer1.xml
+../data/MediaServer1/MediaServer1.xml       /epoc32/data/z/private/101f977c/public/MediaServer1/MediaServer1.xml
+
+../data/backup_registration.xml  /epoc32/data/z/private/101f977c/backup_registration.xml
+../data/backup_registration.xml  /epoc32/release/winscw/udeb/z/private/101f977c/backup_registration.xml
+../data/backup_registration.xml  /epoc32/release/winscw/urel/z/private/101f977c/backup_registration.xml
+
+
+
+
+PRJ_MMPFILES
+mediaserverengine.mmp
+
+//  End of File  

@@ -1,0 +1,190 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Localization strings
+*
+*/
+
+
+
+
+
+
+//  LOCALISATION STRINGS
+
+//--------------------------------------------------------------------
+//
+//    Text of Home Media application in application grid
+//    and application title
+//
+//    "Home Media"
+//    "Home Media"
+//--------------------------------------------------------------------
+//
+
+//d:Icon text for the application grid
+//l:cell_app_pane_t1
+//r:2.0
+//
+#define qtn_iupnp_grid_home_media                  "Home Media"
+
+
+//d:Title text for the application
+//d:This is visible in the title pane
+//l:title_pane_t2/opt9
+//r:2.0
+//
+#define qtn_iupnp_title_home_media                 "Home Media"
+
+
+
+//--------------------------------------------------------------------
+//
+//    Text of setting list items in the Home Media:
+//
+//    "Browse home"
+//    "Sharing"
+//--------------------------------------------------------------------
+//
+
+//d:First line text for the "Browse home" -listbox item in the main
+//d:pane of the Home Media application
+//d:This starts the browsing home network
+//l:list_double_large_graphic_pane_t1
+//r:2.0
+// 
+#define qtn_iupnp_browse_home                      "Browse home"
+
+
+//d:First line text for the "Sharing" -listbox item in the main
+//d:pane of the Home Media application
+//d:This starts the Sharing dialog
+//l:list_double_large_graphic_pane_t1
+//r:1.0
+//
+#define qtn_iupnp_share                            "Sharing"
+
+
+
+//--------------------------------------------------------------------
+//
+//    Secondary text for the 2nd setting list 
+//    item "Share content":
+// 
+//    "Sharing is on"
+//    "Sharing is off"
+//--------------------------------------------------------------------
+//
+
+//d:Alternative second line text for the "Sharing" -listbox item
+//d:in the main pane of the Home Media application
+//d:Indicates that files can be seen through wlan network
+//l:list_double_large_graphic_pane_t2
+//r:2.0
+//
+#define qtn_iupnp_share_active                      "Sharing is on"
+
+
+//d:Alternative second line text for the "Sharing" -listbox item
+//d:in the main pane of the Home Media application
+//d:Indicates that files can not be seen through wlan network
+//l:list_double_large_graphic_pane_t2
+//r:2.0
+//
+#define qtn_iupnp_share_inactive                    "Sharing is off"
+
+
+
+//--------------------------------------------------------------------
+//
+//    Text of Home Media Options menu items:
+//    "Run wizard"
+//    "Settings"
+//
+//--------------------------------------------------------------------
+//
+
+//d:Menu text in Home Media
+//d:Start wizard dialog
+//l:list_single_pane_t1_cp2
+//r:1.0
+//  
+#define qtn_iupnp_options_run_wizard                 "Run wizard"
+
+
+//d:Menu text in Home Media
+//d:Start settings view
+//l:list_single_pane_t1_cp2
+//r:2.0
+//
+#define qtn_iupnp_options_settings_main              "Settings"
+
+
+//--------------------------------------------------------------------
+//
+//    Text to be shown in Home Media NaviPane depending on the sharing 
+//    status:
+//    
+//    "Not connected"
+//    "Connected"
+//
+//--------------------------------------------------------------------
+
+//d:Text in nave pane if sharing is not active
+//l:navi_text_pane_t1
+//r:2.0
+//
+#define qtn_iupnp_navi_not_connected                 "Not connected"
+
+
+//d:Text in nave pane if sharing is active and iap is always ask
+//l:navi_text_pane_t1
+//r:wk50/2008
+//
+#define qtn_iupnp_navi_connected                     "Connected"
+
+
+//--------------------------------------------------------------------
+//
+//    Home Media wait notes:
+//    
+//    "Connecting"
+//--------------------------------------------------------------------
+//
+
+//d:Connecting wait note.
+//d:Shown when the user have selected Browse Home and waiting
+//d:for connection to be established.
+//l:popup_note_wait_window
+//r:wk51/2008
+//
+#define qtn_iupnp_wait_connecting                      "Connecting"
+
+
+//--------------------------------------------------------------------
+//
+//    Text to be shown in Home Media when the
+//    connection is failed
+//    
+//    "Connection failed"
+//--------------------------------------------------------------------
+//
+
+//d:Connection failed note
+//l:popup_note_window/opt2
+//r:1.0
+//
+#define qtn_iupnp_err_con_failed                      "Connection failed"
+
+
+// End of File

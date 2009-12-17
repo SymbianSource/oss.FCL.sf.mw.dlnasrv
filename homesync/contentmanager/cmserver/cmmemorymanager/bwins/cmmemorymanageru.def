@@ -1,0 +1,10 @@
+EXPORTS
+	??1CCmMmMain@@UAE@XZ @ 1 NONAME ; CCmMmMain::~CCmMmMain(void)
+	?Cancel@CCmMmMain@@QAEXXZ @ 2 NONAME ; void CCmMmMain::Cancel(void)
+	?DeleteFilesL@CCmMmMain@@QAEXAAVCDesC16Array@@@Z @ 3 NONAME ; void CCmMmMain::DeleteFilesL(class CDesC16Array &)
+	?NewL@CCmMmMain@@SAPAV1@AAVCCmDmMain@@@Z @ 4 NONAME ; class CCmMmMain * CCmMmMain::NewL(class CCmDmMain &)
+	?NewLC@CCmMmMain@@SAPAV1@AAVCCmDmMain@@@Z @ 5 NONAME ; class CCmMmMain * CCmMmMain::NewLC(class CCmDmMain &)
+	?SetObserver@CCmMmMain@@QAEXAAVMCmMmObserver@@@Z @ 6 NONAME ; void CCmMmMain::SetObserver(class MCmMmObserver &)
+	?SetQuotaListenerStateL@CCmMmMain@@QAEXH@Z @ 7 NONAME ; void CCmMmMain::SetQuotaListenerStateL(int)
+	?ShrinkImagesL@CCmMmMain@@QAEXAAVCDesC16Array@@@Z @ 8 NONAME ; void CCmMmMain::ShrinkImagesL(class CDesC16Array &)
+

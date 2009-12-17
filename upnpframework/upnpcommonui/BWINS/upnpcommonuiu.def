@@ -1,0 +1,27 @@
+EXPORTS
+	?DismissDialogL@CUPnPCommonUI@@QAEXH@Z @ 1 NONAME ; void CUPnPCommonUI::DismissDialogL(int)
+	?GetUpperMostItem@CUPnPBrowseCacheItem@@QBEHXZ @ 2 NONAME ; int CUPnPBrowseCacheItem::GetUpperMostItem(void) const
+	??1CUPnPCommonUI@@UAE@XZ @ 3 NONAME ; CUPnPCommonUI::~CUPnPCommonUI(void)
+	?SelectDeviceL@CUPnPCommonUI@@QAEHAAVMUPnPAVController@@AAVCUpnpAVDevice@@W4TUPnPDeviceTypesToSearch@@W4TUPnPDialogTitle@@@Z @ 4 NONAME ; int CUPnPCommonUI::SelectDeviceL(class MUPnPAVController &, class CUpnpAVDevice &, enum TUPnPDeviceTypesToSearch, enum TUPnPDialogTitle)
+	?SetFirstItem@CUPnPBrowseCacheItem@@QAEXH@Z @ 5 NONAME ; void CUPnPBrowseCacheItem::SetFirstItem(int)
+	??1CUPnPBrowseDialog@@UAE@XZ @ 6 NONAME ; CUPnPBrowseDialog::~CUPnPBrowseDialog(void)
+	?NewL@CUPnPNaviPaneContainer@@SAPAV1@ABVTRect@@VTPoint@@PAVCAknNavigationControlContainer@@@Z @ 7 NONAME ; class CUPnPNaviPaneContainer * CUPnPNaviPaneContainer::NewL(class TRect const &, class TPoint, class CAknNavigationControlContainer *)
+	?GetItem@CUPnPBrowseCacheItem@@QAEPBVCUpnpObject@@H@Z @ 8 NONAME ; class CUpnpObject const * CUPnPBrowseCacheItem::GetItem(int)
+	?GetHighlightedItem@CUPnPBrowseCacheItem@@QBEHXZ @ 9 NONAME ; int CUPnPBrowseCacheItem::GetHighlightedItem(void) const
+	?ContainerId@CUPnPBrowseCacheItem@@QBEABVHBufC8@@XZ @ 10 NONAME ; class HBufC8 const & CUPnPBrowseCacheItem::ContainerId(void) const
+	?ExecuteBrowseDialogL@CUPnPCommonUI@@QAEHAAVMUPnPAVController@@ABVCUpnpAVDevice@@@Z @ 11 NONAME ; int CUPnPCommonUI::ExecuteBrowseDialogL(class MUPnPAVController &, class CUpnpAVDevice const &)
+	?ExecuteDeviceDialogL@CUPnPCommonUI@@QAEHAAVMUPnPAVController@@@Z @ 12 NONAME ; int CUPnPCommonUI::ExecuteDeviceDialogL(class MUPnPAVController &)
+	?NewL@CUPnPCommonUI@@SAPAV1@XZ @ 13 NONAME ; class CUPnPCommonUI * CUPnPCommonUI::NewL(void)
+	?PlayL@CUPnPLocalPlayer@@QAEXABVCUpnpObject@@@Z @ 14 NONAME ; void CUPnPLocalPlayer::PlayL(class CUpnpObject const &)
+	?DisplayConnectionErrorNoteL@CUPnPCommonUI@@QAEXXZ @ 15 NONAME ; void CUPnPCommonUI::DisplayConnectionErrorNoteL(void)
+	?NewL@CUPnPBrowseDialog@@SAPAV1@HAAVMUPnPAVController@@ABVCUpnpAVDevice@@AAVCUPnPCommonUI@@@Z @ 16 NONAME ; class CUPnPBrowseDialog * CUPnPBrowseDialog::NewL(int, class MUPnPAVController &, class CUpnpAVDevice const &, class CUPnPCommonUI &)
+	?NewL@CUPnPLocalPlayer@@SAPAV1@AAVMUPnPAVController@@AAVMUPnPAVBrowsingSession@@AAVCUPnPCommonUI@@@Z @ 17 NONAME ; class CUPnPLocalPlayer * CUPnPLocalPlayer::NewL(class MUPnPAVController &, class MUPnPAVBrowsingSession &, class CUPnPCommonUI &)
+	?ExecuteVideoPlayerL@CUPnPCommonUI@@QAEHAAVMUPnPAVRenderingSession@@ABVCUpnpObject@@@Z @ 18 NONAME ; int CUPnPCommonUI::ExecuteVideoPlayerL(class MUPnPAVRenderingSession &, class CUpnpObject const &)
+	?ExecuteMusicPlayerL@CUPnPCommonUI@@QAEHAAVMUPnPAVController@@PAVCUPnPPlayListFiller@@PBVCUpnpAVDevice@@@Z @ 19 NONAME ; int CUPnPCommonUI::ExecuteMusicPlayerL(class MUPnPAVController &, class CUPnPPlayListFiller *, class CUpnpAVDevice const *)
+	?NewL@CUPnPBrowseCacheItem@@SAPAV1@ABVTDesC8@@HH@Z @ 20 NONAME ; class CUPnPBrowseCacheItem * CUPnPBrowseCacheItem::NewL(class TDesC8 const &, int, int)
+	?SetHighLightedItem@CUPnPBrowseCacheItem@@QAEXH@Z @ 21 NONAME ; void CUPnPBrowseCacheItem::SetHighLightedItem(int)
+	??1CUPnPBrowseCacheItem@@UAE@XZ @ 22 NONAME ; CUPnPBrowseCacheItem::~CUPnPBrowseCacheItem(void)
+	?SetItemArrayL@CUPnPBrowseCacheItem@@QAEXABV?$RPointerArray@VCUpnpObject@@@@@Z @ 23 NONAME ; void CUPnPBrowseCacheItem::SetItemArrayL(class RPointerArray<class CUpnpObject> const &)
+	?GetNumberOfItems@CUPnPBrowseCacheItem@@QBEHXZ @ 24 NONAME ; int CUPnPBrowseCacheItem::GetNumberOfItems(void) const
+	?DisplayConnectionLostCopyErrorNoteL@CUPnPCommonUI@@QAEXXZ @ 25 NONAME ; void CUPnPCommonUI::DisplayConnectionLostCopyErrorNoteL(void)
+

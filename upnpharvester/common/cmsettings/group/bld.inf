@@ -1,0 +1,35 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Build information file for CM Settings Engine
+*
+*/
+
+
+PRJ_PLATFORMS
+DEFAULT
+
+PRJ_EXPORTS
+../inc/cmsettingsfactory.h   |../../../../inc/cmsettingsfactory.h
+../inc/cmsettings.h   |../../../../inc/cmsettings.h
+
+// Central repository default keys
+../data/10281FAB.txt    /epoc32/release/winscw/udeb/z/private/10202be9/10281FAB.txt
+../data/10281FAB.txt    /epoc32/release/winscw/urel/z/private/10202be9/10281FAB.txt
+../data/10281FAB.txt    /epoc32/release/armv5/udeb/z/private/10202be9/10281FAB.txt
+../data/10281FAB.txt    /epoc32/release/armv5/urel/z/private/10202be9/10281FAB.txt
+
+PRJ_MMPFILES
+cmsettingsengine.mmp
+
+

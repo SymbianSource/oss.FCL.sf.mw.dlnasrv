@@ -1,0 +1,6 @@
+EXPORTS
+	_ZN18CCmSettingsFactory20NewCmSettingsEngineLEv @ 1 NONAME
+	_ZN18CCmSettingsFactory21NewCmSettingsEngineLCEv @ 2 NONAME
+	_ZTI17CCmSettingsEngine @ 3 NONAME ; #<TI>#
+	_ZTV17CCmSettingsEngine @ 4 NONAME ; #<VT>#
+

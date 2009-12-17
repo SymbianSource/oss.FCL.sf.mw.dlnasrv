@@ -1,0 +1,49 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Project definition file for Cds Sync
+*
+*/
+
+
+
+
+
+
+#include <platform_paths.hrh>
+
+TARGET        cdssync.dll
+TARGETTYPE    dll
+UID           0x1000008d 0x015D2C17
+
+CAPABILITY CAP_GENERAL_DLL
+                   
+SOURCEPATH    ../src
+
+SOURCE        cdssync.cpp
+SOURCE        cdssyncimplsql.cpp
+SOURCE        cdssyncsqlao.cpp
+
+USERINCLUDE   ../inc
+USERINCLUDE     ../../../../inc
+
+MW_LAYER_SYSTEMINCLUDE
+
+LIBRARY       euser.lib
+LIBRARY       flogger.lib
+LIBRARY       hash.lib
+LIBRARY       xmlframework.lib
+LIBRARY       bafl.lib
+LIBRARY       efsrv.lib
+LIBRARY       cmcommon.lib
+LIBRARY       cmsqlwrapper.lib

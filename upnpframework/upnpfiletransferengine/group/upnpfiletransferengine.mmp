@@ -1,0 +1,88 @@
+/*
+* Copyright (c) 2006-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project definition file for project UpnpFileTransferEngine
+*
+*/
+
+
+// For compatibility with S60 3.2 and IAD branch
+#include "../../../group/upnpplatformvar.hrh"
+#include "../inc/upnpfiletransferengineuids.hrh"
+
+#include <data_caging_paths.hrh>
+
+// Build target
+TARGET          upnpfiletransferengine.dll
+CAPABILITY      CAP_GENERAL_DLL
+TARGETTYPE      DLL
+UID             0x10009D8D KUpnpFileTransferEngineDllUid
+VENDORID        VID_DEFAULT
+
+// SIS installation + IAD support
+VERSION 10.1
+paged
+
+SOURCEPATH      ../data
+START RESOURCE  upnpfiletransferengineresources.rss
+HEADER
+TARGET          upnpfiletransferengineresources.rsc
+TARGETPATH      RESOURCE_FILES_DIR
+LANGUAGE_IDS
+END
+
+USERINCLUDE     ../inc
+USERINCLUDE     ../../inc
+USERINCLUDE     ../../../inc
+USERINCLUDE     ../data
+USERINCLUDE     ../../upnputilities/inc
+USERINCLUDE     ../../upnpcommand/inc
+USERINCLUDE     ../../upnpaiwengine/inc
+
+MW_LAYER_SYSTEMINCLUDE
+UPNP_LOC_INCLUDE_PATH_COMPONENT
+
+SOURCEPATH      ../src
+SOURCE          upnpplaylisthandler.cpp
+SOURCE          upnpfiletransferhandler.cpp
+SOURCE          upnpfiletransferengine.cpp
+SOURCE          upnpnotehandler.cpp
+SOURCE          upnpdownloadhandler.cpp
+SOURCE          upnpuploadhandler.cpp
+
+// Core platform + Ui
+LIBRARY         euser.lib
+LIBRARY         bafl.lib
+LIBRARY         cone.lib
+LIBRARY         efsrv.lib 
+LIBRARY         PlatformEnv.lib
+LIBRARY         avkon.lib
+LIBRARY         eikctl.lib
+LIBRARY         CommonEngine.lib 
+
+// S60 Upnp Stack
+LIBRARY         upnpipserversutils.lib
+LIBRARY         upnpavobjects.lib
+
+// Upnp Framework
+LIBRARY         upnpavcontrollerclient.lib
+LIBRARY         upnpavcontrollerhelper.lib
+LIBRARY         upnputilities.lib
+LIBRARY         upnpmusicadapter.lib
+LIBRARY         upnpsettingsengine.lib 
+LIBRARY         upnpxmlparser.lib
+
+// Debugging
+DEBUGLIBRARY    flogger.lib
+
+// End of file

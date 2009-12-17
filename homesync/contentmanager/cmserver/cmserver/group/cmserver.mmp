@@ -1,0 +1,76 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project specification file for Content Manager server
+*
+*/
+
+
+#include <platform_paths.hrh>
+#include "../inc/cmuids.hrh"
+
+TARGET              cmserver.exe
+TARGETTYPE          exe
+UID                 0x1000008d KCmServerUid
+
+TARGETPATH          /system/programs
+
+CAPABILITY          CAP_SERVER
+VENDORID            VID_DEFAULT
+
+// Minimum heap size 4kB, maximum heap size 16MB, stack size 32kB
+EPOCHEAPSIZE   0x1000 0x1000000
+EPOCSTACKSIZE  0x8000
+
+SOURCEPATH          ../src/server
+SOURCE              cmservermain.cpp
+SOURCE              cmserver.cpp
+SOURCE              cmserversession.cpp
+
+START RESOURCE      ../../data/cmserver.rss
+TARGETPATH          /resource/apps
+END
+
+USERINCLUDE         ../inc
+USERINCLUDE         ../inc/server
+
+MW_LAYER_SYSTEMINCLUDE
+USERINCLUDE       ../../../../../inc
+
+LIBRARY         avcontrolframework.lib
+LIBRARY         upnpserviceframework.lib
+LIBRARY         upnpavcontrollerclient.lib
+LIBRARY         cmmdhclient.lib
+LIBRARY         cmsettingsengine.lib
+LIBRARY         cmcommon.lib
+LIBRARY         cmdatabasemanager.lib
+LIBRARY         cmfillmanager.lib
+LIBRARY         cmstoremanager.lib
+LIBRARY         cmscheduler.lib
+LIBRARY         cmmemorymanager.lib
+LIBRARY         centralrepository.lib
+LIBRARY         mdeclient.lib
+LIBRARY         bafl.lib
+LIBRARY         euser.lib
+LIBRARY         ecom.lib
+LIBRARY         estor.lib
+LIBRARY         efsrv.lib
+LIBRARY         ws32.lib        // for application activity info
+LIBRARY         apgrfx.lib      // for application activity info
+DEBUGLIBRARY    flogger.lib
+
+START RESOURCE      ../../data/cmserver_reg.rss
+TARGETPATH          /resource/apps
+END
+
+// End of File

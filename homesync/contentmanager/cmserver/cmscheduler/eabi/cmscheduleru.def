@@ -1,0 +1,13 @@
+EXPORTS
+	_ZN12CCmScheduler11SetEnabledLEi @ 1 NONAME
+	_ZN12CCmScheduler15ServiceExecutedE10TCmServicei @ 2 NONAME
+	_ZN12CCmScheduler19SetServiceToExecuteE10TCmService @ 3 NONAME
+	_ZN12CCmScheduler24SetScheduledServiceStateEi @ 4 NONAME
+	_ZN12CCmScheduler4NewLER18MCmServiceObserverR11MCmSettings @ 5 NONAME
+	_ZTI12CCmScheduler @ 6 NONAME ; #<TI>#
+	_ZTI17CCmCenrepNotifier @ 7 NONAME ; #<TI>#
+	_ZTI18CCmCommsDbNotifier @ 8 NONAME ; #<TI>#
+	_ZTV12CCmScheduler @ 9 NONAME ; #<VT>#
+	_ZTV17CCmCenrepNotifier @ 10 NONAME ; #<VT>#
+	_ZTV18CCmCommsDbNotifier @ 11 NONAME ; #<VT>#
+

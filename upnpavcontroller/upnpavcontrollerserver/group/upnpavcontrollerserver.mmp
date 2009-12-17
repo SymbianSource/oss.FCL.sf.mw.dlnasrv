@@ -1,0 +1,87 @@
+/*
+* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      project file for AVController server library
+*
+*/
+
+
+
+
+
+#include "../../../group/upnpplatformvar.hrh"
+
+TARGET          upnpavcontrollerserver.exe
+TARGETTYPE      exe
+CAPABILITY      CAP_SERVER
+VENDORID        VID_DEFAULT
+UID             0x1000008d 0x20007566
+
+VERSION         10.1
+paged
+
+EPOCHEAPSIZE    4096 2097152 // 4K / 2M
+
+SOURCEPATH      ../src
+SOURCE          upnpavcontrollerserver.cpp
+SOURCE          upnpavcontrollersession.cpp
+SOURCE          upnpavdispatcher.cpp
+SOURCE          upnpavactioninfo.cpp
+SOURCE          upnpavcontrollerimpl.cpp
+SOURCE          upnpplaybacksession.cpp
+SOURCE          upnpfilesharingactive.cpp
+SOURCE          upnpbrowsingsession.cpp
+SOURCE          upnpaverrorhandler.cpp
+SOURCE          upnpavtimer.cpp
+SOURCE          upnpdevicerepository.cpp
+SOURCE          upnpavdeviceextended.cpp
+SOURCE          upnpdevicediscoverymessage.cpp
+SOURCE          upnpdownloadsession.cpp
+SOURCE          upnpuploadsession.cpp
+SOURCE          upnpfiletransfersessionbase.cpp
+SOURCE          upnpresourcehelper.cpp
+
+MW_LAYER_SYSTEMINCLUDE
+USERINCLUDE   ../../../inc
+
+USERINCLUDE     ../inc
+USERINCLUDE     ../../inc
+USERINCLUDE     ../../upnpavcontrollerclient/inc
+
+// system
+LIBRARY         euser.lib 
+LIBRARY         efsrv.lib
+LIBRARY         estor.lib
+LIBRARY         insock.lib
+LIBRARY         centralrepository.lib
+LIBRARY         charconv.lib
+
+// upnp stack
+LIBRARY         avmediaserverclient.lib
+LIBRARY         upnpserviceframework.lib
+LIBRARY         upnpcontrolpointbase.lib
+LIBRARY         upnpavobjects.lib
+LIBRARY         upnpipserversutils.lib
+LIBRARY         avcontrolframework.lib
+
+// UPnP framework
+LIBRARY         upnpavcontrollerclient.lib
+LIBRARY         upnpavcontrollerhelper.lib
+LIBRARY         upnpxmlparser.lib
+LIBRARY         upnputilities.lib
+LIBRARY         upnpsecurity.lib
+LIBRARY         httptransfer.lib
+
+DEBUGLIBRARY    flogger.lib
+
+// End of file

@@ -1,0 +1,7 @@
+EXPORTS
+	_ZN25CUPnPAppFileSharingDialog4NewLEiR22CUPnPFileSharingEngine @ 1 NONAME
+	_ZTI25CUPnPAppFileSharingDialog @ 2 NONAME ; #<TI>#
+	_ZTV25CUPnPAppFileSharingDialog @ 3 NONAME ; #<VT>#
+	_ZN25CUPnPAppFileSharingDialog22ExecuteSharingDialogLDEv @ 4 NONAME
+	_ZN25CUPnPAppFileSharingDialog22UpdateFileSharingListLEv @ 5 NONAME
+

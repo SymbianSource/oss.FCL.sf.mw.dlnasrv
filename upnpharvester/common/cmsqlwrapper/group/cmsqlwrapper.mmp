@@ -1,0 +1,54 @@
+/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Project definition file for project SQL wrapper
+*
+*/
+
+
+
+
+
+
+#include <platform_paths.hrh>
+
+TARGET          cmsqlwrapper.dll
+TARGETTYPE      dll
+UID             0x1000008d 0x1028290D
+
+CAPABILITY CAP_GENERAL_DLL
+
+TARGETPATH      /sys/bin
+
+USERINCLUDE     ../inc
+USERINCLUDE     ../../../../inc
+
+MW_LAYER_SYSTEMINCLUDE
+
+SOURCEPATH      ../src
+
+SOURCE          cmsqlmain.cpp
+SOURCE          cmsqlmainfactory.cpp
+SOURCE          cmsqldbmaintenance.cpp
+SOURCE          cmsqlconnection.cpp
+SOURCE          cmsqldbclause.cpp
+
+LIBRARY         bafl.lib
+LIBRARY         sqldb.lib
+LIBRARY         euser.lib
+LIBRARY         estor.lib
+LIBRARY         efsrv.lib
+LIBRARY         cmcommon.lib
+LIBRARY         charconv.lib
+DEBUGLIBRARY    flogger.lib
+

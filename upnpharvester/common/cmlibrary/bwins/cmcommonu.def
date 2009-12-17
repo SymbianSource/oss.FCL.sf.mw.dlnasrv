@@ -1,0 +1,319 @@
+EXPORTS
+	?NewL@CCmSqlResolutionPropertyItem@@SAPAV1@XZ @ 1 NONAME ; class CCmSqlResolutionPropertyItem * CCmSqlResolutionPropertyItem::NewL(void)
+	?NewLC@CCmSqlImageItem@@SAPAV1@XZ @ 2 NONAME ; class CCmSqlImageItem * CCmSqlImageItem::NewLC(void)
+	?StoreRule@CCmStoreRule@@QAEXHPAW4TCmMediaType@@@Z @ 3 NONAME ; void CCmStoreRule::StoreRule(int, enum TCmMediaType *)
+	?ListId@CCmFillRule@@QBEIXZ @ 4 NONAME ; unsigned int CCmFillRule::ListId(void) const
+	?SetListId@CCmFillListItem@@QAEXI@Z @ 5 NONAME ; void CCmFillListItem::SetListId(unsigned int)
+	?Status@CCmBaseListItem@@QBE?AW4TCmListItemStatus@@XZ @ 6 NONAME ; enum TCmListItemStatus CCmBaseListItem::Status(void) const
+	?InternalizeL@CCmDriveInfo@@QAEXAAVRReadStream@@@Z @ 7 NONAME ; void CCmDriveInfo::InternalizeL(class RReadStream &)
+	?SetListRealSizeInBytes@CCmFillRule@@QAEXK@Z @ 8 NONAME ; void CCmFillRule::SetListRealSizeInBytes(unsigned long)
+	?AddPropertyItemL@CCmSqlPropertyContainer@@QAEXPAVCCmSqlPropertyItem@@@Z @ 9 NONAME ; void CCmSqlPropertyContainer::AddPropertyItemL(class CCmSqlPropertyItem *)
+	?Priority@CCmFillListItem@@QBEEXZ @ 10 NONAME ; unsigned char CCmFillListItem::Priority(void) const
+	?PrimaryText@CCmBaseListItem@@QBEAAVTDesC16@@XZ @ 11 NONAME ; class TDesC16 & CCmBaseListItem::PrimaryText(void) const
+	?Height@CCmSqlResolutionPropertyItem@@QBEHXZ @ 12 NONAME ; int CCmSqlResolutionPropertyItem::Height(void) const
+	?ExcAlbums@CCmFillRule@@QBEAAVCDesC16Array@@XZ @ 13 NONAME ; class CDesC16Array & CCmFillRule::ExcAlbums(void) const
+	?DeleteRule@CCmFillRule@@QAEXW4TCmMetadataField@@@Z @ 14 NONAME ; void CCmFillRule::DeleteRule(enum TCmMetadataField)
+	??1CCmMediaServerFull@@UAE@XZ @ 15 NONAME ; CCmMediaServerFull::~CCmMediaServerFull(void)
+	?Amount@CCmFillRule@@QBEKXZ @ 16 NONAME ; unsigned long CCmFillRule::Amount(void) const
+	?MediaServerName@CCmMediaServerFull@@QBE?AVTPtrC8@@XZ @ 17 NONAME ; class TPtrC8 CCmMediaServerFull::MediaServerName(void) const
+	?SetId@CCmSqlPropertyItem@@QAEX_J@Z @ 18 NONAME ; void CCmSqlPropertyItem::SetId(long long)
+	?SetArtistId@CCmSqlAudioItem@@QAEX_J@Z @ 19 NONAME ; void CCmSqlAudioItem::SetArtistId(long long)
+	?Bitrate@CCmSqlAudioItem@@QBEHXZ @ 20 NONAME ; int CCmSqlAudioItem::Bitrate(void) const
+	?MediaServerCount@CCmStoreRule@@QBEHXZ @ 21 NONAME ; int CCmStoreRule::MediaServerCount(void) const
+	?CompareItemsByName@CCmSqlPropertyItem@@SAHABV1@0@Z @ 22 NONAME ; int CCmSqlPropertyItem::CompareItemsByName(class CCmSqlPropertyItem const &, class CCmSqlPropertyItem const &)
+	?NewL@CCmSqlBaseItem@@SAPAV1@XZ @ 23 NONAME ; class CCmSqlBaseItem * CCmSqlBaseItem::NewL(void)
+	?DefCount@CCmStoreRule@@QBEHXZ @ 24 NONAME ; int CCmStoreRule::DefCount(void) const
+	?UsedDriveQuota@CCmDriveInfo@@QBE_JXZ @ 25 NONAME ; long long CCmDriveInfo::UsedDriveQuota(void) const
+	?SetType@CCmSqlPropertyContainer@@QAEXW4TCmMetadataField@@@Z @ 26 NONAME ; void CCmSqlPropertyContainer::SetType(enum TCmMetadataField)
+	?AddMediaServerL@CCmFillRule@@QAEHABVTDesC8@@@Z @ 27 NONAME ; int CCmFillRule::AddMediaServerL(class TDesC8 const &)
+	?Status@CCmStoreRule@@QBE?AW4TCmListItemStatus@@XZ @ 28 NONAME ; enum TCmListItemStatus CCmStoreRule::Status(void) const
+	?NewLC@CCmFillListItem@@SAPAV1@IIIW4TCmFillRuleStatus@@@Z @ 29 NONAME ; class CCmFillListItem * CCmFillListItem::NewLC(unsigned int, unsigned int, unsigned int, enum TCmFillRuleStatus)
+	?SetListRealCount@CCmFillRule@@QAEXK@Z @ 30 NONAME ; void CCmFillRule::SetListRealCount(unsigned long)
+	?CompareItemsByName@CCmSqlResolutionPropertyItem@@SAHABV1@0@Z @ 31 NONAME ; int CCmSqlResolutionPropertyItem::CompareItemsByName(class CCmSqlResolutionPropertyItem const &, class CCmSqlResolutionPropertyItem const &)
+	?SetTemplateId@CCmFillRule@@QAEXE@Z @ 32 NONAME ; void CCmFillRule::SetTemplateId(unsigned char)
+	?NewLC@CCmMediaServer@@SAPAV1@XZ @ 33 NONAME ; class CCmMediaServer * CCmMediaServer::NewLC(void)
+	?SetSelected@CCmFillRule@@QAEXW4TCmFillRuleStatus@@@Z @ 34 NONAME ; void CCmFillRule::SetSelected(enum TCmFillRuleStatus)
+	?HarvestDate@CCmSqlGenericItem@@QBE?AVTTime@@XZ @ 35 NONAME ; class TTime CCmSqlGenericItem::HarvestDate(void) const
+	?TrackNumber@CCmSqlAudioItem@@QBEHXZ @ 36 NONAME ; int CCmSqlAudioItem::TrackNumber(void) const
+	?SetPriority@CCmFillListItem@@QAEXE@Z @ 37 NONAME ; void CCmFillListItem::SetPriority(unsigned char)
+	?GetResource@CCmSqlGenericItem@@QAEXAAVTDesC8@@AAH11AA_JH@Z @ 38 NONAME ; void CCmSqlGenericItem::GetResource(class TDesC8 &, int &, int &, int &, long long &, int)
+	?AlbumArtUri@CCmSqlAudioItem@@QBEAAVTDesC8@@XZ @ 39 NONAME ; class TDesC8 & CCmSqlAudioItem::AlbumArtUri(void) const
+	?ExternalizeL@CCmFillListItem@@QBEXAAVRWriteStream@@@Z @ 40 NONAME ; void CCmFillListItem::ExternalizeL(class RWriteStream &) const
+	?NewLC@CCmSqlPropertyContainer@@SAPAV1@XZ @ 41 NONAME ; class CCmSqlPropertyContainer * CCmSqlPropertyContainer::NewLC(void)
+	?Name@CCmSqlPropertyItem@@QBEAAVTDesC8@@XZ @ 42 NONAME ; class TDesC8 & CCmSqlPropertyItem::Name(void) const
+	?Date@CCmSqlGenericItem@@QBE?AVTTime@@XZ @ 43 NONAME ; class TTime CCmSqlGenericItem::Date(void) const
+	?NewLC@CCmStoreListItem@@SAPAV1@XZ @ 44 NONAME ; class CCmStoreListItem * CCmStoreListItem::NewLC(void)
+	?ExcPlayLists@CCmFillRule@@QBEAAVCDesC16Array@@XZ @ 45 NONAME ; class CDesC16Array & CCmFillRule::ExcPlayLists(void) const
+	?SetMethod@CCmFillRule@@QAEXW4TCmFillMethod@@@Z @ 46 NONAME ; void CCmFillRule::SetMethod(enum TCmFillMethod)
+	??1CCmSqlPropertyItem@@UAE@XZ @ 47 NONAME ; CCmSqlPropertyItem::~CCmSqlPropertyItem(void)
+	??1CCmFillRule@@UAE@XZ @ 48 NONAME ; CCmFillRule::~CCmFillRule(void)
+	?NewLC@CCmSqlVideoItem@@SAPAV1@XZ @ 49 NONAME ; class CCmSqlVideoItem * CCmSqlVideoItem::NewLC(void)
+	?ExternalizeL@CCmStoreRuleContainer@@QBEXAAVRWriteStream@@@Z @ 50 NONAME ; void CCmStoreRuleContainer::ExternalizeL(class RWriteStream &) const
+	?SetItemCount@CCmSearchResponseHash@@QAEXH@Z @ 51 NONAME ; void CCmSearchResponseHash::SetItemCount(int)
+	?DeleteFillRule@CCmFillRuleContainer@@QAEXH@Z @ 52 NONAME ; void CCmFillRuleContainer::DeleteFillRule(int)
+	?ExternalizeL@CCmStoreListItem@@QBEXAAVRWriteStream@@@Z @ 53 NONAME ; void CCmStoreListItem::ExternalizeL(class RWriteStream &) const
+	?TemplateId@CCmFillRule@@QBEEXZ @ 54 NONAME ; unsigned char CCmFillRule::TemplateId(void) const
+	?Size@CCmSqlGenericItem@@QBEHXZ @ 55 NONAME ; int CCmSqlGenericItem::Size(void) const
+	?VisibleDate@CCmMediaServerFull@@QBE?AVTTime@@XZ @ 56 NONAME ; class TTime CCmMediaServerFull::VisibleDate(void) const
+	?SetVisibleDate@CCmMediaServerFull@@QAEXVTTime@@@Z @ 57 NONAME ; void CCmMediaServerFull::SetVisibleDate(class TTime)
+	?NewLC@CCmFillRule@@SAPAV1@XZ @ 58 NONAME ; class CCmFillRule * CCmFillRule::NewLC(void)
+	?Title@CCmSqlGenericItem@@QBEAAVTDesC8@@XZ @ 59 NONAME ; class TDesC8 & CCmSqlGenericItem::Title(void) const
+	?StartIndex@CCmSearchResponseHash@@QBEHXZ @ 60 NONAME ; int CCmSearchResponseHash::StartIndex(void) const
+	?DriveNumber@CCmDriveInfo@@QBEHXZ @ 61 NONAME ; int CCmDriveInfo::DriveNumber(void) const
+	?Name@CCmFillRule@@QBEAAVTDesC8@@XZ @ 62 NONAME ; class TDesC8 & CCmFillRule::Name(void) const
+	?FillUsage@CCmMediaServerFull@@QAEHXZ @ 63 NONAME ; int CCmMediaServerFull::FillUsage(void)
+	?SetAmount@CCmFillRule@@QAEXK@Z @ 64 NONAME ; void CCmFillRule::SetAmount(unsigned long)
+	??1CCmSqlBaseItem@@UAE@XZ @ 65 NONAME ; CCmSqlBaseItem::~CCmSqlBaseItem(void)
+	?SetResolutionId@CCmSqlImageItem@@QAEX_J@Z @ 66 NONAME ; void CCmSqlImageItem::SetResolutionId(long long)
+	?SetDriveQuota@CCmDriveInfo@@QAEX_J@Z @ 67 NONAME ; void CCmDriveInfo::SetDriveQuota(long long)
+	?DeleteMediaServer@CCmFillRule@@QAEXABVTDesC8@@@Z @ 68 NONAME ; void CCmFillRule::DeleteMediaServer(class TDesC8 const &)
+	?RemoveExcPlayList@CCmFillRule@@QAEXABVTDesC16@@@Z @ 69 NONAME ; void CCmFillRule::RemoveExcPlayList(class TDesC16 const &)
+	?SystemUpdateID@CCmMediaServer@@QBEHXZ @ 70 NONAME ; int CCmMediaServer::SystemUpdateID(void) const
+	??1CCmStoreRuleContainer@@UAE@XZ @ 71 NONAME ; CCmStoreRuleContainer::~CCmStoreRuleContainer(void)
+	?ExternalizeL@CCmDriveInfo@@QBEXAAVRWriteStream@@@Z @ 72 NONAME ; void CCmDriveInfo::ExternalizeL(class RWriteStream &) const
+	?NewL@CCmSqlPropertyContainer@@SAPAV1@XZ @ 73 NONAME ; class CCmSqlPropertyContainer * CCmSqlPropertyContainer::NewL(void)
+	?UpnpProfileId@CCmSqlGenericItem@@QBE_JXZ @ 74 NONAME ; long long CCmSqlGenericItem::UpnpProfileId(void) const
+	?SetHeight@CCmSqlResolutionPropertyItem@@QAEXH@Z @ 75 NONAME ; void CCmSqlResolutionPropertyItem::SetHeight(int)
+	?SetStatus@CCmFillRule@@QAEXW4TCmListItemStatus@@@Z @ 76 NONAME ; void CCmFillRule::SetStatus(enum TCmListItemStatus)
+	?DeleteMediaServer@CCmFillRule@@QAEXH@Z @ 77 NONAME ; void CCmFillRule::DeleteMediaServer(int)
+	?Description@CCmSqlImageItem@@QBEAAVTDesC8@@XZ @ 78 NONAME ; class TDesC8 & CCmSqlImageItem::Description(void) const
+	?SetDevId@CCmStoreListItem@@QAEXEW4TCmListItemStatus@@@Z @ 79 NONAME ; void CCmStoreListItem::SetDevId(unsigned char, enum TCmListItemStatus)
+	?SetDate@CCmBaseListItem@@QAEXVTTime@@@Z @ 80 NONAME ; void CCmBaseListItem::SetDate(class TTime)
+	?ExcPlayLists@CCmStoreRule@@QAEAAVCDesC16Array@@XZ @ 81 NONAME ; class CDesC16Array & CCmStoreRule::ExcPlayLists(void)
+	?NewL@CCmSqlVideoItem@@SAPAV1@XZ @ 82 NONAME ; class CCmSqlVideoItem * CCmSqlVideoItem::NewL(void)
+	?SetRefId@CCmBaseListItem@@QAEX_K@Z @ 83 NONAME ; void CCmBaseListItem::SetRefId(unsigned long long)
+	?Status@CCmDriveInfo@@QBEHXZ @ 84 NONAME ; int CCmDriveInfo::Status(void) const
+	?Hash@CCmSqlBaseItem@@QBEAAVTDesC16@@XZ @ 85 NONAME ; class TDesC16 & CCmSqlBaseItem::Hash(void) const
+	?SetMediaType@CCmBaseListItem@@QAEXW4TCmMediaType@@@Z @ 86 NONAME ; void CCmBaseListItem::SetMediaType(enum TCmMediaType)
+	?SetDevId@CCmFillListItem@@QAEXE@Z @ 87 NONAME ; void CCmFillListItem::SetDevId(unsigned char)
+	?NewLC@CCmSqlResolutionPropertyItem@@SAPAV1@XZ @ 88 NONAME ; class CCmSqlResolutionPropertyItem * CCmSqlResolutionPropertyItem::NewLC(void)
+	?Size@CCmBaseListItem@@QBEKXZ @ 89 NONAME ; unsigned long CCmBaseListItem::Size(void) const
+	?SetSize@CCmBaseListItem@@QAEXK@Z @ 90 NONAME ; void CCmBaseListItem::SetSize(unsigned long)
+	?NewLC@CCmStoreRule@@SAPAV1@XZ @ 91 NONAME ; class CCmStoreRule * CCmStoreRule::NewLC(void)
+	?InternalizeL@CCmSqlResolutionPropertyItem@@QAEXAAVRReadStream@@@Z @ 92 NONAME ; void CCmSqlResolutionPropertyItem::InternalizeL(class RReadStream &)
+	?NewLC@CCmBaseListItem@@SAPAV1@XZ @ 93 NONAME ; class CCmBaseListItem * CCmBaseListItem::NewLC(void)
+	?MediaServerCount@CCmFillRule@@QBEHXZ @ 94 NONAME ; int CCmFillRule::MediaServerCount(void) const
+	?IsDuplicate@CCmSqlPropertyContainer@@QAEHAAVCCmSqlPropertyItem@@@Z @ 95 NONAME ; int CCmSqlPropertyContainer::IsDuplicate(class CCmSqlPropertyItem &)
+	?InternalizeL@CCmBaseListItem@@QAEXAAVRReadStream@@@Z @ 96 NONAME ; void CCmBaseListItem::InternalizeL(class RReadStream &)
+	?MediaServerL@CCmStoreRule@@QAEABVTDesC8@@H@Z @ 97 NONAME ; class TDesC8 const & CCmStoreRule::MediaServerL(int)
+	?IsActive@CCmMediaServerFull@@QBEEXZ @ 98 NONAME ; unsigned char CCmMediaServerFull::IsActive(void) const
+	?AddFillRuleL@CCmFillRuleContainer@@QAEHPAVCCmFillRule@@@Z @ 99 NONAME ; int CCmFillRuleContainer::AddFillRuleL(class CCmFillRule *)
+	?NewLC@CCmSqlBaseItem@@SAPAV1@XZ @ 100 NONAME ; class CCmSqlBaseItem * CCmSqlBaseItem::NewLC(void)
+	?SetPathL@CCmBaseListItem@@QAEXABVTDesC16@@@Z @ 101 NONAME ; void CCmBaseListItem::SetPathL(class TDesC16 const &)
+	?CompareByHash@CCmSqlBaseItem@@SAHABV1@0@Z @ 102 NONAME ; int CCmSqlBaseItem::CompareByHash(class CCmSqlBaseItem const &, class CCmSqlBaseItem const &)
+	?Method@CCmFillRule@@QBE?AW4TCmFillMethod@@XZ @ 103 NONAME ; enum TCmFillMethod CCmFillRule::Method(void) const
+	?DbId@CCmMediaServer@@QBE_JXZ @ 104 NONAME ; long long CCmMediaServer::DbId(void) const
+	?SetGenreId@CCmSqlAudioItem@@QAEX_J@Z @ 105 NONAME ; void CCmSqlAudioItem::SetGenreId(long long)
+	?DeletePropertyContainer@CCmSqlPropertyCollector@@QAEXH@Z @ 106 NONAME ; void CCmSqlPropertyCollector::DeletePropertyContainer(int)
+	?DevIds@CCmStoreListItem@@QBE?AV?$RArray@H@@XZ @ 107 NONAME ; class RArray<int> CCmStoreListItem::DevIds(void) const
+	?UpdateFileStatusL@CCmStoreListItem@@QAEXEW4TCmListItemStatus@@@Z @ 108 NONAME ; void CCmStoreListItem::UpdateFileStatusL(unsigned char, enum TCmListItemStatus)
+	?DeleteMediaServer@CCmStoreRule@@QAEXABVTDesC8@@@Z @ 109 NONAME ; void CCmStoreRule::DeleteMediaServer(class TDesC8 const &)
+	?SetNameL@CCmSqlPropertyItem@@QAEXABVTDesC8@@@Z @ 110 NONAME ; void CCmSqlPropertyItem::SetNameL(class TDesC8 const &)
+	?SetUpnpclassId@CCmSqlGenericItem@@QAEX_J@Z @ 111 NONAME ; void CCmSqlGenericItem::SetUpnpclassId(long long)
+	?SetAlbumArtUriL@CCmSqlAudioItem@@QAEXABVTDesC8@@@Z @ 112 NONAME ; void CCmSqlAudioItem::SetAlbumArtUriL(class TDesC8 const &)
+	?NewL@CCmFillRule@@SAPAV1@XZ @ 113 NONAME ; class CCmFillRule * CCmFillRule::NewL(void)
+	?SetUriL@CCmFillListItem@@QAEXABVTDesC8@@@Z @ 114 NONAME ; void CCmFillListItem::SetUriL(class TDesC8 const &)
+	?NewL@CCmSearchResponseHash@@SAPAV1@HHABVTDesC8@@@Z @ 115 NONAME ; class CCmSearchResponseHash * CCmSearchResponseHash::NewL(int, int, class TDesC8 const &)
+	?SetDriveNameL@CCmDriveInfo@@QAEXABVTDesC16@@@Z @ 116 NONAME ; void CCmDriveInfo::SetDriveNameL(class TDesC16 const &)
+	?LimitType@CCmFillRule@@QBE?AW4TCmLimitType@@XZ @ 117 NONAME ; enum TCmLimitType CCmFillRule::LimitType(void) const
+	?SetLimitType@CCmFillRule@@QAEXW4TCmLimitType@@@Z @ 118 NONAME ; void CCmFillRule::SetLimitType(enum TCmLimitType)
+	?RuleCount@CCmFillRule@@QBEHXZ @ 119 NONAME ; int CCmFillRule::RuleCount(void) const
+	?ListId@CCmFillListItem@@QBEIXZ @ 120 NONAME ; unsigned int CCmFillListItem::ListId(void) const
+	?Width@CCmSqlResolutionPropertyItem@@QBEHXZ @ 121 NONAME ; int CCmSqlResolutionPropertyItem::Width(void) const
+	?AddRuleParamL@CCmFillRule@@QAEHHH@Z @ 122 NONAME ; int CCmFillRule::AddRuleParamL(int, int)
+	?Type@CCmSqlPropertyContainer@@QAE?AW4TCmMetadataField@@XZ @ 123 NONAME ; enum TCmMetadataField CCmSqlPropertyContainer::Type(void)
+	?AddExcAlbumL@CCmFillRule@@QAEXABVTDesC16@@@Z @ 124 NONAME ; void CCmFillRule::AddExcAlbumL(class TDesC16 const &)
+	??1CCmSqlPropertyContainer@@UAE@XZ @ 125 NONAME ; CCmSqlPropertyContainer::~CCmSqlPropertyContainer(void)
+	?AddStoreRuleL@CCmStoreRuleContainer@@QAEHPAVCCmStoreRule@@@Z @ 126 NONAME ; int CCmStoreRuleContainer::AddStoreRuleL(class CCmStoreRule *)
+	?MediaType@CCmSqlGenericItem@@QBE?AW4TCmMediaType@@XZ @ 127 NONAME ; enum TCmMediaType CCmSqlGenericItem::MediaType(void) const
+	?SetCdsIdL@CCmSqlBaseItem@@QAEXABVTDesC8@@@Z @ 128 NONAME ; void CCmSqlBaseItem::SetCdsIdL(class TDesC8 const &)
+	?NewL@CCmDriveInfo@@SAPAV1@XZ @ 129 NONAME ; class CCmDriveInfo * CCmDriveInfo::NewL(void)
+	?DeleteStoreRule@CCmStoreRuleContainer@@QAEXH@Z @ 130 NONAME ; void CCmStoreRuleContainer::DeleteStoreRule(int)
+	?Uri@CCmFillListItem@@QBEAAVTDesC8@@XZ @ 131 NONAME ; class TDesC8 & CCmFillListItem::Uri(void) const
+	?NewLC@CCmSqlGenericItem@@SAPAV1@XZ @ 132 NONAME ; class CCmSqlGenericItem * CCmSqlGenericItem::NewLC(void)
+	?PropertyContainerCount@CCmSqlPropertyCollector@@QBEHXZ @ 133 NONAME ; int CCmSqlPropertyCollector::PropertyContainerCount(void) const
+	?ItemId@CCmFillListItem@@QBEAAVTDesC8@@XZ @ 134 NONAME ; class TDesC8 & CCmFillListItem::ItemId(void) const
+	?NewLC@CCmFillRuleContainer@@SAPAV1@XZ @ 135 NONAME ; class CCmFillRuleContainer * CCmFillRuleContainer::NewLC(void)
+	?DeleteRule@CCmFillRule@@QAEXW4TCmMetadataField@@W4TCmOperatorType@@@Z @ 136 NONAME ; void CCmFillRule::DeleteRule(enum TCmMetadataField, enum TCmOperatorType)
+	?InternalizeL@CCmStoreRuleContainer@@QAEXAAVRReadStream@@@Z @ 137 NONAME ; void CCmStoreRuleContainer::InternalizeL(class RReadStream &)
+	?SetNameL@CCmFillRule@@QAEHABVTDesC8@@@Z @ 138 NONAME ; int CCmFillRule::SetNameL(class TDesC8 const &)
+	?Selected@CCmFillRule@@QBE?AW4TCmFillRuleStatus@@XZ @ 139 NONAME ; enum TCmFillRuleStatus CCmFillRule::Selected(void) const
+	?MediaType@CCmFillRule@@QBE?AW4TCmMediaType@@XZ @ 140 NONAME ; enum TCmMediaType CCmFillRule::MediaType(void) const
+	?Id@CCmSqlPropertyItem@@QBE_JXZ @ 141 NONAME ; long long CCmSqlPropertyItem::Id(void) const
+	?SortPropertyItem@CCmSqlPropertyContainer@@QAEXXZ @ 142 NONAME ; void CCmSqlPropertyContainer::SortPropertyItem(void)
+	?StoreRuleCount@CCmStoreRuleContainer@@QBEHXZ @ 143 NONAME ; int CCmStoreRuleContainer::StoreRuleCount(void) const
+	?DevId@CCmFillListItem@@QBEEXZ @ 144 NONAME ; unsigned char CCmFillListItem::DevId(void) const
+	?SetSearchId@CCmSqlBaseItem@@QAEX_J@Z @ 145 NONAME ; void CCmSqlBaseItem::SetSearchId(long long)
+	?NewL@CCmSqlPropertyCollector@@SAPAV1@XZ @ 146 NONAME ; class CCmSqlPropertyCollector * CCmSqlPropertyCollector::NewL(void)
+	?ExcAlbums@CCmStoreRule@@QAEAAVCDesC16Array@@XZ @ 147 NONAME ; class CDesC16Array & CCmStoreRule::ExcAlbums(void)
+	?Hash@CCmSearchResponseHash@@QBEABVTDesC8@@XZ @ 148 NONAME ; class TDesC8 const & CCmSearchResponseHash::Hash(void) const
+	?SetUsedDriveQuota@CCmDriveInfo@@QAEX_J@Z @ 149 NONAME ; void CCmDriveInfo::SetUsedDriveQuota(long long)
+	?RemoveExcAlbum@CCmStoreRule@@QAEXABVTDesC16@@@Z @ 150 NONAME ; void CCmStoreRule::RemoveExcAlbum(class TDesC16 const &)
+	?SetSelected@CCmFillListItem@@QAEXW4TCmFillRuleStatus@@@Z @ 151 NONAME ; void CCmFillListItem::SetSelected(enum TCmFillRuleStatus)
+	?SetDriveNumber@CCmDriveInfo@@QAEXH@Z @ 152 NONAME ; void CCmDriveInfo::SetDriveNumber(int)
+	?SetMediaType@CCmFillRule@@QAEXW4TCmMediaType@@@Z @ 153 NONAME ; void CCmFillRule::SetMediaType(enum TCmMediaType)
+	?DriveQuota@CCmDriveInfo@@QBE_JXZ @ 154 NONAME ; long long CCmDriveInfo::DriveQuota(void) const
+	?SetDate@CCmSqlGenericItem@@QAEXABVTTime@@@Z @ 155 NONAME ; void CCmSqlGenericItem::SetDate(class TTime const &)
+	?Selected@CCmStoreRule@@QBE?AW4TCmFillRuleStatus@@XZ @ 156 NONAME ; enum TCmFillRuleStatus CCmStoreRule::Selected(void) const
+	?AlbumId@CCmSqlAudioItem@@QBE_JXZ @ 157 NONAME ; long long CCmSqlAudioItem::AlbumId(void) const
+	?UpnpclassId@CCmSqlGenericItem@@QBE_JXZ @ 158 NONAME ; long long CCmSqlGenericItem::UpnpclassId(void) const
+	?Selected@CCmFillListItem@@QBE?AW4TCmFillRuleStatus@@XZ @ 159 NONAME ; enum TCmFillRuleStatus CCmFillListItem::Selected(void) const
+	?NewLC@CCmSqlPropertyItem@@SAPAV1@XZ @ 160 NONAME ; class CCmSqlPropertyItem * CCmSqlPropertyItem::NewLC(void)
+	?Date@CCmBaseListItem@@QBE?AVTTime@@XZ @ 161 NONAME ; class TTime CCmBaseListItem::Date(void) const
+	??1CCmBaseListItem@@UAE@XZ @ 162 NONAME ; CCmBaseListItem::~CCmBaseListItem(void)
+	?SetId@CCmSqlBaseItem@@QAEX_J@Z @ 163 NONAME ; void CCmSqlBaseItem::SetId(long long)
+	??1CCmSqlAudioItem@@UAE@XZ @ 164 NONAME ; CCmSqlAudioItem::~CCmSqlAudioItem(void)
+	?LoadResourceFileL@CmCommonUtils@@SAHABVTDesC16@@AAVCEikonEnv@@@Z @ 165 NONAME ; int CmCommonUtils::LoadResourceFileL(class TDesC16 const &, class CEikonEnv &)
+	?SetUDNL@CCmMediaServer@@QAEXABVTDesC8@@@Z @ 166 NONAME ; void CCmMediaServer::SetUDNL(class TDesC8 const &)
+	?FillRule@CCmFillRuleContainer@@QBEPAVCCmFillRule@@H@Z @ 167 NONAME ; class CCmFillRule * CCmFillRuleContainer::FillRule(int) const
+	?AddExcPlayListL@CCmFillRule@@QAEXABVTDesC16@@@Z @ 168 NONAME ; void CCmFillRule::AddExcPlayListL(class TDesC16 const &)
+	?ItemCount@CCmSearchResponseHash@@QBEHXZ @ 169 NONAME ; int CCmSearchResponseHash::ItemCount(void) const
+	?SetItemIdL@CCmFillListItem@@QAEXABVTDesC8@@@Z @ 170 NONAME ; void CCmFillListItem::SetItemIdL(class TDesC8 const &)
+	?NewL@CCmSqlPropertyItem@@SAPAV1@XZ @ 171 NONAME ; class CCmSqlPropertyItem * CCmSqlPropertyItem::NewL(void)
+	?StoreUsage@CCmMediaServerFull@@QAEHXZ @ 172 NONAME ; int CCmMediaServerFull::StoreUsage(void)
+	?NewLC@CCmSqlPropertyCollector@@SAPAV1@XZ @ 173 NONAME ; class CCmSqlPropertyCollector * CCmSqlPropertyCollector::NewLC(void)
+	?ExternalizeL@CCmSqlPropertyContainer@@QBEXAAVRWriteStream@@@Z @ 174 NONAME ; void CCmSqlPropertyContainer::ExternalizeL(class RWriteStream &) const
+	?NewLC@CCmMediaServerFull@@SAPAV1@XZ @ 175 NONAME ; class CCmMediaServerFull * CCmMediaServerFull::NewLC(void)
+	??1CCmSqlPropertyCollector@@UAE@XZ @ 176 NONAME ; CCmSqlPropertyCollector::~CCmSqlPropertyCollector(void)
+	?DriveId@CCmDriveInfo@@QBEIXZ @ 177 NONAME ; unsigned int CCmDriveInfo::DriveId(void) const
+	?SetWidth@CCmSqlResolutionPropertyItem@@QAEXH@Z @ 178 NONAME ; void CCmSqlResolutionPropertyItem::SetWidth(int)
+	?NewL@CCmFillListItem@@SAPAV1@XZ @ 179 NONAME ; class CCmFillListItem * CCmFillListItem::NewL(void)
+	?InternalizeL@CCmFillListItem@@QAEXAAVRReadStream@@@Z @ 180 NONAME ; void CCmFillListItem::InternalizeL(class RReadStream &)
+	?MediaServerL@CCmFillRule@@QAEXHAAH@Z @ 181 NONAME ; void CCmFillRule::MediaServerL(int, int &)
+	?SetStatus@CCmDriveInfo@@QAEXH@Z @ 182 NONAME ; void CCmDriveInfo::SetStatus(int)
+	?RuleParamL@CCmFillRule@@QAEXHHPAVTPtrC8@@@Z @ 183 NONAME ; void CCmFillRule::RuleParamL(int, int, class TPtrC8 *)
+	?UpnpClass@CCmFillListItem@@QBEAAVTDesC16@@XZ @ 184 NONAME ; class TDesC16 & CCmFillListItem::UpnpClass(void) const
+	?MediaServerL@CCmFillRule@@QAEABVTDesC8@@H@Z @ 185 NONAME ; class TDesC8 const & CCmFillRule::MediaServerL(int)
+	?SetHashL@CCmSqlBaseItem@@QAEXABVTDesC16@@@Z @ 186 NONAME ; void CCmSqlBaseItem::SetHashL(class TDesC16 const &)
+	?Id@CCmSqlBaseItem@@QBE_JXZ @ 187 NONAME ; long long CCmSqlBaseItem::Id(void) const
+	?SearchId@CCmSqlBaseItem@@QBE_JXZ @ 188 NONAME ; long long CCmSqlBaseItem::SearchId(void) const
+	??1CCmFillRuleContainer@@UAE@XZ @ 189 NONAME ; CCmFillRuleContainer::~CCmFillRuleContainer(void)
+	?ExternalizeL@CCmSqlResolutionPropertyItem@@QBEXAAVRWriteStream@@@Z @ 190 NONAME ; void CCmSqlResolutionPropertyItem::ExternalizeL(class RWriteStream &) const
+	?SetMediaServerNameL@CCmMediaServerFull@@QAEXABVTDesC8@@@Z @ 191 NONAME ; void CCmMediaServerFull::SetMediaServerNameL(class TDesC8 const &)
+	?SetPriority@CCmFillRule@@QAEXE@Z @ 192 NONAME ; void CCmFillRule::SetPriority(unsigned char)
+	?DbId@CCmBaseListItem@@QBE_KXZ @ 193 NONAME ; unsigned long long CCmBaseListItem::DbId(void) const
+	?NewL@CCmSearchResponseHash@@SAPAV1@XZ @ 194 NONAME ; class CCmSearchResponseHash * CCmSearchResponseHash::NewL(void)
+	?InternalizeL@CCmFillRuleContainer@@QAEXAAVRReadStream@@@Z @ 195 NONAME ; void CCmFillRuleContainer::InternalizeL(class RReadStream &)
+	?InternalizeL@CCmSqlPropertyItem@@QAEXAAVRReadStream@@@Z @ 196 NONAME ; void CCmSqlPropertyItem::InternalizeL(class RReadStream &)
+	?SetFillUsage@CCmMediaServerFull@@QAEXH@Z @ 197 NONAME ; void CCmMediaServerFull::SetFillUsage(int)
+	?SetPixelCount@CCmSqlResolutionPropertyItem@@QAEXH@Z @ 198 NONAME ; void CCmSqlResolutionPropertyItem::SetPixelCount(int)
+	?Duration@CCmSqlAudioItem@@QBEHXZ @ 199 NONAME ; int CCmSqlAudioItem::Duration(void) const
+	?SetUpnpClassL@CCmFillListItem@@QAEXABVTDesC16@@@Z @ 200 NONAME ; void CCmFillListItem::SetUpnpClassL(class TDesC16 const &)
+	?SetSelected@CCmStoreRule@@QAEXW4TCmFillRuleStatus@@@Z @ 201 NONAME ; void CCmStoreRule::SetSelected(enum TCmFillRuleStatus)
+	?SetHashL@CCmSearchResponseHash@@QAEXABVTDesC8@@@Z @ 202 NONAME ; void CCmSearchResponseHash::SetHashL(class TDesC8 const &)
+	?SetUriL@CCmSqlGenericItem@@QAEXABVTDesC8@@@Z @ 203 NONAME ; void CCmSqlGenericItem::SetUriL(class TDesC8 const &)
+	?AddPropertyContainerL@CCmSqlPropertyCollector@@QAEHPAVCCmSqlPropertyContainer@@@Z @ 204 NONAME ; int CCmSqlPropertyCollector::AddPropertyContainerL(class CCmSqlPropertyContainer *)
+	?ResourceCount@CCmSqlGenericItem@@QBEHXZ @ 205 NONAME ; int CCmSqlGenericItem::ResourceCount(void) const
+	?SetDriveId@CCmFillListItem@@QAEXI@Z @ 206 NONAME ; void CCmFillListItem::SetDriveId(unsigned int)
+	?AddRuleParamL@CCmFillRule@@QAEHHABVTDesC8@@@Z @ 207 NONAME ; int CCmFillRule::AddRuleParamL(int, class TDesC8 const &)
+	?DriveSize@CCmDriveInfo@@QBE_JXZ @ 208 NONAME ; long long CCmDriveInfo::DriveSize(void) const
+	?SetDriveNumber@CCmFillListItem@@QAEXH@Z @ 209 NONAME ; void CCmFillListItem::SetDriveNumber(int)
+	?Uri@CCmSqlGenericItem@@QBEAAVTDesC8@@XZ @ 210 NONAME ; class TDesC8 & CCmSqlGenericItem::Uri(void) const
+	?Status@CCmSqlPropertyItem@@QBEHXZ @ 211 NONAME ; int CCmSqlPropertyItem::Status(void) const
+	?DriveNumber@CCmFillListItem@@QBEHXZ @ 212 NONAME ; int CCmFillListItem::DriveNumber(void) const
+	?PropertyItem@CCmSqlPropertyContainer@@QAEPAVCCmSqlPropertyItem@@H@Z @ 213 NONAME ; class CCmSqlPropertyItem * CCmSqlPropertyContainer::PropertyItem(int)
+	?PropertyItemCount@CCmSqlPropertyContainer@@QBEHXZ @ 214 NONAME ; int CCmSqlPropertyContainer::PropertyItemCount(void) const
+	?SetTrackNumber@CCmSqlAudioItem@@QAEXH@Z @ 215 NONAME ; void CCmSqlAudioItem::SetTrackNumber(int)
+	?CopyCapability@CCmMediaServerFull@@QBEHXZ @ 216 NONAME ; int CCmMediaServerFull::CopyCapability(void) const
+	?CompareByCdsId@CCmSqlBaseItem@@SAHABV1@0@Z @ 217 NONAME ; int CCmSqlBaseItem::CompareByCdsId(class CCmSqlBaseItem const &, class CCmSqlBaseItem const &)
+	?SecondaryText@CCmBaseListItem@@QBEAAVTDesC16@@XZ @ 218 NONAME ; class TDesC16 & CCmBaseListItem::SecondaryText(void) const
+	?InternalizeL@CCmSqlPropertyCollector@@QAEXAAVRReadStream@@@Z @ 219 NONAME ; void CCmSqlPropertyCollector::InternalizeL(class RReadStream &)
+	?NewLC@CCmDriveInfo@@SAPAV1@XZ @ 220 NONAME ; class CCmDriveInfo * CCmDriveInfo::NewLC(void)
+	?SetStoreUsage@CCmMediaServerFull@@QAEXH@Z @ 221 NONAME ; void CCmMediaServerFull::SetStoreUsage(int)
+	?AddExcAlbumL@CCmStoreRule@@QAEXABVTDesC16@@@Z @ 222 NONAME ; void CCmStoreRule::AddExcAlbumL(class TDesC16 const &)
+	??0CCmSqlPropertyItem@@QAE@ABV0@@Z @ 223 NONAME ; CCmSqlPropertyItem::CCmSqlPropertyItem(class CCmSqlPropertyItem const &)
+	?SetSecondaryTextL@CCmBaseListItem@@QAEXABVTDesC16@@@Z @ 224 NONAME ; void CCmBaseListItem::SetSecondaryTextL(class TDesC16 const &)
+	?SetUpnpProfileId@CCmSqlGenericItem@@QAEX_J@Z @ 225 NONAME ; void CCmSqlGenericItem::SetUpnpProfileId(long long)
+	?NewL@CCmStoreRuleContainer@@SAPAV1@XZ @ 226 NONAME ; class CCmStoreRuleContainer * CCmStoreRuleContainer::NewL(void)
+	?RemoveExcPlayList@CCmStoreRule@@QAEXABVTDesC16@@@Z @ 227 NONAME ; void CCmStoreRule::RemoveExcPlayList(class TDesC16 const &)
+	?NewResourceL@CCmSqlGenericItem@@QAEXABVTDesC8@@HHH_J@Z @ 228 NONAME ; void CCmSqlGenericItem::NewResourceL(class TDesC8 const &, int, int, int, long long)
+	?AddRuleL@CCmFillRule@@QAEHW4TCmMetadataField@@W4TCmOperatorType@@@Z @ 229 NONAME ; int CCmFillRule::AddRuleL(enum TCmMetadataField, enum TCmOperatorType)
+	?ListRealSizeInBytes@CCmFillRule@@QBEKXZ @ 230 NONAME ; unsigned long CCmFillRule::ListRealSizeInBytes(void) const
+	?SetDriveType@CCmDriveInfo@@QAEXI@Z @ 231 NONAME ; void CCmDriveInfo::SetDriveType(unsigned int)
+	?AddExcPlayListL@CCmStoreRule@@QAEXABVTDesC16@@@Z @ 232 NONAME ; void CCmStoreRule::AddExcPlayListL(class TDesC16 const &)
+	?ExternalizeL@CCmMediaServerFull@@QBEXAAVRWriteStream@@@Z @ 233 NONAME ; void CCmMediaServerFull::ExternalizeL(class RWriteStream &) const
+	?NewL@CCmStoreListItem@@SAPAV1@XZ @ 234 NONAME ; class CCmStoreListItem * CCmStoreListItem::NewL(void)
+	?SetDbId@CCmBaseListItem@@QAEX_K@Z @ 235 NONAME ; void CCmBaseListItem::SetDbId(unsigned long long)
+	?InternalizeL@CCmStoreListItem@@QAEXAAVRReadStream@@@Z @ 236 NONAME ; void CCmStoreListItem::InternalizeL(class RReadStream &)
+	?SetDuration@CCmSqlAudioItem@@QAEXH@Z @ 237 NONAME ; void CCmSqlAudioItem::SetDuration(int)
+	?ExternalizeL@CCmBaseListItem@@QBEXAAVRWriteStream@@@Z @ 238 NONAME ; void CCmBaseListItem::ExternalizeL(class RWriteStream &) const
+	?SetPrimaryTextL@CCmBaseListItem@@QAEXABVTDesC16@@@Z @ 239 NONAME ; void CCmBaseListItem::SetPrimaryTextL(class TDesC16 const &)
+	?SetDriveSize@CCmDriveInfo@@QAEX_J@Z @ 240 NONAME ; void CCmDriveInfo::SetDriveSize(long long)
+	?SetIsActive@CCmMediaServerFull@@QAEXE@Z @ 241 NONAME ; void CCmMediaServerFull::SetIsActive(unsigned char)
+	?ListId@CCmStoreRule@@QBEIXZ @ 242 NONAME ; unsigned int CCmStoreRule::ListId(void) const
+	?SetStartIndex@CCmSearchResponseHash@@QAEXH@Z @ 243 NONAME ; void CCmSearchResponseHash::SetStartIndex(int)
+	?ListId@CCmStoreListItem@@QBEIXZ @ 244 NONAME ; unsigned int CCmStoreListItem::ListId(void) const
+	?SetHarvestDate@CCmSqlGenericItem@@QAEXABVTTime@@@Z @ 245 NONAME ; void CCmSqlGenericItem::SetHarvestDate(class TTime const &)
+	?SetMediaType@CCmSqlGenericItem@@QAEXW4TCmMediaType@@@Z @ 246 NONAME ; void CCmSqlGenericItem::SetMediaType(enum TCmMediaType)
+	?SetAlbumId@CCmSqlAudioItem@@QAEX_J@Z @ 247 NONAME ; void CCmSqlAudioItem::SetAlbumId(long long)
+	?NewL@CCmFillRuleContainer@@SAPAV1@XZ @ 248 NONAME ; class CCmFillRuleContainer * CCmFillRuleContainer::NewL(void)
+	?InternalizeL@CCmMediaServerFull@@QAEXAAVRReadStream@@@Z @ 249 NONAME ; void CCmMediaServerFull::InternalizeL(class RReadStream &)
+	?ExternalizeL@CCmSqlPropertyItem@@QBEXAAVRWriteStream@@@Z @ 250 NONAME ; void CCmSqlPropertyItem::ExternalizeL(class RWriteStream &) const
+	?SetDescriptionL@CCmSqlImageItem@@QAEXABVTDesC8@@@Z @ 251 NONAME ; void CCmSqlImageItem::SetDescriptionL(class TDesC8 const &)
+	?AddMediaServerL@CCmFillRule@@QAEHH@Z @ 252 NONAME ; int CCmFillRule::AddMediaServerL(int)
+	?NewL@CCmMediaServer@@SAPAV1@XZ @ 253 NONAME ; class CCmMediaServer * CCmMediaServer::NewL(void)
+	?SetTitleL@CCmSqlGenericItem@@QAEXABVTDesC8@@@Z @ 254 NONAME ; void CCmSqlGenericItem::SetTitleL(class TDesC8 const &)
+	?ArtistId@CCmSqlAudioItem@@QBE_JXZ @ 255 NONAME ; long long CCmSqlAudioItem::ArtistId(void) const
+	?SetCopyCapability@CCmMediaServerFull@@QAEXH@Z @ 256 NONAME ; void CCmMediaServerFull::SetCopyCapability(int)
+	?SetDbId@CCmMediaServer@@QAEX_J@Z @ 257 NONAME ; void CCmMediaServer::SetDbId(long long)
+	?ExternalizeL@CCmSqlPropertyCollector@@QBEXAAVRWriteStream@@@Z @ 258 NONAME ; void CCmSqlPropertyCollector::ExternalizeL(class RWriteStream &) const
+	?DeletePropertyItem@CCmSqlPropertyContainer@@QAEXH@Z @ 259 NONAME ; void CCmSqlPropertyContainer::DeletePropertyItem(int)
+	?ResolutionId@CCmSqlImageItem@@QBE_JXZ @ 260 NONAME ; long long CCmSqlImageItem::ResolutionId(void) const
+	?Priority@CCmFillRule@@QBEEXZ @ 261 NONAME ; unsigned char CCmFillRule::Priority(void) const
+	?SetGenreId@CCmSqlVideoItem@@QAEX_J@Z @ 262 NONAME ; void CCmSqlVideoItem::SetGenreId(long long)
+	?ParamCountL@CCmFillRule@@QBEHH@Z @ 263 NONAME ; int CCmFillRule::ParamCountL(int) const
+	?NewL@CCmSqlImageItem@@SAPAV1@XZ @ 264 NONAME ; class CCmSqlImageItem * CCmSqlImageItem::NewL(void)
+	?NewL@CCmSqlAudioItem@@SAPAV1@XZ @ 265 NONAME ; class CCmSqlAudioItem * CCmSqlAudioItem::NewL(void)
+	?SetStatus@CCmStoreRule@@QAEXW4TCmListItemStatus@@@Z @ 266 NONAME ; void CCmStoreRule::SetStatus(enum TCmListItemStatus)
+	?PropertyContainer@CCmSqlPropertyCollector@@QAEPAVCCmSqlPropertyContainer@@H@Z @ 267 NONAME ; class CCmSqlPropertyContainer * CCmSqlPropertyCollector::PropertyContainer(int)
+	??1CCmStoreRule@@UAE@XZ @ 268 NONAME ; CCmStoreRule::~CCmStoreRule(void)
+	??1CCmStoreListItem@@UAE@XZ @ 269 NONAME ; CCmStoreListItem::~CCmStoreListItem(void)
+	?SetBitrate@CCmSqlAudioItem@@QAEXH@Z @ 270 NONAME ; void CCmSqlAudioItem::SetBitrate(int)
+	?StatusValues@CCmStoreListItem@@QBE?AV?$RArray@W4TCmListItemStatus@@@@XZ @ 271 NONAME ; class RArray<enum TCmListItemStatus> CCmStoreListItem::StatusValues(void) const
+	?NewLC@CCmStoreRuleContainer@@SAPAV1@XZ @ 272 NONAME ; class CCmStoreRuleContainer * CCmStoreRuleContainer::NewLC(void)
+	?NewL@CCmMediaServerFull@@SAPAV1@XZ @ 273 NONAME ; class CCmMediaServerFull * CCmMediaServerFull::NewL(void)
+	?NewLC@CCmFillListItem@@SAPAV1@XZ @ 274 NONAME ; class CCmFillListItem * CCmFillListItem::NewLC(void)
+	?GenreId@CCmSqlAudioItem@@QBE_JXZ @ 275 NONAME ; long long CCmSqlAudioItem::GenreId(void) const
+	?DriveType@CCmDriveInfo@@QBEIXZ @ 276 NONAME ; unsigned int CCmDriveInfo::DriveType(void) const
+	??1CCmFillListItem@@UAE@XZ @ 277 NONAME ; CCmFillListItem::~CCmFillListItem(void)
+	?MediaServer@CCmMediaServer@@QBEABVTDesC8@@XZ @ 278 NONAME ; class TDesC8 const & CCmMediaServer::MediaServer(void) const
+	??1CCmSqlResolutionPropertyItem@@UAE@XZ @ 279 NONAME ; CCmSqlResolutionPropertyItem::~CCmSqlResolutionPropertyItem(void)
+	?AddStoreRuleL@CCmStoreRule@@QAEHW4TCmMediaType@@@Z @ 280 NONAME ; int CCmStoreRule::AddStoreRuleL(enum TCmMediaType)
+	?DriveName@CCmDriveInfo@@QBEAAVTDesC16@@XZ @ 281 NONAME ; class TDesC16 & CCmDriveInfo::DriveName(void) const
+	?NewL@CCmBaseListItem@@SAPAV1@XZ @ 282 NONAME ; class CCmBaseListItem * CCmBaseListItem::NewL(void)
+	?Name@CCmStoreRule@@QBEAAVTDesC8@@XZ @ 283 NONAME ; class TDesC8 & CCmStoreRule::Name(void) const
+	?NewL@CCmStoreRule@@SAPAV1@XZ @ 284 NONAME ; class CCmStoreRule * CCmStoreRule::NewL(void)
+	??1CCmSqlGenericItem@@UAE@XZ @ 285 NONAME ; CCmSqlGenericItem::~CCmSqlGenericItem(void)
+	?RefId@CCmBaseListItem@@QBE_KXZ @ 286 NONAME ; unsigned long long CCmBaseListItem::RefId(void) const
+	?SetNameL@CCmStoreRule@@QAEXABVTDesC8@@@Z @ 287 NONAME ; void CCmStoreRule::SetNameL(class TDesC8 const &)
+	?AddMediaServerL@CCmStoreRule@@QAEHABVTDesC8@@@Z @ 288 NONAME ; int CCmStoreRule::AddMediaServerL(class TDesC8 const &)
+	?NewL@CCmSqlGenericItem@@SAPAV1@XZ @ 289 NONAME ; class CCmSqlGenericItem * CCmSqlGenericItem::NewL(void)
+	?NewLC@CCmSqlAudioItem@@SAPAV1@XZ @ 290 NONAME ; class CCmSqlAudioItem * CCmSqlAudioItem::NewLC(void)
+	?SetStatus@CCmBaseListItem@@QAEXW4TCmListItemStatus@@@Z @ 291 NONAME ; void CCmBaseListItem::SetStatus(enum TCmListItemStatus)
+	?Status@CCmFillRule@@QBE?AW4TCmListItemStatus@@XZ @ 292 NONAME ; enum TCmListItemStatus CCmFillRule::Status(void) const
+	??1CCmSqlImageItem@@UAE@XZ @ 293 NONAME ; CCmSqlImageItem::~CCmSqlImageItem(void)
+	?RuleParamL@CCmFillRule@@QAEXHHAAH@Z @ 294 NONAME ; void CCmFillRule::RuleParamL(int, int, int &)
+	?SetListId@CCmStoreListItem@@QAEXI@Z @ 295 NONAME ; void CCmStoreListItem::SetListId(unsigned int)
+	?MediaType@CCmBaseListItem@@QBE?AW4TCmMediaType@@XZ @ 296 NONAME ; enum TCmMediaType CCmBaseListItem::MediaType(void) const
+	?InternalizeL@CCmSqlPropertyContainer@@QAEXAAVRReadStream@@@Z @ 297 NONAME ; void CCmSqlPropertyContainer::InternalizeL(class RReadStream &)
+	?DriveId@CCmFillListItem@@QBEIXZ @ 298 NONAME ; unsigned int CCmFillListItem::DriveId(void) const
+	?SetWlanScanL@CmCommonUtils@@SAXH@Z @ 299 NONAME ; void CmCommonUtils::SetWlanScanL(int)
+	?PixelCount@CCmSqlResolutionPropertyItem@@QBEHXZ @ 300 NONAME ; int CCmSqlResolutionPropertyItem::PixelCount(void) const
+	?ListRealCount@CCmFillRule@@QBEKXZ @ 301 NONAME ; unsigned long CCmFillRule::ListRealCount(void) const
+	?SetListId@CCmFillRule@@QAEXI@Z @ 302 NONAME ; void CCmFillRule::SetListId(unsigned int)
+	?GenreId@CCmSqlVideoItem@@QBE_JXZ @ 303 NONAME ; long long CCmSqlVideoItem::GenreId(void) const
+	?FillRuleCount@CCmFillRuleContainer@@QBEHXZ @ 304 NONAME ; int CCmFillRuleContainer::FillRuleCount(void) const
+	??1CCmDriveInfo@@UAE@XZ @ 305 NONAME ; CCmDriveInfo::~CCmDriveInfo(void)
+	?SetDriveId@CCmDriveInfo@@QAEXI@Z @ 306 NONAME ; void CCmDriveInfo::SetDriveId(unsigned int)
+	?RuleL@CCmFillRule@@QAEXHPAW4TCmMetadataField@@PAW4TCmOperatorType@@PAH@Z @ 307 NONAME ; void CCmFillRule::RuleL(int, enum TCmMetadataField *, enum TCmOperatorType *, int *)
+	??1CCmSqlVideoItem@@UAE@XZ @ 308 NONAME ; CCmSqlVideoItem::~CCmSqlVideoItem(void)
+	?SetStatus@CCmSqlPropertyItem@@QAEXH@Z @ 309 NONAME ; void CCmSqlPropertyItem::SetStatus(int)
+	?SetSize@CCmSqlGenericItem@@QAEXH@Z @ 310 NONAME ; void CCmSqlGenericItem::SetSize(int)
+	?SetSystemUpdateID@CCmMediaServer@@QAEXH@Z @ 311 NONAME ; void CCmMediaServer::SetSystemUpdateID(int)
+	?RemoveExcAlbum@CCmFillRule@@QAEXABVTDesC16@@@Z @ 312 NONAME ; void CCmFillRule::RemoveExcAlbum(class TDesC16 const &)
+	?StoreRule@CCmStoreRuleContainer@@QAEPAVCCmStoreRule@@H@Z @ 313 NONAME ; class CCmStoreRule * CCmStoreRuleContainer::StoreRule(int)
+	?Path@CCmBaseListItem@@QBEAAVTDesC16@@XZ @ 314 NONAME ; class TDesC16 & CCmBaseListItem::Path(void) const
+	?CdsId@CCmSqlBaseItem@@QBEAAVTDesC8@@XZ @ 315 NONAME ; class TDesC8 & CCmSqlBaseItem::CdsId(void) const
+	?ExternalizeL@CCmFillRuleContainer@@QBEXAAVRWriteStream@@@Z @ 316 NONAME ; void CCmFillRuleContainer::ExternalizeL(class RWriteStream &) const
+	?SetListId@CCmStoreRule@@QAEXI@Z @ 317 NONAME ; void CCmStoreRule::SetListId(unsigned int)
+

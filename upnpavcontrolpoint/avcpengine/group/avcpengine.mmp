@@ -1,0 +1,71 @@
+/** @file
+* Copyright (c) 2002-2004 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies  this distribution, and is available 
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project specification for AVCPEngine
+*
+*/
+
+#include "../../../group/upnpplatformvar.hrh"
+
+TARGET          avcpengine.exe
+TARGETTYPE      exe
+UID             0x1000008d 0x101F977A
+CAPABILITY      CAP_SERVER
+VENDORID        VID_DEFAULT
+
+VERSION         10.1
+paged
+
+SOURCEPATH      ../src
+SOURCE          upnpavcpenginesession.cpp
+SOURCE          upnpavcpengine.cpp
+SOURCE          upnpavcpenginehelper.cpp
+SOURCE          upnpavcpmanager.cpp
+SOURCE          upnppathelement.cpp
+SOURCE          upnppathresolver.cpp
+SOURCE          upnpresolvehandler.cpp
+SOURCE          upnpcommand.cpp
+SOURCE          upnpbrowsecommand.cpp
+SOURCE          upnpdevicelistcommand.cpp
+SOURCE          upnpdownloadcommand.cpp
+SOURCE          upnpuploadcommand.cpp
+SOURCE          upnpdeletecommand.cpp
+SOURCE          upnpcreatecommand.cpp
+SOURCE          upnpmetadatacommand.cpp
+
+MW_LAYER_SYSTEMINCLUDE
+USERINCLUDE   ../../../inc
+USERINCLUDE   ../../inc
+USERINCLUDE     ../inc
+
+LIBRARY         euser.lib
+LIBRARY         insock.lib
+LIBRARY         esock.lib
+LIBRARY         upnpipserversutils.lib
+LIBRARY         ssdpserver.lib
+LIBRARY         avcontrolframework.lib
+LIBRARY         upnpserviceframework.lib
+LIBRARY         upnpcontrolpointbase.lib
+
+//XML
+LIBRARY         xmlengineutils.lib
+LIBRARY         xmlenginedom.lib
+LIBRARY         estlib.lib 
+
+// file server
+LIBRARY         efsrv.lib
+LIBRARY         estor.lib
+
+LIBRARY         flogger.lib
+
+// End of file

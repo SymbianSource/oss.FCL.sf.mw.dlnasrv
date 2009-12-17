@@ -1,0 +1,66 @@
+/*
+* Copyright (c) 2006-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: Project definition file for UpnpSecurityManager implement.
+*
+*/
+
+#include "upnpsecurityuids.h"
+#include <data_caging_paths.hrh>
+#include <platform_paths.hrh>
+#include <bldvariant.hrh>
+
+
+// Build target
+TARGET          upnpsecuritymanagerplugin.dll
+CAPABILITY      CAP_ECOM_PLUGIN
+VENDORID        VID_DEFAULT
+TARGETTYPE      PLUGIN
+UID             KGenericPluginUid2 KUpnpSecurityManagerPluginDllUid
+
+// SIS installation + IAD support
+VERSION 10.1
+paged
+
+START RESOURCE  ../data/101F977E.rss
+TARGET          upnpsecuritymanagerplugin.rsc
+TARGETPATH      resource/plugins
+END
+
+// Include paths
+USERINCLUDE     .
+USERINCLUDE     ../inc
+USERINCLUDE     ../../../inc
+
+MW_LAYER_SYSTEMINCLUDE
+
+// Sources
+SOURCEPATH      ../src
+SOURCE          upnpsecuritymanagerplugin.cpp
+SOURCE          upnpsecuritymanagerpluginproxy.cpp
+
+// Libraries
+LIBRARY         euser.lib
+
+// Upnp stack
+LIBRARY         upnpserviceframework.lib
+LIBRARY         upnpipserversutils.lib
+LIBRARY         avmediaserverclient.lib
+
+// Upnp security
+LIBRARY         upnpsecurity.lib
+
+// Logging
+DEBUGLIBRARY    flogger.lib
+
+// End of file

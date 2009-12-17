@@ -1,0 +1,4 @@
+EXPORTS
+	?NewCmSettingsEngineL@CCmSettingsFactory@@SAPAVMCmSettings@@XZ @ 1 NONAME ; class MCmSettings * CCmSettingsFactory::NewCmSettingsEngineL(void)
+	?NewCmSettingsEngineLC@CCmSettingsFactory@@SAPAVMCmSettings@@XZ @ 2 NONAME ; class MCmSettings * CCmSettingsFactory::NewCmSettingsEngineLC(void)
+

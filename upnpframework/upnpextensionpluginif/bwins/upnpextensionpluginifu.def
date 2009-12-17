@@ -1,0 +1,6 @@
+EXPORTS
+	??1CUPnPPluginLoader@@UAE@XZ @ 1 NONAME ; CUPnPPluginLoader::~CUPnPPluginLoader(void)
+	?CreatePluginsL@CUPnPPluginLoader@@QAEABV?$RPointerArray@VCUPnPPluginInterface@@@@XZ @ 2 NONAME ; class RPointerArray<class CUPnPPluginInterface> const & CUPnPPluginLoader::CreatePluginsL(void)
+	?DeletePlugin@CUPnPPluginLoader@@QAEXH@Z @ 3 NONAME ; void CUPnPPluginLoader::DeletePlugin(int)
+	?NewL@CUPnPPluginLoader@@SAPAV1@AAVMUPnPPluginLoaderObserver@@@Z @ 4 NONAME ; class CUPnPPluginLoader * CUPnPPluginLoader::NewL(class MUPnPPluginLoaderObserver &)
+

@@ -1,0 +1,19 @@
+EXPORTS
+	??1CUPnPFileSharingEngine@@UAE@XZ @ 1 NONAME ; CUPnPFileSharingEngine::~CUPnPFileSharingEngine(void)
+	?GetSelectionContentL@CUPnPFileSharingEngine@@QBEXAAVCDesC16Array@@@Z @ 2 NONAME ; void CUPnPFileSharingEngine::GetSelectionContentL(class CDesC16Array &) const
+	?GetSelectionIndexesL@CUPnPFileSharingEngine@@QBEXAAV?$CArrayFix@H@@@Z @ 3 NONAME ; void CUPnPFileSharingEngine::GetSelectionIndexesL(class CArrayFix<int> &) const
+	?NewL@CUPnPFileSharingEngine@@SAPAV1@XZ @ 4 NONAME ; class CUPnPFileSharingEngine * CUPnPFileSharingEngine::NewL(void)
+	?NewLC@CUPnPFileSharingEngine@@SAPAV1@XZ @ 5 NONAME ; class CUPnPFileSharingEngine * CUPnPFileSharingEngine::NewLC(void)
+	?Observer@CUPnPFileSharingEngine@@QAEPAVMUPnPFileSharingEngineObserver@@XZ @ 6 NONAME ; class MUPnPFileSharingEngineObserver * CUPnPFileSharingEngine::Observer(void)
+	?RefreshSharedMediaL@CUPnPFileSharingEngine@@QAEXW4THomeConnectMediaType@@@Z @ 7 NONAME ; void CUPnPFileSharingEngine::RefreshSharedMediaL(enum THomeConnectMediaType)
+	?RequestSelectionContentL@CUPnPFileSharingEngine@@QAEXW4THomeConnectMediaType@@@Z @ 8 NONAME ; void CUPnPFileSharingEngine::RequestSelectionContentL(enum THomeConnectMediaType)
+	?RequestSelectionIndexesL@CUPnPFileSharingEngine@@QBEXW4THomeConnectMediaType@@@Z @ 9 NONAME ; void CUPnPFileSharingEngine::RequestSelectionIndexesL(enum THomeConnectMediaType) const
+	?RequestSharingProgressL@CUPnPFileSharingEngine@@QAEXXZ @ 10 NONAME ; void CUPnPFileSharingEngine::RequestSharingProgressL(void)
+	?SetObserver@CUPnPFileSharingEngine@@QAEXPAVMUPnPFileSharingEngineObserver@@@Z @ 11 NONAME ; void CUPnPFileSharingEngine::SetObserver(class MUPnPFileSharingEngineObserver *)
+	?SetSelectionIndexesL@CUPnPFileSharingEngine@@QAEXW4THomeConnectMediaType@@ABV?$CArrayFix@H@@@Z @ 12 NONAME ; void CUPnPFileSharingEngine::SetSelectionIndexesL(enum THomeConnectMediaType, class CArrayFix<int> const &)
+	?SetSharingStateL@CUPnPFileSharingEngine@@QAEXH@Z @ 13 NONAME ; void CUPnPFileSharingEngine::SetSharingStateL(int)
+	?ShareMediaL@CUPnPFileSharingEngine@@QAEXW4THomeConnectMediaType@@@Z @ 14 NONAME ; void CUPnPFileSharingEngine::ShareMediaL(enum THomeConnectMediaType)
+	?SharingStateL@CUPnPFileSharingEngine@@QAEHXZ @ 15 NONAME ; int CUPnPFileSharingEngine::SharingStateL(void)
+	?StartUploadListenerL@CUPnPFileSharingEngine@@QAEXXZ @ 16 NONAME ; void CUPnPFileSharingEngine::StartUploadListenerL(void)
+	?StopUploadListenerL@CUPnPFileSharingEngine@@QAEXXZ @ 17 NONAME ; void CUPnPFileSharingEngine::StopUploadListenerL(void)
+

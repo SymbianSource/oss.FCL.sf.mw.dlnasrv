@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1 Tiny//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-tiny.dtd">
+<svg baseProfile="tiny" version="1.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 21 21">
+<g>
+<g>
+<g>
+<path fill="#FFFFFF" d="M3.605,4.147c-0.536,0-1.002,0.468-1.002,1.133L2.59,15.13c0,1.279,0.091,1.422,1.529,1.422h13.128     c0.92,0,1.173-0.4,1.173-1.342l0.014-9.598c0-0.938-0.19-1.463-1.111-1.463L4.26,4.147H3.605z"/>
+<linearGradient id="XMLID_3_" gradientUnits="userSpaceOnUse" x1="3.0449" y1="9.7627" x2="17.9741" y2="9.7627">
+<stop offset="0" style="stop-color:#C2E0E1"/>
+<stop offset="0.2141" style="stop-color:#7AC0D6"/>
+<stop offset="0.6648" style="stop-color:#559BC1"/>
+<stop offset="1" style="stop-color:#1D65A2"/>
+</linearGradient>
+<path fill="url(#XMLID_3_)" d="M17.406,4.575H3.613l0,0c-0.314,0-0.568,0.259-0.568,0.571v9.785     c-0.029,0.026,14.908,0.026,14.929,0V5.146C17.974,4.834,17.721,4.575,17.406,4.575z"/>
+</g>
+<linearGradient id="XMLID_4_" gradientUnits="userSpaceOnUse" x1="3.0449" y1="14.7666" x2="17.9741" y2="14.7666">
+<stop offset="0" style="stop-color:#2387B8"/>
+<stop offset="0.0123" style="stop-color:#2387B8"/>
+<stop offset="0.1296" style="stop-color:#2387B8"/>
+<stop offset="0.2842" style="stop-color:#2268A8"/>
+<stop offset="0.4843" style="stop-color:#204798"/>
+<stop offset="0.6755" style="stop-color:#1F2F8C"/>
+<stop offset="0.8521" style="stop-color:#1E2085"/>
+<stop offset="1" style="stop-color:#1E1B82"/>
+</linearGradient>
+<path fill="url(#XMLID_4_)" d="M3.045,13.481v1.999c0,0.315,0.254,0.571,0.568,0.571h13.793c0.314,0,0.567-0.251,0.567-0.571    v-1.999H3.045z"/>
+<polygon fill="#F4A816" points="6.953,13.758 5.177,11.845 15.842,11.845 14.063,13.758   "/>
+<polygon fill="#FFFFFF" points="11.103,11.207 11.103,6.106 6.36,11.207   "/>
+<polygon fill="#FFFFFF" points="11.694,6.106 14.656,11.207 11.694,11.207   "/>
+</g>
+<rect fill="none" width="21" height="21"/>
+</g>
+</svg>

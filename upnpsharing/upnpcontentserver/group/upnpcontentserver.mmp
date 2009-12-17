@@ -1,0 +1,90 @@
+/*
+* Copyright (c) 2006-2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      Project definition file for project upnpcontentserver
+*
+*/
+
+
+
+
+
+
+#include "../../../group/upnpplatformvar.hrh"
+#include <data_caging_paths.hrh>
+#include "defaultcaps.hrh"
+
+CAPABILITY CAP_SERVER
+VENDORID VID_DEFAULT
+TARGETTYPE exe
+TARGET upnpcontentserver.exe
+
+UID 0x1000008d 0x20007564
+
+// SIS installation + IAD support
+VERSION 10.1
+paged
+
+EPOCSTACKSIZE 0x8000
+EPOCHEAPSIZE   0x20000 0x1000000 // min size 128kB, max size 16mb
+
+MW_LAYER_SYSTEMINCLUDE
+
+USERINCLUDE ../inc
+USERINCLUDE ../../../inc
+
+SOURCEPATH ../src
+
+SOURCE upnpcontentserver.cpp
+SOURCE upnpcontentserversession.cpp
+SOURCE upnpcontentserverhandler.cpp
+SOURCE upnpcontentsharingao.cpp
+SOURCE upnpsharingrequest.cpp
+SOURCE upnpcontainercheckerao.cpp
+SOURCE upnpunsharerao.cpp
+
+// From old applicationengine
+SOURCE upnpcontentmetadatautility.cpp
+SOURCE upnpcustomgrouper.cpp
+SOURCE upnppostfilter.cpp
+SOURCE upnpselectionreader.cpp
+SOURCE upnpselectionwriter.cpp
+
+LIBRARY euser.lib 
+LIBRARY bafl.lib 
+LIBRARY estor.lib 
+LIBRARY ws32.lib 
+LIBRARY efsrv.lib 
+LIBRARY PlatformEnv.lib
+LIBRARY centralrepository.lib
+// Content listing framework (metadata)
+LIBRARY contentlistingframework.lib
+// CUpnpElement etc..
+LIBRARY upnpavobjects.lib
+// CUpnpFileSharing
+LIBRARY avmediaserverclient.lib
+LIBRARY upnpserviceframework.lib
+
+// UpnpString..
+LIBRARY upnpipserversutils.lib
+
+// upnputilities
+LIBRARY upnputilities.lib
+LIBRARY upnpavcontrollerhelper.lib
+
+LIBRARY dlnaprofiler.lib
+LIBRARY upnpmusicadapter.lib
+
+DEBUGLIBRARY    flogger.lib
+
+// End of file

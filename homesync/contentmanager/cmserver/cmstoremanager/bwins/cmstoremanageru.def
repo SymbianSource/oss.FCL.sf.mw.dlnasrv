@@ -1,0 +1,4 @@
+EXPORTS
+	?NewStoreManagerL@CmStoreManagerFactory@@SAPAVMCmSmManager@@PAVMCmServiceObserver@@AAVCMdESession@@PAVCCmDmMain@@PAVCCmMmMain@@@Z @ 1 NONAME ; class MCmSmManager * CmStoreManagerFactory::NewStoreManagerL(class MCmServiceObserver *, class CMdESession &, class CCmDmMain *, class CCmMmMain *)
+	?NewStoreManagerLC@CmStoreManagerFactory@@SAPAVMCmSmManager@@PAVMCmServiceObserver@@AAVCMdESession@@PAVCCmDmMain@@PAVCCmMmMain@@@Z @ 2 NONAME ; class MCmSmManager * CmStoreManagerFactory::NewStoreManagerLC(class MCmServiceObserver *, class CMdESession &, class CCmDmMain *, class CCmMmMain *)
+

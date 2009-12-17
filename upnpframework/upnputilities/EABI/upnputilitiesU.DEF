@@ -1,0 +1,48 @@
+EXPORTS
+	_ZN15UPnPCommonUtils10DesC8ToIntERK6TDesC8 @ 1 NONAME
+	_ZN15UPnPCommonUtils11RenameFileLERK7TDesC16 @ 2 NONAME
+	_ZN15UPnPCommonUtils12IntToDesC8LCERKi @ 3 NONAME
+	_ZN15UPnPCommonUtils16DeleteTempFilesLEv @ 4 NONAME
+	_ZN15UPnPCommonUtils16MemoryCardStateLEv @ 5 NONAME
+	_ZN15UPnPCommonUtils16ResolveFileTypeLERK7TDesC16 @ 6 NONAME
+	_ZN15UPnPCommonUtils16ResolveMimeTypeLERK7TDesC16 @ 7 NONAME
+	_ZN15UPnPCommonUtils16TTimeToUPnPDateLE5TTime @ 8 NONAME
+	_ZN15UPnPCommonUtils20FindContainerByTitleERK18CUpnpContainerListRK6TDesC8 @ 9 NONAME
+	_ZN15UPnPCommonUtils20IsPlaylistContainerLERK11CUpnpObject @ 10 NONAME
+	_ZN15UPnPCommonUtils23GetMimeTypeByExtensionLERK7TDesC16 @ 11 NONAME
+	_ZN15UPnPCommonUtils24ReplacePlaceHolderInURILER9CUpnpItemRK9TInetAddr @ 12 NONAME
+	_ZN15UPnPCommonUtils33ReplaceIllegalFilenameCharactersLERK6TDesC8 @ 13 NONAME
+	_ZN15UPnPCommonUtils33ReplaceIllegalFilenameCharactersLERK7TDesC16 @ 14 NONAME
+	_ZN19UPnPMetadataFetcher14FetchMetadataLER11CUpnpObjectRK7TDesC16 @ 15 NONAME
+	_ZN19UPnPMetadataFetcher14FetchMetadataLER11CUpnpObjectRK7TDesC16RK6TDesC8 @ 16 NONAME
+	_ZN19UPnPMetadataFetcher19CreateItemFromFileLERK7TDesC16 @ 17 NONAME
+	_ZN19UPnPMetadataFetcher20CreateItemFromFileLCERK7TDesC16 @ 18 NONAME
+	_ZN20CUPnPMetaDataUtility13LoadMetaDataLERK7TDesC16 @ 19 NONAME
+	_ZN20CUPnPMetaDataUtility4NewLEv @ 20 NONAME
+	_ZN20CUPnPMetaDataUtilityD0Ev @ 21 NONAME
+	_ZN20CUPnPMetaDataUtilityD1Ev @ 22 NONAME
+	_ZN20CUPnPMetaDataUtilityD2Ev @ 23 NONAME
+	_ZN22CUPnPConnectionMonitor4NewLER30MUPnPConnectionMonitorObserveri @ 24 NONAME
+	_ZN24UpnpCdsResElementUtility13IsUriAbsoluteERK6TDesC8 @ 25 NONAME
+	_ZN24UpnpCdsResElementUtility14AddResElementLER9CUpnpItemRK7TDesC16 @ 26 NONAME
+	_ZNK20CUPnPMetaDataUtility4DateEv @ 27 NONAME
+	_ZNK20CUPnPMetaDataUtility5AlbumEv @ 28 NONAME
+	_ZNK20CUPnPMetaDataUtility5GenreEv @ 29 NONAME
+	_ZNK20CUPnPMetaDataUtility5TitleEv @ 30 NONAME
+	_ZNK20CUPnPMetaDataUtility6ArtistEv @ 31 NONAME
+	_ZTI20CUPnPMetaDataUtility @ 32 NONAME ; #<TI>#
+	_ZTI22CUPnPConnectionMonitor @ 33 NONAME ; #<TI>#
+	_ZTV20CUPnPMetaDataUtility @ 34 NONAME ; #<VT>#
+	_ZTV22CUPnPConnectionMonitor @ 35 NONAME ; #<VT>#
+	_ZN15UPnPCommonUtils16IsAudioSupportedERK6TDesC8 @ 36 NONAME
+	_ZN15UPnPCommonUtils16IsImageSupportedERK6TDesC8 @ 37 NONAME
+	_ZN15UPnPCommonUtils16IsVideoSupportedERK6TDesC8 @ 38 NONAME
+	_ZN15UPnPCommonUtils24FileExtensionByMimeTypeLERK6TDesC8 @ 39 NONAME
+	_ZN19UpnpGalleryNotifier19NotifyMediaGalleryLEv @ 40 NONAME
+	_ZN22CUPnPConnectionMonitor28DebugSimulateConnectionLostLEv @ 41 NONAME
+	_ZN20CUPnPMetaDataUtility10LoadTitleLERK7TDesC16 @ 42 NONAME
+	_ZN15UPnPCommonUtils19FixListboxItemTextLERK6TDesC8 @ 43 NONAME
+	_ZN13CUPnPPeriodic4NewLEi @ 44 NONAME
+	_ZTI13CUPnPPeriodic @ 45 NONAME ; #<TI>#
+	_ZTV13CUPnPPeriodic @ 46 NONAME ; #<VT>#
+

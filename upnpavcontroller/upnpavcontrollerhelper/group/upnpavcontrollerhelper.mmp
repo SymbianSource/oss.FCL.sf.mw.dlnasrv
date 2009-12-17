@@ -1,0 +1,80 @@
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      project file for AVController helper library
+*
+*/
+
+
+
+
+
+
+#include "../../../group/upnpplatformvar.hrh"
+
+TARGET          upnpavcontrollerhelper.dll
+TARGETTYPE      dll
+UID             0x1000008D 0x20009CA8
+
+CAPABILITY      CAP_GENERAL_DLL
+VENDORID        VID_DEFAULT
+
+VERSION         10.1
+paged
+
+SOURCEPATH      ../src 
+SOURCE          upnpitemutility.cpp
+SOURCE          upnpfileutility.cpp
+SOURCE          upnpdlnautility.cpp
+SOURCE          upnpitemresolverfactory.cpp
+SOURCE          upnpremoteitemresolver.cpp
+SOURCE          upnplocalitemresolver.cpp
+SOURCE          upnpdownloaditemresolver.cpp
+SOURCE          upnpresourceselector.cpp
+SOURCE          upnpabstractbrowsingsessionobserver.cpp
+SOURCE          upnpabstractrenderingsessionobserver.cpp
+SOURCE          upnpinternalfileutility.cpp
+
+USERINCLUDE     ../inc
+USERINCLUDE     ../../inc
+
+MW_LAYER_SYSTEMINCLUDE 
+USERINCLUDE   ../../../inc
+
+// system
+LIBRARY         euser.lib
+LIBRARY         estor.lib
+LIBRARY         bafl.lib
+LIBRARY         drmcommon.lib  // OEM-DRM
+LIBRARY         caf.lib // WM-DRM
+LIBRARY         cafutils.lib // WM-DRM
+LIBRARY         efsrv.lib // RFs
+LIBRARY         PlatformEnv.lib // PathInfo
+LIBRARY         insock.lib // TInetAddr
+
+// S60 upnp stack
+LIBRARY         upnpavobjects.lib // CUpnpObject, ...
+LIBRARY         upnpipserversutils.lib // CUpnpDlnaProtocolInfo
+LIBRARY         avmediaserverclient.lib // file sharing
+
+// other upnp components
+LIBRARY         upnpavcontrollerclient.lib
+LIBRARY         upnpxmlparser.lib // browse response
+LIBRARY         upnputilities.lib // CreateItemFromFileLC
+LIBRARY         upnpsettingsengine.lib // SettingsEngine
+LIBRARY         upnpsecurity.lib // SecAccessController
+
+// debug
+DEBUGLIBRARY    flogger.lib
+
+// End of file

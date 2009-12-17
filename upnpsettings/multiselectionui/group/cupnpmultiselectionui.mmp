@@ -1,0 +1,100 @@
+/*
+* Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:      multiselectionui project definition file
+*
+*/
+
+
+
+
+
+
+// For compatibility with S60 3.2 and IAD branch
+#include "../../../group/upnpplatformvar.hrh"
+#include <data_caging_paths.hrh>
+
+TARGET          upnpmultiselectionui.dll
+TARGETTYPE      dll
+UID             0x100000D8 0x200009E8
+
+VENDORID        VID_DEFAULT
+CAPABILITY      CAP_GENERAL_DLL
+
+// SIS installation + IAD support
+VERSION 10.1
+paged
+
+// Include paths
+MW_LAYER_SYSTEMINCLUDE
+UPNP_LOC_INCLUDE_PATH_COMPONENT
+
+USERINCLUDE     ../inc
+USERINCLUDE     ../../../inc
+
+START RESOURCE  ../data/cupnpmultiselectionui.rss
+HEADER
+TARGETPATH      RESOURCE_FILES_DIR
+LANGUAGE_IDS
+END
+
+SOURCEPATH      ../src
+
+SOURCE          upnpmultiselectionutility.cpp
+SOURCE          cupnpmultiselectionui.cpp
+SOURCE          upnpappmultiselectiondialog.cpp
+SOURCE          upnpappmultiselectionpopup.cpp
+
+LIBRARY         AknIcon.lib
+LIBRARY         aknlayout.lib
+LIBRARY         AknLayout2Scalable.lib
+LIBRARY         AKNSKINS.lib
+LIBRARY         apparc.lib
+LIBRARY         avkon.lib
+LIBRARY         charconv.lib
+LIBRARY         CommonEngine.lib
+LIBRARY         cone.lib
+LIBRARY         efsrv.lib
+LIBRARY         egul.lib
+LIBRARY         eikcoctl.lib
+LIBRARY         eikcore.lib
+LIBRARY         eikctl.lib
+LIBRARY         eikdlg.lib
+LIBRARY         euser.lib
+LIBRARY         fbscli.lib 
+LIBRARY         featmgr.lib
+LIBRARY         gdi.lib
+LIBRARY         hlplch.lib
+LIBRARY         ws32.lib 
+
+// ecom
+LIBRARY         ecom.lib
+
+// string.h
+LIBRARY         upnpipserversutils.lib
+
+// rpointerarray tdesc16
+LIBRARY         bafl.lib
+
+// esock
+LIBRARY         esock.lib
+
+// filesharingengine
+LIBRARY upnpapplicationengine.lib
+
+// pathinfo::
+LIBRARY PlatformEnv.lib
+
+DEBUGLIBRARY    flogger.lib
+
+// End of file

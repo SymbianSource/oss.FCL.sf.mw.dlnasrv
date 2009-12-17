@@ -1,0 +1,42 @@
+/*
+* Copyright (c) 2005 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Build information file for UPnPMusicAdapter
+*
+*/
+
+
+PRJ_PLATFORMS
+WINSCW ARMV5
+
+PRJ_EXPORTS
+../inc/upnpalbumservices.h           |../../../inc/upnpalbumservices.h
+../inc/upnpbrowseplaylistfiller.h    |../../../inc/upnpbrowseplaylistfiller.h
+../inc/upnpbrowsetimer.h             |../../../inc/upnpbrowsetimer.h
+../inc/upnplitefiller.h              |../../../inc/upnplitefiller.h
+../inc/upnpliteselectionfiller.h     |../../../inc/upnpliteselectionfiller.h
+../inc/upnpmusicadapter.h            |../../../inc/upnpmusicadapter.h
+../inc/upnpplaylistfiller.h          |../../../inc/upnpplaylistfiller.h
+../inc/upnpplaylistservices.h        |../../../inc/upnpplaylistservices.h
+
+PRJ_MMPFILES
+upnpmusicadapter.mmp
+
+PRJ_TESTMMPFILES
+// None
+
+PRJ_TESTEXPORTS
+// None
+
+
+

@@ -1,0 +1,6 @@
+EXPORTS
+	_ZN19CCmMdhClientFactory15NewCmMdhClientLER18MCmServiceObserver @ 1 NONAME
+	_ZN19CCmMdhClientFactory16NewCmMdhClientLCER18MCmServiceObserver @ 2 NONAME
+	_ZTI12CCmMdhClient @ 3 NONAME ; #<TI>#
+	_ZTV12CCmMdhClient @ 4 NONAME ; #<VT>#
+
