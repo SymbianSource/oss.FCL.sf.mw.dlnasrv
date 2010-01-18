@@ -26,6 +26,7 @@
 #include <sysutil.h>
 #include <bautils.h>
 #include <caf/caf.h>
+#include <caf/manager.h>
 
 #include "upnpsender.h"
 #include "upnpcontentdirectory.h"
