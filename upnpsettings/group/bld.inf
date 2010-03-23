@@ -46,8 +46,9 @@ PRJ_MMPFILES
 
     // Sharing ui
     #include "../upnpsharingui/group/bld.inf"
-#endif // FF_UPNP_FRAMEWORK_2_0
+    
     // GS plugin
     #include "../upnpgsplugin/group/bld.inf"
+#endif // FF_UPNP_FRAMEWORK_2_0
 
 // end of file
