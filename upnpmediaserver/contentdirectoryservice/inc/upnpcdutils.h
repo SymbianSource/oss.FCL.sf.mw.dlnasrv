@@ -156,7 +156,7 @@ class UpnpCdUtils
    	static HBufC8* BuildImportUriLC(TInt aResId);
    	static HBufC8* BuildImportUriShorterLC(TInt64 aResId);
 	static HBufC8* BuildContentUriL(TInt aResId, const TDesC& aFileExten, TDesC8& aObjectId);
-    static HBufC8* UpnpCdUtils::RandomizeL(TInt aRange);
+    static HBufC8* RandomizeL(TInt aRange);
     /**
     * Checks whether the element is required and removes the attribute notifying it
     * @since Series S60 3.0

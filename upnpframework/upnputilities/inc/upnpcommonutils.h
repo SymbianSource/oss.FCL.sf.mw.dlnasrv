@@ -193,7 +193,7 @@ public: // Business logic methods
      * @param aFilePath original file path
      * @return HBufC pointer to the new filepath
      */
-    IMPORT_C static HBufC* UPnPCommonUtils::RenameFileL( const TDesC& aFilePath );
+    IMPORT_C static HBufC* RenameFileL( const TDesC& aFilePath );
     
     /**
      * Delete upnp genereated temporary files from download locations

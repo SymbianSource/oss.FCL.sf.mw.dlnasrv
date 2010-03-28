@@ -151,12 +151,12 @@ private: // private methods
     /**
      * constructor
      */
-    CUPnPMpxHelper::CUPnPMpxHelper();
+    CUPnPMpxHelper();
 
     /**
      * 2nd phase constructor
      */
-    void CUPnPMpxHelper::ConstructL( const TUid& aModeId );
+    void ConstructL( const TUid& aModeId );
 
 private: // members
 

@@ -99,7 +99,7 @@ public: // Constructors and destructors
 
 public: //from CUpnpServiceImplementation
     
-    CUpnpStateHandler* CUpnpContentDirectory::StateHandler();
+    CUpnpStateHandler* StateHandler();
     /**
     * Handles auto destroy events.
     * @since Series 60 2.6

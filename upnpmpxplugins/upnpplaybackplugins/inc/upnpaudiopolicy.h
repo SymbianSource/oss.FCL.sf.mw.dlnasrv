@@ -73,7 +73,7 @@ public: // public services
     /**
      * destructor
      */
-    CUPnPAudioPolicy::~CUPnPAudioPolicy();
+    ~CUPnPAudioPolicy();
 
     /**
      * request for start playback

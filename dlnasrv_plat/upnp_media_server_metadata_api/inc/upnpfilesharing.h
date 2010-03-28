@@ -287,7 +287,7 @@ public:     // Interface methods
     * @since S60 5.0 HN
     * @return media server client refernce
     */                              
-    IMPORT_C RUpnpMediaServerClient& CUpnpFileSharing::MediaServerClient( );
+    IMPORT_C RUpnpMediaServerClient& MediaServerClient( );
 
 private:
 

@@ -144,7 +144,7 @@ private:
      * @return a3rdhField 3rdhField from protocolInfo (if it is DLNA compatible) which is
      *       related to founded resource. Ownership is transfered to the caller.
      */
-    HBufC8* CUpnpDlnaFilter::ThirdFieldFromCdL( const TDesC8& aContentUri );
+    HBufC8* ThirdFieldFromCdL( const TDesC8& aContentUri );
 
     /**
      * Gets name of file with content for given object's id.

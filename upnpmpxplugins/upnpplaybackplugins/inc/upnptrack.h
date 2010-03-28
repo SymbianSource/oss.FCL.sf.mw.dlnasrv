@@ -257,7 +257,7 @@ private:
      * A helper method that converts text from 8-bit to 16-bit.
      * Note that a member buffer is used that has static length.
      */
-    const HBufC16* CUPnPTrack::To16LC( const TDesC8& aText );
+    const HBufC16* To16LC( const TDesC8& aText );
 
 private: // data
 
