@@ -27,12 +27,8 @@
     data=DATAZ_\resource\UPnPAiwEngineResources.RSC \resource\UPnPAiwEngineResources.rsc
     data=DATAZ_\resource\UPnPAiwMenuResources.rsc \resource\UPnPAiwMenuResources.rsc
 
-#endif // FF_UPNP_FRAMEWORK_2_0	
-
     // UpnpCommand
     data=DATAZ_\resource\upnpcommandresources.RSC \resource\upnpcommandresources.rsc
-
-#ifdef FF_UPNP_FRAMEWORK_2_0 // UPnP feature flag
 
     // File transfer engine
     data=DATAZ_\resource\UPnPFileTransferEngineResources.rsc \resource\UPnPFileTransferEngineResources.rsc
