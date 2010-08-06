@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2010 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -11,22 +11,19 @@
 *
 * Contributors:
 *
-* Description:      Build information file for upnpmpxplugins
+* Description:      Build information file for upnpavcontroller ROM
 *
 */
 
+
 #include "../../group/upnpplatformvar.hrh"
+
 
 PRJ_PLATFORMS
 
 PRJ_EXPORTS
+// ROM build
+../rom/upnpavcontroller.iby            CORE_MW_LAYER_IBY_EXPORT_PATH(upnpavcontroller.iby)
 
 PRJ_MMPFILES
-
-// playback plugins
-#include "../upnpplaybackplugins/group/bld.inf"
-
-// upnpmpxplugins ROM
-#include "../rom/bld.inf"
-
-// end of file
+// none

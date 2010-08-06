@@ -11,22 +11,28 @@
 *
 * Contributors:
 *
-* Description:      Build information file for upnpmpxplugins
+* Description:      Exports for upnpsettings
 *
 */
 
+
+
+
+
+
+// For compatibility with S60 3.2 and IAD branch
 #include "../../group/upnpplatformvar.hrh"
 
 PRJ_PLATFORMS
 
 PRJ_EXPORTS
+// ROM build
+upnpsettings.iby               CORE_MW_LAYER_IBY_EXPORT_PATH(upnpsettings.iby)
+upnpsettingsresources.iby      CORE_MW_LAYER_IBY_EXPORT_PATH(upnpsettingsresources.iby)
+// LOC files
+UPNP_LOC_EXPORT(upnpsettings.loc)
 
 PRJ_MMPFILES
-
-// playback plugins
-#include "../upnpplaybackplugins/group/bld.inf"
-
-// upnpmpxplugins ROM
-#include "../rom/bld.inf"
+// none
 
 // end of file

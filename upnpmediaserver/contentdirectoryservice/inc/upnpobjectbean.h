@@ -24,7 +24,7 @@
 #include "upnptablebean.h"
 #include <e32base.h>
 #include <d32dbms.h>
-#include <xmlengdom.h>
+#include <xml/dom/xmlengdom.h>
 
 class CUpnpObject;
 

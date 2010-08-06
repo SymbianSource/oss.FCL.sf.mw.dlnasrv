@@ -23,7 +23,7 @@
 //  INCLUDES
 #include <e32base.h>
 
-#include <xmlengdom.h>
+#include <xml/dom/xmlengdom.h>
 
 // FORWARD DECLARATIONS
 class CUpnpPathElement;
