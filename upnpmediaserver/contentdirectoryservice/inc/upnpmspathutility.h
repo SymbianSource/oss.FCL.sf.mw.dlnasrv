@@ -26,7 +26,7 @@
 // INCLUDE FILES
 #include <e32base.h>    // CBase
 #include <f32file.h>    // TDriveNumber
-#include <xmlengdom.h>
+#include <xml/dom/xmlengdom.h>
 
 // FORWARD DECLARATIONS
 class CRepository;

@@ -1,9 +1,9 @@
 /** @file
-* Copyright (c) 2005-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* Copyright (c) 2005-2006 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
-* which accompanies  this distribution, and is available 
+* which accompanies  this distribution, and is available
 * at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
@@ -22,9 +22,6 @@ WINSCW ARMV5
 //DEFAULT
 
 PRJ_EXPORTS
-../rom/upnpmediaserver.iby CORE_MW_LAYER_IBY_EXPORT_PATH(upnpmediaserver.iby)
-../conf/upnpmediaserver.confml MW_LAYER_CONFML(upnpmediaserver.confml)
-../conf/upnpmediaserver_101F978F.crml MW_LAYER_CRML(upnpmediaserver_101F978F.crml)
 
 PRJ_MMPFILES
 
@@ -33,6 +30,7 @@ PRJ_MMPFILES
 #include "../connectionmanagerservice/group/bld.inf"
 #include "../contentdirectoryservice/group/bld.inf"
 #include "../mediaserverengine/group/bld.inf"
+#include "../rom/bld.inf"
 
 
-//  End of File  
+//  End of File

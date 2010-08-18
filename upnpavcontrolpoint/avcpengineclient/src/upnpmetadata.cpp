@@ -21,7 +21,7 @@
 #include "upnpmetadata.h"
 #include "upnpavcpenginemsclient.h"
 #include <upnpdominterface.h>
-#include <XmlEngDOMParser.h>
+#include <xml/dom/xmlengdomparser.h>
 #include <XmlEngSerializationOptions.h>
 #include <Uri16.h>
 

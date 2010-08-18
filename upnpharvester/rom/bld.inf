@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2005 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2010 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -11,28 +11,28 @@
 *
 * Contributors:
 *
-* Description:      Build information file for CM Metadata Harvester
+* Description:      Build information file for CM Metadata Harvester ROM
 *
 */
 
+
+
+
+
+
 #include "../../group/upnpplatformvar.hrh"
 
+
 PRJ_PLATFORMS
+
 DEFAULT
 
 PRJ_EXPORTS
+../install/upnpharvester_stub.SIS   /epoc32/data/z/system/install/upnpharvester_stub.sis
+../install/10281fab.cre             /epoc32/release/armv5/urel/z/private/10202be9/10281fab.cre
+../rom/upnpharvester.iby            CORE_MW_LAYER_IBY_EXPORT_PATH(upnpharvester.iby)
 
 PRJ_MMPFILES
-
-#include "../common/cmlibrary/group/bld.inf"
-#include "../common/cmsettings/group/bld.inf"
-#include "../common/dbmanager/group/bld.inf"
-#include "../common/cmsqlwrapper/group/bld.inf"
-#include "../cdssync/common/bld.inf"
-#include "../mdhserver/group/bld.inf"
-
-// CM Metadata Harvester ROM
-#include "../rom/bld.inf"
 
 PRJ_TESTMMPFILES
 

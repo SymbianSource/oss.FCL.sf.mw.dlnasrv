@@ -22,8 +22,8 @@
 
 // INCLUDES
 
-#include <xmlengdom.h>
-#include <xmlengdocument.h>
+#include <xml/dom/xmlengdom.h>
+#include <xml/dom/xmlengdocument.h>
 #include "upnpcontentdirectory.h"
 #include "upnpfiletransfer.h"
 #include "upnperrors.h" // Added by ClassView

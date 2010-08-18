@@ -25,7 +25,7 @@
 #include "upnpelementfactory.h"
 
 // new xml
-#include <xmlengdom.h>
+#include <xml/dom/xmlengdom.h>
 
 #include "upnpfiletransfer.h"
 #include "upnpcontentdirectorydatafinder.h"
