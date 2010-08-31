@@ -19,7 +19,7 @@
 // INCLUDE FILES
 #include <sysutil.h>
 #include <uri8.h>
-#include <xmlengdomparser.h>
+#include <xml/dom/xmlengdomparser.h>
 
 #include "upnpelementfactory.h"
 #include "upnpcontentdirectoryglobals.h"

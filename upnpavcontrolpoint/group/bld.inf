@@ -1,9 +1,9 @@
 /** @file
-* Copyright (c) 2005-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* Copyright (c) 2005-2006 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
-* which accompanies  this distribution, and is available 
+* which accompanies  this distribution, and is available
 * at the URL "http://www.eclipse.org/legal/epl-v10.html".
 *
 * Initial Contributors:
@@ -22,11 +22,14 @@ WINSCW ARMV5
 //DEFAULT
 
 PRJ_EXPORTS
-../rom/upnpavcontrolpoint.iby CORE_MW_LAYER_IBY_EXPORT_PATH(upnpavcontrolpoint.iby)
 
 PRJ_MMPFILES
 
 #include "../avcontrolframework/group/bld.inf"
+
+// UPnP Stack ROM
+#include "../rom/bld.inf"
+
 /*
 commented-out due to s60 distribution policy
 #include "../avcpengine/group/bld.inf"
@@ -35,4 +38,4 @@ commented-out due to s60 distribution policy
 */
 
 
-//  End of File  
+//  End of File

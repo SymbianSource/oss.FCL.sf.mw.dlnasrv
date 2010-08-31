@@ -20,7 +20,7 @@
 #include <barsread.h>
 #include <barsc.h>   
 #include <f32file.h>
-#include <xmlengdom.h>
+#include <xml/dom/xmlengdom.h>
 #include <sysutil.h>
 #include <upnpdominterface.h>
 #include <upnpstring.h>
