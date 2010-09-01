@@ -18,7 +18,7 @@
 
 
 // INCLUDE FILES
-#include <xml/dom/xmlengdom.h>
+#include <xmlengdom.h>
 #include "upnpattributebean.h"
 #include "upnpcontentdirectoryglobals.h"
 #include <upnpattribute.h>

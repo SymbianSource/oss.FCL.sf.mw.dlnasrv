@@ -27,7 +27,7 @@
 #include "upnpstring.h"
 #include "upnpcons.h"
 #include <utf.h>
-#include <xml/dom/xmlengdocument.h>
+#include <xmlengdocument.h>
 #include <e32math.h>
 
 // ============================ MEMBER FUNCTIONS ===============================

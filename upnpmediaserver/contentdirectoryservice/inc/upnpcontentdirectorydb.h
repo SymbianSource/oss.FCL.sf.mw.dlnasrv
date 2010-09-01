@@ -26,7 +26,7 @@
 #include <s32file.h>
 #include <flogger.h>
 #include <upnperrors.h>
-#include <xml/dom/xmlengdom.h>
+#include <xmlengdom.h>
 
 
 // CLASS DECLARATION

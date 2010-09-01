@@ -23,8 +23,8 @@
 #include <e32base.h>
 #include <e32cmn.h>
  
-#include <xml/dom/xmlengdom.h>
-#include <xml/dom/xmlengdocument.h>
+#include <xmlengdom.h>
+#include <xmlengdocument.h>
 
 //rsfw
 #include <rsfwmountman.h>

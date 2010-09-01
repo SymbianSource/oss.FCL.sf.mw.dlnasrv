@@ -15,28 +15,32 @@
 *
 */
 
+
+
+
+
+
 #include "../../group/upnpplatformvar.hrh"
+
 
 PRJ_PLATFORMS
 
 PRJ_EXPORTS
-// none
+// ROM build
+../rom/upnpavcontroller.iby            CORE_MW_LAYER_IBY_EXPORT_PATH(upnpavcontroller.iby)
 
 PRJ_MMPFILES
 // none
 
-// upnp xml parser
-#include "../upnpxmlparser/group/bld.inf"
+    // upnp xml parser
+    #include "../upnpxmlparser/group/bld.inf"
 
-// avcontroller server
-#include "../upnpavcontrollerserver/group/bld.inf"
+    // avcontroller server
+    #include "../upnpavcontrollerserver/group/bld.inf"
 
-// avcontroller client
-#include "../upnpavcontrollerclient/group/bld.inf"
+    // avcontroller client
+    #include "../upnpavcontrollerclient/group/bld.inf"
 
-// avcontroller helper
-#include "../upnpavcontrollerhelper/group/bld.inf"
-
-// upnpavcontroller ROM
-#include "../rom/bld.inf"
+    // avcontroller helper
+    #include "../upnpavcontrollerhelper/group/bld.inf"
 

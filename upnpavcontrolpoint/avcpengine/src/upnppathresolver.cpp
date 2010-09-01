@@ -29,8 +29,8 @@ using namespace UpnpAVCPEngine;
 
 #include "upnpstring.h"
 
-#include <xml/dom/xmlengdom.h>
-#include <xml/dom/xmlengdomparser.h>
+#include <xmlengdom.h>
+#include <xmlengdomparser.h>
 
 #include "upnpdominterface.h"
 

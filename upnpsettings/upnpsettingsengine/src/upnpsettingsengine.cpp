@@ -29,6 +29,7 @@
 #include <pathinfo.h> //PathInfo
 #include <upnpmediaserversettings.h>
 
+#include <cmsettingsui.h> // CCmSettingsUi
 #include <cmmanager.h>   // RCmManager
 #include <cmconnectionmethoddef.h>
 #include <commdb.h> // CCommsDatabase
@@ -689,6 +690,10 @@ EXPORT_C void CUPnPSettingsEngine::GetWLANAccessPointsL(
 //
 EXPORT_C void CUPnPSettingsEngine::CreateAccessPointL()
     {
+    CCmSettingsUi* settings = CCmSettingsUi::NewL();    
+    CleanupStack::PushL( settings );
+    settings->RunSettingsL();
+    CleanupStack::PopAndDestroy( settings );
     }
     
 //---------------------------------------------------------------------------

@@ -23,16 +23,28 @@ PRJ_PLATFORMS
 DEFAULT
 
 PRJ_EXPORTS
-// none
+// ROM build
+../rom/upnpframework.iby               CORE_MW_LAYER_IBY_EXPORT_PATH(upnpframework.iby)
+../rom/upnpframeworkresources.iby      CORE_MW_LAYER_IBY_EXPORT_PATH(upnpframeworkresources.iby)
+// LOC files
+UPNP_LOC_EXPORT(upnpframework.loc)
+// IAD support
+../install/20009cae.cre                /epoc32/release/arm5/urel/z/private/20009cae.cre
+../install/20007564.cre                /epoc32/release/arm5/urel/z/private/20007564.cre
+../install/upnpframework_stub.sis      /epoc32/data/z/system/install/upnpframework_stub.sis
+// upnpframework common headers
+../inc/upnpframeworkfeatures_mmp.hrh   |../../inc/upnpframeworkfeatures_mmp.hrh
+../inc/upnplogging.h                   |../../inc/upnplogging.h
+../inc/upnppanic.h                     |../../inc/upnppanic.h
+../inc/upnplog.h                       |../../inc/upnplog.h
 
 PRJ_MMPFILES
 // none
 
-// Build subprojects
+    // Build subprojects
 
-// UpnpUtilities
-#include "../upnputilities/group/bld.inf"
-
+    // UpnpUtilities
+    #include "../upnputilities/group/bld.inf"
 #ifdef FF_UPNP_FRAMEWORK_2_0  // UPnP feature flag
      // UPnP (Home Media) Extension plugin interface
     #include "../upnpextensionpluginif/group/bld.inf"
@@ -51,14 +63,12 @@ PRJ_MMPFILES
 
 #endif // FF_UPNP_FRAMEWORK_2_0
 
-// UpnpMusicAdapter
-#include "../upnpmusicadapter/group/bld.inf"
+    // UpnpMusicAdapter
+    #include "../upnpmusicadapter/group/bld.inf"
+    
+    // UpnpCommand
+    #include "../upnpcommand/group/bld.inf"
 
-// UpnpCommand
-#include "../upnpcommand/group/bld.inf"
-
-// Exports for upnpframework
-#include "../rom/bld.inf"
 
 
 // End of file

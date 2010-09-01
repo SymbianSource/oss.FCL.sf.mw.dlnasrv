@@ -26,7 +26,7 @@
 #include <d32dbms.h>
 #include <s32file.h>
 #include <upnperrors.h>
-#include <xml/dom/xmlengdom.h>
+#include <xmlengdom.h>
 
 // FORWARD DECLARATIONS
 class CUpnpObjectBean;

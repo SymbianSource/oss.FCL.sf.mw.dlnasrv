@@ -15,12 +15,22 @@
 *
 */
 
+
+
+
+
+
 #include "../../group/upnpplatformvar.hrh"
 
+
 PRJ_PLATFORMS
+
 DEFAULT
 
 PRJ_EXPORTS
+../install/upnpharvester_stub.SIS   /epoc32/data/z/system/install/upnpharvester_stub.sis
+../install/10281fab.cre             /epoc32/release/armv5/urel/z/private/10202be9/10281fab.cre
+../rom/upnpharvester.iby            CORE_MW_LAYER_IBY_EXPORT_PATH(upnpharvester.iby)
 
 PRJ_MMPFILES
 
@@ -30,9 +40,6 @@ PRJ_MMPFILES
 #include "../common/cmsqlwrapper/group/bld.inf"
 #include "../cdssync/common/bld.inf"
 #include "../mdhserver/group/bld.inf"
-
-// CM Metadata Harvester ROM
-#include "../rom/bld.inf"
 
 PRJ_TESTMMPFILES
 

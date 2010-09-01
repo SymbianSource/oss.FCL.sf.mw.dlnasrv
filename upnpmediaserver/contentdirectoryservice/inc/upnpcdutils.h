@@ -21,7 +21,7 @@
 #define CDUTILS_H
 
 //  INCLUDES
-#include <xml/dom/xmlengdom.h>
+#include <xmlengdom.h>
 #include <e32base.h>
 
 

@@ -23,8 +23,8 @@
 
 #include <xml/parser.h>
 #include <xml/parserfeature.h>
-#include <xml/dom/xmlengnodefilter.h>
-#include <xml/dom/xmlengdomparser.h>
+#include <xmlengnodefilter.h>
+#include <xmlengdomparser.h>
 
 #include <charconv.h>
 #include <utf.h>

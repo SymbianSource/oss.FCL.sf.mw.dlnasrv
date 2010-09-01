@@ -20,9 +20,9 @@
 #include <fbs.h>
 #include <uri8.h>
 #include <pathinfo.h>
-#include <xml/dom/xmlengdom.h>
-#include <xml/dom/xmlengserializationoptions.h>
-#include <xml/dom/xmlengdomparser.h>
+#include <xmlengdom.h>
+#include <xmlengserializationoptions.h>
+#include <xmlengdomparser.h>
 #include <sysutil.h>
 #include <bautils.h>
 #include <caf/caf.h>
