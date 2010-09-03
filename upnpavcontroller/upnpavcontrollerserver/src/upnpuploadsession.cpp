@@ -379,7 +379,7 @@ as UPnP content" );
     CUPnPResourceHelper* helper = CUPnPResourceHelper::NewL();
     CleanupStack::Pop( tmpUpnpItem );
     helper->SetItem( tmpUpnpItem ); // Transfer ownership
-    iResources.Append( helper );
+    iResources.AppendL( helper );
     
     iUploader->MoveToTransferQueueL( (TAny*)transferItem.iKey );
     

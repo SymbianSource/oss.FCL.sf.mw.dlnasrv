@@ -1361,7 +1361,7 @@ TInt CCmDmSQLiteConnection::QueryFillRuleServersL( CCmFillRule* aFillRule,
               err = iStatement.Next() )
             {
             // Get cell contents    
-            mediaServerIds.Append( 
+            mediaServerIds.AppendL( 
                 iStatement.ColumnInt64(0) );             
             }    
         iStatement.Reset();            
@@ -1410,7 +1410,7 @@ TInt CCmDmSQLiteConnection::QueryFillRuleParamsL( CCmFillRule* aFillRule )
               err = iStatement.Next() )
             {
             // Get cell content
-            ruleIds.Append( iStatement.ColumnInt64( 0 ) );
+            ruleIds.AppendL( iStatement.ColumnInt64( 0 ) );
             aFillRule->AddRuleL( 
                 (TCmMetadataField)iStatement.ColumnInt( 1 ), 
                 (TCmOperatorType)iStatement.ColumnInt( 2 ) );
@@ -1595,7 +1595,7 @@ TInt CCmDmSQLiteConnection::QueryStoreRuleDefsL( CCmStoreRule* aStoreRule,
                   err = iStatement.Next() )
                 {
                 // Get cell contents    
-                mediaServerIds.Append( 
+                mediaServerIds.AppendL( 
                     iStatement.ColumnInt64( 0 ));
                 }
             iStatement.Reset();            
@@ -1910,7 +1910,7 @@ TInt CCmDmSQLiteConnection::GetLowPriorityFilledFilesL( TInt aDrive,
             filled->SetSize( size );
             filled->SetListId( listId );
             filled->SetDbId( fileId );
-            aFilled.Append( filled );
+            aFilled.AppendL( filled );
             CleanupStack::Pop( filled );                
             }                                
         }
@@ -2098,7 +2098,7 @@ TInt CCmDmSQLiteConnection::GetAllStoreFilesL(
         item->SetListId( iStatement.ColumnInt( 5 ) );
         devId = iStatement.ColumnInt( 6 );
         item->SetDevId( devId, (TCmListItemStatus)status );            
-        aItems.Append( item ); // transfer ownership
+        aItems.AppendL( item ); // transfer ownership
         CleanupStack::Pop( item );
         }       
     iStatement.Reset();                
@@ -2152,7 +2152,7 @@ TInt CCmDmSQLiteConnection::QueryAllFillFilesL(
             iStatement.ColumnInt( 15 ));
         item->SetDriveId( iStatement.ColumnInt64( 16 ) );
         item->SetDriveNumber( iStatement.ColumnInt( 17 ) );    
-        aItems.Append( item ); // transfer ownership
+        aItems.AppendL( item ); // transfer ownership
         CleanupStack::Pop( item );
         }
     iStatement.Reset();                
@@ -2204,7 +2204,7 @@ TInt CCmDmSQLiteConnection::QueryAllStoreFilesL(
             }
         if( !found )
             {
-            aItems.Append( item ); // transfer ownership
+            aItems.AppendL( item ); // transfer ownership
             CleanupStack::Pop( item );
             }
         else
@@ -2343,7 +2343,7 @@ void CCmDmSQLiteConnection::QueryDrivesL(
         drive->SetUsedDriveQuota( iStatement.ColumnInt64( 5 ) );
         drive->SetDriveId( iStatement.ColumnInt64( 6 ) );
         drive->SetStatus( (TBool)iStatement.ColumnInt( 7 ) );
-        aDrives.Append( drive );
+        aDrives.AppendL( drive );
         CleanupStack::Pop( drive ); 
         }   
     iStatement.Reset();                

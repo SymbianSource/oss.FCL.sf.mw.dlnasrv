@@ -492,7 +492,7 @@ void CMSAppUi::CheckDrivesSelectedL()
                 driveArray[j]->SetDriveQuota( quota );
                 driveArray[j]->SetStatus( ETrue );
                 
-                massDrives.Append( driveArray[j] );
+                massDrives.AppendL( driveArray[j] );
                 MSEngine()->SetDrivesL( massDrives );
                 CleanupStack::PopAndDestroy(  );// &massDrives
                 //break, for only one mass memory exist

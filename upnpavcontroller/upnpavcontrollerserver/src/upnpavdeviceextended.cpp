@@ -225,7 +225,7 @@ void CUpnpAVDeviceExtended::SetSinkProtocolInfoL(
             if( err == KErrNone && tmpInfo )
                 {
                 // Transfer ownership of tmpInfo
-                iSinkProtocolInfo.Append( tmpInfo );
+                iSinkProtocolInfo.AppendL( tmpInfo );
                 }
             else
                 {
@@ -276,7 +276,7 @@ void CUpnpAVDeviceExtended::SetSourceProtocolInfoL(
             if( err == KErrNone && tmpInfo )
                 {
                 // Transfer ownership of tmpInfo
-                iSourceProtocolInfo.Append( tmpInfo );
+                iSourceProtocolInfo.AppendL( tmpInfo );
                 }
             else
                 {
@@ -655,7 +655,7 @@ void CUpnpAVDeviceExtended::SetSourceProtocolInfoL(
         {
         CUpnpDlnaProtocolInfo* tmpInfo = CUpnpDlnaProtocolInfo::NewL(
             aProtocolInfo[ i ]->ProtocolInfoL() );
-        iSourceProtocolInfo.Append( tmpInfo ); // Ownership is transferred
+        iSourceProtocolInfo.AppendL( tmpInfo ); // Ownership is transferred
         }    
     }
     
@@ -672,7 +672,7 @@ void CUpnpAVDeviceExtended::SetSinkProtocolInfoL(
         {
         CUpnpDlnaProtocolInfo* tmpInfo = CUpnpDlnaProtocolInfo::NewL(
             aProtocolInfo[ i ]->ProtocolInfoL() );
-        iSinkProtocolInfo.Append( tmpInfo ); // Ownership is transferred
+        iSinkProtocolInfo.AppendL( tmpInfo ); // Ownership is transferred
         }
     }
     

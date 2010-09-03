@@ -511,7 +511,7 @@ void CCmSettingsEngine::DriveListL(
                 driveInfo->SetDriveSize( volInfo.iSize );
                 driveInfo->SetDriveId( volInfo.iUniqueID );
 
-                aDrives.Append( driveInfo );
+                aDrives.AppendL( driveInfo );
 
                 if ( memoryCardName )
                     {

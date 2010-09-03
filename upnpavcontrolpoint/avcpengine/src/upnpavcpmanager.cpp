@@ -122,7 +122,7 @@ CUpnpPathResolver& CUpnpAVCPManager::PathResolverL(const TDesC8& aUUID, CUpnpAVC
 	    	User::Leave(KErrNotFound);
 	    	}
 	    CleanupStack::Pop(resolver);	
-	    iPathResolvers.Append(resolver);	    
+	    iPathResolvers.AppendL(resolver);	    
     	}  
     	
     resolver->RegisterSession(aSession);	
@@ -163,7 +163,7 @@ void CUpnpAVCPManager::CleanupSessionL( CUpnpAVCPEngineSession* aSession)
 // -----------------------------------------------------------------------------			
 void CUpnpAVCPManager::RegisterForAction(MUpnpResponseHandler& aHandler)	 
   {
-      iPendingHandlers.Append(&aHandler);
+      iPendingHandlers.AppendL(&aHandler);
   }
 
 // -----------------------------------------------------------------------------
@@ -189,7 +189,7 @@ TInt CUpnpAVCPManager::HandlerBySessionId(TInt aSessionId)
 // -----------------------------------------------------------------------------	
 void CUpnpAVCPManager::RegisterForHttp(MUpnpHttpResponseHandler& aHandler)	 
     {
-    iHttpPendingHandlers.Append(&aHandler);
+    iHttpPendingHandlers.AppendL(&aHandler);
     }
 
 // -----------------------------------------------------------------------------

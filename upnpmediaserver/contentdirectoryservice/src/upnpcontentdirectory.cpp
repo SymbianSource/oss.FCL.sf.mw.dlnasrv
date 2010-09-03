@@ -1413,7 +1413,7 @@ TUpnpErrorCode CUpnpContentDirectory::ImportResourceL( CUpnpAction*& aAction )
 //
 TUpnpErrorCode CUpnpContentDirectory::ExportResourceL( CUpnpAction*& aAction )
     {
-    if ( iTransferController->IsMaxImportExportTransfers( ) )
+ /*   if ( iTransferController->IsMaxImportExportTransfers( ) )
         {
         return ETransferBusy;
         }
@@ -1530,7 +1530,7 @@ TUpnpErrorCode CUpnpContentDirectory::ExportResourceL( CUpnpAction*& aAction )
     CleanupStack::PopAndDestroy( srcNoEsc );
     CleanupStack::PopAndDestroy( rscBean );
     CleanupStack::PopAndDestroy( srcBuf );
-
+*/
     return EHttpOk;
     }
 
@@ -2352,7 +2352,7 @@ CUpnpThumbnailCreator* CUpnpContentDirectory::CreateThumbnailCreatorL(
         iThumbnailCreators.AppendL( thumbCreator );
         TInt index = iThumbnailCreators.Find( thumbCreator );
         User::LeaveIfError( index );
-        iThObjectIds.Insert( aObjectId, index );
+        iThObjectIds.InsertL( aObjectId, index );
         CleanupStack::Pop( thumbCreator );
         }
     return thumbCreator;

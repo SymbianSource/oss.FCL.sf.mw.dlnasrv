@@ -144,6 +144,7 @@ CUpnpElementFactory::CUpnpElementFactory()
 
 TUpnpErrorCode CUpnpElementFactory::ValidateNewObjectL( const TXmlEngElement& aNewElement, TBool aNew, TBool aLocalSharing)
 {
+    /*
     TInt i;    
     TPtrC8 objectType = KItem();
 
@@ -606,7 +607,7 @@ TUpnpErrorCode CUpnpElementFactory::ValidateNewObjectL( const TXmlEngElement& aN
     // * has the all required fields (if some were missing, they are added)
     // * had a proper xml structure (_not_ using UpnpDomInterface:: functions that do not care)
     // * has for sure a mostly proper object structure 
-
+*/
     return EUndefined;
 }
 // -----------------------------------------------------------------------------
@@ -923,7 +924,7 @@ TXmlEngElement CUpnpElementFactory::ActiveElementL( const RXmlEngDocument& aDocu
         RXmlEngNodeList<TXmlEngElement> children;
         CleanupClosePushL(children);
         root.GetChildElements( children );
-        children.HasNext();
+    //    children.HasNext();
         CleanupStack::PopAndDestroy(&children);
         return children.Next();
     }
@@ -943,7 +944,7 @@ RXmlEngDocument CUpnpElementFactory::ExtractActiveElementL( const RXmlEngDocumen
     ret.OpenL(iDOMImpl);
     CleanupClosePushL(ret);
 
-    if( aDocument.IsNull() || aDocument.DocumentElement().IsNull() )
+ /*    if( aDocument.IsNull() || aDocument.DocumentElement().IsNull() )
     {
         User::Leave( KErrNotFound );            
     }
@@ -963,7 +964,7 @@ RXmlEngDocument CUpnpElementFactory::ExtractActiveElementL( const RXmlEngDocumen
         CleanupStack::PopAndDestroy(&children);
     }
     ret.SetDocumentElement(active);
-    
+   */    
     CleanupStack::Pop(&ret);
     
     return ret;
@@ -1209,7 +1210,7 @@ void CUpnpElementFactory::ClassesL( const TXmlEngElement& aObject, RArray<TXmlEn
         // if such type found
         if ( objectDescription.NotNull() ) 
         {
-            aArray.Append( objectDescription );
+            aArray.AppendL( objectDescription );
         }
         /* This case is valid for any numeric value of containerID used in CreateObject() action
         *  We do some checking starting from 3rd string of <upnp:class> element, if the string isn't

@@ -165,7 +165,7 @@ EXPORT_C void CCmSqlGenericItem::NewResourceL( const TDesC8& aUri,
     {
     CCmSqlItemResource* item = CCmSqlItemResource::NewLC( 
         aUri, aSize, aDuration, aBitrate, aResolutionId );
-    iResources.Append( item );
+    iResources.AppendL( item );
     CleanupStack::Pop( item );  
     }
     

@@ -185,7 +185,7 @@ void CUpnpStateHandler::IncreaseContainerUpdateIdL( const TDesC8& aContainerID )
         //First time of modification, thus ID is 1.
         // No magic (white nor black) used here.
         cui.iUpdateId = 1;
-        iContainerUpdateIds.Append( cui );
+        iContainerUpdateIds.AppendL( cui );
         updateId = cui.iUpdateId;
     }
     else
@@ -243,7 +243,7 @@ void CUpnpStateHandler::IncreaseContainerUpdateIdL( const TDesC8& aContainerID )
         newEl.iContainerId = properContainerID->AllocL();                                                                                   
         newEl.iUpdateId = updateId;
         
-        iCurrentContainerUpdateIds.Append(newEl);
+        iCurrentContainerUpdateIds.AppendL(newEl);
     }
                             
     // preparing new value of 'ContainerUpdateIds' state variable ----   

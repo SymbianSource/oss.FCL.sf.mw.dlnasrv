@@ -50,7 +50,7 @@ EXPORT_C TInt RUpnpAVCPEngineMSClient::GetDeviceListL(RArray<TAVDevice>& aDevice
 
         for (TInt i = 0; i < size; i++) 
         	{
-           	aDeviceList.Append(devices[i]);
+           	aDeviceList.AppendL(devices[i]);
         	}
         delete[] devices;
     	}

@@ -416,7 +416,7 @@ MUPnPAVBrowsingSession& CUPnPAVControllerActive::StartBrowsingSessionL(
         }
     CUPnPAVBrowsingSessionImpl* sessionImpl =
         CUPnPAVBrowsingSessionImpl::NewL( iServer, aDevice );
-    iBrowsingSessions.Append( sessionImpl );
+    iBrowsingSessions.AppendL( sessionImpl );
     return *sessionImpl;
     }
 
@@ -463,7 +463,7 @@ MUPnPAVRenderingSession& CUPnPAVControllerActive::StartRenderingSessionL(
         }
     CUPnPAVRenderingSessionImpl* sessionImpl =
         CUPnPAVRenderingSessionImpl::NewL( iServer, aDevice );
-    iRenderingSessions.Append( sessionImpl );
+    iRenderingSessions.AppendL( sessionImpl );
     return *sessionImpl;
     }
     
@@ -510,7 +510,7 @@ MUPnPFileUploadSession& CUPnPAVControllerActive::StartUploadSessionL(
         }
     CUPnPFileUploadSessionImpl* sessionImpl =
         CUPnPFileUploadSessionImpl::NewL( iServer, aDevice );
-    iUploadSessions.Append( sessionImpl );
+    iUploadSessions.AppendL( sessionImpl );
     return *sessionImpl;
     }
     
@@ -558,7 +558,7 @@ MUPnPFileDownloadSession& CUPnPAVControllerActive::StartDownloadSessionL(
         }
     CUPnPFileDownloadSessionImpl* sessionImpl =
         CUPnPFileDownloadSessionImpl::NewL( iServer, aDevice );
-    iDownloadSessions.Append( sessionImpl );
+    iDownloadSessions.AppendL( sessionImpl );
     return *sessionImpl;
     }   
 

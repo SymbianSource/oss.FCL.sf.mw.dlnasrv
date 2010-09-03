@@ -882,13 +882,13 @@ void CUPnPAiwEngine::TransferToExternalL(TUPnPAiwEngineTransferMode aMode,
             }
         if (fileTitle)
             {
-            fileTitles.Append(fileTitle);
+            fileTitles.AppendL(fileTitle);
             }
         }
     aFilePaths.ResetAndDestroy();
     for (TInt index = 0; index < fileTitles.Count(); index++)
         {
-        aFilePaths.Append(fileTitles[index]);
+        aFilePaths.AppendL(fileTitles[index]);
         }
 
     fileTitles.Reset();

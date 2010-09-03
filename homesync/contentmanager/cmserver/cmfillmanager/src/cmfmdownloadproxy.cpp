@@ -217,13 +217,13 @@ void CCmFmDownloadProxy::CreateNewSessionL(
     CCmFmDownloadMngr* mngr = CCmFmDownloadMngr::NewL( aAVController, aObserver,
        *(*aDevices)[aSessionCount], aSessionCount );
     CleanupStack::PushL( mngr );
-    iDownloadSessions.Append( mngr );            
+    iDownloadSessions.AppendL( mngr );            
     CleanupStack::Pop( mngr );
     iDownloadSessionCount++;             
     TCmFmDownloadSessionIndexes index;
     index.iDeviceIndex = aSessionCount;   
     index.iSessionIndex = ( iDownloadSessions.Count() - 1 );
-    iSessionIndexes.Append( index );
+    iSessionIndexes.AppendL( index );
     aSessionIndex = index.iSessionIndex;     
     }
      

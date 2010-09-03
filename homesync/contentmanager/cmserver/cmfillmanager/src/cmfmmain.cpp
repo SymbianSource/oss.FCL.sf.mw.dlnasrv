@@ -690,7 +690,7 @@ void CCmFmMain::DuplicateL( const TBool aDuplicate )
 			iItems[index]->SetStatus( ECmFilled );
 			RPointerArray<CCmBaseListItem> items;
 			CleanupClosePushL( items );
-			items.Append( iItems[index] );
+			items.AppendL( iItems[index] );
 			iDbManager->UpdateStatusValues( items );
 			items.Reset();
 			CleanupStack::PopAndDestroy( &items );

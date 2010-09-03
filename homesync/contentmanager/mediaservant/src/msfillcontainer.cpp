@@ -220,7 +220,7 @@ void CMSFillContainer::ConstructL( TRect aRect )
 
     for ( TInt index = 0; index < selected->Count(); index++ )
         {
-        iSelectedLists.Append( (*selected)[index] );
+        iSelectedLists.AppendL( (*selected)[index] );
         }
 
     // Set highlighted item
@@ -727,7 +727,7 @@ TKeyResponse CMSFillContainer::HandleReorderKeyEventL(
         for ( TInt index = 0; index < selected->Count(); index++ )
             {
             TInt a = (*selected)[index];
-            iSelectedLists.Append( (*selected)[index] );
+            iSelectedLists.AppendL( (*selected)[index] );
             }
         }
 

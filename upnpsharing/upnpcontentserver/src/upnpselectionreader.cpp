@@ -180,7 +180,7 @@ void CUpnpSelectionReader::FetchCollectionsL( CDesCArray*
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
 
-    if ( !aSettingsTextArray )
+/*    if ( !aSettingsTextArray )
         {
         User::Leave( KErrGeneral );
         }
@@ -255,7 +255,7 @@ void CUpnpSelectionReader::FetchCollectionsL( CDesCArray*
     iContainerCount = aSettingsTextArray->MdcaCount();
 
     CleanupStack::PopAndDestroy( sharedStuff );
-    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
+    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );*/
     }
 
 
@@ -268,7 +268,7 @@ void CUpnpSelectionReader::FetchPlaylistsL( CDesCArray* aSettingsTextArray )
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
 
-    if ( !aSettingsTextArray )
+ /*   if ( !aSettingsTextArray )
         {
         User::Leave( KErrGeneral );
         }
@@ -343,7 +343,7 @@ void CUpnpSelectionReader::FetchPlaylistsL( CDesCArray* aSettingsTextArray )
         iSelectedMusic->AppendL( KShareNoneIndex );
         }
     iContainerCount = aSettingsTextArray->MdcaCount();
-    CleanupStack::PopAndDestroy( sharedStuff );
+    CleanupStack::PopAndDestroy( sharedStuff );*/
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
 

@@ -353,7 +353,7 @@ EXPORT_C TInt CMSAppWizard::StartL()
 					{
 					if ( iMediaServers.operator[](index)->CopyCapability() )
 						{
-						iStoreServers.Append( 
+						iStoreServers.AppendL( 
 						    iMediaServers.operator[]( index ) );
 						}
 					}
@@ -877,14 +877,14 @@ void CMSAppWizard::UPnPDeviceDiscoveredL( const CUpnpAVDevice& aDevice )
         TTime timeStamp;
         timeStamp.HomeTime();
         tempServer->SetVisibleDate( timeStamp );
-        iMediaServers.Append( tempServer );
+        iMediaServers.AppendL( tempServer );
         
         if ( iStep == EStep9 )
         	{
 	        // Add only store servers in step EStep9
         	if ( tempServer->CopyCapability() )
         		{
-        		iStoreServers.Append( tempServer );
+        		iStoreServers.AppendL( tempServer );
         		AddDeviceNameL( aDevice );
         		}
         	}

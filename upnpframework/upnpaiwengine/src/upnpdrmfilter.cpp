@@ -150,10 +150,10 @@ void CUpnpDrmFilter::Filter()
                        Filter , drmError :%d" , drmError );        
                 
                 // Add the file to aDRMProtectedFiles array.
-                iDRMProtectedFiles.Append( iFiles[index + iStartPoint] );
+                iDRMProtectedFiles.AppendL( iFiles[index + iStartPoint] );
                 // save the drm file index to array. These files will be removed
                 // from the aFiles array soon.
-                iRemovedIndexArray.Append( index + iStartPoint );
+                iRemovedIndexArray.AppendL( index + iStartPoint );
                 }            
             if ( KErrNone != drmError )
                 {
@@ -182,10 +182,10 @@ void CUpnpDrmFilter::Filter()
                         Filter , drmError :%d" , drmError );        
                  
                 // Add the file to aDRMProtectedFiles array.
-                iDRMProtectedFiles.Append( iFiles[index + iStartPoint] );
+                iDRMProtectedFiles.AppendL( iFiles[index + iStartPoint] );
                 // save the drm file index to array. These files will be removed
                 // from the aFiles array soon.
-                iRemovedIndexArray.Append( index + iStartPoint );
+                iRemovedIndexArray.AppendL( index + iStartPoint );
                 } 
             if ( KErrNone != drmError )
                 {

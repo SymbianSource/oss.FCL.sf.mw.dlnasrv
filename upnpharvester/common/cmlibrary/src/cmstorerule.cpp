@@ -104,7 +104,7 @@ EXPORT_C TInt CCmStoreRule::AddMediaServerL( const TDesC8& aUDN )
     {
     CCmMediaServer* server = CCmMediaServer::NewLC();
     server->SetUDNL( aUDN );    
-    iMediaServers.Append( server );
+    iMediaServers.AppendL( server );
     CleanupStack::Pop( server );    
     TInt index = iMediaServers.Count() - 1;    
     return index;        
@@ -389,7 +389,7 @@ void CCmStoreRule::InternalizeL( RReadStream& aStream )
     // Then internalize them from the stream one by one
     for (TInt index = 0; index < ruleCount; index++ )
         {
-        iRuleDefs.Append((TCmMediaType)aStream.ReadInt16L());   
+        iRuleDefs.AppendL((TCmMediaType)aStream.ReadInt16L());   
         }
         
     // cleanup
@@ -403,7 +403,7 @@ void CCmStoreRule::InternalizeL( RReadStream& aStream )
         {
         CCmMediaServer* server = CCmMediaServer::NewLC();    
         server->InternalizeL( aStream );
-        iMediaServers.Append( server );
+        iMediaServers.AppendL( server );
         CleanupStack::Pop( server );   
         server = NULL;
         }

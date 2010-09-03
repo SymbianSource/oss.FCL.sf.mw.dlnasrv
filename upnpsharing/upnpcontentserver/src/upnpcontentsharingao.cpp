@@ -594,7 +594,7 @@ EShareMany");
 void CUpnpContentSharingAo::ShareContainersL()
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-    iMetadataUtility->ClearPostFiltersL();
+ /*   iMetadataUtility->ClearPostFiltersL();
 
     TInt ind( 0 );
     // Theres is still containers to share
@@ -688,7 +688,7 @@ void CUpnpContentSharingAo::ShareContainersL()
         }
 
     iSharingState = EShareContainersResult;
-    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
+    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );*/
     }
 
 // --------------------------------------------------------------------------

@@ -293,7 +293,7 @@ void CUpnpContainerCheckerAo::QueryDefaultContainerIdsResultL()
                 {
                 tmpContainer = static_cast< CUpnpContainer* >(
                     iContainerList->operator[]( i ));
-                iSharedContainerIds.Append(
+                iSharedContainerIds.AppendL(
                     UPnPCommonUtils::DesC8ToInt( tmpContainer->Id() ) );
                 }
 
@@ -587,7 +587,7 @@ void CUpnpContainerCheckerAo::UnshareItemListL()
 void CUpnpContainerCheckerAo::ShareContainerL( TInt aPos )
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-    iTmpContainer = CUpnpContainer::NewL();
+ /*   iTmpContainer = CUpnpContainer::NewL();
     iTmpContainer->SetParentIdL( *UPnPCommonUtils::IntToDesC8LC(
         KRootContainerId ) );
     CleanupStack::PopAndDestroy(); //UPnPCommonUtils::IntToDesC8LC
@@ -623,7 +623,7 @@ void CUpnpContainerCheckerAo::ShareContainerL( TInt aPos )
         CleanupStack::PopAndDestroy(); // UPnPCommonUtils::IntToDesC8LC
         iCurrentOperation = EShareContainerResult;
         SetActive();
-        }
+        }*/
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
 

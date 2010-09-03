@@ -1326,7 +1326,7 @@ void CUPnPPlaybackSession::RcLastChangeEvent(
                     // If iEventMessage is invalid and mute's value is
                     // right, we will append event to iEventQue.
                     // Else nothing to do.
-                    iEventQue.Append( unEvent );
+                    iEventQue.AppendL( unEvent );
                     }                            
                 }
 
@@ -1359,7 +1359,7 @@ void CUPnPPlaybackSession::RcLastChangeEvent(
                     }
                 else
                     {
-                    iEventQue.Append( unEvent );
+                    iEventQue.AppendL( unEvent );
                     }                            
                 }
             
@@ -1397,7 +1397,7 @@ void CUPnPPlaybackSession::AvtLastChangeEvent(
             else
                 {
                 __LOG( "AvtLastChangeEvent - appending playuser" );
-                iEventQue.Append( event );
+                iEventQue.AppendL( event );
                 }            
             }
         else if( aLastChange.Find( KStopped ) >= 0 &&
@@ -1416,7 +1416,7 @@ void CUPnPPlaybackSession::AvtLastChangeEvent(
             else
                 {
                 __LOG( "AvtLastChangeEvent - appending stopuser" );
-                iEventQue.Append( event );
+                iEventQue.AppendL( event );
                 }    
             }
         else if( aLastChange.Find( KPaused ) >= 0 &&
@@ -1436,7 +1436,7 @@ void CUPnPPlaybackSession::AvtLastChangeEvent(
             else
                 {
                 __LOG( "AvtLastChangeEvent - appending pauseuser" );
-                iEventQue.Append( event );
+                iEventQue.AppendL( event );
                 }
             }
         }    

@@ -249,7 +249,7 @@ void CUPnPRemoteItemResolver::BrowseResponseL( const TDesC8& aBrowseResponse )
 void CUPnPRemoteItemResolver::ProcessResultObjectL(
     const CUpnpObject* aResult )
     {
-    if ( aResult->ObjectType() != EUPnPItem )
+  /*  if ( aResult->ObjectType() != EUPnPItem )
         {
         User::Leave( KErrArgument );
         }
@@ -305,7 +305,7 @@ void CUPnPRemoteItemResolver::ProcessResultObjectL(
     if( item )
         {
         CleanupStack::PopAndDestroy( item );
-        }
+        }*/
     }
 
 

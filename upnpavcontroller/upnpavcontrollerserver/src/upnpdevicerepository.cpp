@@ -183,7 +183,7 @@ void CUPnPDeviceRepository::AddDeviceL( CUpnpDevice& aDevice )
     
     ParseDeviceServicesL( aDevice, *dev );
     CleanupStack::Pop( dev );
-    iDevices.Append( dev );
+    iDevices.AppendL( dev );
     }
     
 // --------------------------------------------------------------------------

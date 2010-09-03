@@ -249,7 +249,7 @@ TBool CUpnpContentServer::CanStop() const
 void CUpnpContentServer::Stop()
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-    if ( iIdle )
+  /*  if ( iIdle )
         {
         iIdle->Cancel();
         }
@@ -261,7 +261,7 @@ void CUpnpContentServer::Stop()
 
     iIdle->Start( KShutdownTimeout, 
                   KShutdownTimeout, 
-                  TCallBack( Shutdown, this ) );
+                  TCallBack( Shutdown, this ) );*/
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
 

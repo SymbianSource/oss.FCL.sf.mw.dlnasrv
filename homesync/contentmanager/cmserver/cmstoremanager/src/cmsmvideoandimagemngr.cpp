@@ -162,7 +162,7 @@ void CCmSmVideoAndImageMngr::HandleQueryNewResults(CMdEQuery& aQuery,
               i++ ) 
             {
             CMdEObject* object = (CMdEObject*)query.TakeOwnershipOfResult(i);
-            iObjects.Append(object);         
+            iObjects.AppendL(object);         
             }   
         }
                    
