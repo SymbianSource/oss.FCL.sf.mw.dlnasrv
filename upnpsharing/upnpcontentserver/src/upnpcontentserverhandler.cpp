@@ -83,7 +83,7 @@ CUpnpContentServerHandler::CUpnpContentServerHandler(
 void CUpnpContentServerHandler::ConstructL()
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-    static _LIT_SECURITY_POLICY_PASS(KAllowAllPolicy);
+ /*   static _LIT_SECURITY_POLICY_PASS(KAllowAllPolicy);
     static _LIT_SECURITY_POLICY_S0(KThisProcessPolicy,
                                    KUpnpContentServerCat.iUid );
 
@@ -108,7 +108,7 @@ void CUpnpContentServerHandler::ConstructL()
     const TInt KRefreshDelay( 500000 );
     iIdle->Start( KRefreshDelay, KRefreshDelay, cb );
     iReader = CUpnpSelectionReader::NewL( NULL ); // metadata set later
-    SetProgressL( KNoProgress );
+    SetProgressL( KNoProgress );*/
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
 
@@ -277,7 +277,7 @@ void CUpnpContentServerHandler::GetSelectionIndexesL(
         // There is sharing ongoing, return the buffered selections
         for( TInt i(0); i < sharingReq->iSelections.Count(); i++ )
             {
-            aMarkedItems.Append( sharingReq->iSelections[ i ] );
+            aMarkedItems.AppendL( sharingReq->iSelections[ i ] );
             }
         }
     else

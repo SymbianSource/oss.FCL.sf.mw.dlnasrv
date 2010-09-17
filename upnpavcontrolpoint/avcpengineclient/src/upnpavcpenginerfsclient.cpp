@@ -70,7 +70,7 @@ EXPORT_C TInt RUpnpAVCPEngineRFSClient::GetDirectoryL(const TDesC8& aUUID, const
         for (TInt i = 0; i < size; i++) 
         	{
         	CRsfwDirEnt* entry = GetFileInformationL(dirs[i]);
-            aDirList.Append(entry);
+            aDirList.AppendL(entry);
         	}
         delete[] dirs;
     	}

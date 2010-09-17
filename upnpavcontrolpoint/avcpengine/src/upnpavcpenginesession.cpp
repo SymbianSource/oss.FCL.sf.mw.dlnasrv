@@ -98,7 +98,7 @@ void CUpnpAVCPEngineSession::ServiceL( const RMessage2& aMessage )
             CUpnpCommand* command = CUpnpCommand::NewL(iAVCPManager, *this, aMessage);            
             if (command) 
             {            	
-                iCommandList.Append(command);
+                iCommandList.AppendL(command);
                 CleanupStack::PushL(command);
                 command->ExecuteL();
                 CleanupStack::Pop(command); // it will be destroyed after completion

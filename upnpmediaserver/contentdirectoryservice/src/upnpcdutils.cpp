@@ -624,7 +624,7 @@ HBufC* UpnpCdUtils::EscapeAposL(const TDesC&  aValue)
 //
 TBool UpnpCdUtils::ValidateDateL( TPtrC8 aValue )
     {         
-    TBool wrong = 0;
+ /*   TBool wrong = 0;
 
     TInt dateLength = aValue.Length();                                         
 
@@ -824,7 +824,7 @@ TBool UpnpCdUtils::ValidateDateL( TPtrC8 aValue )
         {                        
         return EFalse;      
         }
-
+*/
     return ETrue;
     }
     

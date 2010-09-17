@@ -514,7 +514,7 @@ void CUPnPAVControllerImpl::CreateRenderingSessionL(
         iMediaServer, iServer, id, *buf );
 
     CleanupStack::PopAndDestroy( buf );
-    iPlaybackSessions.Append( tempPtr );
+    iPlaybackSessions.AppendL( tempPtr );
     
     aMessage.Complete( KErrNone );
     }
@@ -1161,7 +1161,7 @@ void CUPnPAVControllerImpl::CreateBrowsingSessionL(
         iMediaServer, iServer, id, *buf );
 
     CleanupStack::PopAndDestroy( buf );
-    iBrowsingSessions.Append( tempPtr );
+    iBrowsingSessions.AppendL( tempPtr );
     
     aMessage.Complete( KErrNone );    
     }
@@ -1694,7 +1694,7 @@ void CUPnPAVControllerImpl::CreateDownloadSessionL(
     CUPnPDownloadSession* tempPtr = CUPnPDownloadSession::NewL(
         iServer, id, *buf );
     CleanupStack::PopAndDestroy( buf );
-    iDownloadSessions.Append( tempPtr );
+    iDownloadSessions.AppendL( tempPtr );
     
     aMessage.Complete( KErrNone );    
     }
@@ -1938,7 +1938,7 @@ void CUPnPAVControllerImpl::CreateUploadSessionL(
     CUPnPUploadSession* tempPtr = CUPnPUploadSession::NewL(
         iServer, id, *buf );
     CleanupStack::PopAndDestroy( buf );
-    iUploadSessions.Append( tempPtr );
+    iUploadSessions.AppendL( tempPtr );
     
     aMessage.Complete( KErrNone );        
     }

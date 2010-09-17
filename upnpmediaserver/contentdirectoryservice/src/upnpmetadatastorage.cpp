@@ -1655,7 +1655,7 @@ void CUpnpMetadataStorage::DeleteReferencesL( TInt aObjId,
         CleanupStack::PushL( colSet );
         TDbColNo colNo(colSet->ColNo( KObjParentIdColName ) );
         ret = table.ColInt( colNo );
-        aRefList.Append( ret );
+        aRefList.AppendL( ret );
         CleanupStack::PopAndDestroy( colSet );
         // delete the row
         table.DeleteL( );

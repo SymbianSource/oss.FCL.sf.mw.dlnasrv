@@ -340,7 +340,7 @@ void CMSSettingItemMemory::SetStorageInformationL()
             // add quota to drive info
             iDriveArray[i]->SetDriveQuota( quota );
             // add selected drive to array
-            activeDrives.Append( iDriveArray[i] );
+            activeDrives.AppendL( iDriveArray[i] );
             }
         }
 

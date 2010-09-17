@@ -412,7 +412,7 @@ void CUPnPTrack::GetMetaDataL( const TArray<TMPXAttribute>& aAttrs,
         iMetadataObserver = &aObs;
         for( TInt i = 0; i < aAttrs.Count(); ++i )
             {
-            iQueriedAttributes.Append( aAttrs[i] );
+            iQueriedAttributes.AppendL( aAttrs[i] );
             }
         }
     }

@@ -122,7 +122,7 @@ void CUpnpPathResolver::RegisterSession(CUpnpAVCPEngineSession* aSession)
 	TInt index = iAVCPSessions.Find(aSession); 
     if (index == KErrNotFound) 
 	    {
-	    iAVCPSessions.Append(aSession); 
+	    iAVCPSessions.AppendL(aSession); 
 	    }
 	}
 
@@ -203,7 +203,7 @@ const TDesC8& CUpnpPathResolver::AddElementL(const TDesC8& aParentId, const TDes
 			elem->SetImportURIL(aImportURI);
 			}
 	    CleanupStack::Pop(elem);
-        iPathElements.Append(elem);
+        iPathElements.AppendL(elem);
         return elem->Name();
 		}
 	  
@@ -254,7 +254,7 @@ void CUpnpPathResolver::ResolveIdL(const TDesC8& aPath, MUpnpResolverObserver& a
 	{
 	CUpnpResolveHandler* handler = CUpnpResolveHandler::NewL(iManager,*this, aObserver);	
 	CleanupStack::PushL(handler);
-	iResolveHandlers.Append(handler);
+	iResolveHandlers.AppendL(handler);
 	handler->ResolveL(aPath);	
 	CleanupStack::Pop(handler);	
 	}

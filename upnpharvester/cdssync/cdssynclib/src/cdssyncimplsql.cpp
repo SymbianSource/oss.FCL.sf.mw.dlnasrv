@@ -349,7 +349,7 @@ void CCdsSyncImpl::RunL()
                     KMetadataTypes[namesCount]
                 );
                 iSqlAo->Activate();
-                iNames.Append( nameArray );
+                iNames.AppendL( nameArray );
                 }
             break;
             }
@@ -1127,7 +1127,7 @@ void CCdsSyncImpl::OnStartElementL( const RTagInfo& aElement,
                     res->iProtocol = attrValue; 
                     } 
                 }
-            iResources.Append( res );
+            iResources.AppendL( res );
             CleanupStack::Pop( res );
             }     
         }
@@ -1352,7 +1352,7 @@ void CCdsSyncImpl::OnEndElementL( const RTagInfo& aElement,
                     currentTime.HomeTime();
                     item->SetHarvestDate( currentTime );
                     item->SetSearchId( iSearchIndex );
-                    iItemsToAdd.Append( item ); // transfer ownership
+                    iItemsToAdd.AppendL( item ); // transfer ownership
                     ProgressL(1);
                     iProcessedItems++;
                     CleanupStack::Pop( item );

@@ -279,7 +279,7 @@ void CCmSmFileMngr::LoadSelectedStoreRulesL()
         iDBManager->PrepareQueryCmdL(EStoreRuleQuery);
         storeRule->SetNameL( *array[i] );        
         iDBManager->QueryStoreRuleL( storeRule );
-        iRuleArray.Append( storeRule );
+        iRuleArray.AppendL( storeRule );
         CleanupStack::Pop(storeRule);
         }
     array.ResetAndDestroy();
@@ -511,7 +511,7 @@ void CCmSmFileMngr::MediaTypesL( RArray<TInt>& aIds, TCmMediaType aType )
                     {
                     if( KErrNone == ms.Compare( *iMsIds[l]->iUuid ) )
                         {
-                        aIds.InsertInOrder( iMsIds[l]->iId );
+                        aIds.InsertInOrderL( iMsIds[l]->iId );
                         // End loop    
                     	l = iMsIds.Count();  
                         }
@@ -543,8 +543,8 @@ void CCmSmFileMngr::LoadMediaServerIdsL()
                 {
                 HBufC8* uuid = mediaServer.AllocLC();
                 CCmSmMsInfo* msInfo = CCmSmMsInfo::NewLC( *uuid, id );
-                tempIds.Append(id);
-                iMsIds.Append(msInfo);                
+                tempIds.AppendL(id);
+                iMsIds.AppendL(msInfo);                
                 CleanupStack::Pop( msInfo );
                 CleanupStack::PopAndDestroy( uuid );
                 }
@@ -614,7 +614,7 @@ void CCmSmFileMngr::GetItemsL( RArray<TInt>& aItemIds,
                 if( itemOnSelectedList &&
                     ECmStored != statusValues[ index ] )
                     {
-                    aItemIds.Append( i );
+                    aItemIds.AppendL( i );
                     }                
                 }            
             }

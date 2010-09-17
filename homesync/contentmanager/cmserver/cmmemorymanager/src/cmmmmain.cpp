@@ -184,7 +184,7 @@ EXPORT_C void CCmMmMain::SetQuotaListenerStateL( TBool aState )
                 CCmMmQuotaListener::NewL( 
                     iDbManager, 
                     drives[i]->DriveNumber() );
-            iQuotaListeners.Append( listener );        
+            iQuotaListeners.AppendL( listener );        
             }
         drives.ResetAndDestroy();            
         }        

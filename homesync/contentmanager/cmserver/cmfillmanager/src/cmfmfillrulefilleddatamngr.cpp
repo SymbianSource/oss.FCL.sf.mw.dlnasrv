@@ -12,7 +12,7 @@
 * Contributors:
 *
 * Description:  Fill rule and filled data processing
-*  Version     : %version: tr1ido#17 % << Don't touch!
+*  Version     : %version: ou1s60rt#18 % << Don't touch!
 *
 */
 
@@ -429,7 +429,7 @@ void CCmFmFillRuleFilledDataMngr::DeleteMetadataL()
         if( mediaServers[i]->DbId() != 0 && 
             !( mediaServers[i]->FillUsage() ) )
             {
-            iMetadataServersToBeDeleted.Append( mediaServers[i]->DbId() );
+            iMetadataServersToBeDeleted.AppendL( mediaServers[i]->DbId() );
             TRACE(Print(_L("[FILL MNGR]\t DbId = %ld"), 
                 mediaServers[i]->DbId() ));            
                 
@@ -653,7 +653,7 @@ void CCmFmFillRuleFilledDataMngr::CalculateAvgTransferTimeL()
         ret = iDBManager->QueryAllMediaServersL( server );
         if( !ret )
             {
-            servers.Append( server );
+            servers.AppendL( server );
             CleanupStack::Pop( server );
             }
         else
@@ -867,7 +867,7 @@ void CCmFmFillRuleFilledDataMngr::LoadRuleL( const TDesC8& aFillListName )
     iDBManager->PrepareQueryCmdL(EFillRuleQuery);
     fillRule->SetNameL( aFillListName );
     iDBManager->QueryFillRuleL( fillRule );
-    iRuleArray.Append( fillRule );   
+    iRuleArray.AppendL( fillRule );   
     iContainer->AddFillRuleL( fillRule );
     CleanupStack::Pop( fillRule );
     }
@@ -960,7 +960,7 @@ void CCmFmFillRuleFilledDataMngr::DoProcessReferenceValuesL()
                 {
                 if( iItems[k]->Priority() > iItems[j]->Priority() )
                     {
-                    refIds.InsertInOrder( k );
+                    refIds.InsertInOrderL( k );
                     }
                 else if ( iItems[k]->Priority() < iItems[j]->Priority() )
                     {
@@ -969,7 +969,7 @@ void CCmFmFillRuleFilledDataMngr::DoProcessReferenceValuesL()
                     if( ECmUnSelected == iItems[k]->Selected() && 
                         ECmSelected == iItems[j]->Selected() )
                         {
-                        refIds.InsertInOrder( k );
+                        refIds.InsertInOrderL( k );
                         }
                     else
                         {
@@ -1091,7 +1091,7 @@ void CCmFmFillRuleFilledDataMngr::SelectFillListFiles( RArray<TInt>& aList,
         {
         if( iItems[i]->ListId() == aId )
             {
-            aList.InsertInOrder( i );
+            aList.InsertInOrderL( i );
             }
         }    
     }
@@ -1218,7 +1218,7 @@ void CCmFmFillRuleFilledDataMngr::ProcessFileStatusValuesL()
             iUpdateItems.Reset();
             for( TInt j = 0; j < iItems.Count(); j++ )
                 {
-                iUpdateItems.Append( iItems[j] );
+                iUpdateItems.AppendL( iItems[j] );
                 }
 	    }
      
@@ -1273,7 +1273,7 @@ void CCmFmFillRuleFilledDataMngr::ProcessFileSizeAndCount(
          iItems[iFileIds[aIndex]]->Status() == ECmToBeShrinked )
         {
         aRealSize -= iItems[iFileIds[aIndex]]->Size();
-        aDelIds.InsertInOrder( iFileIds[aIndex] );
+        aDelIds.InsertInOrderL( iFileIds[aIndex] );
         aRealCount--;
         }
     else // ECmLocalCopy
@@ -1431,13 +1431,13 @@ void CCmFmFillRuleFilledDataMngr::CheckFillListsL()
                 {
                 LOG(_L("[FILL MNGR]\t Random rule is not processed"));
                 // Don't remove rule
-                iRuleArray.Append( iContainer->FillRule( j ) );
+                iRuleArray.AppendL( iContainer->FillRule( j ) );
                 }                   
             }
         else
             {
             LOG(_L("[FILL MNGR]\t Rule is not random rule"));
-            iRuleArray.Append( iContainer->FillRule( j ) );
+            iRuleArray.AppendL( iContainer->FillRule( j ) );
             }    
         }
     }

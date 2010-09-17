@@ -1580,12 +1580,12 @@ void CUPnPBrowseDialog::BrowseResponseL(
                         {
                         HBufC8* containerId = 
                             ( iResultArray[ 0 ]->ParentId() ).AllocL();
-                        iParentId.Append( containerId );
+                        iParentId.AppendL( containerId );
 
                         // store parent name
                         HBufC8* name = 
                          ( iResultArray[ iSelectedItem ]->Title() ).AllocL();
-                        iParentName.Append( name );
+                        iParentName.AppendL( name );
                         }
                     }
                 }
@@ -1672,7 +1672,7 @@ void CUPnPBrowseDialog::BrowseResponseL(
                     CleanupStack::PushL( container );
                     container->CopyL( *aResultArray[ index ] );
                     CleanupStack::Pop( container );
-                    iResultArray.Append( container );
+                    iResultArray.AppendL( container );
                     }
                 else 
                     {
@@ -1681,7 +1681,7 @@ void CUPnPBrowseDialog::BrowseResponseL(
                     CleanupStack::PushL( item );
                     item->CopyL( *aResultArray[ index ] );
                     CleanupStack::Pop( item );
-                    iResultArray.Append( item );
+                    iResultArray.AppendL( item );
                     }                    
                 }
             else if ( iBrowseDirection == EBackward )
@@ -1692,7 +1692,7 @@ void CUPnPBrowseDialog::BrowseResponseL(
                     CleanupStack::PushL( container );
                     container->CopyL( *aResultArray[ index ] );
                     CleanupStack::Pop( container );
-                    iResultArray.Insert( container, index );
+                    iResultArray.InsertL( container, index );
                     iUppermostItem--;
                     }
                 else
@@ -1702,7 +1702,7 @@ void CUPnPBrowseDialog::BrowseResponseL(
                     CleanupStack::PushL( item );
                     item->CopyL( *aResultArray[ index ] );
                     CleanupStack::Pop( item );
-                    iResultArray.Insert( item, index );
+                    iResultArray.InsertL( item, index );
                     iUppermostItem--;
                     }                    
                 }
@@ -2378,7 +2378,7 @@ void CUPnPBrowseDialog::SendDummyBrowseResponseL( TInt aCacheIndex )
     TInt numberOfItems = iBrowseCacheItems[ aCacheIndex ]->GetNumberOfItems();
     for ( TInt index = 0; index < numberOfItems; index++ )
         {
-        iTempArray.Append( iBrowseCacheItems[ aCacheIndex ]->
+        iTempArray.Appendl( iBrowseCacheItems[ aCacheIndex ]->
                                                           GetItem( index ) );
         }
     iUppermostItem = iBrowseCacheItems[ aCacheIndex ]->GetUpperMostItem();
@@ -2404,7 +2404,7 @@ void CUPnPBrowseDialog::CacheItemUpdateL( const TDesC8& aContainerId,
                                                         iPrevHighlighteditem,
                                                         iUppermostItem );
         CleanupStack::PushL( test );
-        iBrowseCacheItems.Append( test );
+        iBrowseCacheItems.AppendL( test );
         CleanupStack::Pop( test );
         }
     else //update current item

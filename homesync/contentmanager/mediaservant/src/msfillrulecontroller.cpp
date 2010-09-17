@@ -159,7 +159,7 @@ void CMSFillRuleController::InitializeRuleContainersL()
                     CMSFillList* list =
                         CMSFillList::NewL( *iMSEngine, *rule );
                     // add list to array
-                    iFillListArray.Append( list );
+                    iFillListArray.AppendL( list );
 
                     // stop for loop
                     index = rulecount;
@@ -426,7 +426,7 @@ void  CMSFillRuleController::UpdateArrayL()
                     CMSFillList* list =
                             CMSFillList::NewLC( *iMSEngine, *rule );
                     // add rule to array
-                    iFillListArray.Append( list );
+                    iFillListArray.AppendL( list );
                     CleanupStack::Pop( list );
                     }
                 }

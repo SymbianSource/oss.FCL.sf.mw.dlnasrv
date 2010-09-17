@@ -1005,7 +1005,7 @@ void CUPnPAVDispatcher::RegisterL( TInt aSessionId,
     tempInfo->SetObserver( aObserver );
     //tempInfo->SetUuidL( aUuid );
     CleanupStack::Pop( tempInfo );
-    iActionInfos.Append( tempInfo );
+    iActionInfos.AppendL( tempInfo );
     }
 
 void CUPnPAVDispatcher::UnRegister( TInt aSessionId
@@ -1048,7 +1048,7 @@ void CUPnPAVDispatcher::RegisterForEventsL(
     tempInfo->SetObserver( aObserver );
     tempInfo->SetUuidL( aUuid );
     CleanupStack::Pop( tempInfo );
-    iActionInfosEvent.Append( tempInfo );        
+    iActionInfosEvent.AppendL( tempInfo );        
     }
     
 void CUPnPAVDispatcher::UnRegisterEvents(

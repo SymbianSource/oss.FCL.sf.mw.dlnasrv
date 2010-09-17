@@ -254,7 +254,7 @@ void CUPnPFileTransferSessionBase::Complete(
         __LOG1( "iEvent = %d", aEvent.iEvent );
         __LOG1( "iKey = %d", aEvent.iKey );
         __LOG1( "iStatus = %d", aEvent.iStatus );        
-        iEventQueu.Append( aEvent );
+        iEventQueu.AppendL( aEvent );
         }
     }
     

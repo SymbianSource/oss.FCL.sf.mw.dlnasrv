@@ -71,7 +71,7 @@ TInt CCmRule::AddRuleParamL( const TDesC8& aParam )
     {
     CCmParam* param = CCmParam::NewLC();
     param->SetComparisonDataL( aParam );
-    iRuleParamsArray.Append( param ); // transfer ownership
+    iRuleParamsArray.AppendL( param ); // transfer ownership
     CleanupStack::Pop( param );
     TInt index = iRuleParamsArray.Count() - 1;    
     return index;    
@@ -85,7 +85,7 @@ TInt CCmRule::AddRuleParamL( TInt aParam )
     {
     CCmParam* param = CCmParam::NewLC();
     param->SetComparisonData( aParam );
-    iRuleParamsArray.Append( param ); // transfer ownership
+    iRuleParamsArray.AppendL( param ); // transfer ownership
     CleanupStack::Pop( param );
     TInt index = iRuleParamsArray.Count() - 1;    
     return index;    

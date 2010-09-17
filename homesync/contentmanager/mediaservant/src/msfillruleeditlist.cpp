@@ -230,7 +230,7 @@ void CMSFillRuleEditList::ConstructL( CMSAppUi& aAppUi,
             {
             for( TInt i=0; i<count; i++ )
                 {
-                iTrackArray.Append( iVideoTitleArray[i] );	
+                iTrackArray.AppendL( iVideoTitleArray[i] );	
                 }
             }
         	
@@ -1176,7 +1176,7 @@ void CMSFillRuleEditList::ReadTemplateRulesL( TInt aTemplate )
             }
         // Remember IDs of template rules - rules will be set
         // visible later
-        iVisibleRules.Append( ruleId );
+        iVisibleRules.AppendL( ruleId );
 
         // set value of rule
         SetDefaultValue( ruleId, value );
@@ -1277,7 +1277,7 @@ void CMSFillRuleEditList::AddFillRuleL()
         // add only hidden items to the list
         if ( SearchItemById( value )->IsHidden() )
             {
-            indexArray.Append( value );
+            indexArray.AppendL( value );
             ruleNames->AppendL( text );
             }
         }
@@ -1418,28 +1418,28 @@ void CMSFillRuleEditList::GetRuleValuesL()
                 {
                 case ECmArtist:
                     {
-                    iArtistArray.Append( ruleParam );
+                    iArtistArray.AppendL( ruleParam );
                     break;
                     }
                 case ECmAlbum:
                     {
-                    iAlbumArray.Append( ruleParam );
+                    iAlbumArray.AppendL( ruleParam );
                     break;
                     }
                 case ECmGenre:
                     {
-                    iGenreArray.Append( ruleParam );
+                    iGenreArray.AppendL( ruleParam );
                     break;
                     }
                 case ECmTitle:
                     {
                     if ( iMediaType == ECmAudio )
                         {
-                        iTrackArray.Append( ruleParam );
+                        iTrackArray.AppendL( ruleParam );
                         }
                     else // video
                         {
-                        iVideoTitleArray.Append( ruleParam );
+                        iVideoTitleArray.AppendL( ruleParam );
                         }
 
                     break;
@@ -1971,7 +1971,7 @@ void CMSFillRuleEditList::ReadyL( TCmService aService, TInt /*aError*/ )
 		                {
 		                for( TInt i=0; i<count; i++ )
 			                {
-			                iTrackArray.Append( iVideoTitleArray[i] );	
+			                iTrackArray.AppendL( iVideoTitleArray[i] );	
 			                }
 		                }
 	                	

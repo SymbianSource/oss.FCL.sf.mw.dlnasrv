@@ -834,7 +834,7 @@ void CCmSession::ServiceL(const RMessage2& aMessage)
                 CCmMediaServerFull* mediaServer =
                     CCmMediaServerFull::NewLC();
                 mediaServer->InternalizeL( stream );
-                mediaServers.Append( mediaServer );
+                mediaServers.AppendL( mediaServer );
                 CleanupStack::Pop( mediaServer );
                 }
             TInt ret = iDbManager.SetMediaServersL( mediaServers );
@@ -879,7 +879,7 @@ void CCmSession::ServiceL(const RMessage2& aMessage)
                 {
                 CCmBaseListItem* item = CCmBaseListItem::NewLC();
                 item->InternalizeL( stream );
-                items.Append( item );
+                items.AppendL( item );
                 CleanupStack::Pop( item );
                 }
             TInt ret = iDbManager.UpdateStatusValues( items );
@@ -986,7 +986,7 @@ void CCmSession::ServiceL(const RMessage2& aMessage)
                 CCmDriveInfo* drive =
                     CCmDriveInfo::NewLC();
                 drive->InternalizeL( stream );
-                drives.Append( drive );
+                drives.AppendL( drive );
                 }
             // Has drive slots changed or has some mmc taken away
             TBool driveSelected( EFalse );

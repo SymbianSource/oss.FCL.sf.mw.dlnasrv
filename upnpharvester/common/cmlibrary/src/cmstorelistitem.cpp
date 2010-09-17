@@ -81,7 +81,7 @@ EXPORT_C void CCmStoreListItem::SetDevId( const TUint8 aId,
     TCmListItemStatus aStatus )
     {
     iDeviceIds.Append( aId );
-    iStatusValues.Append( aStatus );
+    iStatusValues.AppendL( aStatus );
     }    
     
 // ---------------------------------------------------------------------------
@@ -165,7 +165,7 @@ EXPORT_C void CCmStoreListItem::InternalizeL( RReadStream& aStream )
     iStatusValues.Reset();
     for( TInt i = 0; i < count; i++ )
         {
-        iStatusValues.Append( (TCmListItemStatus) aStream.ReadInt16L() );
+        iStatusValues.AppendL( (TCmListItemStatus) aStream.ReadInt16L() );
         }        
     CCmBaseListItem::InternalizeL(aStream);               
     }

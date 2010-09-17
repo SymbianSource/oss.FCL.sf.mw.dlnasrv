@@ -305,7 +305,7 @@ void CUPnPAdvancedFindList::SearchResponseL(
                     CleanupStack::PushL( item );
                     item->CopyL( *aResultArray[count] );
                     //And if item is correct type
-                    iResultArray.Append( item ); // item ownership transferred
+                    iResultArray.AppendL( item ); // item ownership transferred
                     CleanupStack::Pop( item );
                     }
                 }

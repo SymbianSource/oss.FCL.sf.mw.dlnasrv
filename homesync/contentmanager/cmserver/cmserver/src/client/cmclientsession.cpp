@@ -904,7 +904,7 @@ EXPORT_C void RContentManager::GetDrivesL(
         {
         CCmDriveInfo* tempDrive = CCmDriveInfo::NewLC();
         tempDrive->InternalizeL( stream );
-        aDrives.Append( tempDrive );
+        aDrives.AppendL( tempDrive );
         CleanupStack::Pop( tempDrive );
         }
     CleanupStack::PopAndDestroy( 2, buffer );

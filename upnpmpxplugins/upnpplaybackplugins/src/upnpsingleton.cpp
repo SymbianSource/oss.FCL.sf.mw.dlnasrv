@@ -288,7 +288,7 @@ void CUPnPSingleton::UPnPDeviceDiscovered( const CUpnpAVDevice& aDevice  )
             TRAP_IGNORE( dev = CUpnpAVDevice::NewL( aDevice ) );
             if( dev )
                 {
-                iMediaRenderers.Append( dev );
+                iMediaRenderers.AppendL( dev );
                 if ( iRendererselectorObserver != 0 )
                     {
                     TRAP_IGNORE( DeliverNamesToObserverL( EFalse ) );
@@ -470,7 +470,7 @@ void CUPnPSingleton::CacheRendererListL()
         CUpnpAVDevice* device = (*devices)[ 0 ];
         if( device->AudioCapability() )
             {
-            iMediaRenderers.Append( device );
+            iMediaRenderers.AppendL( device );
             }
         devices->Remove( 0 );
         }
