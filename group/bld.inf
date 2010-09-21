@@ -17,10 +17,11 @@
 
 
 
-
+#ifdef FF_UPNP_FRAMEWORK_2_0  // UPnP feature flag
 
 // For compatibility with S60 3.2 and IAD branch
 #include "upnpplatformvar.hrh"
+
 
 // Export domain and SDK headers
 #include "../dlnasrv_plat/group/bld.inf"
@@ -36,7 +37,7 @@
 #include "../upnpsharing/group/bld.inf"
 #include "../upnpmpxplugins/group/bld.inf"
 
-#ifdef FF_UPNP_FRAMEWORK_2_0  // UPnP feature flag
+
 #include "../upnpharvester/group/bld.inf"
 
 // upnp applications
