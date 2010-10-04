@@ -572,6 +572,7 @@ void CUPnPDownloadItemResolver::IsLocallySupportedL( const CUpnpElement& aRes )
     // parse protocol info
     CUpnpDlnaProtocolInfo* pInfo = NULL;
     pInfo = CUpnpDlnaProtocolInfo::NewL( attr->Value() );
+    CleanupStack::PushL( pInfo );
     
     //if DLNA compliant item
     if ( pInfo->PnParameter() != KNullDesC8() )
@@ -590,6 +591,7 @@ void CUPnPDownloadItemResolver::IsLocallySupportedL( const CUpnpElement& aRes )
             }
         
         }
+    CleanupStack::PopAndDestroy( pInfo );
     }
 
 

@@ -64,9 +64,12 @@ CUPnPAppMultiselectionPopup* CUPnPAppMultiselectionPopup::NewL(
 
     CUPnPAppMultiselectionPopup* self =
                    new(ELeave) CUPnPAppMultiselectionPopup( NULL, aHeading );
+    CleanupStack::PushL( self);
 
     self->ConstructL( aMediaType, aFileSharingEngine,aSelectionIndexArray );
-
+	
+    CleanupStack::Pop( self);
+    
     __LOG("CUPnPAppMultiselectionPopup::NewL end");
     return self;
     }

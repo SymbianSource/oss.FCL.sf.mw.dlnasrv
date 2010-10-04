@@ -39,7 +39,16 @@ EXPORT_C RUpnpAVCPEngineRFSClient::RUpnpAVCPEngineRFSClient()
     :RUpnpAVCPEngineClient()
     {
     }
-
+	
+// -----------------------------------------------------------------------------
+// Cleanup mechanism
+// -----------------------------------------------------------------------------
+//
+void RUpnpAVCPEngineRFSClient::CleanupArray(TAny* aDirs)
+    {
+    TFileInfo* dirs = (TFileInfo*) aDirs ;
+    delete[] dirs;
+    }
 
 // -----------------------------------------------------------------------------
 // RUpnpAVCPEngineRFSClient::GetDirectoryL
@@ -64,6 +73,7 @@ EXPORT_C TInt RUpnpAVCPEngineRFSClient::GetDirectoryL(const TDesC8& aUUID, const
     	{        
         TFileInfo* dirs = new TFileInfo[size];
         // put array on cleanup stack
+        CleanupStack::PushL(TCleanupItem(CleanupArray, dirs));
         TPtr8 result(reinterpret_cast<TUint8*>(dirs), sizeof(TFileInfo)*size, sizeof(TFileInfo)*size);
         err = SendReceive(EDownloadDirList,TIpcArgs(id, &result));
 
@@ -72,7 +82,7 @@ EXPORT_C TInt RUpnpAVCPEngineRFSClient::GetDirectoryL(const TDesC8& aUUID, const
         	CRsfwDirEnt* entry = GetFileInformationL(dirs[i]);
             aDirList.AppendL(entry);
         	}
-        delete[] dirs;
+        CleanupStack::PopAndDestroy(dirs);
     	}
     return err;
 	}

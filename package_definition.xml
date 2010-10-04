@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SystemDefinition schema="3.0.0">
- <package id="dlnasrv" name="DLNA Services" levels="stack server ctrl framework plugin">
+ <package id="dlnasrv" name="DLNA Services" version="1.1.0" levels="stack server ctrl framework plugin">
   <!-- uncomment all the units when configuration is in place, they're currently #included from other xxx_build components -->
   <collection id="dlnasrv_plat" name="DLNA Services Platform Interfaces" level="plugin">
+   <meta rel="config">
+    <defined condition="FF_UPNP_FRAMEWORK_2_0"/>
+   </meta>
    <component id="upnp_media_server_settings_api" name="UPnP Media Server Settings API" class="api" filter="s60">
     <meta rel="Api" href="dlnasrv_plat/upnp_media_server_settings_api/upnp_media_server_settings_api.metaxml"/>
     <unit bldFile="dlnasrv_plat/upnp_media_server_settings_api/group"/>
@@ -40,15 +43,24 @@
    </component>
   </collection>
   <collection id="upnpavcontrolpoint" name="UPnP A/V Control Point" level="plugin">
+   <meta rel="config">
+    <defined condition="FF_UPNP_FRAMEWORK_2_0"/>
+   </meta>
    <component id="avcontrolframework" filter="s60" name="A/V Control Famework" introduced="9.1" deprecated="^3">
     <unit bldFile="upnpavcontrolpoint/avcontrolframework/group" filter="!test"/>
     <unit bldFile="upnpavcontrolpoint/avcontrolframework/tsrc/public/basic/group" filter="test,api_test"/>
    </component>
    <component id="upnpavcontrolpoint_rom" filter="s60" name="UPnP A/V Control Point ROM" introduced="9.1" deprecated="^3">
+   <meta rel="config">
+    <defined condition="FF_UPNP_FRAMEWORK_2_0"/>
+   </meta> 
     <unit bldFile="upnpavcontrolpoint/rom"/>
    </component>
   </collection>
   <collection id="upnpmediaserver" name="UPnP Media Server" level="server">
+   <meta rel="config">
+    <defined condition="FF_UPNP_FRAMEWORK_2_0"/>
+   </meta>
    <component id="avobjects" filter="s60" name="A/V Objects">
     <unit bldFile="upnpmediaserver/avobjects/group" filter="!test"/>
     <unit bldFile="upnpmediaserver/avobjects/tsrc/public/basic/group" filter="test,api_test"/>
@@ -64,6 +76,9 @@
     <unit bldFile="upnpmediaserver/contentdirectoryservice/group"/>
    </component>
    <component id="mediaserverengine" filter="s60" name="Media Server Engine">
+   <meta rel="config">
+    <defined condition="FF_UPNP_FRAMEWORK_2_0"/>
+   </meta>
     <unit bldFile="upnpmediaserver/mediaserverengine/group"/>
    </component>
    <component id="upnpmediaserver_rom" filter="s60" name="UPnP Media Server ROM">
@@ -71,6 +86,9 @@
    </component>
   </collection>
   <collection id="upnpavcontroller" name="UPnP A/V Controller" level="ctrl">
+   <meta rel="config">
+    <defined condition="FF_UPNP_FRAMEWORK_2_0"/>
+   </meta>
    <component id="upnpxmlparser" filter="s60" name="UPnP XML Parser" introduced="^2">
     <unit bldFile="upnpavcontroller/upnpxmlparser/group" filter="!test"/>
     <unit bldFile="upnpavcontroller/upnpxmlparser/tsrc/upnpxmlparsertest/group" filter="test,api_test"/>
@@ -79,6 +97,9 @@
     <unit bldFile="upnpavcontroller/upnpavcontrollerserver/group"/>
    </component>
    <component id="upnpavcontrollerclient" filter="s60" name="UPnP A/V Ccontroller Client" introduced="^2">
+   <meta rel="config">
+    <defined condition="FF_UPNP_FRAMEWORK_2_0"/>
+   </meta>
     <unit bldFile="upnpavcontroller/upnpavcontrollerclient/group"/>
    </component>
    <component id="upnpavcontrollerhelper" filter="s60" name="UPnP A/V Controller Helper" introduced="^2">
@@ -89,6 +110,9 @@
    </component>
   </collection>
   <collection id="upnpframework" name="UPnP Framework" level="framework">
+   <meta rel="config">
+    <defined condition="FF_UPNP_FRAMEWORK_2_0"/>
+   </meta>
    <component id="upnputilities" filter="s60" name="UPnP Utilities" introduced="^2">
     <unit bldFile="upnpframework/upnputilities/group"/>
    </component>
@@ -133,6 +157,9 @@
    </component>
   </collection>
   <collection id="upnpsettings" name="UPnP Settings" level="framework">
+   <meta rel="config">
+    <defined condition="FF_UPNP_FRAMEWORK_2_0"/>
+   </meta>
    <component id="upnpsettingsengine" filter="s60" name="UPnP Settings Engine" introduced="^2">
     <unit bldFile="upnpsettings/upnpsettingsengine/group"/>
    </component>
@@ -179,6 +206,9 @@
       </component>
     </collection> -->
   <collection id="upnpsharing" name="UPnP Sharing" level="server">
+   <meta rel="config">
+    <defined condition="FF_UPNP_FRAMEWORK_2_0"/>
+   </meta>
    <component id="upnpdlnaprofiler" filter="s60" name="UPnP DLNA Profiler" introduced="^2">
     <unit bldFile="upnpsharing/upnpdlnaprofiler/group"/>
    </component>
@@ -196,6 +226,9 @@
    </component>
   </collection>
   <collection id="upnpmpxplugins" name="UPnP MPX Plugins" level="plugin">
+   <meta rel="config">
+    <defined condition="FF_UPNP_FRAMEWORK_2_0"/>
+   </meta>
    <component id="upnpplaybackplugins" filter="s60" name="UPnP Playback Plugins" class="plugin" introduced="^2">
     <unit bldFile="upnpmpxplugins/upnpplaybackplugins/group"/>
    </component>

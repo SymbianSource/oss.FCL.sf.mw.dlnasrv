@@ -62,13 +62,19 @@ void CUpnpDlnaProfiler::ConstructL()
     {
     __LOG( "[UPnPDlnaProfiler] ConstructL" );
     CUpnpAudioSolverBase* baseAudioSolver = CUpnpAudioSolverBase::NewL();
+    CleanupStack::PushL( baseAudioSolver );
     iAudioSolvers.AppendL( baseAudioSolver );
+    CleanupStack::Pop( baseAudioSolver );
     
     CUpnpAvSolverBase* baseAvSolver = CUpnpAvSolverBase::NewL();
+    CleanupStack::PushL( baseAvSolver );
     iAvSolvers.AppendL( baseAvSolver );
+    CleanupStack::Pop( baseAvSolver );
     
     CUpnpImageSolverBase* baseImageSolver = CUpnpImageSolverBase::NewL();
+    CleanupStack::PushL( baseImageSolver );
     iImageSolvers.AppendL( baseImageSolver );
+    CleanupStack::Pop( baseImageSolver );
     }
 
 

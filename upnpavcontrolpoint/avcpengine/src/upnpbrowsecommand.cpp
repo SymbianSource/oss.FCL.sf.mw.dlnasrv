@@ -148,15 +148,26 @@ void CUpnpBrowseCommand::SetResultL(const RMessage2& aMessage)
 	//ASSERT(aMessage.Function() == EDownloadDirList);
 
      TInt size = iResult.Count();
-      TFileInfo* dirs = new  TFileInfo[size];
+     TFileInfo* dirs = new  TFileInfo[size];
+     CleanupStack::PushL(TCleanupItem(CleanupArray, dirs));
       for (TInt i = 0; i < size; i++) 
       	{
          dirs[i] = iResult[i];
       	}
       TPtr8 result(reinterpret_cast<TUint8*>(dirs), sizeof(TFileInfo)*size, sizeof(TFileInfo)*size);          
       aMessage.WriteL(1, result);  
-      delete[] dirs;
+	  CleanupStack::PopAndDestroy(dirs);
 	}
+	
+// -----------------------------------------------------------------------------
+// CUpnpBrowseCommand::CleanupArray
+// -----------------------------------------------------------------------------
+// 
+void CUpnpBrowseCommand::CleanupArray(TAny* aDirs)
+    {
+    TFileInfo* dirs = (TFileInfo*) aDirs ;
+    delete[] dirs;
+    }
 
 
 // -----------------------------------------------------------------------------

@@ -275,6 +275,7 @@ void CCmSqlDbClause::FormatParamsL( CCmFillRule& aRule )
                             ( dataField.Length() * multiplier ) );  
                         HBufC8* temp = HBufC8::NewMaxL( iFreeText->Length() + 
                             ( dataField.Length() * multiplier ) );
+                        CleanupStack::PushL( temp );
                         // Format dataField into clause
                         if( multiplier == 1 )
                             {                    
@@ -293,7 +294,7 @@ void CCmSqlDbClause::FormatParamsL( CCmFillRule& aRule )
                         iClause = iClause->ReAllocL( iClause->Length() + 
                             temp->Length() );
                         iClause->Des().Append( *temp );
-                        delete temp;                        
+                        CleanupStack::PopAndDestroy( temp );                       
                         }
                     else
                         {

@@ -289,15 +289,19 @@ void CUPnPXMLParserLite::OnEndElementL( const RTagInfo& aElement,
                 CleanupStack::PushL( tempBuf );
                 HBufC* buf = HBufC::NewL( iFormatString->Length() +
                     tempBuf->Length() );
+                CleanupStack::PushL( buf );
                 buf->Des().Format( *iFormatString, tempBuf );
-                CleanupStack::PopAndDestroy( tempBuf );
                 obj->SetTitleL( buf );
+                CleanupStack::Pop( buf );
+                CleanupStack::PopAndDestroy( tempBuf );
                 }
             else
                 {
                 HBufC* buf = HBufC::NewL( iTitleBuf->Length() );
+                CleanupStack::PushL( buf );
                 buf->Des().Copy( *iTitleBuf );
                 obj->SetTitleL( buf );
+                CleanupStack::Pop( buf );
                 }
             delete iTitleBuf; iTitleBuf = NULL;
             }

@@ -739,7 +739,9 @@ void CUpnpAVControllerServer::StartMediaServerL( const RMessage2& aMessage )
         if( iStartMessages.Count() > 0 )
             {
             RMessage2* message = new (ELeave) RMessage2( aMessage );
+            CleanupStack::PushL( message);
             iStartMessages.AppendL( message );
+            CleanupStack::Pop( message );
             }
         else
             {

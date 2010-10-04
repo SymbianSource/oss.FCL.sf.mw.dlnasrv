@@ -272,8 +272,9 @@ void CUpnpDlnaProtocolInfo::ParseDlnaFlagsParamL(TLex8& aLexer)
                 User::Leave( KErrArgument );
         
         TLex8* ptr = new TLex8(value);
+        CleanupStack::PushL(ptr);
         User::LeaveIfError(ptr->Val(iDlnaFlags[i], EHex)); 
-        delete ptr;
+        CleanupStack::PopAndDestroy(ptr);
         }
     SkipAndMark(aLexer,1);
     }

@@ -138,6 +138,12 @@ class RUpnpAVCPEngineRFSClient : public RUpnpAVCPEngineClient
 		* @return converted object of CDirEnt
 		*/
 		CRsfwDirEnt* RUpnpAVCPEngineRFSClient::GetFileInformationL(TFileInfo& aFileInfo);
+		
+	public:
+		/*
+		 * Custom cleanup mechanism
+		 */
+		static void CleanupArray(TAny* aDirs);
 	};
 
 #endif // C_RUPNPAVCPENGINERFSCLIENT_H

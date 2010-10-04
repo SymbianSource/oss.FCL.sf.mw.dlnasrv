@@ -440,8 +440,10 @@ void CUPnPAVControllerImpl::GetDeviceListSizeL( const RMessage2& aMessage )
                     {
                     CUpnpAVDevice* tempDev = CUpnpAVDevice::NewL(
                         *devList[i] );
+                    CleanupStack::PushL( tempDev );
                     // Ownership of tempDev transferred
                     tempList->AppendDeviceL( *tempDev );
+                    CleanupStack::Pop( tempDev );
                     }
                 }
             }

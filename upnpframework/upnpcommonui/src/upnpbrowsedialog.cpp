@@ -2456,11 +2456,13 @@ void CUPnPBrowseDialog::SelectedArrayCheckL( void )
             if ( !alreadyInArray )
                 {
                 CUpnpItem* itemForSelectionArray = CUpnpItem::NewL();
+                CleanupStack::PushL( itemForSelectionArray );
                 
                 itemForSelectionArray->CopyL( *iResultArray[ indexes->At(
                                                      selectionCount ) ] );
 
                 iSelectedItemsArray.AppendL( itemForSelectionArray );
+                CleanupStack::Pop( itemForSelectionArray );
                 }
             }
         }

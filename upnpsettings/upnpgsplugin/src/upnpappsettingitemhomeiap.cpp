@@ -133,10 +133,12 @@ void UPnPAppSettingItemHomeIAP::CreateAndExecuteSettingPageL()
     if ( iSharingState || status == UPnPAVControllerFactory::EStatusActive )
         {
         CAknInformationNote* note = new (ELeave) CAknInformationNote;
+        CleanupStack::PushL(note);
         HBufC* noteText = iCoeEnv->AllocReadResourceLC(
             R_QTN_IUPNP_IAP_TURN_SHARING_OFF);
         note->ExecuteLD(*noteText);
         CleanupStack::PopAndDestroy(noteText);
+        CleanupStack::Pop(note);
         return;
         }
 

@@ -53,7 +53,12 @@ class CUpnpBrowseCommand : public CUpnpCommand, public MUpnpResponseHandler,
 		/**
 		* Destructor.
 		*/	       
-		virtual ~CUpnpBrowseCommand();	       
+		virtual ~CUpnpBrowseCommand();	  
+		   
+		/**
+		* Cleanup Mechanism
+		*/
+		static void CleanupArray(TAny* aDirs);
 			
 	public:	// Method from CUpnpCommand
 		/**

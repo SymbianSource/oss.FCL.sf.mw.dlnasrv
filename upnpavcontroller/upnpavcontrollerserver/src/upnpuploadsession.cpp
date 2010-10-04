@@ -378,8 +378,11 @@ as UPnP content" );
     
     CUPnPResourceHelper* helper = CUPnPResourceHelper::NewL();
     CleanupStack::Pop( tmpUpnpItem );
+    CleanupStack::PushL( helper );
     helper->SetItem( tmpUpnpItem ); // Transfer ownership
     iResources.AppendL( helper );
+    
+    CleanupStack::Pop( helper );
     
     iUploader->MoveToTransferQueueL( (TAny*)transferItem.iKey );
     
