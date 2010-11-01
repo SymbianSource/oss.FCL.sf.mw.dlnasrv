@@ -71,7 +71,7 @@ public:
      *
      * @param aStatus request status
      */    
-    void StartUp( TRequestStatus& aStatus );
+    TInt StartUp();
 
     /**
      * Cancels startup.
@@ -121,31 +121,16 @@ public:
      * @return error code
      */    
     TInt GetDeviceList( TDes8& aList );
-    
-    /**
-     * Release media server
-     *
-     * @param aId session id
-     * @return error code
-     */    
-    TInt ReleaseMediaServer( TInt aId );
-    
-    /**
-     * Reserve media server
-     * 
-     * @param aId session id
-     * @param aStatus request status
-     */    
-    void ReserveMediaServer( TInt aId, TRequestStatus& aStatus );
-    
-    /**
-     * Cancel reserve media server
-     * 
-     * @param aId session id
-     * @return error code
-     */    
-    TInt CancelReserveMediaServer( TInt aId );
 
+    /**
+     * Gets device icon
+     * 
+     * @param aUuid uuid of the device
+     * @param aFile icon file
+     * @return error code
+     */    
+    TInt GetDeviceIcon( const TDesC8& aUuid, RFile& aFile );
+ 
 public: // Rendering Session releated
     
     /**
@@ -361,6 +346,35 @@ public: // Rendering Session releated
      */    
     TInt CancelGetPositionInfo( TInt aId );
 
+    /**
+     * Send seek action with REL_TIME unit. 
+     *
+     * @param aId session id.
+     * @param aTargetTime target time for seeking.
+     * @param aStatus request status.
+     */    
+    void SeekRelTime( 
+        TInt aId, 
+        TDes8& aTargetTime, 
+        TRequestStatus& aStatus );
+        
+    /**
+     * Cancel seek action with REL_TIME unit.
+     * 
+     * @param aId session id
+     * @return error code
+     */    
+    TInt CancelSeekRelTime( TInt aId );
+
+    /**
+     * Get renderer state
+     *
+     * @param aId session id
+     * @param aState renderer state
+     * @return error code
+     */    
+    TInt GetRendererState( TInt aId, TDes8& aState );    
+    
 public: // Browsing Session releated
 
     /**
@@ -539,14 +553,7 @@ public: // Browsing Session releated
      */    
     TInt CancelMonitorConnection();
 
-    /**
-     * 
-     *
-     * @param aInUse
-     * @return error code
-     */    
-    TInt MSServicesInUse( TDes8& aInUse );
-
+ 
 public: // Download Session releated
 
     /**

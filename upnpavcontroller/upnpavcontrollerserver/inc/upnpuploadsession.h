@@ -25,20 +25,19 @@
 
 // EXTERNAL INCLUDES
 #include <e32base.h>
-#include <upnpavcontrolpointobserver.h>
 
 // INTERNAL INCLUDES
 #include "httptransferobserver.h"
 #include "upnpfiletransfersessionbase.h"
 #include "tupnpfiletransferevent.h"
+#include "upnpavcontrolpointobserver.h"
 
 // FORWARD DECLARATIONS
 class CHttpUploader;
-class CUpnpFileTransferItem;
 class CUPnPResourceHelper;
-class CUpnpDlnaProtocolInfo;
 class CUpnpObject;
 class CUpnpAttribute;
+class CUpnpDevice;
 
 // CLASS DECLARATION
 /**
@@ -46,9 +45,9 @@ class CUpnpAttribute;
  *
  * @since S60 v3.2
  */
-class CUPnPUploadSession :  public CUPnPFileTransferSessionBase,
-                            public MHttpTransferObserver,
-                            public MUpnpAVControlPointObserver
+class CUPnPUploadSession : public CUPnPFileTransferSessionBase,
+                           private MHttpTransferObserver,
+                           private MUpnpAVControlPointObserver
     {
         
 public:
@@ -106,523 +105,40 @@ private: // From MHttpTransferObserver
 private: // From MUpnpAVControlPointObserver
 
     /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void RcSetVolumeResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/, 
-        const TDesC8& /*aInstance*/, 
-        const TDesC8& /*aChannel*/, 
-        const TDesC8& /*aDesiredVolume*/ ) {}
-        
+    * @see MUpnpAVControlPointObserver::ActionResponseL
+    */
+    void ActionResponseL( CUpnpAction* aAction );
+    
     /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void RcVolumeResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/, 
-        const TDesC8& /*aInstance*/, 
-        const TDesC8& /*aChannel*/, 
-        const TDesC8& /*aCurrentVolume*/) {}
-         
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void RcSetMuteResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/, 
-        const TDesC8& /*aInstance*/, 
-        const TDesC8& /*aChannel*/, 
-        const TDesC8& /*aDesiredMute*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void RcMuteResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/, 
-        const TDesC8& /*aInstance*/, 
-        const TDesC8& /*aChannel*/, 
-        const TDesC8& /*aCurrentMute*/) {} 
+    * @see MUpnpAVControlPointObserver::StateUpdatedL
+    */
+    void StateUpdatedL( CUpnpService* aService );
 
     /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void AvtSetTransportUriResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aInstanceId*/,
-        const TDesC8& /*aCurrentUri*/,
-        const TDesC8& /*aCurrentUriMetaData*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    virtual void AvtSetNextTransportUriResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aInstanceId*/,
-        const TDesC8& /*aNextUri*/,
-        const TDesC8& /*aNextUriMetaData*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void AvtMediaInfoResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aInstanceId*/,
-        const TDesC8& /*aNrTracks*/,
-        const TDesC8& /*aMediaDuration*/,
-        const TDesC8& /*aCurrentUri*/,
-        const TDesC8& /*aCurrentUriMetaData*/,
-        const TDesC8& /*aNextUri*/,
-        const TDesC8& /*aNextUriMetaData*/,
-        const TDesC8& /*aPlayMedium*/,
-        const TDesC8& /*aRecordMedium*/,
-        const TDesC8& /*aWriteStatus*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void AvtGetTransportInfoResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aInstanceId*/,
-        const TDesC8& /*aCurrenTransportState*/,
-        const TDesC8& /*aCurrentTransportStatus*/,
-        const TDesC8& /*aCurrentSpeed*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void AvtPositionInfoResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aInstanceId*/,
-        const TDesC8& /*aTrack*/,
-        const TDesC8& /*aTrackDuration*/,
-        const TDesC8& /*aTrackMetaData*/,
-        const TDesC8& /*aTrackURI*/,
-        const TDesC8& /*aRelTime*/,
-        const TDesC8& /*aAbsTime*/,
-        const TDesC8& /*aRelCount*/,
-        const TDesC8& /*aAbsCount*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void AvtDeviceCapabilitiesResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aInstanceId*/,
-        const TDesC8& /*aPlayMedia*/,
-        const TDesC8& /*aRecMedia*/,
-        const TDesC8& /*aRecQualityMode*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void AvtTransportSettingsResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aInstanceId*/,
-        const TDesC8& /*aPlayMode*/,
-        const TDesC8& /*aRecQualityMode*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void AvtStopResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aInstanceId*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void AvtPlayResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aInstanceId*/,
-        const TDesC8& /*aSpeed*/) {}
+    * @see MUpnpAVControlPointObserver::HttpResponseL
+    */
+    void HttpResponseL( CUpnpHttpMessage* aMessage );
     
     /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void AvtPauseResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aInstanceId*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void AvtRecordResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aInstanceId*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void AvtSeekResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aInstanceId*/,
-        const TDesC8& /*aUnit*/,
-        const TDesC8& /*aTarget*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void AvtNextResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aInstanceId*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void AvtPreviousResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aInstanceId*/) {}
+    * @see MUpnpAVControlPointObserver::DeviceDiscoveredL
+    */
+    void DeviceDiscoveredL( CUpnpDevice* aDevice );
     
     /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void AvtSetPlayModeResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aInstanceId*/,
-        const TDesC8& /*aNewPlayMode*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void AvtSetRecordModeResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aInstanceId*/,
-        const TDesC8& /*aNewRecordQuality*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CdsSearchCapabilitiesResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aSearchCaps*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CdsSortCapabilitiesResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aSortCaps*/) {}
+    * @see MUpnpAVControlPointObserver::DeviceDisappearedL
+    */
+    void DeviceDisappearedL( CUpnpDevice* aDevice );
+
+private: // network event handling
 
     /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CdsSystemUpdateIdResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        TInt /*aSystemUpdateId*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CdsBrowseResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aObjectID*/,
-        const TDesC8& /*aBrowseFlag*/,
-        const TDesC8& /*aFilter*/,
-        TInt /*aIndex*/,
-        TInt /*aRequest*/,
-        const TDesC8& /*aSortCriteria*/,
-        const TDesC8& /*aResult*/,
-        TInt /*aReturned*/,
-        TInt /*aMatches*/,
-        const TDesC8& /*aUpdateID*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CdsSearchResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aContainerId*/,
-        const TDesC8& /*aSearchCriteria*/,
-        const TDesC8& /*aFilter*/,
-        TInt /*aIndex*/,
-        TInt /*aRequest*/,
-        const TDesC8& /*aSortCriteria*/,
-        const TDesC8& /*aResult*/,
-        TInt /*aReturned*/,
-        TInt /*aMatches*/,
-        const TDesC8& /*aUpdateID*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CdsDestroyObjectResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aObjectId*/ ) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CdsUpdateObjectResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aObjectId*/,
-        const TDesC8& /*aCurrentTagValue*/,
-        const TDesC8& /*aNewTagValue*/ ) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CdsImportResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aSourceURI*/,
-        const TDesC8& /*aDestinationURI*/,
-        const TDesC8& /*aTransferId*/ ) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CdsExportResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aSourceURI*/,
-        const TDesC8& /*aDestinationURI*/,
-        const TDesC8& /*aTransferId*/ ) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CdsStopTransferResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aTransferId*/ ) {}
-    
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    virtual void CdsCTransferProgressResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aTransferId*/,
-        const TDesC8& /*aTransferStatus*/,
-        const TDesC8& /*aTransferLength*/,            
-        const TDesC8& /*aTransferTotal*/ ) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CdsDeleteResourceResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aResourceUri*/ ) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CdsCreateReferenceResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aContainerId*/, 
-        const TDesC8& /*aObjectId*/, 
-        const TDesC8& /*aNewId*/ ) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
+     * Handles response for ContentDirectory CreateObject command
      */
     void CdsCreateObjectResponse(
-        const TDesC8& aUuid,
-        TInt aSessionId,
         TInt aErr,
-        const TDesC8& aContainerID, 
-        const TDesC8& aElements, 
         const TDesC8& aObjectID, 
         const TDesC8& aResult );
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CmProtocolInfoResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aSource*/, 
-        const TDesC8& /*aSink*/ ) {}
-    
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CmPrepareResponse(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aRemoteProtocolInfo*/,
-        const TDesC8& /*aPeerConnectionManager*/,
-        const TDesC8& /*aPeerConnectionId*/,
-        const TDesC8& /*aDirection*/,
-        TInt /*aConnection*/,
-        TInt /*aTransport*/,
-        TInt /*aRsc*/ ) {}
-    
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CmComplete(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        TInt /*aConnection*/ ) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CmCurrentConnections(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        const TDesC8& /*aConnections*/) {}
-        
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CmCurrentInfo(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSessionId*/,
-        TInt /*aErr*/,
-        TInt /*rscId*/, 
-        TInt /*transportId*/, 
-        const TDesC8& /*aProtocolInfo*/,
-        const TDesC8& /*aPeerConnectionManager*/, 
-        TInt /*peerId*/, 
-        const TDesC8& /*aDirection*/, 
-        const TDesC8& /*aStatus*/ ) {}
 
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CdsUpdateEvent(
-            const TDesC8& /*aUuid*/,
-            TInt /*aSystemUpdateId*/
-            ) {}
-            
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CdsContainerEvent(
-            const TDesC8& /*aUuid*/,
-            const TDesC8& /*aConteinerIds*/
-            ) {}
-            
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CdsTransferEvent(
-            const TDesC8& /*aUuid*/,
-            const TDesC8& /*aTransferIds*/
-            ) {}
-            
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void RcLastChangeEvent(
-            const TDesC8& /*aUuid*/,
-            const TDesC8& /*aLastChange*/
-            ) {}
-            
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void AvtLastChangeEvent(
-            const TDesC8& /*aUuid*/,
-            const TDesC8& /*aLastChange*/
-            ) {}
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CmSourceEvent(
-            const TDesC8& /*aUuid*/,
-            const TDesC8& /*aSource*/
-            ) {}
-            
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CmSinkEvent(
-            const TDesC8& /*aUuid*/,
-            const TDesC8& /*aSink*/
-            ) {}
-            
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void CmConnectionsEvent(
-            const TDesC8& /*aUuid*/,
-            const TDesC8& /*aConnections*/
-            ) {}
-
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void HttpResponseL( CUpnpHttpMessage* /*aMessage*/ ) {}
-
-public:
-
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void DeviceDiscoveredL( CUpnpDevice* /*aDevice*/ ) {} 
-
-    /**
-     * See upnpavcontrolpointobserver.h
-     */
-    void DeviceDisappearedL( CUpnpDevice* /*aDevice*/ ) {}
-     
 public: // New functions
 
     /**
@@ -631,7 +147,7 @@ public: // New functions
      * @param aMessage message
      */
     void StartUploadL( const RMessage2& aMessage );
-    
+
     /**
      * Cancels upload
      *
@@ -752,7 +268,19 @@ private:
      * @return none
      */
     void DoSchedulerStoppedCallBack();
-    
+
+    /**
+     * Sends CreateObject command to remote CDS
+     * returns the related HTTP session id
+     */
+    int CreateObjectL( const TDesC8& aContainerId, const TDesC8& aElements );
+
+    /**
+     * Sends DestroyObject command to remote CDS
+     * returns the related HTTP session id
+     */
+    int DestroyObjectL( const TDesC8& aObjectId );
+
 private:
 
     /**
@@ -773,6 +301,11 @@ private:
      * Owned
      */
     RPointerArray<CUPnPResourceHelper>      iResources;
+    
+    /**
+     * CUpnpDevice used by AvControlPoint.
+     */
+    const CUpnpDevice*                      iCpDevice; // Not own.    
         
     /**
      * Resource index

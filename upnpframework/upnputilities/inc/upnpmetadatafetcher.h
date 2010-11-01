@@ -87,6 +87,12 @@ public:
      */
     IMPORT_C static CUpnpItem* CreateItemFromFileL(
                                             const TDesC& aFilePath );
+    
+private:
+    
+    static void AddElementToObjectL(CUpnpObject& aObject,
+                                         const TDesC& aMetaDataUtilityName, 
+                                         const TDesC8& aElementName );
 
     };
 

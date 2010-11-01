@@ -27,7 +27,6 @@
 #include "upnpavcontrollerglobals.h"
 
 #include <e32base.h>
-#include "upnpconnectionmonitorobserver.h"
 
 
 // FORWARD DECLARATIONS
@@ -41,8 +40,7 @@ class CUpnpDevice;
 /** 
   An instance of class CUpnpAVControllerSession is created for each client
   */
-class CUpnpAVControllerSession :    public CSession2,
-                                    public MUPnPConnectionMonitorObserver
+class CUpnpAVControllerSession :    public CSession2
 {
 
 public: // New methods
@@ -76,7 +74,8 @@ public: // From CSession
     *        (containing requested operation and any data)
     */
     void ServiceL( const RMessage2& aMessage );
-public: // From MUPnPConnectionMonitorObserver
+	
+public:
 
     /**
      * Handles UPnP device discoveries.
@@ -92,7 +91,15 @@ public: // From MUPnPConnectionMonitorObserver
      */
     void DeviceDisappearedL( CUpnpAVDeviceExtended& aDevice );
 
+    /**
+     * Handles UPnP device icon download completions.
+     * @param aDevice Device that icon was downloaded.
+     */
+    void DeviceIconDownloadedL( CUpnpAVDeviceExtended& aDevice );
 
+    /**
+     * Handles connection lost.
+     */
     void ConnectionLost();
 
 private: // New methods
@@ -112,6 +119,36 @@ private: // New methods
     * @param panic code
     */
     void PanicClient( const RMessage2& aMessage, TInt aPanic ) const;
+    
+    /**
+     * ServiceL method extended ( cyclomatic complexity reduced)
+     */
+    void ServiceAvTransportCommandsL( const RMessage2& aMessage );
+    
+    /**
+     * ServiceL method extended ( cyclomatic complexity reduced)
+     */
+    void ServiceAvTransportVariablesL( const RMessage2& aMessage );
+    
+    /**
+     * ServiceL method extended ( cyclomatic complexity reduced)
+     */
+    void ServiceDeviceL( const RMessage2& aMessage );
+    
+    /**
+     * ServiceL method extended ( cyclomatic complexity reduced)
+     */
+    void ServiceSearchandBrowseL( const RMessage2& aMessage );
+   
+    /**
+     * ServiceL method extended ( cyclomatic complexity reduced)
+     */
+    void ServiceDownloadandUploadL( const RMessage2& aMessage );
+    
+    /**
+     * ServiceL method extended ( cyclomatic complexity reduced)
+     */
+    void ServiceCommonL( const RMessage2& aMessage );
 
 private: 
 

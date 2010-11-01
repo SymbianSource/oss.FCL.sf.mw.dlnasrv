@@ -26,7 +26,9 @@
 // Include files
 #include <e32base.h>
 
+const TInt KTimerCycle1         = 1;
 const TInt KTimerCycle3         = 3;
+const TInt KTimerCycle5         = 5;
 const TInt KTimerCycle10        = 10;
 const TInt KTimerCycle30        = 30;
 const TInt KTimerCycle300       = 300;
@@ -50,7 +52,8 @@ public:
     enum TAVTimerType
         {
         ETimerServerShutdown = 0,
-        ETimerMediaServer
+        ETimerMediaServer,
+        ETimerFailSafe
         };
  
 public:

@@ -25,19 +25,21 @@
 #include <f32file.h>
 
 // upnp stack api
-#include <upnpmediaserversettings.h>
 #include <upnpstring.h>
+
+// dlnasrv / mediaserver api
+#include <upnpmediaserversettings.h>
 #include <upnpdlnaprotocolinfo.h>
 #include <upnpdlnaprotocolinfocons.h>
 
-// upnpframework / avcontroller helper api
+// dlnasrv / avcontroller helper api
 #include "upnpconstantdefs.h" // for upnp-specific stuff
 
-// upnpframework / internal api's
+// dlnasrv / internal api's
 #include "upnpcommonutils.h"
 #include "httpdownloader.h"
 
-// avcontroller internal
+// dlnasrv / avcontroller internal
 #include "upnpdownloadsession.h"
 #include "upnpavdeviceextended.h"
 #include "upnpfiletransferitem.h"

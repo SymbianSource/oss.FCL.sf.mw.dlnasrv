@@ -15,13 +15,13 @@
 *
 */
 
-
-
-
-
 PRJ_EXPORTS
 
 // Central repository default keys
+../cenrep/20007564.cre  /epoc32/release/winscw/udeb/z/private/10202be9/20007564.cre
+../cenrep/20007564.cre  /epoc32/release/winscw/urel/z/private/10202be9/20007564.cre
+../cenrep/20007564.cre  /epoc32/release/armv5/udeb/z/private/10202be9/20007564.cre
+../cenrep/20007564.cre  /epoc32/release/armv5/urel/z/private/10202be9/20007564.cre
 ../cenrep/20007564.txt  /epoc32/release/winscw/udeb/z/private/10202be9/20007564.txt
 ../cenrep/20007564.txt  /epoc32/release/winscw/urel/z/private/10202be9/20007564.txt
 ../cenrep/20007564.txt  /epoc32/release/armv5/udeb/z/private/10202be9/20007564.txt
@@ -37,3 +37,4 @@ PRJ_MMPFILES
 upnpcontentserver.mmp
 upnpcontentserverclient.mmp
 
+// End of file

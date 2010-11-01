@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -22,12 +22,14 @@
 
 // INCLUDES
 // upnp stack api
+#include <upnpstring.h>
+
+// dlnasrv / mediaserver api
 #include <upnpcontainer.h>
 #include <upnpobjectlist.h>
 #include <upnpitem.h>
-#include <upnpstring.h>
 
-// upnpframework / avcontroller api
+// dlnasrv / avcontroller api
 #include "upnpavdevice.h"
 #include "upnpavbrowsingsessionobserver.h"
 
@@ -102,10 +104,6 @@ CUPnPAVBrowsingSessionImpl::~CUPnPAVBrowsingSessionImpl()
     iDevice = NULL;
     
     Cancel();
-    if( iMediaServerResourceReserved )
-        {
-        iServer.ReleaseMediaServer( (TInt)this );
-        }    
     iServer.DestroyBrowsingSession( (TInt)this );
     }
 
@@ -163,12 +161,6 @@ void CUPnPAVBrowsingSessionImpl::RunL()
             DeleteObjectCompletedL();
             }
             break;
-
-        case EStartMediaServer:
-            {
-            StartMediaServerCompleteL();
-            }
-            break;
             
         default:
             __PANICD( __FILE__, __LINE__ );
@@ -215,12 +207,6 @@ void CUPnPAVBrowsingSessionImpl::DoCancel()
             iServer.CancelDeleteObject( (TInt)this );
             }
             break;
-
-        case EStartMediaServer:
-            {
-            iServer.CancelReserveMediaServer( (TInt)this );
-            }
-            break;          
 
         default:
             __PANICD( __FILE__, __LINE__ );
@@ -273,63 +259,6 @@ MUPnPAVBrowsingSessionObserver* CUPnPAVBrowsingSessionImpl::Observer() const
 const CUpnpAVDevice& CUPnPAVBrowsingSessionImpl::Device() const
     {
     return *iDevice;
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPAVBrowsingSessionImpl::ReserveLocalMSServicesL
-// Reserves local media server
-// --------------------------------------------------------------------------
-void CUPnPAVBrowsingSessionImpl::ReserveLocalMSServicesL()
-    {
-    __LOG( "CUPnPAVBrowsingSessionImpl::ReserveLocalMSServicesL" );
-    
-    ResetL();
-    
-    if( iMediaServerResourceReserved )
-        {
-        if( iObserver )
-            {
-            iObserver->ReserveLocalMSServicesCompleted( KErrNone );
-            }
-        }
-    else
-        {
-        iPendingOperation = EStartMediaServer;
-        iServer.ReserveMediaServer( (TInt)this, iStatus );
-        SetActive();            
-        }    
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPAVBrowsingSessionImpl::CancelReserveLocalMSServicesL
-// Cancel reserve local media server
-// --------------------------------------------------------------------------
-void CUPnPAVBrowsingSessionImpl::CancelReserveLocalMSServicesL()
-    {
-    __LOG( "CUPnPAVBrowsingSessionImpl::CancelReserveLocalMSServicesL" );
-    
-    if( iPendingOperation == EStartMediaServer )
-        {
-        Cancel();
-        }
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPAVBrowsingSessionImpl::ReleaseLocalMSServicesL
-// Release local media server
-// --------------------------------------------------------------------------
-void CUPnPAVBrowsingSessionImpl::ReleaseLocalMSServicesL()
-    {
-    __LOG( "CUPnPAVBrowsingSessionImpl::ReleaseLocalMSServicesL" );
-    
-    ResetL();
-    
-    if( iMediaServerResourceReserved )
-        {
-        iMediaServerResourceReserved = EFalse;
-        
-        User::LeaveIfError( iServer.ReleaseMediaServer( (TInt)this ) );
-        }
     }
 
 // --------------------------------------------------------------------------
@@ -765,29 +694,5 @@ void CUPnPAVBrowsingSessionImpl::ResetL()
 
     iPendingOperation = ENone;
     }    
-
-// --------------------------------------------------------------------------
-// CUPnPAVBrowsingSessionImpl::StartMediaServerCompleteL
-// Handle start media server
-// --------------------------------------------------------------------------
-void CUPnPAVBrowsingSessionImpl::StartMediaServerCompleteL()
-    {
-    __LOG( "CUPnPAVBrowsingSessionImpl::StartMediaServerCompleteL" );
-    
-    if( iObserver )
-        {
-
-        if( iStatus.Int() == EAVControllerStartMediaServerCompleted )
-            {
-            iMediaServerResourceReserved = ETrue;
-            iObserver->ReserveLocalMSServicesCompleted( KErrNone );
-            }
-        else
-            {
-            iObserver->ReserveLocalMSServicesCompleted( iStatus.Int() );
-            }
-        
-        }
-    }
 
 // end of file

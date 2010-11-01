@@ -21,10 +21,10 @@
 
 
 // INCLUDE FILES
-// upnpframework / avcontroller helper api
+// dlnasrv / avcontroller helper api
 #include "upnpitemresolverfactory.h"
 
-// avcontrollerhelper internal
+// dlnasrv / avcontroller helper internal
 #include "upnpremoteitemresolver.h"
 #include "upnplocalitemresolver.h"
 #include "upnpdownloaditemresolver.h"

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2002-2004 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2002-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -56,11 +56,7 @@ void CUpnpAVControllerSession::ConstructL()
     
     iAVControllerServer.IncrementSessions();
     
-    iAVController = CUPnPAVControllerImpl::NewL
-        (
-        iAVControllerServer.MediaServer(),
-        iAVControllerServer
-        );
+    iAVController = CUPnPAVControllerImpl::NewL( iAVControllerServer );
     }
 
 // --------------------------------------------------------------------------
@@ -82,318 +78,582 @@ CUpnpAVControllerSession::~CUpnpAVControllerSession()
 // --------------------------------------------------------------------------
 //
 void CUpnpAVControllerSession::ServiceL( const RMessage2& aMessage )
-    {   
-         
-    switch ( aMessage.Function() )
+    {
+    switch(aMessage.Function())
         {
         case EAVControllerStartupRequest:
+            {
             iAVControllerServer.StartUpL();
             aMessage.Complete( KErrNone );
-            break;
-        
+            }
+            break;        
         case EAVControllerCancelStartupRequest:
+            {
             iAVControllerServer.CancelStartUp();
             aMessage.Complete( KErrNone );
-            break;        
-        
-        case EAVControllerDeviceRequest:           
-            iAVController->EnableDeviceDiscoveryL( aMessage );
-            break;
-            
-        case EAVControllerGetDeviceRequest:
-            iAVController->GetDeviceL( aMessage );
-            break;                      
-
-        case EAVControllerCancelDeviceRequest:
-            iAVController->DisableDeviceDiscoveryL();
-            aMessage.Complete( KErrNone );
-            break;                      
-        
-        case EAVControllerGetDeviceListSizeRequest:
-            iAVController->GetDeviceListSizeL( aMessage );
-            break;
-
-        case EAVControllerGetDeviceListRequest:
-            iAVController->GetDeviceListL( aMessage );
+            }
             break;
 
         case EAVControllerCreateRenderingSession:
+            {
             iAVController->CreateRenderingSessionL( aMessage );
+            }
             break;
-
         case EAVControllerDestroyRenderingSession:
+            {
             iAVController->DestroyRenderingSessionL( aMessage );
+            }
             break;
-            
-        case EAVControllerEventRequest:
-            iAVController->EventRequestL( aMessage );
-            break;
-            
-        case EAVControllerCancelEventRequest:
-            iAVController->CancelEventRequestL( aMessage );
-            break;
-
-        case EAVControllerSetURI:
-            iAVController->SetURIL( aMessage );
-            break;
-            
-        case EAVControllerCancelSetURI:
-            iAVController->CancelSetURIL( aMessage );
-            break;
-    
-        case EAVControllerSetNextURI:
-            iAVController->SetNextURIL( aMessage );
-            break;
-            
-        case EAVControllerCancelSetNextURI:
-            iAVController->CancelSetNextURIL( aMessage );
-            break;
-
-        case EAVControllerPlay:
-            iAVController->PlayL( aMessage );
-            break;
-    
-        case EAVControllerCancelPlay:
-            iAVController->CancelPlayL( aMessage );
-            break;
-            
-        case EAVControllerStop:
-            iAVController->StopL( aMessage );
-            break;
-    
-        case EAVControllerCancelStop:
-            iAVController->CancelStopL( aMessage );
-            break;
-            
-        case EAVControllerPause:
-            iAVController->PauseL( aMessage );
-            break;
-            
-        case EAVControllerCancelPause:
-            iAVController->CancelPauseL( aMessage );
-            break;
-    
-        case EAVControllerSetVolume:
-            iAVController->SetVolumeL( aMessage );
-            break;
-
-        case EAVControllerCancelSetVolume:
-            iAVController->CancelSetVolumeL( aMessage );
-            break;
-    
-        case EAVControllerGetVolume:
-            iAVController->GetVolumeL( aMessage );
-            break;
-    
-        case EAVControllerCancelGetVolume:
-            iAVController->CancelGetVolumeL( aMessage );
-            break;
-    
-        case EAVControllerSetMute:
-            iAVController->SetMuteL( aMessage );
-            break;
-
-        case EAVControllerCancelSetMute:
-            iAVController->CancelSetMuteL( aMessage );
-            break;
-    
-        case EAVControllerGetMute:
-            iAVController->GetMuteL( aMessage );
-            break;
-            
-        case EAVControllerCancelGetMute:
-            iAVController->CancelGetMuteL( aMessage );
-            break;
-            
-        case EAVControllerGetPositionInfo:
-            iAVController->GetPositionInfoL( aMessage );
-            break;
-            
-        case EAVControllerCancelGetPositionInfo:
-            iAVController->CancelGetPositionInfoL( aMessage );
-            break;
-            
         case EAVControllerCreateBrowsingSession:
+            {
             iAVController->CreateBrowsingSessionL( aMessage );
+            }
             break;
             
         case EAVControllerDestroyBrowsingSession:
+            {
             iAVController->DestroyBrowsingSessionL( aMessage );
-            break;
-
-        case EAVControllerGetBrowseResponseSize:
-            iAVController->GetBrowseResponseSizeL( aMessage );
-            break;
-        
-        case EAVControllerCancelGetBrowseResponseSize:
-            iAVController->CancelGetBrowseResponseSizeL( aMessage );
-            break;
-        
-        case EAVControllerGetBrowseResponse:
-            iAVController->GetBrowseResponseL( aMessage );
-            break;
-                    
-        case EAVControllerGetSearchResponseSize:
-            iAVController->GetSearchResponseSizeL( aMessage );
-            break;
-            
-        case EAVControllerCancelGetSearchResponseSize:
-            iAVController->CancelGetSearchResponseSizeL( aMessage );
-            break;
-        
-        case EAVControllerGetSearchResponse:
-            iAVController->GetSearchResponseL( aMessage );
-            break;
-                    
-        case EAVControllerGetSearchCapabilitiesSize:
-            iAVController->GetSearchCapabitiesSizeL( aMessage );
-            break;    
-                            
-        case EAVControllerCancelGetSearchCapabilitiesSize:
-            iAVController->CancelGetSearchCapabitiesSizeL( aMessage );
-            break;
-            
-        case EAVControllerGetSearchCapabilities:
-            iAVController->GetSearchCapabitiesL( aMessage );
-            break;
-
-        case EAVControllerCreateContainer:
-            iAVController->CreateContainerL( aMessage );
-            break;
-        
-        case EAVControllerCancelCreateContainer:
-            iAVController->CancelCreateContainerL( aMessage );
+            }
             break;  
 
-        case EAVControllerDeleteObject:
-            iAVController->DeleteObjectL( aMessage );
-            break;
-            
-        case EAVControllerCancelDeleteObject:
-            iAVController->CancelDeleteObjectL( aMessage );
-            break;
-            
-        case EAVControllerDeviceDisappearedRequest:
-            iAVController->DeviceDisappearedRequestL( aMessage );
-            break;
-            
-        case EAVControllerCancelDeviceDisappearedRequest:
-            iAVController->CancelDeviceDisappearedRequestL( aMessage );
-            break;              
-
-        case EAVControllerStartMediaServer:
-            iAVControllerServer.StartMediaServerL( aMessage );
-            break;
-            
-        case EAVControllerCancelStartMediaServer:
-            iAVControllerServer.CancelStartMediaServerL( aMessage );
-            break;
-
-        case EAVControllerStopMediaServer:
-            iAVControllerServer.StopMediaServerL( aMessage );
-            break;
-            
-        case EAVControllerMonitorConnection:
-            iAVController->MonitorConnectionL( aMessage );
-            break;
-
-        case EAVControllerCancelMonitorConnection:
-            iAVController->CancelMonitorConnectionL( aMessage );
-            break;
-        
-        case EAVControllerMSServicesInUse:
-            iAVControllerServer.MSServicesInUse( aMessage );
-            break;
-            
         case EAVControllerCreateDownloadSession:
+            {
             iAVController->CreateDownloadSessionL( aMessage );
+            }
             break;
             
         case EAVControllerCreateUploadSession:
+            {
             iAVController->CreateUploadSessionL( aMessage );       
+            }
             break;
         
         case EAVControllerDestroyDownloadSession:
+            {
             iAVController->DestroyDownloadSessionL( aMessage );
+            }
             break;
         
         case EAVControllerDestroyUploadSession:
+            {
             iAVController->DestroyUploadSessionL( aMessage );
-            break;
-        
-        case EAVControllerStartDownload:
-            iAVController->StartDownloadL( aMessage );
-            break;
-        
-        case EAVControllerCancelDownload:
-            iAVController->CancelDownloadL( aMessage );
-            break;
-        
-        case EAVControllerCancelAllDownloads:
-            iAVController->CancelAllDownloadsL( aMessage );
-            break;
-        
-        case EAVControllerStartUpload:
-            iAVController->StartUploadL( aMessage );
-            break;
-        
-        case EAVControllerCancelUpload:
-            iAVController->CancelUploadL( aMessage );
-            break;
-        
-        case EAVControllerCancelAllUploads:
-            iAVController->CancelAllUploadsL( aMessage );
-            break;
-        
-        case EAVControllerStartTrackingUploadProgress:
-            iAVController->StartTrackingUploadProgressL( aMessage );
-            break;
-        
-        case EAVControllerStartTrackingDownloadProgress:
-            iAVController->StartTrackingDownloadProgressL( aMessage );
-            break;
-        
-        case EAVControllerGetDownloadEvent:
-            iAVController->GetDownloadEventL( aMessage );
-            break;
-        
-        case EAVControllerCancelDownloadEvent:
-            iAVController->CancelGetDownloadEventL( aMessage );
-            break;
-        
-        case EAVControllerGetUploadEvent:
-            iAVController->GetUploadEventL( aMessage );
-            break;
-        
-        case EAVControllerCancelUploadEvent:
-            iAVController->CancelGetUploadEventL( aMessage );
-            break;
-        
-        case EAVControllerStartDownloadFH:
-            iAVController->StartDownloadFHL( aMessage );
-            break;
-
+            }
+            break; 
+            
         default:
-            PanicClient( aMessage, EAVControllerServerBadRequest );
+            {
+            ServiceAvTransportCommandsL(aMessage);
+            }
             break;
         }
     }
 
+// --------------------------------------------------------------------------
+// CUpnpAVControllerSession::ServiceAvTransportCommandsL
+// Handle client requests.
+// --------------------------------------------------------------------------
+//
+void CUpnpAVControllerSession::ServiceAvTransportCommandsL( 
+        const RMessage2& aMessage )
+    {
+    switch(aMessage.Function())
+        {
+        case EAVControllerSetURI:
+            {
+            iAVController->SetURIL( aMessage );
+            }
+            break;
+            
+        case EAVControllerCancelSetURI:
+            {
+            iAVController->CancelSetURIL( aMessage );
+            }
+            break;
+    
+        case EAVControllerSetNextURI:
+            {
+            iAVController->SetNextURIL( aMessage );
+            }
+            break;
+            
+        case EAVControllerCancelSetNextURI:
+            {
+            iAVController->CancelSetNextURIL( aMessage );
+            }
+            break;
 
+        case EAVControllerPlay:
+            {
+            iAVController->PlayL( aMessage );
+            }
+            break;
+    
+        case EAVControllerCancelPlay:
+            {
+            iAVController->CancelPlayL( aMessage );
+            }
+            break;
+            
+        case EAVControllerStop:
+            {
+            iAVController->StopL( aMessage );
+            }
+            break;
+    
+        case EAVControllerCancelStop:
+            {
+            iAVController->CancelStopL( aMessage );
+            }
+            break;
+            
+        case EAVControllerPause:
+            {
+            iAVController->PauseL( aMessage );
+            }
+            break;
+            
+        case EAVControllerCancelPause:
+            {
+            iAVController->CancelPauseL( aMessage );
+            }
+            break;
+        case EAVControllerSeekRelTime:
+            {
+            iAVController->SeekRelTimeL( aMessage );
+            }
+            break;
+            
+        case EAVControllerCancelSeekRelTime:
+            {
+            iAVController->CancelSeekRelTimeL( aMessage );
+            }
+            break;  
+            
+        default:
+            {
+            ServiceAvTransportVariablesL(aMessage);
+            }
+            break;
+        }
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpAVControllerSession::ServiceAvTransportVariablesL
+// Handle client requests.
+// --------------------------------------------------------------------------
+//
+void CUpnpAVControllerSession::ServiceAvTransportVariablesL( 
+        const RMessage2& aMessage )
+    {
+    switch(aMessage.Function())
+        {
+        case EAVControllerGetRendererState:
+            {
+            iAVController->GetRendererStateL( aMessage );
+            }
+            break;
+            
+        case EAVControllerEventRequest:
+            {
+            iAVController->EventRequestL( aMessage );
+            }
+            break;
+            
+        case EAVControllerCancelEventRequest:
+            {
+            iAVController->CancelEventRequestL( aMessage );
+            }
+            break;
+
+        case EAVControllerSetVolume:
+            {
+            iAVController->SetVolumeL( aMessage );
+            }
+            break;
+
+        case EAVControllerCancelSetVolume:
+            {
+            iAVController->CancelSetVolumeL( aMessage );
+            }
+            break;
+    
+        case EAVControllerGetVolume:
+            {
+            iAVController->GetVolumeL( aMessage );
+            }
+            break;
+    
+        case EAVControllerCancelGetVolume:
+            {
+            iAVController->CancelGetVolumeL( aMessage );
+            }
+            break;
+    
+        case EAVControllerSetMute:
+            {
+            iAVController->SetMuteL( aMessage );
+            }
+            break;
+
+        case EAVControllerCancelSetMute:
+            {
+            iAVController->CancelSetMuteL( aMessage );
+            }
+            break;
+    
+        case EAVControllerGetMute:
+            {
+            iAVController->GetMuteL( aMessage );
+            }
+            break;
+            
+        case EAVControllerCancelGetMute:
+            {
+            iAVController->CancelGetMuteL( aMessage );
+            }
+            break;
+            
+        case EAVControllerGetPositionInfo:
+            {
+            iAVController->GetPositionInfoL( aMessage );
+            }
+            break;
+            
+        case EAVControllerCancelGetPositionInfo:
+            {
+            iAVController->CancelGetPositionInfoL( aMessage );
+            }
+            break;          
+            
+        default:
+            {
+            ServiceDeviceL(aMessage);
+            }
+            break;
+        }
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpAVControllerSession::ServiceDeviceL
+// Handle client requests.
+// --------------------------------------------------------------------------
+//
+void CUpnpAVControllerSession::ServiceDeviceL( const RMessage2& aMessage )
+{
+    switch(aMessage.Function())
+        {
+        case EAVControllerDeviceRequest:           
+            {
+            iAVController->EnableDeviceDiscoveryL( aMessage );
+            }
+            break;
+            
+        case EAVControllerGetDeviceRequest:
+            {
+            iAVController->GetDeviceL( aMessage );
+            }
+            break;                      
+
+        case EAVControllerCancelDeviceRequest:
+            {
+            iAVController->DisableDeviceDiscoveryL();
+            aMessage.Complete( KErrNone );
+            }
+            break;                      
+        
+        case EAVControllerGetDeviceListSizeRequest:
+            {
+            iAVController->GetDeviceListSizeL( aMessage );
+            }
+            break;
+
+        case EAVControllerGetDeviceListRequest:
+            {
+            iAVController->GetDeviceListL( aMessage );
+            }
+            break;
+            
+        case EAVControllerDeviceDisappearedRequest:
+            {
+            iAVController->DeviceDisappearedRequestL( aMessage );
+            }
+            break;
+            
+        case EAVControllerCancelDeviceDisappearedRequest:
+            {
+            iAVController->CancelDeviceDisappearedRequestL( aMessage );
+            }
+            break;
+
+        case EAVControllerGetDeviceIconRequest:
+            {
+            iAVController->GetDeviceIconRequestL( aMessage );
+            }
+            break;
+            
+        default:
+            {
+            ServiceSearchandBrowseL(aMessage);
+            }
+            break;
+        }
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpAVControllerSession::ServiceSearchandBrowseL
+// Handle client requests.
+// --------------------------------------------------------------------------
+//
+void CUpnpAVControllerSession::ServiceSearchandBrowseL( 
+        const RMessage2& aMessage )
+{
+    switch(aMessage.Function())
+        {
+        case EAVControllerGetBrowseResponseSize:
+            {
+            iAVController->GetBrowseResponseSizeL( aMessage );
+            }
+            break;
+        
+        case EAVControllerCancelGetBrowseResponseSize:
+            {
+            iAVController->CancelGetBrowseResponseSizeL( aMessage );
+            }
+            break;
+        
+        case EAVControllerGetBrowseResponse:
+            {
+            iAVController->GetBrowseResponseL( aMessage );
+            }
+            break;
+                    
+        case EAVControllerGetSearchResponseSize:
+            {
+            iAVController->GetSearchResponseSizeL( aMessage );
+            }
+            break;
+            
+        case EAVControllerCancelGetSearchResponseSize:
+            {
+            iAVController->CancelGetSearchResponseSizeL( aMessage );
+            }
+            break;
+        
+        case EAVControllerGetSearchResponse:
+            {
+            iAVController->GetSearchResponseL( aMessage );
+            }
+            break;
+                    
+        case EAVControllerGetSearchCapabilitiesSize:
+            {
+            iAVController->GetSearchCapabitiesSizeL( aMessage );
+            }
+            break;    
+                            
+        case EAVControllerCancelGetSearchCapabilitiesSize:
+            {
+            iAVController->CancelGetSearchCapabitiesSizeL( aMessage );
+            }
+            break;
+            
+        case EAVControllerGetSearchCapabilities:
+            {
+            iAVController->GetSearchCapabitiesL( aMessage );
+            }
+            break;  
+            
+        default:
+            {
+            ServiceDownloadandUploadL(aMessage);
+            }
+            break;
+        }
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpAVControllerSession::ServiceDownloadandUploadL
+// Handle client requests.
+// --------------------------------------------------------------------------
+//
+void CUpnpAVControllerSession::ServiceDownloadandUploadL( 
+        const RMessage2& aMessage )
+    {
+    switch(aMessage.Function())
+        {
+        case EAVControllerStartDownload:
+            {
+            iAVController->StartDownloadL( aMessage );
+            }
+            break;
+        
+        case EAVControllerCancelDownload:
+            {
+            iAVController->CancelDownloadL( aMessage );
+            }
+            break;
+        
+        case EAVControllerCancelAllDownloads:
+            {
+            iAVController->CancelAllDownloadsL( aMessage );
+            }
+            break;
+        
+        case EAVControllerStartUpload:
+            {
+            iAVController->StartUploadL( aMessage );
+            }
+            break;
+        
+        case EAVControllerCancelUpload:
+            {
+            iAVController->CancelUploadL( aMessage );
+            }
+            break;
+        
+        case EAVControllerCancelAllUploads:
+            {
+            iAVController->CancelAllUploadsL( aMessage );
+            }
+            break;
+            
+        case EAVControllerStartTrackingUploadProgress:
+            {
+            iAVController->StartTrackingUploadProgressL( aMessage );
+            }
+            break;
+        
+        case EAVControllerStartTrackingDownloadProgress:
+            {
+            iAVController->StartTrackingDownloadProgressL( aMessage );
+            }
+            break;
+        
+        case EAVControllerGetDownloadEvent:
+            {
+            iAVController->GetDownloadEventL( aMessage );
+            }
+            break;
+        
+        case EAVControllerCancelDownloadEvent:
+            {
+            iAVController->CancelGetDownloadEventL( aMessage );
+            }
+            break;
+        
+        case EAVControllerGetUploadEvent:
+            {
+            iAVController->GetUploadEventL( aMessage );
+            }
+            break;
+        
+        case EAVControllerCancelUploadEvent:
+            {
+            iAVController->CancelGetUploadEventL( aMessage );
+            }
+            break;
+        
+        case EAVControllerStartDownloadFH:
+            {
+            iAVController->StartDownloadFHL( aMessage );
+            }
+            break;   
+            
+        default:
+            {
+            ServiceCommonL(aMessage);
+            }
+            break;
+        }
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpAVControllerSession::ServiceCommonL
+// Handle client requests.
+// --------------------------------------------------------------------------
+//
+void CUpnpAVControllerSession::ServiceCommonL( const RMessage2& aMessage )
+    {
+    switch(aMessage.Function())
+        {
+        case EAVControllerCreateContainer:
+            {
+            iAVController->CreateContainerL( aMessage );
+            }
+            break;
+        
+        case EAVControllerCancelCreateContainer:
+            {
+            iAVController->CancelCreateContainerL( aMessage );
+            }
+            break;  
+        
+        case EAVControllerDeleteObject:
+            {
+            iAVController->DeleteObjectL( aMessage );
+            }
+            break;
+        
+        case EAVControllerCancelDeleteObject:
+            {
+            iAVController->CancelDeleteObjectL( aMessage );
+            }
+            break;
+                
+        case EAVControllerMonitorConnection:
+            {
+            iAVController->MonitorConnectionL( aMessage );
+            }
+            break;
+        
+        case EAVControllerCancelMonitorConnection:
+            {
+            iAVController->CancelMonitorConnectionL( aMessage );
+            }
+            break;
+        
+        default:
+            {
+            PanicClient( aMessage, EAVControllerServerBadRequest );
+            }
+            break;
+        }
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpAVControllerSession::DeviceDiscoveredL
+// --------------------------------------------------------------------------
+//
 void CUpnpAVControllerSession::DeviceDiscoveredL(
     CUpnpAVDeviceExtended& aDevice )
     {
     iAVController->DeviceDiscoveredL( aDevice );
     }
 
- 
+// --------------------------------------------------------------------------
+// CUpnpAVControllerSession::DeviceDisappearedL
+// --------------------------------------------------------------------------
+// 
 void CUpnpAVControllerSession::DeviceDisappearedL(
     CUpnpAVDeviceExtended& aDevice )
     {
     iAVController->DeviceDisappearedL( aDevice );
     }
 
+// --------------------------------------------------------------------------
+// CUpnpAVControllerSession::DeviceIconDownloadedL
+// --------------------------------------------------------------------------
+// 
+void CUpnpAVControllerSession::DeviceIconDownloadedL(
+    CUpnpAVDeviceExtended& aDevice )
+    {
+    iAVController->DeviceIconDownloadedL( aDevice );
+    }
 
+// --------------------------------------------------------------------------
+// CUpnpAVControllerSession::ConnectionLost
+// --------------------------------------------------------------------------
+// 
 void CUpnpAVControllerSession::ConnectionLost()
     {
     iAVController->ConnectionLost();

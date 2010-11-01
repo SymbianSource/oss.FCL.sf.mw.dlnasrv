@@ -111,7 +111,7 @@ public: // the interface
      * see UPnPItemResolver
      */
     void ResolveL(
-        MUPnPItemResolverObserver& aObserver );
+        MUPnPItemResolverObserver& aObserver, CUpnpAVDevice* aDevice = NULL );
 
     /**
      * see UPnPItemResolver

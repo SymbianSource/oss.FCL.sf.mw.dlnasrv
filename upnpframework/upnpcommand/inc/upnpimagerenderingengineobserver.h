@@ -58,9 +58,9 @@ class MUpnpImageRenderingEngineObserver
          * @param aError any errors that occurred
          * @param aItem the actual item that is playing, trying to play, or
          *        NULL if such is not available for some error condition
-		 * @return response error code
-		 *         KErrNone if the engine should carry on working
-		 *         KErrDisconnected if engine should disconnect
+        * @return response error code
+        *         KErrNone if the engine should carry on working
+        *         KErrDisconnected if engine should disconnect
          */
         virtual TInt RenderAck(
             TInt aError,

@@ -101,7 +101,8 @@ EXPORT_C CUpnpAVDevice* CUpnpAVDevice::NewLC()
 EXPORT_C CUpnpAVDevice::~CUpnpAVDevice()
     {
     delete iName;
-    delete iUuid;            
+    delete iUuid; 
+    delete iModelName;
     }
 
 // --------------------------------------------------------------------------
@@ -112,9 +113,11 @@ EXPORT_C void CUpnpAVDevice::ExternalizeL( RWriteStream& aStream ) const
     {
     __ASSERTD( iUuid, __FILE__, __LINE__ );
     __ASSERTD( iName, __FILE__, __LINE__ );
+    __ASSERTD( iModelName, __FILE__, __LINE__ );
     
     aStream << *iUuid;
     aStream << *iName;
+    aStream << *iModelName;
     aStream.WriteInt32L( (TInt)iDeviceType );
     aStream.WriteInt32L( (TInt)iCopyCapability );
     aStream.WriteInt32L( (TInt)iSearchCapability );
@@ -127,6 +130,7 @@ EXPORT_C void CUpnpAVDevice::ExternalizeL( RWriteStream& aStream ) const
     aStream.WriteInt32L( (TInt)iNextAVTransportUri );
     aStream.WriteInt32L( (TInt)iMaxVolume );
     aStream.WriteInt32L( (TInt)iDlnaCompatible );
+    aStream.WriteInt32L( (TInt)iSeekCapability );
     }
     
 // --------------------------------------------------------------------------
@@ -143,6 +147,10 @@ EXPORT_C void CUpnpAVDevice::InternalizeL( RReadStream& aStream )
     iName = NULL;
     iName = HBufC8::NewL( aStream, KMaxStringLen );
     
+    delete iModelName;
+    iModelName = NULL;
+    iModelName = HBufC8::NewL( aStream, KMaxStringLen );
+    
     iDeviceType = (TUpnpAVDeviceType)aStream.ReadInt32L();
     iCopyCapability = (TBool)aStream.ReadInt32L();
     iSearchCapability = (TBool)aStream.ReadInt32L();
@@ -155,6 +163,7 @@ EXPORT_C void CUpnpAVDevice::InternalizeL( RReadStream& aStream )
     iNextAVTransportUri = (TBool)aStream.ReadInt32L();
     iMaxVolume = (TInt)aStream.ReadInt32L();
     iDlnaCompatible = (TBool)aStream.ReadInt32L();
+    iSeekCapability = (TSeekMode)aStream.ReadInt32L();
     }
 
 // --------------------------------------------------------------------------
@@ -194,6 +203,7 @@ EXPORT_C void CUpnpAVDevice::CopyFromL( const CUpnpAVDevice& aDevice )
     iDeviceType = aDevice.DeviceType();
     SetFriendlyNameL( aDevice.FriendlyName() );
     SetUuidL( aDevice.Uuid() );
+    SetModelNameL( aDevice.ModelName() );
     iCopyCapability = aDevice.CopyCapability();
     iSearchCapability = aDevice.SearchCapability();
     iPauseCapability = aDevice.PauseCapability();
@@ -205,6 +215,7 @@ EXPORT_C void CUpnpAVDevice::CopyFromL( const CUpnpAVDevice& aDevice )
     iNextAVTransportUri = aDevice.NextAVTransportUri();
     iMaxVolume = aDevice.MaxVolume();
     iDlnaCompatible = aDevice.DlnaCompatible();
+    iSeekCapability = aDevice.SeekCapability();
     }
 
 // --------------------------------------------------------------------------
@@ -234,6 +245,25 @@ EXPORT_C const TDesC8& CUpnpAVDevice::FriendlyName() const
         }        
     }
 
+// --------------------------------------------------------------------------
+// CUpnpAVDevice::SetModelNameL
+// See upnpavdevice.h
+// --------------------------------------------------------------------------
+EXPORT_C void CUpnpAVDevice::SetModelNameL( const TDesC8& aName )
+    {
+    HBufC8* tempBuf = aName.AllocL();
+    delete iModelName;
+    iModelName = tempBuf;    
+    }
+    
+// --------------------------------------------------------------------------
+// CUpnpAVDevice::ModelName
+// See upnpavdevice.h
+// --------------------------------------------------------------------------
+EXPORT_C const TDesC8& CUpnpAVDevice::ModelName() const
+    {
+    return (iModelName) ? *iModelName : KNullDesC8();     
+    }
 
 // --------------------------------------------------------------------------
 // CUpnpAVDevice::SetUuidL
@@ -523,7 +553,7 @@ EXPORT_C TBool CUpnpAVDevice::VideoCapability() const
 
 // --------------------------------------------------------------------------
 // CUpnpAVDevice::SetDlnaCompatible
-// See upnpavdeviceextended.h
+// See upnpavdevice.h
 // --------------------------------------------------------------------------
 EXPORT_C void CUpnpAVDevice::SetDlnaCompatible( TBool aDlnaCompatible )
     {
@@ -532,11 +562,30 @@ EXPORT_C void CUpnpAVDevice::SetDlnaCompatible( TBool aDlnaCompatible )
     
 // --------------------------------------------------------------------------
 // CUpnpAVDevice::DlnaCompatible
-// See upnpavdeviceextended.h
+// See upnpavdevice.h
 // --------------------------------------------------------------------------
 EXPORT_C TBool CUpnpAVDevice::DlnaCompatible() const
     {
     return iDlnaCompatible;
+    }
+    
+// --------------------------------------------------------------------------
+// CUpnpAVDevice::SetSeekCapability
+// See upnpavdevice.h
+// --------------------------------------------------------------------------
+EXPORT_C void CUpnpAVDevice::SetSeekCapability( 
+                                CUpnpAVDevice::TSeekMode aSeekCapability )
+    {
+    iSeekCapability = aSeekCapability;
+    }
+    
+// --------------------------------------------------------------------------
+// CUpnpAVDevice::SeekCapability
+// See upnpavdevice.h
+// --------------------------------------------------------------------------
+EXPORT_C CUpnpAVDevice::TSeekMode CUpnpAVDevice::SeekCapability() const
+    {
+    return iSeekCapability;
     }
 
 // End of File

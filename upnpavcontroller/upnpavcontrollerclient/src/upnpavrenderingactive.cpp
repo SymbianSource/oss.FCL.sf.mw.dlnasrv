@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -19,6 +19,7 @@
 
 
 
+#include <utf.h>
 
 #include "upnpavrenderingactive.h"
 
@@ -30,6 +31,7 @@ _LIT( KComponentLogfile, "upnpavcontrollerclient.txt");
 #include "upnplog.h"
 
 const TInt KPositionInfoSize = 15;
+static const TInt KSeekTargetMaxLength = 8; // "00:00:20" -> 8
 
 // ======== MEMBER FUNCTIONS ========
 
@@ -70,17 +72,12 @@ CUPnPAVRenderingActive::CUPnPAVRenderingActive(
 // --------------------------------------------------------------------------
 CUPnPAVRenderingActive::~CUPnPAVRenderingActive()
     {
-    __LOG( "CUPnPAVRenderingActive::~CUPnPAVRenderingActive" );
+    __LOG1( "CUPnPAVRenderingActive::~CUPnPAVRenderingActive %d", this );
     
     Cancel();
     
     delete iBuffer;
     delete iBuffer2;
-
-    if( iMediaServerResourceReserved )
-        {
-        iServer.ReleaseMediaServer( iId );
-        }    
     }
 
 // --------------------------------------------------------------------------
@@ -89,7 +86,7 @@ CUPnPAVRenderingActive::~CUPnPAVRenderingActive()
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::ConstructL()
     {  
-    __LOG( "CUPnPAVRenderingActive::ConstructL" );  
+    __LOG1( "CUPnPAVRenderingActive::ConstructL %d", this );  
     }
 
 // --------------------------------------------------------------------------
@@ -98,7 +95,7 @@ void CUPnPAVRenderingActive::ConstructL()
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::RunL()
     {
-    __LOG( "CUPnPAVRenderingActive::RunL" );
+    __LOG1( "CUPnPAVRenderingActive::RunL %d", this );
     
     switch( iPendingOperation )
         {
@@ -162,14 +159,16 @@ void CUPnPAVRenderingActive::RunL()
             }
             break;
             
-        case EStartMediaServer:
+        case ESeekRelTime:
             {
-            StartMediaServerCompleteL();
+            SeekRelTimeComplete();
             }
             break;
             
         default:
+            {
             __PANICD( __FILE__, __LINE__ );
+            }
             break;            
         }
     }
@@ -180,7 +179,7 @@ void CUPnPAVRenderingActive::RunL()
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::DoCancel()
     {
-    __LOG( "CUPnPAVRenderingActive::DoCancel" );
+    __LOG1( "CUPnPAVRenderingActive::DoCancel %d", this );
     
     switch( iPendingOperation )
         {
@@ -243,15 +242,17 @@ void CUPnPAVRenderingActive::DoCancel()
             iServer.CancelGetPositionInfo( iId );
             }
             break;
-
-        case EStartMediaServer:
+                       
+        case ESeekRelTime:
             {
-            iServer.CancelReserveMediaServer( iId );
+            iServer.CancelSeekRelTime( iId );
             }
-            break;          
+            break;
                        
         default:
+            {
             __PANICD( __FILE__, __LINE__ );
+            }
             break;            
         }    
     }
@@ -300,71 +301,13 @@ void CUPnPAVRenderingActive::RemoveObserver()
     }
 
 // --------------------------------------------------------------------------
-// CUPnPAVRenderingActive::ReserveLocalMSServicesL
-// See upnpavrenderingactive.h
-// --------------------------------------------------------------------------
-void CUPnPAVRenderingActive::ReserveLocalMSServicesL()
-    {
-    __LOG( "CUPnPAVRenderingActive::ReserveLocalMSServicesL" );
-    
-    ResetL();
-    
-    if( iMediaServerResourceReserved )
-        {
-        if( iObserver )
-            {
-            iObserver->ReserveLocalMSServicesCompleted( KErrNone );
-            }
-        }
-    else
-        {
-        iPendingOperation = EStartMediaServer;
-        iServer.ReserveMediaServer( iId, iStatus );
-        SetActive();    
-        
-        }    
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPAVRenderingActive::CancelReserveLocalMSServicesL
-// See upnpavrenderingactive.h
-// --------------------------------------------------------------------------
-void CUPnPAVRenderingActive::CancelReserveLocalMSServicesL()
-    {
-    __LOG( "CUPnPAVRenderingActive::CancelReserveLocalMSServicesL" );
-    
-    if( iPendingOperation == EStartMediaServer )
-        {
-        Cancel();
-        }
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPAVRenderingActive::ReleaseLocalMSServicesL
-// See upnpavrenderingactive.h
-// --------------------------------------------------------------------------
-void CUPnPAVRenderingActive::ReleaseLocalMSServicesL()
-    {
-    __LOG( "CUPnPAVRenderingActive::ReleaseLocalMSServicesL" );
-    
-    ResetL();
-    
-    if( iMediaServerResourceReserved )
-        {
-        iMediaServerResourceReserved = EFalse;
-        
-        User::LeaveIfError( iServer.ReleaseMediaServer( iId ) );        
-        }
-    }
-
-// --------------------------------------------------------------------------
 // CUPnPAVRenderingActive::SetURIL
 // See upnpavrenderingactive.h
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::SetURIL( const TDesC8& aURI,
     const CUpnpItem& aItem )
     {
-    __LOG( "CUPnPAVRenderingActive::SetURIL" );
+    __LOG1( "CUPnPAVRenderingActive::SetURIL %d", this );
     
     ResetL();
         
@@ -392,7 +335,7 @@ void CUPnPAVRenderingActive::SetURIL( const TDesC8& aURI,
 void CUPnPAVRenderingActive::SetNextURIL( const TDesC8& aURI,
     const CUpnpItem& aItem )    
     {
-    __LOG( "CUPnPAVRenderingActive::SetNextURIL" );
+    __LOG1( "CUPnPAVRenderingActive::SetNextURIL %d", this );
     
     ResetL();
     
@@ -420,7 +363,7 @@ void CUPnPAVRenderingActive::SetNextURIL( const TDesC8& aURI,
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::PlayL()
     {
-    __LOG( "CUPnPAVRenderingActive::PlayL" );
+    __LOG1( "CUPnPAVRenderingActive::PlayL %d", this );
     
     ResetL();
     iPendingOperation = EPlay;
@@ -434,7 +377,7 @@ void CUPnPAVRenderingActive::PlayL()
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::StopL()
     {
-    __LOG( "CUPnPAVRenderingActive::StopL" );
+    __LOG1( "CUPnPAVRenderingActive::StopL %d", this );
     
     ResetL();
     iPendingOperation = EStop;
@@ -448,7 +391,7 @@ void CUPnPAVRenderingActive::StopL()
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::PauseL()
     {
-    __LOG( "CUPnPAVRenderingActive::PauseL" );
+    __LOG1( "CUPnPAVRenderingActive::PauseL %d", this );
     
     ResetL();
     iPendingOperation = EPause;
@@ -462,7 +405,7 @@ void CUPnPAVRenderingActive::PauseL()
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::SetVolumeL( TInt aVolumeLevel )
     {
-    __LOG( "CUPnPAVRenderingActive::SetVolumeL" );
+    __LOG1( "CUPnPAVRenderingActive::SetVolumeL %d", this );
     
     ResetL();
     iPendingOperation = ESetVolume;
@@ -476,7 +419,7 @@ void CUPnPAVRenderingActive::SetVolumeL( TInt aVolumeLevel )
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::GetVolumeL()
     {
-    __LOG( "CUPnPAVRenderingActive::GetVolumeL" );
+    __LOG1( "CUPnPAVRenderingActive::GetVolumeL %d", this );
     
     ResetL();
     iPendingOperation = EGetVolume;
@@ -490,7 +433,7 @@ void CUPnPAVRenderingActive::GetVolumeL()
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::SetMuteL( TBool aMute )
     {
-    __LOG( "CUPnPAVRenderingActive::SetMuteL" );
+    __LOG1( "CUPnPAVRenderingActive::SetMuteL %d", this );
     
     ResetL();
     iPendingOperation = ESetMute;
@@ -504,7 +447,7 @@ void CUPnPAVRenderingActive::SetMuteL( TBool aMute )
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::GetMuteL()
     {
-    __LOG( "CUPnPAVRenderingActive::GetMuteL" );
+    __LOG1( "CUPnPAVRenderingActive::GetMuteL %d", this );
     
     ResetL();
     iPendingOperation = EGetMute;
@@ -518,7 +461,7 @@ void CUPnPAVRenderingActive::GetMuteL()
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::GetPositionInfoL()
     {
-    __LOG( "CUPnPAVRenderingActive::GetPositionInfoL" );
+    __LOG1( "CUPnPAVRenderingActive::GetPositionInfoL %d", this );
     
     ResetL();
   
@@ -532,12 +475,33 @@ void CUPnPAVRenderingActive::GetPositionInfoL()
     }
 
 // --------------------------------------------------------------------------
+// CUPnPAVRenderingActive::SeekRelTimeL
+// See upnpavrenderingactive.h
+// --------------------------------------------------------------------------
+void CUPnPAVRenderingActive::SeekRelTimeL( const TTime& aDesiredTime ) 
+    {
+    __LOG1( "CUPnPAVRenderingActive::SeekRelTimeL %d", this );
+    
+    ResetL();
+  
+    _LIT16( KHourMinSecFormatString, "%:0%*H%:1%T%:2%S%:3" ); //Current value equals to R_QTN_TIME_DURAT_LONG.
+    TBuf<KSeekTargetMaxLength> desiredTimeString;
+    aDesiredTime.FormatL( desiredTimeString, KHourMinSecFormatString );
+
+    iBuffer = CnvUtfConverter::ConvertFromUnicodeToUtf8L( desiredTimeString );
+    iBufferPtr.Set( iBuffer->Des() );
+    iPendingOperation = ESeekRelTime;
+    iServer.SeekRelTime( iId, iBufferPtr, iStatus );
+    SetActive();   
+    }
+
+// --------------------------------------------------------------------------
 // CUPnPAVRenderingActive::ResetL
 // See upnpavrenderingactive.h
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::ResetL()
     {
-    __LOG( "CUPnPAVRenderingActive::ResetL" );
+    __LOG1( "CUPnPAVRenderingActive::ResetL %d", this );
     
     if( IsActive() )
         {
@@ -555,7 +519,7 @@ void CUPnPAVRenderingActive::ResetL()
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::SetURICompleteL()
     {
-    __LOG( "CUPnPAVRenderingActive::SetURICompleteL" );
+    __LOG1( "CUPnPAVRenderingActive::SetURICompleteL %d", this );
     
     if( iObserver )
         {
@@ -576,7 +540,7 @@ void CUPnPAVRenderingActive::SetURICompleteL()
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::SetNextURICompleteL()
     {
-    __LOG( "CUPnPAVRenderingActive::SetNextURICompleteL" );
+    __LOG1( "CUPnPAVRenderingActive::SetNextURICompleteL %d", this );
     
     if( iObserver )
         {
@@ -597,7 +561,7 @@ void CUPnPAVRenderingActive::SetNextURICompleteL()
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::PlayCompleteL()
     {
-    __LOG( "CUPnPAVRenderingActive::PlayCompleteL" );
+    __LOG1( "CUPnPAVRenderingActive::PlayCompleteL %d", this );
     
     if( iObserver )
         {
@@ -619,7 +583,7 @@ void CUPnPAVRenderingActive::PlayCompleteL()
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::StopCompleteL()
     {
-    __LOG( "CUPnPAVRenderingActive::StopCompleteL" );
+    __LOG1( "CUPnPAVRenderingActive::StopCompleteL %d", this );
     
     if( iObserver )
         {
@@ -641,7 +605,7 @@ void CUPnPAVRenderingActive::StopCompleteL()
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::PauseCompleteL()
     {
-    __LOG( "CUPnPAVRenderingActive::PauseCompleteL" );
+    __LOG1( "CUPnPAVRenderingActive::PauseCompleteL %d", this );
 
     if( iObserver )
         {
@@ -664,7 +628,7 @@ void CUPnPAVRenderingActive::PauseCompleteL()
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::SetVolumeCompleteL()
     {
-    __LOG( "CUPnPAVRenderingActive::SetVolumeCompleteL" );
+    __LOG1( "CUPnPAVRenderingActive::SetVolumeCompleteL %d", this );
     
     if( iObserver )
         {
@@ -685,7 +649,7 @@ void CUPnPAVRenderingActive::SetVolumeCompleteL()
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::GetVolumeCompleteL()
     {
-    __LOG( "CUPnPAVRenderingActive::GetVolumeCompleteL" );
+    __LOG1( "CUPnPAVRenderingActive::GetVolumeCompleteL %d", this );
     
     if( iObserver )
         {
@@ -706,7 +670,7 @@ void CUPnPAVRenderingActive::GetVolumeCompleteL()
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::SetMuteCompleteL()
     {
-    __LOG( "CUPnPAVRenderingActive::SetMuteCompleteL" );
+    __LOG1( "CUPnPAVRenderingActive::SetMuteCompleteL %d", this );
     
     if( iObserver )
         {
@@ -727,7 +691,7 @@ void CUPnPAVRenderingActive::SetMuteCompleteL()
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::GetMuteCompleteL()
     {
-    __LOG( "CUPnPAVRenderingActive::GetMuteCompleteL" );
+    __LOG1( "CUPnPAVRenderingActive::GetMuteCompleteL %d", this );
     
     if( iObserver )
         {
@@ -748,7 +712,7 @@ void CUPnPAVRenderingActive::GetMuteCompleteL()
 // --------------------------------------------------------------------------
 void CUPnPAVRenderingActive::PositionInfoCompleteL()
     {
-    __LOG( "CUPnPAVRenderingActive::PositionInfoCompleteL" );
+    __LOG1( "CUPnPAVRenderingActive::PositionInfoCompleteL %d", this );
     
     if( iObserver )
         {
@@ -764,28 +728,26 @@ void CUPnPAVRenderingActive::PositionInfoCompleteL()
             }
         }            
     }
-
+    
 // --------------------------------------------------------------------------
-// CUPnPAVRenderingActive::StartMediaServerCompleteL
+// CUPnPAVRenderingActive::SeekRelTimeComplete
 // See upnpavrenderingactive.h
 // --------------------------------------------------------------------------
-void CUPnPAVRenderingActive::StartMediaServerCompleteL()
+void CUPnPAVRenderingActive::SeekRelTimeComplete()
     {
-    __LOG( "CUPnPAVRenderingActive::StartMediaServerCompleteL" );
+    __LOG1( "CUPnPAVRenderingActive::SeekRelTimeCompleteL %d", this );
     
     if( iObserver )
         {
-
-        if( iStatus.Int() == EAVControllerStartMediaServerCompleted )
+        if( iStatus.Int() == EAVControllerSeekCompleted )
             {
-            iMediaServerResourceReserved = ETrue;
-            iObserver->ReserveLocalMSServicesCompleted( KErrNone );
+            iObserver->InteractOperationComplete( KErrNone, EUPnPAVSeek );    
             }
         else
             {
-            iObserver->ReserveLocalMSServicesCompleted( iStatus.Int() );
+            iObserver->InteractOperationComplete( iStatus.Int(),EUPnPAVSeek); 
             }
-        
         }
-    }    
+    }
+
 // end of file

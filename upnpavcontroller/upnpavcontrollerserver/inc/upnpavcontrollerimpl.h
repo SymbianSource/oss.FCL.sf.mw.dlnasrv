@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -26,24 +26,16 @@
 
 // INDLUDE FILES
 #include <e32base.h>
-#include <upnpavcontrolpointobserver.h>
-#include <upnpmediaserverclient.h>
 #include "upnpavcontrollerglobals.h"
-#include "upnpconnectionmonitorobserver.h"
 
 // FORWARD DECLARATIONS
-class MUPnPAVDeviceObserver;
-class MUPnPAVMediaObserver;
-class MUPnPAVFileObserver;
+
 class CUPnPPlaybackSession;
 class CUpnpAVControllerServer;
 class CUpnpAVDevice;
-class CUpnpHttpMessage;
-class CUpnpDevice;
 class CUpnpAVDeviceExtended;
 class CUPnPBrowsingSession;
 class CUpnpDeviceDiscoveryMessage;
-
 class CUPnPUploadSession;
 class CUPnPDownloadSession;
 
@@ -52,11 +44,10 @@ class CUPnPDownloadSession;
  *  Rendering and browsing sessions are created from this session.
  *  Handles device discovery and fetching of device listst.
  *
- *  @lib upnpavcontrollerclient.lib
+ *  @exe upnpavcontrollerserver.exe
  *  @since S60 v3.1
  */
-class CUPnPAVControllerImpl :   public CBase,
-                                public MUPnPConnectionMonitorObserver
+class CUPnPAVControllerImpl : public CBase
                                 
     {
 
@@ -65,14 +56,11 @@ public:
     /**
      * Two-phased constructor.
      *
-     * @param aControlPoint control point reference
      * @param aClient media server client reference
-     * @param aDispatcher callback dispatcher reference
      * @param aServer server class reference
      */
     static CUPnPAVControllerImpl* NewL
         (
-        RUpnpMediaServerClient& aClient,
         CUpnpAVControllerServer& aServer
         );
     
@@ -86,31 +74,23 @@ private:
     /**
      * Private constructor
      *
-     * @param aControlPoint control point reference
      * @param aClient media server client reference
-     * @param aDispatcher callback dispatcher reference
      * @param aServer server class reference          
      */
-    CUPnPAVControllerImpl
-    (
-    RUpnpMediaServerClient& aClient,
-    CUpnpAVControllerServer& aServer
-    );    
+    CUPnPAVControllerImpl( CUpnpAVControllerServer& aServer );    
     
     /**
      * Destructor
      */
     void ConstructL();    
 
-public: // From MUPnPConnectionMonitorObserver
-    
+public: // New functions
+
     /**
-     * See upnpconnectionmonitorobserver.h
+     * Handles connection lost.
      */
     void ConnectionLost();
     
-public: // New functions
-
     /**
      * Handles UPnP device discoveries.
      * @since Series 60 2.6
@@ -124,7 +104,12 @@ public: // New functions
      * @param aDevice Device that disappeared.
      */
     void DeviceDisappearedL( CUpnpAVDeviceExtended& aDevice );
-    
+
+    /**
+     * Handles UPnP device icon download completions.
+     * @param aDevice Device that's icon was downloaded.
+     */
+    void DeviceIconDownloadedL( CUpnpAVDeviceExtended& aDevice );
 
     /**
      * Enables device discovery by storing a message to server side, which
@@ -159,7 +144,14 @@ public: // New functions
      * @param aMessage message
      */
     void GetDeviceListL( const RMessage2& aMessage );
-    
+
+    /**
+     * Returns the icon to client side.
+     *
+     * @param aMessage message
+     */
+    void GetDeviceIconRequestL( const RMessage2& aMessage );
+
     /**
      * Creates a rendering session.
      *
@@ -330,6 +322,27 @@ public: // New functions
     void CancelGetPositionInfoL( const RMessage2& aMessage );
     
     /**
+     * Send the seek action with unit REL_TIME.
+     *
+     * @param aMessage message
+     */
+    void SeekRelTimeL( const RMessage2& aMessage );
+        
+    /**
+     * Get initial state of the renderer
+     *
+     * @param aMessage message
+     */
+    void GetRendererStateL( const RMessage2& aMessage );
+    
+    /**
+     * Cancels seeking with unit REL_TIME (basically just ignores the result).
+     *
+     * @param aMessage message
+     */
+    void CancelSeekRelTimeL( const RMessage2& aMessage );
+    
+    /**
      * Create a browsing session
      *
      * @param aMessage message
@@ -460,48 +473,143 @@ public: // New functions
     void MonitorConnectionL( const RMessage2& aMessage );
     
     /**
-     * Cancels the msg.
+     * Cancels the connection monitoring message.
      *
      * @param aMessage message
      */
     void CancelMonitorConnectionL( const RMessage2& aMessage );
-
+    
+    /**
+     * Create a download session
+     *
+     * @param aMessage message
+     */
     void CreateDownloadSessionL( const RMessage2& aMessage );
     
+    /**
+     * Destroy the download session
+     *
+     * @param aMessage message
+     */
     void DestroyDownloadSessionL( const RMessage2& aMessage );
-
+    
+    /**
+     * Start download
+     *
+     * @param aMessage message
+     */
     void StartDownloadL( const RMessage2& aMessage );
     
+    /**
+     * Start FHL download.
+     *
+     * @param aMessage message
+     */
     void StartDownloadFHL( const RMessage2& aMessage );
     
+    /**
+     * Cancel download
+     *
+     * @param aMessage message
+     */
     void CancelDownloadL( const RMessage2& aMessage );
-
+    
+    /**
+     * Cancel all download
+     *
+     * @param aMessage message
+     */
     void CancelAllDownloadsL( const RMessage2& aMessage );
     
+    /**
+     * Start tracking the download progress
+     *
+     * @param aMessage message
+     */
     void StartTrackingDownloadProgressL( const RMessage2& aMessage );
-
+    
+    /**
+     * Stop tracking the download progress
+     *
+     * @param aMessage message
+     */
     void StopTrackingDownloadProgressL( const RMessage2& aMessage );
-
+    
+    /**
+     * Get download event
+     *
+     * @param aMessage message
+     */
     void GetDownloadEventL( const RMessage2& aMessage );
     
+    /**
+     * Cancel download event
+     *
+     * @param aMessage message
+     */
     void CancelGetDownloadEventL( const RMessage2& aMessage );
 
+    /**
+     * Create upload session
+     *
+     * @param aMessage message
+     */
     void CreateUploadSessionL( const RMessage2& aMessage );
     
+    /**
+     * Destroy upload session
+     *
+     * @param aMessage message
+     */
     void DestroyUploadSessionL( const RMessage2& aMessage );    
-
+    
+    /**
+     * Start upload
+     *
+     * @param aMessage message
+     */
     void StartUploadL( const RMessage2& aMessage );
     
+    /**
+     * Cancel upload
+     *
+     * @param aMessage message
+     */
     void CancelUploadL( const RMessage2& aMessage );
-
+    
+    /**
+     * Cancel all upload
+     *
+     * @param aMessage message
+     */
     void CancelAllUploadsL( const RMessage2& aMessage );
     
+    /**
+     * Start tracking the upload progress
+     *
+     * @param aMessage message
+     */
     void StartTrackingUploadProgressL( const RMessage2& aMessage );
-
+    
+    /**
+     * Stop tracking upload progress
+     *
+     * @param aMessage message
+     */
     void StopTrackingUploadProgressL( const RMessage2& aMessage );
-
+    
+    /**
+     * Get upload event
+     *
+     * @param aMessage message
+     */
     void GetUploadEventL( const RMessage2& aMessage );
     
+    /**
+     * Cancel get upload event
+     *
+     * @param aMessage message
+     */
     void CancelGetUploadEventL( const RMessage2& aMessage );
 
 private:
@@ -516,9 +624,7 @@ private:
         TAVControllerDeviceDiscovery aType );
 
 private:
-    
-    RUpnpMediaServerClient&     iMediaServer; // Not own       
-    
+       
     CUpnpAVControllerServer&    iServer; // Not own       
     
     RMessage2*                  iDeviceDiscoveryMsg; // Own

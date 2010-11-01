@@ -103,7 +103,8 @@ EXPORT_C TBool CUpnpBrowseCommand::IsAvailableL()
     // then query command availability.
     TBool available = EFalse;
     TRAP_IGNORE(
-        CUpnpCommand* temp = UpnpCommandMain::LoadL( UpnpCommand::ECommandBrowse );
+        CUpnpCommand* temp = UpnpCommandMain::LoadL( 
+                                        UpnpCommand::ECommandBrowse );
         CleanupStack::PushL( temp );
         available = temp->IsAvailableL();
         CleanupStack::PopAndDestroy( temp );

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -15,12 +15,6 @@
 *
 */
 
-
-
-
-
-
-
 // INCLUDE FILES
 // System
 #include <in_sock.h>
@@ -28,62 +22,63 @@
 
 // upnp stack api
 #include <upnpdevice.h>
-#include <upnpcontainer.h>
 #include <upnpservice.h>
+#include <upnpstring.h>
+
+// dlnasrv / mediaserver api
+#include <upnpcontainer.h>
 #include <upnpitem.h>
 #include <upnpelement.h>
-#include <upnpstring.h>
-#include <upnpmediaserverclient.h>
 #include <upnpdlnaprotocolinfo.h>
-#include <upnpavcontrolpoint.h>
 
-// upnpframework / xmlparser api
+// dlnasrv / xmlparser api
 #include "upnpxmlparser.h"
 
-// upnpframework / avcontroller api
+// dlnasrv / avcontroller api
 #include "upnpavcontrollerglobals.h"
 
-// upnpframework / avcontroller helper api
+// dlnasrv / avcontroller helper api
 #include "upnpitemutility.h"
 #include "upnpconstantdefs.h" // for upnp-specific stuff
 
-// upnpframework / internal api's
+// dlnasrv / internal api
 #include "upnpmetadatafetcher.h"
 #include "upnpcommonutils.h"
 #include "upnpcdsreselementutility.h"
 #include "upnpxmleventparser.h"
 
-// avcontroller internal
+// dlnasrv / avcontroller internal
 #include "upnpavcontrollerserver.h"
 #include "upnpavrequest.h"
-#include "upnpfilesharingactive.h"
 #include "upnpavdispatcher.h"
 #include "upnpaverrorhandler.h"
 #include "upnpavdeviceextended.h"
 #include "upnpdevicerepository.h"
 #include "upnpplaybacksession.h"
-#include "upnpperiodic.h"
+#include "upnpavcontrolpoint.h"
+#include "upnpavcpstrings.h"
+
+using namespace UpnpAVCPStrings;
 
 _LIT( KComponentLogfile, "upnpavcontrollerserver.txt");
 #include "upnplog.h"
 
-_LIT8( KPlaying,            "PLAYING" );
-_LIT8( KPaused,             "PAUSED_PLAYBACK" );
-_LIT8( KStopped,            "STOPPED" );
 _LIT8( KNormalSpeed,        "1" );
 _LIT8( KMasterVolume,       "Master" );
 _LIT8( KMuteOn,             "1" );
 _LIT8( KMuteOff,            "0" );
 _LIT8( KAsterisk,           "*" );
+_LIT8( KConnectioMgr,       "urn:upnp-org:serviceId:ConnectionManager" );
+_LIT8( KInput,              "Input" );
+_LIT8( KDefaultPeerConnectionID, "-1" );
 
 const TInt KDefaultInstanceId   = 0;
-const TInt KExpectedCount       = 1;
 const TInt KMaxVolume           = 100;
+const TInt KMaxIntLength        = 10;
 
-// Timer to wait until sending the play action after set transport uri.
-// For some reason, some equipments can not responce play action 
-// immediately after set transport uri, eg. Kiss 1600.  
-const TInt KPlayDelayTimerInterval = 1000000;
+_LIT8( KNoMedia, "NO_MEDIA_PRESENT" );
+_LIT8( KPlaying, "PLAYING" );
+_LIT8( KPausedPlayback, "PAUSED_PLAYBACK" );
 
 // ======== MEMBER FUNCTIONS ========
 
@@ -93,14 +88,13 @@ const TInt KPlayDelayTimerInterval = 1000000;
 // --------------------------------------------------------------------------
 CUPnPPlaybackSession* CUPnPPlaybackSession::NewL
     (
-    RUpnpMediaServerClient& aClient,
     CUpnpAVControllerServer& aServer,
     TInt aSessionId,
     const TDesC8& aUuid
     )
     {
     CUPnPPlaybackSession* self = new (ELeave) CUPnPPlaybackSession(
-        aClient, aServer, aSessionId );
+        aServer, aSessionId );
     CleanupStack::PushL( self );
     self->ConstructL( aUuid );
     CleanupStack::Pop( self );
@@ -113,19 +107,22 @@ CUPnPPlaybackSession* CUPnPPlaybackSession::NewL
 // --------------------------------------------------------------------------
 CUPnPPlaybackSession::CUPnPPlaybackSession
     (
-    RUpnpMediaServerClient& aClient,
     CUpnpAVControllerServer& aServer,
     TInt aSessionId
     ):
     iServer( aServer ),
-    iMediaServer( aClient ),
     iSessionId( aSessionId ),
-    iInstanceId( KDefaultInstanceId ),
+    iAVTInstanceId( KDefaultInstanceId ),
+    iRCInstanceId( KDefaultInstanceId ),
+    iConnectionId( KErrNotFound ),
     iIPSessionIdCommand( KErrNotFound ),
     iIPSessionIdSetting( KErrNotFound ),
     iEventingActive( EFalse ),
+    iPlaybackState( EUninitialized ),
     iMuteState( EUnknown ),
-    iVolume( -1 )
+    iVolume( KErrNotFound ),
+    iInitialEventReceived(EFalse),
+    iPreviousTransportState( CUPnPAVTEvent::ENoMediaPresent )
     {
     }
 
@@ -137,15 +134,14 @@ CUPnPPlaybackSession::~CUPnPPlaybackSession()
     {
     __LOG( "CUPnPPlaybackSession::~CUPnPPlaybackSession" );
     
-    if( iPlaybackState == EPlaying || iPlaybackState == EPaused ||
-        iPlaybackState == EPlaySent )
+    if( ( iPlaybackState == EPlaying || iPlaybackState == EPaused ) && 
+         !iInitialEventReceived )
         {
         if( iDevice && iServer.DeviceRepository().IsWlanActive() )
             {
             __LOG( "~CUPnPPlaybackSession - \
 playback still ongoing, send stop" );    
-            TRAP_IGNORE( iServer.ControlPoint().AvtStopActionL( 
-                iDevice->Uuid(), iInstanceId ) );            
+            TRAP_IGNORE( EmergencyStopL() );
             }
         else
             {
@@ -153,27 +149,12 @@ playback still ongoing, send stop" );
 playback still ongoing, wlan not active" );    
             }    
         }
-        
-    if( iSharedItem && iItemShared && iFileSharing )
-        {
-        TRAP_IGNORE( iFileSharing->UnShareItemL( iSharedItem->Id() ) );
-        }
-
-    if( iNextSharedItem && iNextItemShared && iFileSharing )
-        {
-        TRAP_IGNORE( iFileSharing->UnShareItemL( iNextSharedItem->Id() ) );
-        }
-    delete iFileSharing;
-        
-    //iMediaServer.Close();
-
-    delete iSharedItem;
-    delete iNextSharedItem;
 
     delete iEventMessage;
     delete iSettingMessage;
     delete iCommandMessage;
     delete iDeviceMessage;
+    delete iInitialEventMsg;
     
     delete iLocalMediaServerUuid;
     delete iEventParser;
@@ -192,12 +173,16 @@ playback still ongoing, wlan not active" );
         
     delete iDevice;        
     
-    // delete the playdelay timer
-    if( iPlayDelayTimer )
+    delete iPInfoForPrevious;
+    delete iCurrentUri;
+    delete iCurrentItem;
+    
+    if( iTimer )
         {
-        iPlayDelayTimer->Cancel();
-        delete iPlayDelayTimer;
+        iTimer->Cancel();
+        delete iTimer;
         }
+	delete iUuid;
     }
 
 // --------------------------------------------------------------------------
@@ -207,8 +192,6 @@ playback still ongoing, wlan not active" );
 void CUPnPPlaybackSession::ConstructL( const TDesC8& aUuid )
     {
     __LOG( "CUPnPPlaybackSession::ConstructL" );
-
-    iFileSharing = CUPnPFileSharingActive::NewL();
     
     iEventParser = CUPnPXMLEventParser::NewL();
     
@@ -222,12 +205,12 @@ void CUPnPPlaybackSession::ConstructL( const TDesC8& aUuid )
             {
             __LOG( "CUPnPPlaybackSession::ConstructL - Local MS found!" );
             
-            __ASSERTD( !iLocalMediaServerUuid, __FILE__, __LINE__ );
+            __ASSERT( !iLocalMediaServerUuid, __FILE__, __LINE__ );
             iLocalMediaServerUuid = devList[i]->Uuid().AllocL();
             }
         if( devList[ i ]->Uuid() == aUuid )
             {
-            __ASSERTD( !iDevice, __FILE__, __LINE__ );
+            __ASSERT( !iDevice, __FILE__, __LINE__ );
             iDevice = CUpnpAVDeviceExtended::NewL( *devList[ i ] );
             }
         }        
@@ -235,36 +218,194 @@ void CUPnPPlaybackSession::ConstructL( const TDesC8& aUuid )
         {
         User::Leave( KErrNotFound );
         }
+    
+    iUuid = HBufC8::NewL( aUuid.Length() );
+    TPtr8 uuidPtr( iUuid->Des() );
+    uuidPtr.Copy( aUuid );
+    
+    iTimer = CUPnPAVTimer::NewL( *this, CUPnPAVTimer::ETimerFailSafe );
 
-    // create the playdelaytimer
-    iPlayDelayTimer = CUPnPPeriodic::NewL( CActive::EPriorityStandard );
     }
     
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::CpDeviceL
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+const CUpnpDevice* CUPnPPlaybackSession::CpDeviceL()
+    {
+    const CUpnpDevice* device = iServer.ControlPoint().Device( iUuid->Des() );
+    if( !device )
+        {
+		// Control point resets device information once renderer or wlan 
+		// connection lost. Avoid panicing by leaving.
+        __LOG( "CUPnPPlaybackSession::CpDeviceL - no device, leaving" );
+        User::Leave( KErrNotReady );
+        }
+    return device;
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::ActionResponseL
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::ActionResponseL( CUpnpAction* aAction )
+    {
+    if ( aAction->Name().Compare( KSetVolume ) == 0 )
+        {
+        RcSetVolumeResponse(
+            aAction->Error(),
+            aAction->ArgumentValue( KDesiredVolume ) );
+        }
+    else if ( aAction->Name().Compare( KGetVolume ) == 0 )
+        {
+        RcVolumeResponse( 
+            aAction->Error(),
+            aAction->ArgumentValue( KCurrentVolume ) );
+        }
+    else if ( aAction->Name().Compare( KSetMute ) == 0 )
+        {
+        RcSetMuteResponse( 
+            aAction->Error(),
+            aAction->ArgumentValue( KDesiredMute ) );
+        }
+    else if ( aAction->Name().Compare( KGetMute ) == 0 )
+        {
+        RcMuteResponse( 
+             aAction->Error(),
+             aAction->ArgumentValue( KCurrentMute ) );
+        }
+    else if ( aAction->Name().Compare( KSetAVTransportURI ) == 0 )
+        {
+        AvtSetTransportUriResponse(
+            aAction->Error() );
+        }
+    else if ( aAction->Name().Compare( KGetMediaInfo ) == 0 )
+        {
+        AvtGetMediaInfoResponse(
+            aAction->Error(),
+            aAction->ArgumentValue( KCurrentURI ) );
+        }
+    else if ( aAction->Name().Compare( KGetTransportInfo ) == 0 )
+        {
+        AvtGetTransportInfoResponse(
+            aAction->Error(),
+            aAction->ArgumentValue( KCurrentTransportState ) );
+        }
+    else if ( aAction->Name().Compare( KGetPositionInfo ) == 0 )
+        {
+        AvtPositionInfoResponse(
+            aAction->Error(),
+            aAction->ArgumentValue( KTrackDuration ),
+            aAction->ArgumentValue( KRelTime ) );
+        }
+    else if ( aAction->Name().Compare( KStop ) == 0 )
+        {				
+        AvtStopResponse(
+            aAction->Error() );
+        }
+    else if ( aAction->Name().Compare( KPlay ) == 0 )
+        {				
+        AvtPlayResponse(
+            aAction->Error() );
+        }
+    else if ( aAction->Name().Compare( KPause ) == 0 )
+        {		
+        AvtPauseResponse(
+            aAction->Error() );
+        }
+    else if ( aAction->Name().Compare( KSeek ) == 0 )
+        {	
+        AvtSeekResponse(
+            aAction->Error() );
+        }
+    else if (aAction->Name().Compare( KPrepareForConnection ) == 0)
+        {
+        TLex8 connectionLex1( aAction->ArgumentValue( KConnectionId ) );
+        TInt connectionId;
+        User::LeaveIfError( connectionLex1.Val( connectionId ) );
+        TLex8 transportLex1( aAction->ArgumentValue( KAVTransportId ) );
+        TInt transportId;
+        User::LeaveIfError( transportLex1.Val( transportId ) );
+        TLex8 rscLex3( aAction->ArgumentValue( KRcsID ) );
+        TInt rscId;
+        User::LeaveIfError( rscLex3.Val( rscId ) );
+        CmPrepareResponse(
+            aAction->Error(),
+            connectionId,
+            transportId,
+            rscId );
+        }
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::StateUpdatedL
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::StateUpdatedL(CUpnpService* aService)
+    {
+    if (aService->ServiceType().Match( KRenderingControl ) != KErrNotFound )
+        {
+        CUpnpStateVariable* lastChange = aService->StateVariable( KLastChange );
+        if( lastChange ) 
+            {
+            RcLastChangeEvent(
+                lastChange->Value() );
+            }
+        }
+    else if (aService->ServiceType().Match( KAVTransport ) != KErrNotFound )
+        {
+        CUpnpStateVariable* lastChange = aService->StateVariable( KLastChange );
+        if( lastChange )
+            {
+            AvtLastChangeEvent(
+                lastChange->Value() );
+            }
+        }
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::HttpResponseL
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::HttpResponseL( CUpnpHttpMessage* /*aMessage*/ )
+    {
+    // No implementation required
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::DeviceDiscoveredL
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::DeviceDiscoveredL( CUpnpDevice* /*aDevice*/ )
+    {
+    // No implementation required
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::DeviceDisappearedL
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::DeviceDisappearedL( CUpnpDevice* /*aDevice*/ )    {
+    // No implementation required
+    }
+
 // --------------------------------------------------------------------------
 // CUPnPPlaybackSession::RcSetVolumeResponse
 // See upnpplaybacksession.h
 // --------------------------------------------------------------------------
 void CUPnPPlaybackSession::RcSetVolumeResponse(
-    const TDesC8& /*aUuid*/,
-    TInt aSessionId,
     TInt aErr, 
-    const TDesC8& /*aInstance*/, 
-    const TDesC8& /*aChannel*/, 
     const TDesC8& aDesiredVolume )
     {
     __LOG1( "CUPnPPlaybackSession::RcSetVolumeResponse: %d", aErr );
     
-    __ASSERTD( iIPSessionIdSetting == aSessionId, __FILE__, __LINE__ );
-    
     iServer.Dispatcher().UnRegister( iIPSessionIdSetting );
-    //iSettingPending = EFalse;
     iIPSessionIdSetting = KErrNotFound;
     
     if( iSettingMessage )
         {
         aErr = UPnPAVErrorHandler::ConvertToSymbianErrorCode( aErr,
             EUPnPRenderingControlError );    
-        
         if( aErr == KErrNone )
             {
             TInt vol;
@@ -313,19 +454,12 @@ void CUPnPPlaybackSession::RcSetVolumeResponse(
 // See upnpplaybacksession.h
 // --------------------------------------------------------------------------
 void CUPnPPlaybackSession::RcVolumeResponse(
-    const TDesC8& /*aUuid*/,
-    TInt aSessionId,
     TInt aErr, 
-    const TDesC8& /*aInstance*/, 
-    const TDesC8& /*aChannel*/, 
     const TDesC8& aCurrentVolume)
     {
     __LOG1( "CUPnPPlaybackSession::RcVolumeResponse: %d", aErr );    
     
-    __ASSERTD( iIPSessionIdSetting == aSessionId, __FILE__, __LINE__ );
-    
     iServer.Dispatcher().UnRegister( iIPSessionIdSetting );
-    //iSettingPending = EFalse;
     iIPSessionIdSetting = KErrNotFound;
 
     if( iSettingMessage )
@@ -384,19 +518,12 @@ void CUPnPPlaybackSession::RcVolumeResponse(
 // See upnpplaybacksession.h
 // --------------------------------------------------------------------------
 void CUPnPPlaybackSession::RcSetMuteResponse(
-    const TDesC8& /*aUuid*/,
-    TInt aSessionId,
     TInt aErr, 
-    const TDesC8& /*aInstance*/, 
-    const TDesC8& /*aChannel*/, 
     const TDesC8& aDesiredMute )
     {
     __LOG1( "CUPnPPlaybackSession::RcSetMuteResponse: %d", aErr );    
-    
-    __ASSERTD( iIPSessionIdSetting == aSessionId, __FILE__, __LINE__ );
-    
+
     iServer.Dispatcher().UnRegister( iIPSessionIdSetting );
-    //iSettingPending = EFalse;
     iIPSessionIdSetting = KErrNotFound;
     
     if( iSettingMessage )
@@ -450,17 +577,11 @@ void CUPnPPlaybackSession::RcSetMuteResponse(
 // See upnpplaybacksession.h
 // --------------------------------------------------------------------------
 void CUPnPPlaybackSession::RcMuteResponse(
-    const TDesC8& /*aUuid*/,
-    TInt aSessionId,
     TInt aErr, 
-    const TDesC8& /*aInstance*/, 
-    const TDesC8& /*aChannel*/, 
     const TDesC8& aCurrentMute )
     {
     __LOG1( "CUPnPPlaybackSession::RcMuteResponse: %d" , aErr );
-    
-    __ASSERTD( iIPSessionIdSetting == aSessionId, __FILE__, __LINE__ );
-    
+
     iServer.Dispatcher().UnRegister( iIPSessionIdSetting );
     iIPSessionIdSetting = KErrNotFound;
 
@@ -514,123 +635,100 @@ void CUPnPPlaybackSession::RcMuteResponse(
 // See upnpplaybacksession.h
 // --------------------------------------------------------------------------
 void CUPnPPlaybackSession::AvtSetTransportUriResponse(
-    const TDesC8& /*aUuid*/,
-    TInt aSessionId,
-    TInt aErr,
-    const TDesC8& aInstanceId,
-    const TDesC8& /*aCurrentUri*/,
-    const TDesC8& /*aCurrentUriMetaData*/)
+    TInt aErr )
     {
-    __LOG1( "CUPnPPlaybackSession::AvtSetTransportUriResponse: %d", aErr );
-    
-    __ASSERTD( iIPSessionIdCommand == aSessionId, __FILE__, __LINE__ );  
-    
+    __LOG1( "CUPnPPlaybackSession::AvtSetTransportUriResponse: %d", aErr );  
+
     iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
-    iIPSessionIdCommand = KErrNotFound;
-    TInt temp;
-    TLex8 lex( aInstanceId );
-    TInt err = lex.Val( temp );
-    if( err == KErrNone )
+
+    aErr = UPnPAVErrorHandler::ConvertToSymbianErrorCode( aErr,
+        EUPnPAVTransportError );    
+
+    if( aErr == KErrNone )
         {
-        __LOG1( "AvtSetTransportUriResponse, instance id: %d", temp );
-        iInstanceId = temp;
+        if( iPlaybackState == EStopped )
+            {
+            __LOG( "CUPnPPlaybackSession::AvtSetTransportUriResponse - \
+Already in stopped state" );
+            
+            // Lastchangeevent came already!                         
+            }
+        else
+            {
+            iIPSessionIdCommand = KErrNotFound;
+            
+            __LOG( "CUPnPPlaybackSession::AvtSetTransportUriResponse - \
+Start waiting for CurrentUriMetadata" );
+            
+            iTimer->Cancel();
+            iTimer->Start( KTimerCycle10 );
+            }      
+        }
+    else
+        {
+        __ASSERT( iCommandMessage, __FILE__, __LINE__ );
+        
         iPlaybackState = EStopped;
-        }
-    
-    if( iCommandMessage )
-        {
-        aErr = UPnPAVErrorHandler::ConvertToSymbianErrorCode( aErr,
-            EUPnPAVTransportError );    
-        
-        if( aErr == KErrNone )
-            {
-            iCommandMessage->Complete( EAVControllerSetURICompleted );
-            delete iCommandMessage; iCommandMessage = NULL;      
-            }
-        else
-            {
-            iCommandMessage->Complete( aErr );
-            delete iCommandMessage; iCommandMessage = NULL;      
-            }                
-        }
-    else
-        {
-        __LOG( "AvtSetTransportUriResponse - no msg" );
-        }        
+        iExpectedEvent = EEventNone;
+        iCommandMessage->Complete( aErr );
+        delete iCommandMessage; iCommandMessage = NULL;      
+        }                       
     }
 
 // --------------------------------------------------------------------------
-// CUPnPPlaybackSession::AvtSetNextTransportUriResponse
+// CUPnPPlaybackSession::AvtGetMediaInfoResponse
 // See upnpplaybacksession.h
 // --------------------------------------------------------------------------
-void CUPnPPlaybackSession::AvtSetNextTransportUriResponse(
-    const TDesC8& /*aUuid*/,
-    TInt aSessionId,
+//
+void CUPnPPlaybackSession::AvtGetMediaInfoResponse(
     TInt aErr,
-    const TDesC8& aInstanceId,
-    const TDesC8& /*aNextUri*/,
-    const TDesC8& /*aNextUriMetaData*/)
+    const TDesC8& aCurrentUri )
     {
-    __LOG1( "CUPnPPlaybackSession::AvtSetNextTransportUriResponse: %d",
-        aErr );
-    
-    __ASSERTD( iIPSessionIdCommand == aSessionId, __FILE__, __LINE__ );
-    
-    iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
-    iIPSessionIdCommand = KErrNotFound;
-
-    TInt temp;
-    TLex8 lex( aInstanceId );
-    TInt err = lex.Val( temp );
-    if( err == KErrNone )
-        {
-        __LOG1( "AvtSetNextTransportUriResponse, instance id: %d", temp );
-        //iInstanceId = temp;
-        }
-
-    if( iCommandMessage )
-        {
-        aErr = UPnPAVErrorHandler::ConvertToSymbianErrorCode( aErr,
-            EUPnPAVTransportError );
+    // GetMediaInfo action request is issued in playing state when an unexpected 
+    // playing event is received.  If the URI in the renderer does not match with 
+    // iCurrentUri, it is intepreted as a case where the renderer is being 
+    // controlled by some other Control Point and therefore a stop event is propagated.
         
-        if( aErr == KErrNone )
-            {
-            iCommandMessage->Complete( EAVControllerSetNextURICompleted );
-            delete iCommandMessage; iCommandMessage = NULL;            
-            }
-        else
-            {
-            iCommandMessage->Complete( aErr );
-            delete iCommandMessage; iCommandMessage = NULL;      
-            }            
-        }
-    else
+    __LOG1( "CUPnPPlaybackSession::AvtGetMediaInfoResponse %d", aErr );
+    
+    if ( iCheckForHijackedRenderer )
         {
-        __LOG( "AvtSetNextTransportUriResponse - no msg" );
-        }    
+        __LOG8_1( "CUPnPPlaybackSession::AvtGetMediaInfoResponse: %S",
+                &aCurrentUri );
 
-    }
-  
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::AvtMediaInfoResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::AvtMediaInfoResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aNrTracks*/,
-    const TDesC8& /*aMediaDuration*/,
-    const TDesC8& /*aCurrentUri*/,
-    const TDesC8& /*aCurrentUriMetaData*/,
-    const TDesC8& /*aNextUri*/,
-    const TDesC8& /*aNextUriMetaData*/,
-    const TDesC8& /*aPlayMedium*/,
-    const TDesC8& /*aRecordMedium*/,
-    const TDesC8& /*aWriteStatus*/)
-    {
-    // No implementation required        
+        __LOG8_1( "CUPnPPlaybackSession::AvtGetMediaInfoResponse, iCurrentUri: %S",
+                iCurrentUri );
+
+        iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
+        iIPSessionIdCommand = KErrNotFound;
+
+        aErr = UPnPAVErrorHandler::ConvertToSymbianErrorCode( aErr,
+                EUPnPConnectionManagerError );
+            
+        if( aErr == KErrNone && iCurrentUri && *iCurrentUri != aCurrentUri )
+            {
+            // not our URI playing, renderer is hijacked    
+            if( iPlaybackState != EStopped )
+                {
+                // if we're not yet stopped, propagate a stop event    
+                __LOG( "CUPnPPlaybackSession::AvtGetMediaInfoResponse -\
+unexpected Uri, renderer is being controlled by someone else - propagate a stop event" );      
+                iPlaybackState = EHalted;
+                TUnsolicitedEventC event;
+                event.iEvent = EStop;
+                event.iValue = KErrNotReady;
+                PropagateEvent( event );                    
+                }
+            else
+                {
+                // just ignore as someone else keeps controlling the renderer    
+                __LOG( "CUPnPPlaybackSession::AvtGetMediaInfoResponse -\
+unexpected Uri, renderer is still being controlled by someone else - ignoring this event" );                      
+                }
+            }
+        
+        iCheckForHijackedRenderer = EFalse;
+        }            
     }
 
 // --------------------------------------------------------------------------
@@ -639,15 +737,67 @@ void CUPnPPlaybackSession::AvtMediaInfoResponse(
 // --------------------------------------------------------------------------
 //
 void CUPnPPlaybackSession::AvtGetTransportInfoResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aCurrenTransportState*/,
-    const TDesC8& /*aCurrentTransportStatus*/,
-    const TDesC8& /*aCurrentSpeed*/)
+    TInt aErr,
+    const TDesC8& aCurrenTransportState )
     {
-    // No implementation required        
+    __LOG1( "CUPnPPlaybackSession::AvtGetTransportInfoResponse %d", aErr );
+
+    __LOG8_1( "CUPnPPlaybackSession::AvtGetTransportInfoResponse: %S",
+            &aCurrenTransportState );
+
+    iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
+    iIPSessionIdCommand = KErrNotFound;
+ 
+    aErr = UPnPAVErrorHandler::ConvertToSymbianErrorCode( aErr,
+            EUPnPConnectionManagerError );
+    
+    if( aErr == KErrNone )
+        {            
+        // Send AVTranportUri-action. If an error occurs (leaves), complete
+        // the message with error code. No futher processing can be done
+        
+        if( aCurrenTransportState == KNoMedia )
+            {
+            iPlaybackState = ENoMedia;
+            }
+        else if( aCurrenTransportState == KPlaying )
+            {
+            iPlaybackState = EPlaying;
+            }
+        else if( aCurrenTransportState == KPausedPlayback )
+            {
+            iPlaybackState = EPaused;
+            }
+        else
+            {
+            iPlaybackState = EStopped;
+            }
+        
+        TRAP( aErr, SendAVTransportUriActionL() );
+        if( aErr != KErrNone )
+            {
+            __LOG1( "CUPnPPlaybackSession::AvtGetTransportInfoResponse -\
+SendAVTransportUriActionL failed with code %d", aErr  );
+            iCommandMessage->Complete( aErr );
+            delete iCommandMessage; iCommandMessage = NULL;
+            }
+        }
+    else
+        {
+        // Something wrong with the action. Complete the message with error
+        // code. No further processing can be dome.
+        __LOG1( "CUPnPPlaybackSession::AvtGetTransportInfoResponse - \
+action failed with code %d", aErr  );
+        
+        delete iCurrentItem; iCurrentItem = NULL;
+        delete iCurrentUri; iCurrentUri = NULL;
+        
+        iCommandMessage->Complete( aErr );
+        delete iCommandMessage; iCommandMessage = NULL;        
+        } 
+    
+    __LOG( "CUPnPPlaybackSession::AvtGetTransportInfoResponse - end" );
+          
     }
 
 // --------------------------------------------------------------------------
@@ -655,30 +805,19 @@ void CUPnPPlaybackSession::AvtGetTransportInfoResponse(
 // See upnpplaybacksession.h
 // --------------------------------------------------------------------------
 void CUPnPPlaybackSession::AvtPositionInfoResponse(
-    const TDesC8& /*aUuid*/,
-    TInt aSessionId,
     TInt aErr,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aTrack*/,
     const TDesC8& aTrackDuration,
-    const TDesC8& /*aTrackMetaData*/,
-    const TDesC8& /*aTrackURI*/,
-    const TDesC8& aRelTime,
-    const TDesC8& /*aAbsTime*/,
-    const TDesC8& /*aRelCount*/,
-    const TDesC8& /*aAbsCount*/)
+    const TDesC8& aRelTime )
     {
     __LOG1( "CUPnPPlaybackSession::AvtPositionInfoResponse: %d", aErr );    
+
+    iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
+    iIPSessionIdCommand = KErrNotFound;
     
-    __ASSERTD( iIPSessionIdSetting == aSessionId, __FILE__, __LINE__ );
-    
-    iServer.Dispatcher().UnRegister( iIPSessionIdSetting );
-    iIPSessionIdSetting = KErrNotFound;
-    
-    if( iSettingMessage )
+    if( iCommandMessage )
         {
-        TInt err = iSettingMessage->Write( 1, aTrackDuration );
-        err = iSettingMessage->Write( 2, aRelTime );
+        TInt err = iCommandMessage->Write( 1, aTrackDuration );
+        err = iCommandMessage->Write( 2, aRelTime );
         // Howto handle err?
 
         aErr = UPnPAVErrorHandler::ConvertToSymbianErrorCode( aErr,
@@ -686,14 +825,13 @@ void CUPnPPlaybackSession::AvtPositionInfoResponse(
            
         if( aErr == KErrNone )
             {
-            iSettingMessage->Complete( EAVControllerPositionInfoCompleted );
-            delete iSettingMessage; iSettingMessage = NULL;      
+            iCommandMessage->Complete( EAVControllerPositionInfoCompleted );
             }
         else
             {
-            iSettingMessage->Complete( aErr ); 
-            delete iSettingMessage; iSettingMessage = NULL; 
+            iCommandMessage->Complete( aErr ); 
             }        
+        delete iCommandMessage; iCommandMessage = NULL; 
         }
     else
         {
@@ -702,75 +840,37 @@ void CUPnPPlaybackSession::AvtPositionInfoResponse(
     }
 
 // --------------------------------------------------------------------------
-// CUPnPPlaybackSession::AvtDeviceCapabilitiesResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::AvtDeviceCapabilitiesResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aPlayMedia*/,
-    const TDesC8& /*aRecMedia*/,
-    const TDesC8& /*aRecQualityMode*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::AvtTransportSettingsResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::AvtTransportSettingsResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aPlayMode*/,
-    const TDesC8& /*aRecQualityMode*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
 // CUPnPPlaybackSession::AvtStopResponse
 // See upnpplaybacksession.h
 // --------------------------------------------------------------------------
 void CUPnPPlaybackSession::AvtStopResponse(
-    const TDesC8& /*aUuid*/,
-    TInt aSessionId,
-    TInt aErr,
-    const TDesC8& /*aInstanceId*/)
+    TInt aErr )
     {
     __LOG1( "CUPnPPlaybackSession::AvtStopResponse: %d", aErr );    
-    
-    __ASSERTD( iIPSessionIdCommand == aSessionId, __FILE__, __LINE__ );
-    
+
     iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
-    //iCommandPending = EFalse;
     iIPSessionIdCommand = KErrNotFound;
     
-    if( iCommandMessage )
+    aErr = UPnPAVErrorHandler::ConvertToSymbianErrorCode( aErr,
+        EUPnPAVTransportError );        
+    
+    if( aErr == KErrNone )
         {
-        aErr = UPnPAVErrorHandler::ConvertToSymbianErrorCode( aErr,
-            EUPnPAVTransportError );        
-        
-        if( aErr == KErrNone )
-            {
-            iPlaybackState = EStopped;
-            iCommandMessage->Complete( EAVControllerStopCompleted );
-            delete iCommandMessage; iCommandMessage = NULL;       
-            }
-        else
-            {
-            iCommandMessage->Complete( aErr );
-            delete iCommandMessage; iCommandMessage = NULL;       
-            }                
+		__LOG( "CUPnPPlaybackSession::AvtStopResponse - \
+Start waiting for stop event" );
+		
+		iTimer->Cancel();
+		iTimer->Start( KTimerCycle10 );      
         }
     else
         {
-        __LOG( "AvtStopResponse - no msg" );
-        }      
+        __ASSERT( iCommandMessage, __FILE__, __LINE__ );
+        
+        //iWaitingResponse = EFalse;
+        iExpectedEvent = EEventNone;
+        iCommandMessage->Complete( aErr );
+        delete iCommandMessage; iCommandMessage = NULL;       
+        }                
     }
 
 // --------------------------------------------------------------------------
@@ -778,41 +878,34 @@ void CUPnPPlaybackSession::AvtStopResponse(
 // See upnpplaybacksession.h
 // --------------------------------------------------------------------------
 void CUPnPPlaybackSession::AvtPlayResponse(
-    const TDesC8& /*aUuid*/,
-    TInt aSessionId,
-    TInt aErr,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aSpeed*/)
+    TInt aErr )
     {
     __LOG1( "CUPnPPlaybackSession::AvtPlayResponse: %d", aErr );    
     
-    __ASSERTD( iIPSessionIdCommand == aSessionId, __FILE__, __LINE__ );
-    
     iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
-    //iCommandPending = EFalse;
     iIPSessionIdCommand = KErrNotFound;
     
-    if( iCommandMessage )
+    aErr = UPnPAVErrorHandler::ConvertToSymbianErrorCode( aErr,
+        EUPnPAVTransportError );        
+    
+    if( aErr == KErrNone )
         {
-        aErr = UPnPAVErrorHandler::ConvertToSymbianErrorCode( aErr,
-            EUPnPAVTransportError );        
-        
-        if( aErr == KErrNone )
-            {
-            iPlaybackState = EPlaying;
-            iCommandMessage->Complete( EAVControllerPlayCompleted );
-            delete iCommandMessage; iCommandMessage = NULL;             
-            }
-        else
-            {
-            iCommandMessage->Complete( aErr );
-            delete iCommandMessage; iCommandMessage = NULL;
-            }                    
+		__LOG( "CUPnPPlaybackSession::AvtPlayResponse - \
+Start waiting for play event" );
+
+		iTimer->Cancel();
+		iTimer->Start( KTimerCycle10 );      
         }
     else
         {
-        __LOG( "AvtPlayResponse - no msg" );
-        }    
+        __ASSERT( iCommandMessage, __FILE__, __LINE__ );
+        
+        //iWaitingResponse = EFalse;
+        iExpectedEvent = EEventNone;
+        iCommandMessage->Complete( aErr );
+        delete iCommandMessage; iCommandMessage = NULL;
+        }                    
+
     }
 
 // --------------------------------------------------------------------------
@@ -820,53 +913,33 @@ void CUPnPPlaybackSession::AvtPlayResponse(
 // See upnpplaybacksession.h
 // --------------------------------------------------------------------------
 void CUPnPPlaybackSession::AvtPauseResponse(
-    const TDesC8& /*aUuid*/,
-    TInt aSessionId,
-    TInt aErr,
-    const TDesC8& /*aInstanceId*/)
+    TInt aErr )
     {
     __LOG1( "CUPnPPlaybackSession::AvtPauseResponse: %d", aErr );    
     
-    __ASSERTD( iIPSessionIdCommand == aSessionId, __FILE__, __LINE__ );
-    
     iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
-    //iCommandPending = EFalse;
     iIPSessionIdCommand = KErrNotFound;
     
-    if( iCommandMessage )
+    aErr = UPnPAVErrorHandler::ConvertToSymbianErrorCode( aErr,
+        EUPnPAVTransportError );        
+    
+    if( aErr == KErrNone )
         {
-        aErr = UPnPAVErrorHandler::ConvertToSymbianErrorCode( aErr,
-            EUPnPAVTransportError );        
-        
-        if( aErr == KErrNone )
-            {
-            iPlaybackState = EPaused;
-            iCommandMessage->Complete( EAVControllerPauseCompleted );
-            delete iCommandMessage; iCommandMessage = NULL;                   
-            }
-        else
-            {
-            iCommandMessage->Complete( aErr );
-            delete iCommandMessage; iCommandMessage = NULL;             
-            }                    
+		__LOG( "CUPnPPlaybackSession::AvtPauseResponse - \
+Start waiting for pause event" );
+
+		iTimer->Cancel();
+		iTimer->Start( KTimerCycle10 );
         }
     else
         {
-        __LOG( "AvtPauseResponse - no msg" );
-        }    
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::AvtRecordResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::AvtRecordResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/)
-    {
-    // No implementation required        
+        __ASSERT( iCommandMessage, __FILE__, __LINE__ );
+        
+        //iWaitingResponse = EFalse;
+        iExpectedEvent = EEventNone;
+        iCommandMessage->Complete( aErr );
+        delete iCommandMessage; iCommandMessage = NULL;             
+        }                      
     }
 
 // --------------------------------------------------------------------------
@@ -874,496 +947,144 @@ void CUPnPPlaybackSession::AvtRecordResponse(
 // See upnpplaybacksession.h
 // --------------------------------------------------------------------------
 void CUPnPPlaybackSession::AvtSeekResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aUnit*/,
-    const TDesC8& /*aTarget*/)
+    TInt aErr )
     {
-    // No implementation required        
+    __LOG1( "CUPnPPlaybackSession::AvtSeekResponse: %d", aErr );
+
+    __ASSERT( iCommandMessage, __FILE__, __LINE__ );
+    
+    iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
+    iIPSessionIdCommand = KErrNotFound;
+    
+    aErr = UPnPAVErrorHandler::ConvertToSymbianErrorCode( aErr,
+        EUPnPAVTransportError );        
+    
+    if( aErr == KErrNone )
+        {
+        iCommandMessage->Complete( EAVControllerSeekCompleted );
+        }
+    else
+        {
+        iCommandMessage->Complete( aErr );
+        }
+    delete iCommandMessage; 
+    iCommandMessage = NULL;
     }
 
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::AvtNextResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::AvtNextResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::AvtPreviousResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::AvtPreviousResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::AvtSetPlayModeResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::AvtSetPlayModeResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aNewPlayMode*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::AvtSetRecordModeResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::AvtSetRecordModeResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aNewRecordQuality*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CdsSearchCapabilitiesResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CdsSearchCapabilitiesResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aSearchCaps*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CdsSortCapabilitiesResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CdsSortCapabilitiesResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aSortCaps*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CdsSystemUpdateIdResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CdsSystemUpdateIdResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    TInt /*aSystemUpdateId*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CdsBrowseResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CdsBrowseResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aObjectID*/,
-    const TDesC8&  /*aBrowseFlag*/,
-    const TDesC8&  /*aFilter*/,
-    TInt /*aIndex*/,
-    TInt /*aRequest*/,
-    const TDesC8&  /*aSortCriteria*/,
-    const TDesC8&  /*aResult*/,
-    TInt /*aReturned*/,
-    TInt /*aMatches*/,
-    const TDesC8&  /*aUpdateID*/ )
-    {
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CdsSearchResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CdsSearchResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aContainerId*/,
-    const TDesC8& /*aSearchCriteria*/,
-    const TDesC8& /*aFilter*/,
-    TInt /*aIndex*/,
-    TInt /*aRequest*/,
-    const TDesC8& /*aSortCriteria*/,
-    const TDesC8& /*aResult*/,
-    TInt /*aReturned*/,
-    TInt /*aMatches*/,
-    const TDesC8& /*aUpdateID*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CdsDestroyObjectResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CdsDestroyObjectResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aObjectId*/ )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CdsUpdateObjectResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CdsUpdateObjectResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aObjectId*/,
-    const TDesC8& /*aCurrentTagValue*/,
-    const TDesC8& /*aNewTagValue*/ )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CdsImportResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CdsImportResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aSourceURI*/,
-    const TDesC8& /*aDestinationURI*/,
-    const TDesC8& /*aTransferId*/ )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CdsExportResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CdsExportResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aSourceURI*/,
-    const TDesC8& /*aDestinationURI*/,
-    const TDesC8& /*aTransferId*/ )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CdsStopTransferResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CdsStopTransferResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aTransferId*/ )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CdsCTransferProgressResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CdsCTransferProgressResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aTransferId*/,
-    const TDesC8& /*aTransferStatus*/,
-    const TDesC8& /*aTransferLength*/,            
-    const TDesC8& /*aTransferTotal*/ )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CdsDeleteResourceResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CdsDeleteResourceResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aResourceUri*/ )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CdsCreateReferenceResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CdsCreateReferenceResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aContainerId*/, 
-    const TDesC8& /*ObjectId*/,
-    const TDesC8& /*aNewId*/ )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CdsCreateObjectResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CdsCreateObjectResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aContainerID*/, 
-    const TDesC8& /*aElements*/, 
-    const TDesC8& /*aObjectID*/, 
-    const TDesC8& /*aResult*/ )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CmProtocolInfoResponse
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CmProtocolInfoResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aSource*/, 
-    const TDesC8& /*aSink*/ )
-    {
-    // No implementation required        
-    }
 
 // --------------------------------------------------------------------------
 // CUPnPPlaybackSession::CmPrepareResponse
 // See upnpplaybacksession.h
 // --------------------------------------------------------------------------
 void CUPnPPlaybackSession::CmPrepareResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aRemoteProtocolInfo*/,
-    const TDesC8& /*aPeerConnectionManager*/,
-    const TDesC8& /*aPeerConnectionId*/,
-    const TDesC8& /*aDirection*/,
-    TInt /*aConnection*/,
-    TInt /*aTransport*/,
-    TInt /*aRsc*/ )
+    TInt aErr,
+    TInt aConnection,
+    TInt aTransport,
+    TInt aRsc )
     {
-    // No implementation required        
+    __LOG1( "CUPnPPlaybackSession::CmPrepareResponse %d", aErr );    
+
+    iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
+    iIPSessionIdCommand = KErrNotFound;
+ 
+    aErr = UPnPAVErrorHandler::ConvertToSymbianErrorCode( aErr,
+            EUPnPConnectionManagerError );
+    
+    if( aErr == KErrNone )
+        {
+        // FIX IOP problem with RC events with Simple Center
+        // Note that this is likely a problem in SC and needs to be verified
+        // once there is another device supporting CM:PrepareForConnection
+        iRCInstanceId = KDefaultInstanceId; //iRCInstanceId = aRsc; 
+        iAVTInstanceId = aTransport;
+        iConnectionId = aConnection;    
+
+        TRAP( aErr, SendGetTransportInfoActionL() )
+        if( aErr != KErrNone )
+            {
+            __LOG1( "CUPnPPlaybackSession::CmPrepareResponse - \
+SendGetTransportInfoActionL failed with code %d", aErr  );
+            iCommandMessage->Complete( aErr );
+            delete iCommandMessage; iCommandMessage = NULL;
+            }
+
+        __LOG3( "CUPnPPlaybackSession::CmPrepareResponse - \
+AVTid = %d, RCid = %d, connectionid = %d", aTransport, aRsc, aConnection );
+        }
+    else
+        {
+        // Something wrong with the action. Complete the message with error
+        // code. No further processing can be dome.
+        __LOG1( "CUPnPPlaybackSession::CmPrepareResponse - \
+action failed with code %d", aErr  );
+
+        delete iCurrentItem; iCurrentItem = NULL;
+        delete iCurrentUri; iCurrentUri = NULL; 
+
+        iCommandMessage->Complete( aErr );
+        delete iCommandMessage; iCommandMessage = NULL;        
+        } 
+    
+    __LOG( "CUPnPPlaybackSession::CmPrepareResponse - end" );
     }
 
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CmComplete
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CmComplete(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    TInt /*aConnection*/ )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CmCurrentConnections
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CmCurrentConnections(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aConnections*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CmCurrentInfo
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CmCurrentInfo(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    TInt /*rscId*/, 
-    TInt /*transportId*/, 
-    const TDesC8& /*aProtocolInfo*/,
-    const TDesC8& /*aPeerConnectionManager*/, 
-    TInt /*peerId*/, 
-    const TDesC8& /*aDirection*/, 
-    const TDesC8& /*aStatus*/ )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CdsUpdateEvent
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CdsUpdateEvent(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSystemUpdateId*/
-        )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CdsContainerEvent
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CdsContainerEvent(
-        const TDesC8& /*aUuid*/,
-        const TDesC8& /*aConteinerIds*/
-        )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CdsTransferEvent
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CdsTransferEvent(
-        const TDesC8& /*aUuid*/,
-        const TDesC8& /*aTransferIds*/
-        )
-    {
-    // No implementation required        
-    }
 
 // --------------------------------------------------------------------------
 // CUPnPPlaybackSession::RcLastChangeEvent
 // See upnpplaybacksession.h
 // --------------------------------------------------------------------------
 void CUPnPPlaybackSession::RcLastChangeEvent(
-        const TDesC8& /*aUuid*/,
-        const TDesC8& aLastChange
-        )
+    const TDesC8& aLastChange )
     {
-    // No implementation required
-    if( iPlaybackState != EUninitialized )
+    if( iPlaybackState != EHalted )
         {        
         __LOG( "CUPnPPlaybackSession::RcLastChangeEvent" );
-        //__LOG8( aLastChange );
-
-        TInt instanceId = -1;
-        TInt volume = -1;
-        TBool mute = EFalse;
-        if( iMuteState == EMuted )
-            {
-            mute = ETrue;
-            }
-
-        TRAPD( err, iEventParser->ParseResultDataL( aLastChange, instanceId,
-            volume, mute ) );
-        if( err == KErrNone && instanceId == iInstanceId )
-            {
-            TUnsolicitedEventC unEvent;
-            if( iMuteState != (TMuteState)mute )
-                {
-                // State of mute changed, create an event and send it to
-                // the client side
-                unEvent.iEvent = EMute;
-                unEvent.iValue = (TInt)mute;
+        CUPnPAVTEvent* event = NULL;
+        TRAPD(  err, event = iEventParser->ParseRcEventDataL( aLastChange,
+                iRCInstanceId ) );
                 
-                // If mute's value isn't ENotMuted or EMuted, 
-                // we think the value is incorrect.
-                if ( mute != ENotMuted && mute != EMuted )
-                    {    
-                    err = KErrArgument;
-                    }
-                else 
-                    {
+        if( err == KErrNone )
+            {
+            TUnsolicitedEventC unsolicitEvent;
+            TInt volume = event->Volume();
+            TInt mute = event->Mute();
+            // check if it Mute state change
+             if( EUnknown != (TMuteState)mute  &&  
+                     iMuteState != (TMuteState)mute)
+                {
+                unsolicitEvent.iEvent = EMute;
+                unsolicitEvent.iValue = (TInt)mute;
                 iMuteState = (TMuteState)mute;
-                    }
-                if( iEventMessage )
-                    {
-                    TPckg<TUnsolicitedEventC> resp1( unEvent );
-                    TInt error = iEventMessage->Write( 1, resp1 );
-                    if ( error == KErrNone )
-                        {
-                        error = err;
-                        }
-                    iEventMessage->Complete( error );
-                    delete iEventMessage; iEventMessage = NULL;
-                    }
-                else if ( err == KErrNone )
-                    {
-                    // If iEventMessage is invalid and mute's value is
-                    // right, we will append event to iEventQue.
-                    // Else nothing to do.
-                    iEventQue.AppendL( unEvent );
-                    }                            
+                PropagateEvent( unsolicitEvent );
                 }
-
-            // Scale the volume level
-            // Get device's maximum volume value
-            TInt maxVolume = iDevice->MaxVolume();
-            // If max volume not KMaxVolume
-            if( maxVolume != KMaxVolume )
+             // check if it has valid volume information.
+             if (volume >= 0 )  
                 {
-                // Convert volume to match max volume 100
-                TReal tempVolumeLevel = volume;
-                TReal tempMaxVolume = maxVolume;
-                   
-                volume = KMaxVolume * tempVolumeLevel / tempMaxVolume;
-                }            
-            
-            if( iVolume != volume && volume >= 0 )
-                {
-                // State of volume changed, create an event and send it to
-                // the client side
-                unEvent.iEvent = EVolume;
-                unEvent.iValue = volume;
-                iVolume = volume;
-                if( iEventMessage )
+                // Scale the volume level
+                // Get device's maximum volume value
+                TInt maxVolume = iDevice->MaxVolume();
+                // If max volume not KMaxVolume
+                if( maxVolume != KMaxVolume )
                     {
-                    TPckg<TUnsolicitedEventC> resp1( unEvent );
-                    TInt err = iEventMessage->Write( 1, resp1 );
-                    iEventMessage->Complete( err );
-                    delete iEventMessage; iEventMessage = NULL;
+                    // Convert volume to match max volume 100
+                    TReal tempVolumeLevel = volume;
+                    TReal tempMaxVolume = maxVolume;
+                    
+                    volume = KMaxVolume * 
+                                tempVolumeLevel/tempMaxVolume;
+                    }            
+                if( iVolume != volume)
+                    {
+                    // State of volume changed, create an event and send it
+                    // to the client side
+                    unsolicitEvent.iEvent = EVolume;
+                    unsolicitEvent.iValue = volume;
+                    iVolume = volume;
+                    PropagateEvent( unsolicitEvent );                           
                     }
-                else
-                    {
-                    iEventQue.AppendL( unEvent );
-                    }                            
                 }
-            
             }
+        delete event; 
         }
     }
 
@@ -1372,138 +1093,68 @@ void CUPnPPlaybackSession::RcLastChangeEvent(
 // See upnpplaybacksession.h
 // --------------------------------------------------------------------------
 void CUPnPPlaybackSession::AvtLastChangeEvent(
-        const TDesC8& /*aUuid*/,
-        const TDesC8& aLastChange
-        )
+    const TDesC8& aLastChange )
     {
-    // Is it for this device?
-    if( iPlaybackState != EUninitialized )
+    __LOG2( "CUPnPPlaybackSession::AvtLastChangeEvent, pb state %d, exp evt %d", 
+        iPlaybackState, iExpectedEvent );
+
+    CUPnPAVTEvent* avtevent = NULL;
+    TRAPD( err, avtevent = iEventParser->ParseAvtEventDataL( aLastChange, 
+           iAVTInstanceId ) );
+    if( err == KErrNone && iPlaybackState != EHalted )
         {
-        __LOG( "CUPnPPlaybackSession::AvtLastChangeEvent" );
-        
-        TUnsolicitedEventC event;
-        if( aLastChange.Find( KPlaying ) >= 0 )
+        CUPnPAVTEvent::TTransportState transportState = avtevent->TransportState();
+		PropagateState( transportState );
+		
+        if( avtevent->TransportURI().Length() > 0 )
             {
-            __LOG( "AvtLastChangeEvent - PlayUser received" );
-            event.iEvent = EPlay;                            
-            iPlaybackState = EPlaying;
-            if( iEventMessage )
-                {
-                TPckg<TUnsolicitedEventC> resp1( event );
-                TInt err = iEventMessage->Write( 1, resp1 );
-                iEventMessage->Complete( err ); // Ok to complete with err?
-                delete iEventMessage; iEventMessage = NULL;
-                }
-            else
-                {
-                __LOG( "AvtLastChangeEvent - appending playuser" );
-                iEventQue.AppendL( event );
-                }            
+            AVTransportUriEventReceived( avtevent->TransportURI(),
+                avtevent->TransportState() );
             }
-        else if( aLastChange.Find( KStopped ) >= 0 &&
-                 iPlaybackState != EStopped )
-            {
-            __LOG( "AvtLastChangeEvent - StopUser received" );
-            event.iEvent = EStop;                
-            iPlaybackState = EStopped;
-            if( iEventMessage )
+        else
+            {     
+            iInitialEventReceived = EFalse;
+            switch( transportState )
                 {
-                TPckg<TUnsolicitedEventC> resp1( event );
-                TInt err = iEventMessage->Write( 1, resp1 );
-                iEventMessage->Complete( err ); // Ok to complete with err?
-                delete iEventMessage; iEventMessage = NULL;
-                }
-            else
-                {
-                __LOG( "AvtLastChangeEvent - appending stopuser" );
-                iEventQue.AppendL( event );
-                }    
-            }
-        else if( aLastChange.Find( KPaused ) >= 0 &&
-                 iPlaybackState != EPaused )
-            {
-            __LOG( "AvtLastChangeEvent - PauseUser received" );
-            event.iEvent = EPause;
-            iPlaybackState = EPaused;
-            if( iEventMessage )
-                {
-                __LOG( "CUPnPPlaybackSession::AvtLastChangeEvent" );
-                TPckg<TUnsolicitedEventC> resp1( event );
-                TInt err = iEventMessage->Write( 1, resp1 );
-                iEventMessage->Complete( err ); // Ok to complete with err?
-                delete iEventMessage; iEventMessage = NULL;
-                }
-            else
-                {
-                __LOG( "AvtLastChangeEvent - appending pauseuser" );
-                iEventQue.AppendL( event );
+                case CUPnPAVTEvent::EPlaying:
+                    {
+                    PlayingEventReceived();
+                    break;
+                    }     
+                case CUPnPAVTEvent::EStopped:
+                    {         
+                    StoppedEventReceived();
+                    break;
+                    }            
+                case CUPnPAVTEvent::EPausedPlayback:
+                    {
+                    PausedEventReceived();
+                    break;
+                    }
+                case CUPnPAVTEvent::ENoMediaPresent:
+                    {
+                    NoMediaEventReceived();
+                    break;
+                    }
+                default:
+                    {
+                    __LOG( "CUPnPPlaybackSession::AvtLastChangeEvent - \
+TRANSITIONING, IDLE, RECORDING or PAUSED_RECORDING" );    
+                    break;
+                    }   
                 }
             }
-        }    
+        iPreviousTransportState = transportState;
+        }
+    else
+        {
+        __LOG( "CUPnPPlaybackSession::AvtLastChangeEvent - We are halted, or \
+parsing failed. No can do." );
+        }
+    delete avtevent;
+    __LOG( "CUPnPPlaybackSession::AvtLastChangeEvent" );
     }
 
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CmSourceEvent
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CmSourceEvent(
-        const TDesC8& /*aUuid*/,
-        const TDesC8& /*aSource*/
-        )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CmSinkEvent
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CmSinkEvent(
-        const TDesC8& /*aUuid*/,
-        const TDesC8& /*aSink*/
-        )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::CmConnectionsEvent
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::CmConnectionsEvent(
-        const TDesC8& /*aUuid*/,
-        const TDesC8& /*aConnections*/
-        )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::HttpResponseL
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::HttpResponseL( CUpnpHttpMessage* /*aMessage*/ )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::DeviceDiscoveredL
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::DeviceDiscoveredL( CUpnpDevice* /*aDevice*/ )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::DeviceDisappearedL
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-void CUPnPPlaybackSession::DeviceDisappearedL( CUpnpDevice* /*aDevice*/ )
-    {
-    // No implementation required                   
-    }    
 
 // --------------------------------------------------------------------------
 // CUPnPPlaybackSession::DeviceDisappearedL
@@ -1544,7 +1195,7 @@ TInt CUPnPPlaybackSession::SessionId() const
     {
     return iSessionId;
     }
-    
+
 // --------------------------------------------------------------------------
 // CUPnPPlaybackSession::EventRequestL
 // See upnpplaybacksession.h
@@ -1552,9 +1203,9 @@ TInt CUPnPPlaybackSession::SessionId() const
 void CUPnPPlaybackSession::EventRequestL( const RMessage2& aMessage )
     {
     __LOG( "CUPnPPlaybackSession::EventRequestL" );
-    
-    __ASSERTD( !iEventMessage, __FILE__, __LINE__ );
-    
+
+    __ASSERT( !iEventMessage, __FILE__, __LINE__ );
+
     TInt count = iEventQue.Count(); 
     if( count )
         {
@@ -1573,6 +1224,15 @@ void CUPnPPlaybackSession::EventRequestL( const RMessage2& aMessage )
         if( !iEventingActive )
             {
             __LOG( "EventRequestL - subscribing.." );
+            if( iDevice->SubscriptionCount() )
+                {
+                __LOG( "CUPnPPlaybackSession::EventRequestL - Subscription \
+has been made already, set state to no media." );
+                // Some session has already subscribed, so we will not
+                // receive the initial state event. Therefore set our state
+                // to no media.
+                iPlaybackState = ENoMedia;
+                }
             iServer.DeviceRepository().SubscribeDeviceL( iDevice->Uuid() );
             iServer.Dispatcher().RegisterForEventsL( *this,
                 iDevice->Uuid() );
@@ -1613,121 +1273,81 @@ void CUPnPPlaybackSession::SetURIL( const RMessage2& aMessage )
     {
     __LOG( "CUPnPPlaybackSession::SetURIL" );
     
-    __ASSERTD( !iCommandMessage, __FILE__, __LINE__ );
+    __ASSERT( !iCommandMessage, __FILE__, __LINE__ );
     
     ResetL();
-
-    if( iPlaybackState == EPlaying || iPlaybackState == EPaused ||
-        iPlaybackState == EPlaySent )
-        {
-        iServer.ControlPoint().AvtStopActionL( iDevice->Uuid(),
-            iInstanceId );
-        }
-    
-    if( iItemShared )
-        {
-        iFileSharing->UnShareItemL( iSharedItem->Id() );
-        iItemShared = EFalse; 
-        }
-
-    // Uri is set by providing an item. Convert the item to xml document and
-    // send the action
-
-    __LOG( "SetURIL" );
-    
+        
+    // Read and store the item and URI from the request
     CUpnpAVRequest* tmpRequest = CUpnpAVRequest::NewLC();
-    
     ReadReqFromMessageL( aMessage, 1 ,tmpRequest );
     
     CUpnpItem* tmpItem = CUpnpItem::NewL();
     CleanupStack::PushL( tmpItem );
-    
+
     ReadObjFromMessageL( aMessage, 2 ,tmpItem );
 
-    TPtrC8 uri = tmpRequest->URI();
+    HBufC8* tmpUri = tmpRequest->URI().AllocL();
+    
+    CleanupStack::Pop( tmpItem );
+    CleanupStack::PopAndDestroy( tmpRequest );
+    
+    delete iCurrentItem;
+    iCurrentItem = tmpItem;
 
+    delete iCurrentUri;
+    iCurrentUri = tmpUri;
+
+    // Get protocolInfo from the item
     const CUpnpElement& res = 
-        UPnPItemUtility::ResourceFromItemL( *tmpItem );
+        UPnPItemUtility::ResourceFromItemL( *iCurrentItem );
     const CUpnpAttribute* protocolInfo = 
         UPnPItemUtility::FindAttributeByName( 
         res, KAttributeProtocolInfo );
 
-    if( !iDevice->MatchSinkProtocolInfo( protocolInfo->Value() ) )
+    // Store the message. We are going to perfom asynchronous operation
+    // so it's needed (completed) afterwards
+    iCommandMessage = new (ELeave) RMessage2( aMessage );     
+
+    // Check if we have a valid connection (or if it's even needed.
+    // Anyway,that does not matter since if no connection, we can used
+    // default instance id)    
+    if( CheckConnectionL( protocolInfo->Value() ) )
         {
-        // Did not match, try to find a match
-        TRAPD( err, uri.Set( iDevice->FindFirstMatchingInSinkL(
-            *tmpItem ) ) );
-        if( err == KErrNone )
-            {
-            // Suitable res-element found!
-            __LOG( "Suitable element found!" );
-            }
-        else if( err == KErrNotSupported )
-            {
-            // No suitable res-element
-            if( iDevice->DLNADeviceType() ==
-                CUpnpAVDeviceExtended::EDMR )
-                {
-                // DLNA content, DLNA device, no match -> leave
-                User::Leave( KErrNotSupported );                    
-                }
-            else
-                {
-                // Not a dlna device, try to set the uri of
-                // original res-element anyways
-                }
-            }
-        else
-            {
-            // Some error occured
-            User::Leave( err );
-            }    
+        // Connection ok, continue with sending AvtSetTransportUri-action
+        __LOG( "CUPnPPlaybackSession::SetURIL - \
+connection ok, or using default" );
+        
+        SendGetTransportInfoActionL();      
         }
-
-    ValidateProtocolInfoL( *protocolInfo );
-           
-    // Create metadata xml document
-    HBufC8* xmlDoc = CUPnPXMLParser::ItemAsXmlLC( *tmpItem );
-
-    iIPSessionIdCommand = iServer.ControlPoint().
-        AvtSetTransportUriActionL( iDevice->Uuid(), iInstanceId, uri,
-        //KNullDesC8 );
-        *xmlDoc );
-            
-    CleanupStack::PopAndDestroy( xmlDoc );
-    CleanupStack::PopAndDestroy( tmpItem );        
-    CleanupStack::PopAndDestroy( tmpRequest );      
-                         
-                
-    if( iIPSessionIdCommand > 0 )
+    else
         {
-        // Register
+        // Connection needs to be established
+        CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+                CpDeviceL(), KConnectionManager, KPrepareForConnection );
+        
+        action->SetArgumentL( KRemoteProtocolInfo, protocolInfo->Value() );
+	    action->SetArgumentL( KPeerConnectionManager, KConnectioMgr );
+	    action->SetArgumentL( KPeerConnectionID, KDefaultPeerConnectionID );
+	    action->SetArgumentL( KDirection, KInput );
+
+        iServer.ControlPoint().SendL( action );
+        CleanupStack::Pop( action );
+        if (action->SessionId() < 0) User::Leave( action->SessionId() );
+        iIPSessionIdCommand = action->SessionId();
         iServer.Dispatcher().RegisterL( iIPSessionIdCommand, *this );
         }
-    else
-        {
-        User::Leave( iIPSessionIdCommand );
-        }                             
-           
-    iCommandMessage = new (ELeave) RMessage2( aMessage );
-    
-    // after settransporturi, there is a delay to send play action.
-    if ( !iPlayDelayTimer->IsActive() )
-        {
-        iPlayDelayTimer->Start( 
-            0, KPlayDelayTimerInterval, 
-            TCallBack( PlayDelayTimeExpired , this ) );
-        }
-    else
-        {
-        iPlayDelayTimer->Cancel();
-        iPlayDelayTimer->Start( 
-            0, KPlayDelayTimerInterval, 
-            TCallBack( PlayDelayTimeExpired , this ) );
-        }
+
+    // Store protocolinfo, so it can be checked in PrepareConnectionL when
+    // a next item is played 
+    CUpnpDlnaProtocolInfo* tmpInfo = 
+         CUpnpDlnaProtocolInfo::NewL( protocolInfo->Value() );
+
+    delete iPInfoForPrevious;    
+    iPInfoForPrevious = tmpInfo;         
+ 
     __LOG( "CUPnPPlaybackSession::SetURIL - end" );
     }
-    
+
 // --------------------------------------------------------------------------
 // CUPnPPlaybackSession::CancelSetURIL
 // See upnpplaybacksession.h
@@ -1738,10 +1358,13 @@ void CUPnPPlaybackSession::CancelSetURIL()
     
     if( iCommandMessage )
         {
+        //iSetUri = EFalse;
+        iExpectedEvent = EEventNone;
+        iPlaybackState = EStopped;
         iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
         iIPSessionIdCommand = KErrNotFound;
         iCommandMessage->Complete( KErrCancel );
-        delete iCommandMessage; iCommandMessage = NULL;             
+        delete iCommandMessage; iCommandMessage = NULL;
         }
     }
     
@@ -1749,98 +1372,15 @@ void CUPnPPlaybackSession::CancelSetURIL()
 // CUPnPPlaybackSession::SetNextURIL
 // See upnpplaybacksession.h
 // --------------------------------------------------------------------------
-void CUPnPPlaybackSession::SetNextURIL( const RMessage2& aMessage )
+void CUPnPPlaybackSession::SetNextURIL( const RMessage2& /*aMessage*/ )
     {
     __LOG( "CUPnPPlaybackSession::SetNextURIL" );
-    
-    __ASSERTD( !iCommandMessage, __FILE__, __LINE__ );
-    
-    ResetL();
-    
-    if( iNextItemShared )
-        {
-        iFileSharing->UnShareItemL( iNextSharedItem->Id() );
-        iNextItemShared = EFalse; 
-        }
-    
-    // Uri is set by providing an item. Convert the item to xml document and
-    // send the action
-    CUpnpAVRequest* tmpRequest = CUpnpAVRequest::NewLC();
-    
-    ReadReqFromMessageL( aMessage, 1 ,tmpRequest );
-    
-    CUpnpItem* tmpItem = CUpnpItem::NewL();
-    CleanupStack::PushL( tmpItem );
-    
-    ReadObjFromMessageL( aMessage, 2 ,tmpItem );
-
-    TPtrC8 uri = tmpRequest->URI();
-    
-    const CUpnpElement& res = 
-        UPnPItemUtility::ResourceFromItemL( *tmpItem );
-    const CUpnpAttribute* protocolInfo = 
-        UPnPItemUtility::FindAttributeByName( 
-        res, KAttributeProtocolInfo );
-          
-    if( !iDevice->MatchSinkProtocolInfo( protocolInfo->Value() ) )
-        {
-        // Did not match, try to find a match
-        TRAPD( err, uri.Set( iDevice->FindFirstMatchingInSinkL(
-            *tmpItem ) ) );
-        if( err == KErrNone )
-            {
-            // Suitable res-element found!
-            }
-        else if( err == KErrNotSupported )
-            {
-            // No suitable res-element
-            if( iDevice->DLNADeviceType() ==
-                CUpnpAVDeviceExtended::EDMR )
-                {
-                // DLNA content, DLNA device, no match -> leave
-                User::Leave( KErrNotSupported );                    
-                }
-            else
-                {
-                // Not a dlna device, try to set the uri of
-                // original res-element anyways
-                }    
-            }
-        else
-            {
-            // Some error occured
-            User::Leave( err );
-            }    
-        }
-
-    // Create metadata xml document
-    HBufC8* xmlDoc = CUPnPXMLParser::ItemAsXmlLC( *tmpItem );
-    
-    iIPSessionIdCommand = iServer.ControlPoint().
-        AvtSetNextTransportUriActionL( iDevice->Uuid(), iInstanceId, uri,
-        *xmlDoc );
-            
-
-    CleanupStack::PopAndDestroy( xmlDoc );
-    CleanupStack::PopAndDestroy( tmpItem );
-    CleanupStack::PopAndDestroy( tmpRequest );          
-                
-    if( iIPSessionIdCommand > 0 )
-        {
-        // Register
-        iServer.Dispatcher().RegisterL( iIPSessionIdCommand, *this );
-        }
-    else
-        {
-        User::Leave( iIPSessionIdCommand );
-        }                             
-           
-    iCommandMessage = new (ELeave) RMessage2( aMessage );
-    
-    __LOG( "CUPnPPlaybackSession::SetNextURIL - end" );
  
+    User::Leave( KErrNotSupported );
+ 
+    __LOG( "CUPnPPlaybackSession::SetNextURIL - end" );
    }
-    
+
 // --------------------------------------------------------------------------
 // CUPnPPlaybackSession::CancelSetNextURIL
 // See upnpplaybacksession.h
@@ -1848,15 +1388,8 @@ void CUPnPPlaybackSession::SetNextURIL( const RMessage2& aMessage )
 void CUPnPPlaybackSession::CancelSetNextURIL()
     {
     __LOG( "CUPnPPlaybackSession::CancelSetNextURIL" );
-    
-    //__ASSERTD( iCommandPending, User::Panic( KPanicText, __LINE__ ) );
-    if( iCommandMessage )
-        {
-        iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
-        iIPSessionIdCommand = KErrNotFound;
-        iCommandMessage->Complete( KErrCancel );
-        delete iCommandMessage; iCommandMessage = NULL;            
-        }
+
+    User::Leave( KErrNotSupported );   
     }
 
 // --------------------------------------------------------------------------
@@ -1866,37 +1399,32 @@ void CUPnPPlaybackSession::CancelSetNextURIL()
 void CUPnPPlaybackSession::PlayL( const RMessage2& aMessage )
     {
     __LOG( "CUPnPPlaybackSession::PlayL" );
-    if ( !iPlayDelayTimer->IsActive() )
-        {
-        // timer is not running so some time has passed since subscribing
-    __ASSERTD( !iCommandMessage, __FILE__, __LINE__ );
+
+    __ASSERT( !iCommandMessage, __FILE__, __LINE__ );
 
     ResetL();
     
-    iIPSessionIdCommand = iServer.ControlPoint().AvtPlayActionL(
-        iDevice->Uuid(), iInstanceId, KNormalSpeed );
+    if( !(iPlaybackState == EPaused || iPlaybackState == EStopped) )
+        {
+        User::Leave( KErrNotReady );
+        }
+
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            CpDeviceL(), KAVTransport, KPlay );
     
-     if( iIPSessionIdCommand > 0 )
-        {
-        __LOG( "CUPnPPlaybackSession::PlayL - registering" );
-        // Register
-        iPlaybackState = EPlaySent;
-        iServer.Dispatcher().RegisterL( iIPSessionIdCommand, *this );
-        }
-    else
-        {
-        User::Leave( iIPSessionIdCommand );
-            }
+    TBuf8<KMaxIntLength> buf;
+    buf.Num( iAVTInstanceId );
+    action->SetArgumentL( KInstanceID, buf );
+    action->SetArgumentL( KSpeed, KNormalSpeed );
 
-        }
-    else // less than KPlayDelayInterval passed since subscribe.
-        {
-        // issue the play after the timer expires to make sure some HW 
-        // renderers are not confused when beginning the playback.
-        iPlayRequested = ETrue;
-        }
-
+    iServer.ControlPoint().SendL( action );
+    CleanupStack::Pop( action );
+    iIPSessionIdCommand = action->SessionId();
+    iServer.Dispatcher().RegisterL( iIPSessionIdCommand, *this );
     iCommandMessage = new (ELeave) RMessage2( aMessage );
+    
+    iExpectedEvent = EEventPlaying;
+    
     __LOG( "CUPnPPlaybackSession::PlayL - end" );
     }
     
@@ -1908,19 +1436,15 @@ void CUPnPPlaybackSession::CancelPlayL()
     {
     __LOG( "CUPnPPlaybackSession::CancelPlayL" );
     
-    //__ASSERTD( iCommandPending, User::Panic( KPanicText, __LINE__ ) );
+    //__ASSERT( iCommandPending, User::Panic( KPanicText, __LINE__ ) );
     if( iCommandMessage )
         {
-        // cancel postponed play
-        if ( iPlayDelayTimer->IsActive() )
-            {
-            iPlayDelayTimer->Cancel();
-            }
-
         iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
         iIPSessionIdCommand = KErrNotFound;
         iCommandMessage->Complete( KErrCancel );
-        delete iCommandMessage; iCommandMessage = NULL;            
+        delete iCommandMessage; iCommandMessage = NULL;
+        
+        iExpectedEvent = EEventNone;
         }
     }
 
@@ -1932,30 +1456,90 @@ void CUPnPPlaybackSession::StopL( const RMessage2& aMessage )
     {
     __LOG( "CUPnPPlaybackSession::StopL" );
     
-    __ASSERTD( !iCommandMessage, __FILE__, __LINE__ );
+    __ASSERT( !iCommandMessage, __FILE__, __LINE__ );
 
     ResetL();
-    // state stopped must be check before stopped action    
-    if( iPlaybackState != EStopped )
+    // state stopped must be check before stopped action. According to
+    // AVTransPort specification stop may be requested in any other state
+    // except NO_MEDIA_PRESENT
+    if( iPlaybackState == ENoMedia )
         {
-        iIPSessionIdCommand = iServer.ControlPoint().AvtStopActionL(
-            iDevice->Uuid(), iInstanceId );
-        }
-    
-     if( iIPSessionIdCommand > 0 )
-        {
-        // Register
-        iServer.Dispatcher().RegisterL( iIPSessionIdCommand, *this );
+        User::Leave( KErrNotReady );
         }
     else
         {
-        User::Leave( iIPSessionIdCommand );
-        }        
-    iCommandMessage = new (ELeave) RMessage2( aMessage );
+        __LOG1( "CUPnPPlaybackSession::StopL - sending stop in state %d",
+            iPlaybackState);
+        }
+
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            CpDeviceL(), KAVTransport, KStop );
     
+    TBuf8<KMaxIntLength> buf;
+    buf.Num( iAVTInstanceId );
+    action->SetArgumentL( KInstanceID, buf );
+
+    iServer.ControlPoint().SendL( action ); //action ownership is transfered
+    CleanupStack::Pop( action );
+    if (action->SessionId() < 0) User::Leave( action->SessionId() );
+    iIPSessionIdCommand = action->SessionId();
+    iServer.Dispatcher().RegisterL( iIPSessionIdCommand, *this );
+    iCommandMessage = new (ELeave) RMessage2( aMessage );
+
+    iExpectedEvent = EEventStopped;
     __LOG( "CUPnPPlaybackSession::StopL - end" );
     }
+
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::EmergencyStopL
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::EmergencyStopL()
+    {
+    __LOG( "CUPnPPlaybackSession::EmergencyStopL" );
+
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            CpDeviceL(), KAVTransport, KStop );
     
+    TBuf8<KMaxIntLength> buf;
+    buf.Num( iAVTInstanceId );
+    action->SetArgumentL( KInstanceID, buf );
+    iServer.ControlPoint().SendL( action );
+    CleanupStack::Pop( action );
+    __LOG( "CUPnPPlaybackSession::StopL - end" );
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::PropagateState
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::PropagateState( 
+    CUPnPAVTEvent::TTransportState aTransportState )
+    {
+    __LOG2( "CUPnPPlaybackSession::PropagateState - curState %d, prevState %d",
+        aTransportState, iPreviousTransportState );
+        
+    if( aTransportState == CUPnPAVTEvent::ETransitioning )
+        {
+        __LOG( "CUPnPPlaybackSession::PropagateState - \
+TRANSITIONING" );
+        TUnsolicitedEventC event;
+        event.iEvent = ETransition;
+        event.iValue = ETransitionEnter; 
+        PropagateEvent( event );
+        }
+    else if( aTransportState != CUPnPAVTEvent::ETransitioning &&
+        iPreviousTransportState == CUPnPAVTEvent::ETransitioning )
+        {
+        __LOG( "CUPnPPlaybackSession::PropagateState - \
+TRANSITIONING ended" );    
+        TUnsolicitedEventC event;
+        event.iEvent = ETransition;
+        event.iValue = ETransitionExit; 
+        PropagateEvent( event );
+        }
+    }
+
 // --------------------------------------------------------------------------
 // CUPnPPlaybackSession::CancelStopL
 // See upnpplaybacksession.h
@@ -1969,7 +1553,9 @@ void CUPnPPlaybackSession::CancelStopL()
         iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
         iIPSessionIdCommand = KErrNotFound;
         iCommandMessage->Complete( KErrCancel );
-        delete iCommandMessage; iCommandMessage = NULL;            
+        delete iCommandMessage; iCommandMessage = NULL; 
+        
+        iExpectedEvent = EEventNone;
         }
     }
 
@@ -1981,23 +1567,30 @@ void CUPnPPlaybackSession::PauseL( const RMessage2& aMessage )
     {
     __LOG( "CUPnPPlaybackSession::PauseL" );
     
-    __ASSERTD( !iCommandMessage, __FILE__, __LINE__ );
+    __ASSERT( !iCommandMessage, __FILE__, __LINE__ );
 
     ResetL();
     
-    iIPSessionIdCommand = iServer.ControlPoint().AvtPauseActionL(
-        iDevice->Uuid(), iInstanceId );
+    if( !(iPlaybackState == EPlaying)  )
+        {
+        User::Leave( KErrNotReady );
+        }
+
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            CpDeviceL(), KAVTransport, KPause );
     
-     if( iIPSessionIdCommand > 0 )
-        {
-        // Register
-        iServer.Dispatcher().RegisterL( iIPSessionIdCommand, *this );
-        }
-    else
-        {
-        User::Leave( iIPSessionIdCommand );
-        }
+    TBuf8<KMaxIntLength> buf;
+    buf.Num( iAVTInstanceId );
+    action->SetArgumentL( KInstanceID, buf );
+
+    iServer.ControlPoint().SendL( action );
+    CleanupStack::Pop( action );
+    if (action->SessionId() < 0) User::Leave( action->SessionId() );
+    iIPSessionIdCommand = action->SessionId();
+    iServer.Dispatcher().RegisterL( iIPSessionIdCommand, *this );
     iCommandMessage = new (ELeave) RMessage2( aMessage );
+
+    iExpectedEvent = EEventPaused;
     
     __LOG( "CUPnPPlaybackSession::PauseL - end" );                
     }
@@ -2015,7 +1608,9 @@ void CUPnPPlaybackSession::CancelPauseL()
         iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
         iIPSessionIdCommand = KErrNotFound;
         iCommandMessage->Complete( KErrCancel );
-        delete iCommandMessage; iCommandMessage = NULL;            
+        delete iCommandMessage; iCommandMessage = NULL; 
+        
+        iExpectedEvent = EEventNone;
         }
     }
 
@@ -2027,7 +1622,7 @@ void CUPnPPlaybackSession::SetVolumeL( const RMessage2& aMessage )
     {
     __LOG( "CUPnPPlaybackSession::SetVolumeL" );                
     
-    __ASSERTD( !iSettingMessage, __FILE__, __LINE__ );
+    __ASSERT( !iSettingMessage, __FILE__, __LINE__ );
 
     ResetL();
     
@@ -2044,23 +1639,24 @@ void CUPnPPlaybackSession::SetVolumeL( const RMessage2& aMessage )
         
         volume = tempMaxVolume * tempVolumeLevel / KMaxVolume;
         }
-       
 
-
-    iIPSessionIdSetting = iServer.ControlPoint().RcSetVolumetActionL(
-        iDevice->Uuid(), iInstanceId, KMasterVolume, volume );
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            CpDeviceL(), KRenderingControl, KSetVolume );
     
-     if( iIPSessionIdSetting > 0 )
-        {
-        __LOG( "CUPnPPlaybackSession::SetVolumeL - registering" );
-        // Register
-        iServer.Dispatcher().RegisterL( iIPSessionIdSetting, *this );
-        }
-    else
-        {
-        User::Leave( iIPSessionIdSetting );
-        }
-        
+    TBuf8<KMaxIntLength> buf;
+    buf.Num( KDefaultInstanceId );
+    action->SetArgumentL( KInstanceID, buf );
+    action->SetArgumentL( KChannel, KMasterVolume );
+    buf.Num( volume );
+    action->SetArgumentL( KDesiredVolume, buf );
+
+    iServer.ControlPoint().SendL( action );
+    CleanupStack::Pop( action );
+    if (action->SessionId() < 0) User::Leave( action->SessionId() );
+    iIPSessionIdSetting = action->SessionId();
+
+    // Register
+    iServer.Dispatcher().RegisterL( iIPSessionIdSetting, *this );
     iSettingMessage = new (ELeave) RMessage2( aMessage );                
     }
     
@@ -2089,22 +1685,25 @@ void CUPnPPlaybackSession::GetVolumeL( const RMessage2& aMessage )
     {
     __LOG( "CUPnPPlaybackSession::GetVolumeL" );                
     
-    __ASSERTD( !iSettingMessage, __FILE__, __LINE__ );
+    __ASSERT( !iSettingMessage, __FILE__, __LINE__ );
 
     ResetL();
+
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            CpDeviceL(), KRenderingControl, KGetVolume );
     
-    iIPSessionIdSetting = iServer.ControlPoint().RcGetVolumetActionL(
-        iDevice->Uuid(), iInstanceId, KMasterVolume );
+    TBuf8<KMaxIntLength> buf;
+    buf.Num( KDefaultInstanceId );
+    action->SetArgumentL( KInstanceID, buf );
+    action->SetArgumentL( KChannel, KMasterVolume );
+
+    iServer.ControlPoint().SendL( action );
+    CleanupStack::Pop( action );
+    if (action->SessionId() < 0) User::Leave( action->SessionId() );
+    iIPSessionIdSetting = action->SessionId();
     
-     if( iIPSessionIdSetting > 0 )
-        {
-        // Register
-        iServer.Dispatcher().RegisterL( iIPSessionIdSetting, *this );
-        }
-    else
-        {
-        User::Leave( iIPSessionIdSetting );
-        }
+    // Register
+    iServer.Dispatcher().RegisterL( iIPSessionIdSetting, *this );
     iSettingMessage = new (ELeave) RMessage2( aMessage );                    
     }
     
@@ -2133,32 +1732,33 @@ void CUPnPPlaybackSession::SetMuteL( const RMessage2& aMessage )
     {
     __LOG( "CUPnPPlaybackSession::SetMuteL" );                
     
-    __ASSERTD( !iSettingMessage, __FILE__, __LINE__ );
+    __ASSERT( !iSettingMessage, __FILE__, __LINE__ );
 
     ResetL();
 
-    TInt mute = aMessage.Int1();
-    if( mute )
-        {
-        iIPSessionIdSetting = iServer.ControlPoint().RcSetMuteActionL(
-            iDevice->Uuid(), iInstanceId, KMasterVolume, KMuteOn );        
-        }
-    else
-        {
-        iIPSessionIdSetting = iServer.ControlPoint().RcSetMuteActionL(
-            iDevice->Uuid(), iInstanceId, KMasterVolume, KMuteOff );                
-        }    
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            CpDeviceL(), KRenderingControl, KSetMute );
     
-     if( iIPSessionIdSetting > 0 )
+    TBuf8<KMaxIntLength> buf;
+    buf.Num( KDefaultInstanceId );
+    action->SetArgumentL( KInstanceID, buf );
+    action->SetArgumentL( KChannel, KMasterVolume );
+    if ( aMessage.Int1() )
         {
-        // Register
-        iServer.Dispatcher().RegisterL( iIPSessionIdSetting, *this );
+        action->SetArgumentL( KDesiredMute, KMuteOn );
         }
     else
         {
-        User::Leave( iIPSessionIdSetting );
+        action->SetArgumentL( KDesiredMute, KMuteOff );
         }
-        
+
+    iServer.ControlPoint().SendL( action );
+    CleanupStack::Pop( action );
+    if (action->SessionId() < 0) User::Leave( action->SessionId() );
+    iIPSessionIdSetting = action->SessionId();
+
+    // Register
+    iServer.Dispatcher().RegisterL( iIPSessionIdSetting, *this );
     iSettingMessage = new (ELeave) RMessage2( aMessage );                 
     }
     
@@ -2187,22 +1787,25 @@ void CUPnPPlaybackSession::GetMuteL( const RMessage2& aMessage )
     {
     __LOG( "CUPnPPlaybackSession::GetMuteL" );                
     
-    __ASSERTD( !iSettingMessage, __FILE__, __LINE__ );
+    __ASSERT( !iSettingMessage, __FILE__, __LINE__ );
 
     ResetL();
+
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            CpDeviceL(), KRenderingControl, KGetMute );
     
-    iIPSessionIdSetting = iServer.ControlPoint().RcGetMuteActionL(
-        iDevice->Uuid(), iInstanceId, KMasterVolume );
-    
-     if( iIPSessionIdSetting > 0 )
-        {
-        // Register
-        iServer.Dispatcher().RegisterL( iIPSessionIdSetting, *this );
-        }
-    else
-        {
-        User::Leave( iIPSessionIdSetting );
-        }
+    TBuf8<KMaxIntLength> buf;
+    buf.Num( KDefaultInstanceId );
+    action->SetArgumentL( KInstanceID, buf );
+    action->SetArgumentL( KChannel, KMasterVolume );
+
+    iServer.ControlPoint().SendL( action );
+    CleanupStack::Pop( action );
+    if (action->SessionId() < 0) User::Leave( action->SessionId() );
+    iIPSessionIdSetting = action->SessionId();
+
+    // Register
+    iServer.Dispatcher().RegisterL( iIPSessionIdSetting, *this );
     iSettingMessage = new (ELeave) RMessage2( aMessage );                    
     
     }
@@ -2232,23 +1835,25 @@ void CUPnPPlaybackSession::GetPositionInfoL( const RMessage2& aMessage )
     {
     __LOG( "CUPnPPlaybackSession::GetPositionInfoL" );                
     
-    __ASSERTD( !iSettingMessage, __FILE__, __LINE__ );
+    __ASSERT( !iCommandMessage, __FILE__, __LINE__ );
 
     ResetL();
 
-    iIPSessionIdSetting = iServer.ControlPoint().AvtPositionInfoActionL(
-        iDevice->Uuid(), iInstanceId );
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            CpDeviceL(), KAVTransport, KGetPositionInfo );
     
-     if( iIPSessionIdSetting > 0 )
-        {
-        // Register
-        iServer.Dispatcher().RegisterL( iIPSessionIdSetting, *this );
-        }
-    else
-        {
-        User::Leave( iIPSessionIdSetting );
-        }
-    iSettingMessage = new (ELeave) RMessage2( aMessage );
+    TBuf8<KMaxIntLength> buf;
+    buf.Num( iAVTInstanceId );
+    action->SetArgumentL( KInstanceID, buf );
+
+    iServer.ControlPoint().SendL( action );
+    CleanupStack::Pop( action );
+    if (action->SessionId() < 0) User::Leave( action->SessionId() );
+    iIPSessionIdCommand = action->SessionId();
+
+    // Register
+    iServer.Dispatcher().RegisterL( iIPSessionIdCommand, *this );
+    iCommandMessage = new (ELeave) RMessage2( aMessage );
     
     }
     
@@ -2260,12 +1865,113 @@ void CUPnPPlaybackSession::CancelGetPositionInfoL()
     {
     __LOG( "CUPnPPlaybackSession::CancelGetPositionInfoL" );                
     
-    if( iSettingMessage )
+    if( iCommandMessage )
         {
-        iServer.Dispatcher().UnRegister( iIPSessionIdSetting );
-        iIPSessionIdSetting = KErrNotFound;
-        iSettingMessage->Complete( KErrCancel );
-        delete iSettingMessage; iSettingMessage = NULL;            
+        iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
+        iIPSessionIdCommand = KErrNotFound;
+        iCommandMessage->Complete( KErrCancel );
+        delete iCommandMessage; iCommandMessage = NULL;            
+        }
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::SeekRelTimeL
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::SeekRelTimeL( const RMessage2& aMessage )
+    {
+    __LOG( "CUPnPPlaybackSession::SeekRelTimeL" );                
+    
+    __ASSERT( !iCommandMessage, __FILE__, __LINE__ );
+
+    ResetL();
+
+    // Get the seek target value from aMessage parameter
+    // create buffer
+    TInt len = aMessage.GetDesMaxLength( 1 );
+    HBufC8* buf = HBufC8::NewLC( len );
+    TPtr8 ptr( buf->Des() );
+    User::LeaveIfError( aMessage.Read( 1, ptr ) );
+
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            CpDeviceL(), KAVTransport, KSeek );
+    
+    TBuf8<KMaxIntLength> bufInt;
+    bufInt.Num( iAVTInstanceId );
+    action->SetArgumentL( KInstanceID, bufInt );
+    action->SetArgumentL( KUnit, KRel_Time );
+    action->SetArgumentL( KTarget, *buf );
+
+    iServer.ControlPoint().SendL( action );
+    CleanupStack::Pop( action );
+    if (action->SessionId() < 0) User::Leave( action->SessionId() );
+    iIPSessionIdCommand = action->SessionId();
+
+    CleanupStack::PopAndDestroy( buf );
+    
+    // Register
+    iServer.Dispatcher().RegisterL( iIPSessionIdCommand, *this );
+    iCommandMessage = new (ELeave) RMessage2( aMessage );
+    }
+    
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::CancelSeekRelTimeL
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::CancelSeekRelTimeL()
+    {
+    __LOG( "CUPnPPlaybackSession::CancelSeekRelTimeL" );                
+
+    if( iCommandMessage )
+        {
+        iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
+        iIPSessionIdCommand = KErrNotFound;
+        iCommandMessage->Complete( KErrCancel );
+        delete iCommandMessage; 
+        iCommandMessage = NULL;            
+        }
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::GetRendererStateL
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::GetRendererStateL( const RMessage2& aMessage )
+    {
+    __LOG( "CUPnPPlaybackSession::GetRendererStateL" );
+    
+    if( iPlaybackState == EStopped || iPlaybackState == ENoMedia )
+        {
+        __LOG( "CUPnPPlaybackSession::GetRendererStateL - \
+Stopped or no_media" );
+        TUnsolicitedEventE event( EStop );
+        TPckg<TUnsolicitedEventE> resp1( event );
+        TInt err = aMessage.Write( 1, resp1 );
+        aMessage.Complete( err );
+        }
+    else if( iPlaybackState == EPlaying )
+        {
+        __LOG( "CUPnPPlaybackSession::GetRendererStateL - Playing" );
+        TUnsolicitedEventE event( EPlay );
+        TPckg<TUnsolicitedEventE> resp1( event );
+        TInt err = aMessage.Write( 1, resp1 );
+        aMessage.Complete( err );
+        }
+    else if( iPlaybackState == EPaused )
+        {
+        __LOG( "CUPnPPlaybackSession::GetRendererStateL - Paused" );
+        TUnsolicitedEventE event( EPause );
+        TPckg<TUnsolicitedEventE> resp1( event );
+        TInt err = aMessage.Write( 1, resp1 );
+        aMessage.Complete( err );  
+        }
+    else
+        {
+        __LOG( "CUPnPPlaybackSession::GetRendererStateL - Waiting.." );
+        // Waiting the initial event
+        __ASSERT( !iInitialEventMsg, __FILE__, __LINE__ );
+        iTimer->Start( KTimerCycle10 );
+        iInitialEventMsg = new (ELeave) RMessage2( aMessage );
         }
     }
 
@@ -2278,7 +1984,7 @@ void CUPnPPlaybackSession::DeviceDisappearedRequestL(
     {
     __LOG( "CUPnPPlaybackSession::DeviceDisappearedRequestL" );
     
-    __ASSERTD( !iDeviceMessage, __FILE__, __LINE__ );
+    __ASSERT( !iDeviceMessage, __FILE__, __LINE__ );
     
     iDeviceMessage = new (ELeave ) RMessage2( aMessage );
     }
@@ -2298,97 +2004,6 @@ void CUPnPPlaybackSession::CancelDeviceDisappearedRequestL()
         }    
     }
 
-// --------------------------------------------------------------------------
-// CUPnPPlaybackSession::ParseBrowseResponseL
-// See upnpplaybacksession.h
-// --------------------------------------------------------------------------
-HBufC8* CUPnPPlaybackSession::ParseBrowseResponseL( const TDesC8& aResponse )
-    {
-    __LOG( "CUPnPPlaybackSession::ParseBrowseResponseL" );                
-    
-    HBufC8* resource = NULL;
-    
-    CUPnPXMLParser* parser = CUPnPXMLParser::NewL();
-    CleanupStack::PushL( parser );
-    
-    RPointerArray<CUpnpObject> array;
-    CleanupResetAndDestroyPushL( array );
-    
-    parser->ParseResultDataL( array, aResponse );
-    
-    if( array.Count() == KExpectedCount )
-        {
-        if( array[ 0 ]->ObjectType() == EUPnPItem )
-            {
-            CUpnpItem* item = static_cast<CUpnpItem*>( array[ 0 ] );
-            resource = UPnPItemUtility::ResourceFromItemL(
-                *item ).Value().AllocL();
-            CleanupStack::PushL( resource );
-
-            const CUpnpElement& res = 
-                UPnPItemUtility::ResourceFromItemL( *item );
-            const CUpnpAttribute* protocolInfo = 
-                UPnPItemUtility::FindAttributeByName( 
-                res, KAttributeProtocolInfo );
-
-            if( !iDevice->MatchSinkProtocolInfo( protocolInfo->Value() ) )
-                {
-               TPtrC8 uri;
-                // Did not match, try to find a match
-                TRAPD( err, uri.Set( iDevice->FindFirstMatchingInSinkL(
-                    *item ) ) );
-                if( err == KErrNone )
-                    {
-                    // Suitable res-element found!
-                    CleanupStack::PopAndDestroy( resource );
-                    resource = uri.AllocL();
-                    }
-                else if( err == KErrNotSupported )
-                    {
-                    // No suitable res-element
-                    if( iDevice->DLNADeviceType() ==
-                        CUpnpAVDeviceExtended::EDMR )
-                        {
-                        // DLNA content, DLNA device, no match -> leave
-                        User::Leave( KErrNotSupported );                    
-                        }
-                    else
-                        {
-                        // Not a dlna device, try to set the uri of
-                        // original res-element anyways
-                        CleanupStack::Pop( resource );
-                        }    
-                    }
-                else
-                    {
-                    // Some error occured
-                    User::Leave( err );
-                    }    
-                }
-            }
-        else
-            {
-            User::Leave( KErrGeneral );
-            }    
-        }
-    else
-        {
-        User::Leave( KErrGeneral );
-        }    
-        
-    CleanupStack::PopAndDestroy( &array );
-    CleanupStack::PopAndDestroy( parser );
-       
-    __LOG( "CUPnPPlaybackSession::ParseBrowseResponseL - end" );
-    
-    if( !resource )
-        {
-        User::Leave( KErrGeneral );
-        }
-        
-    return resource;
-    }
-    
 // --------------------------------------------------------------------------
 // CUPnPPlaybackSession::Uuid
 // See upnpplaybacksession.h
@@ -2502,56 +2117,767 @@ void CUPnPPlaybackSession::ValidateProtocolInfoL( const CUpnpAttribute&
     attr.SetValueL( tmpInfo->ProtocolInfoL() );
         
     CleanupStack::PopAndDestroy( tmpInfo );
+    
+    __LOG( "CUPnPPlaybackSession::ValidateProtocolInfoL - end" );
     }
 
 // --------------------------------------------------------------------------
-// CUPnPPlaybackSession::SendPlayIfNeededL
+// CUPnPPlaybackSession::CheckConnectionL
 // See upnpplaybacksession.h
 // --------------------------------------------------------------------------
-void CUPnPPlaybackSession::SendPlayIfNeededL()
+TBool CUPnPPlaybackSession::CheckConnectionL( 
+    const TDesC8& aProtocolInfo )
     {
-    __LOG( "CUPnPPlaybackSession::SendPlayIfNeededL" );
-    if ( iPlayRequested )
+    __LOG( "CUPnPPlaybackSession::CheckConnectionL" );
+    
+    // 1.   Check that is CM:PrepareForConnection supported. If not, return
+    //      true. This means that we don't need to establish a new connection
+    //      (we can just used instance id 0)
+    // 2.   If PrepareForConnection is supported, check that do have a
+    //      connection already (!iPInfoForPrevious). If not, return false
+    //      (a new connection is needed). If we have a connection, check that
+    //      does the type of content change. If it changes, a new connection
+    //      is needed.
+    
+    if( iDevice->PrepareForConnection() )
         {
-        // during the timer was running, there was a play request.
-        // handle it here
-        iPlayRequested = EFalse; // play request is being handled
+        __LOG( "CUPnPPlaybackSession::CheckConnectionL - \
+CM:PrepareForConnection supported" );
 
-        ResetL();
-
-        iIPSessionIdCommand = iServer.ControlPoint().AvtPlayActionL(
-            iDevice->Uuid(), iInstanceId, KNormalSpeed );
-
-        if( iIPSessionIdCommand > 0 )
+        if( iPInfoForPrevious && ( iConnectionId != KErrNotFound ) )
             {
-            __LOG( "CUPnPPlaybackSession::SendPlayIfNeededL - registering" );
-            // Register
-            iPlaybackState = EPlaySent;
-            iServer.Dispatcher().RegisterL( iIPSessionIdCommand, *this );
+            CUpnpDlnaProtocolInfo* tmpInfo = CUpnpDlnaProtocolInfo::NewL(
+                    aProtocolInfo );
+            
+            if( tmpInfo->SecondField() == iPInfoForPrevious->SecondField() &&
+                tmpInfo->PnParameter() == iPInfoForPrevious->PnParameter() )
+                {
+                __LOG( "CUPnPPlaybackSession::CheckConnectionL - \
+same as previous" );
+                delete tmpInfo;
+                return ETrue;
+                }
+            else
+                {
+                __LOG( "CUPnPPlaybackSession::CheckConnectionL - \
+media type changes, a new connection is needed" );
+                // Close existing. Ignore error code (we can do nothing
+                // useful in error case)
+                CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+                        CpDeviceL(), KConnectionManager, KConnectionComplete );
+                
+                TBuf8<KMaxIntLength> buf;
+                buf.Num( iConnectionId );
+                action->SetArgumentL( KConnectionID, buf );
+
+                iServer.ControlPoint().SendL( action );
+                CleanupStack::Pop( action );
+
+                iConnectionId = KErrNotFound;
+                iAVTInstanceId = KDefaultInstanceId;  
+                iRCInstanceId = KDefaultInstanceId;
+                delete tmpInfo;
+                return EFalse;                
+               }
             }
         else
             {
-            User::Leave( iIPSessionIdCommand );
+            // No existing connection, a new connection is needed
+            return EFalse;
             }
+        }
+    else
+        {
+        __LOG( "CUPnPPlaybackSession::CheckConnectionL - \
+CM:PrepareForConnection not supported" );
+        
+        // CM:PrepareForConnection is not supported
+        return ETrue;
         }
     }
 
 // --------------------------------------------------------------------------
-// CUPnPPlaybackSession::PlayDelayTimeExpired
+// CUPnPPlaybackSession::SendAVTransportUriActionL
 // See upnpplaybacksession.h
 // --------------------------------------------------------------------------
-TInt CUPnPPlaybackSession::PlayDelayTimeExpired( TAny* aPtr )
+void CUPnPPlaybackSession::SendAVTransportUriActionL()
     {
-    __LOG( "CUPnPPlaybackSession::PlayDelayTimeExpired" );
-    TRAPD( err, ( static_cast< CUPnPPlaybackSession* >( aPtr ) )->
-           SendPlayIfNeededL() );
+    __LOG( "CUPnPPlaybackSession::SendAVTransportUriActionL" );
     
-    if ( err )
+    const CUpnpElement& res = 
+        UPnPItemUtility::ResourceFromItemL( *iCurrentItem );
+    const CUpnpAttribute* protocolInfo = 
+        UPnPItemUtility::FindAttributeByName( 
+        res, KAttributeProtocolInfo );    
+    
+    TPtrC8 uri( *iCurrentUri );
+    
+    if( !iDevice->MatchSinkProtocolInfo( protocolInfo->Value() ) )
         {
-        __LOG( "CUPnPPlaybackSession::PlayDelayTimeExpired error" );
+        // Did not match, try to find a match
+        TRAPD( err, uri.Set( iDevice->FindFirstMatchingInSinkL(
+            *iCurrentItem ) ) );
+        if( err == KErrNone )
+            {
+            // Suitable res-element found!
+            __LOG( "Suitable element found!" );
+            }
+        else if( err == KErrNotSupported )
+            {
+            // No suitable res-element
+            if( iDevice->DLNADeviceType() ==
+                CUpnpAVDeviceExtended::EDMR )
+                {
+                // DLNA content, DLNA device, no match -> leave
+                User::Leave( KErrNotSupported );                    
+                }
+            else
+                {
+                // Not a dlna device, try to set the uri of
+                // original res-element anyways
+                }
+            }
+        else
+            {
+            // Some error occured
+            User::Leave( err );
+            }    
         }
 
-    return ETrue;
+    ValidateProtocolInfoL( *protocolInfo );
+           
+   if( !iDevice->DlnaCompatible() )
+        {        
+        // down grade to upnpitem
+        RemoveDlnaFlagsFromResElementsL();
+        }          
+    else if( ( iDevice->DLNADeviceType() != CUpnpAVDeviceExtended::EDMR ) ||
+        ( !iDevice->MatchSinkProfileId( protocolInfo->Value() ) && 
+           iDevice->MatchSinkMime( protocolInfo->Value()) ) )
+        {
+        // remove DLNA profile
+        RemoveDlnaProfileFromResElementsL();
+        }
+    
+    // Create metadata xml document
+    HBufC8* xmlDoc = CUPnPXMLParser::ItemAsXmlLC( *iCurrentItem );
+
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            CpDeviceL(), KAVTransport, KSetAVTransportURI );
+    
+    TBuf8<KMaxIntLength> buf;
+    buf.Num( iAVTInstanceId );
+    action->SetArgumentL( KInstanceID, buf );
+    action->SetArgumentL( KCurrentURI, uri );
+    action->SetArgumentL( KCurrentURIMetaData, *xmlDoc );
+
+    iServer.ControlPoint().SendL( action );
+    CleanupStack::Pop( action );
+    if (action->SessionId() < 0) User::Leave(action->SessionId());
+    iIPSessionIdCommand = action->SessionId();
+
+    CleanupStack::PopAndDestroy( xmlDoc );      
+                                      
+    iServer.Dispatcher().RegisterL( iIPSessionIdCommand, *this );
+    
+    // Set playback state artificially to no media. This way we can recognize
+    // if renderer has responded with CurrentTrackUri
+    iPlaybackState = ENoMedia;
+    iExpectedEvent = EEventAVTransportUri;
+ 
+    __LOG( "CUPnPPlaybackSession::SendAVTransportUriActionL - end" );
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::RemoveDlnaFlagsFromResElementL
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::RemoveDlnaFlagsFromResElementsL()
+    {
+    __LOG( "CUPnPPlaybackSession::RemoveDlnaFlagsFromResElementL" );
+    RUPnPElementsArray& elements = const_cast<RUPnPElementsArray&>(
+                                                iCurrentItem->GetElements());
+
+    for( TInt resIndex(0); resIndex < elements.Count(); ++resIndex )
+        {
+        if( elements[resIndex]->Name() == KElementRes() )
+            {
+            const RUPnPAttributesArray& array = 
+                                    elements[resIndex]->GetAttributes();
+            CUpnpElement* elem = CUpnpElement::NewLC( KElementRes() );
+            for( TInt i = 0; i < array.Count(); i++ )
+                {
+                _LIT8( KProtocolInfo, "protocolInfo" );
+                _LIT8( KDlnaOrg, "DLNA.ORG" );
+                
+                if( array[ i ]->Name() == KProtocolInfo() )
+                    {
+                    // remove dlna stuff from protocolinfo
+                    TPtrC8 protValue( array[ i ]->Value() );
+                    TInt index = protValue.Find( KDlnaOrg() );
+                    __LOG1( "CUPnPPlaybackSession::RemoveDlnaFlagsFromRes\
+                    ElementL dlnaflags found protinfo index = %d",index );
+                    if( index > 0 )
+                        {
+                        _LIT8( KWildCard, ":*" );
+                        CUpnpAttribute* attribute = CUpnpAttribute::NewLC( 
+                                                     array[ i ]->Name() );
+                        HBufC8* tmp = HBufC8::NewLC( 
+                        protValue.Mid(0, index-1).Length() +
+                        KWildCard().Length() );
+                        
+                        tmp->Des().Copy( protValue.Mid(0, index-1) );
+                        tmp->Des().Append( KWildCard() );
+                        
+                        attribute->SetValueL( *tmp );
+                        CleanupStack::PopAndDestroy( tmp );                                                
+                        elem->AddAttributeL(attribute);
+                        CleanupStack::Pop( attribute );
+                        }
+                    else
+                        {
+                        // if item was allready down graded to upnpitem
+                        // clean and break from here
+                        CleanupStack::PopAndDestroy( elem );
+                        elem = NULL;
+                        break;
+                        }
+                    }
+                else
+                    {
+                    CUpnpAttribute* attribute = CUpnpAttribute::NewLC( 
+                                                 array[ i ]->Name() );
+                    attribute->SetValueL( array[ i ]->Value() );
+                    elem->AddAttributeL(attribute);
+                    CleanupStack::Pop( attribute );
+                    }
+                }     
+            if( elem )
+                {
+                elem->SetValueL( elements[resIndex]->Value() );
+                CleanupStack::Pop( elem );
+                
+                if( elements.Insert( elem, resIndex ) )
+                    {
+                    delete elem;
+                    continue;
+                    }
+                
+                delete elements[++resIndex];
+                elements.Remove(resIndex);                    
+
+                __LOG( "CUPnPPlaybackSession::RemoveDlnaFlagsFromResElementL\
+                res found and replaced protocol info without dlna stuff" );
+                }
+            }
+        }
+    __LOG( "CUPnPPlaybackSession::RemoveDlnaFlagsFromResElementL end" );
+    }
+    
+    // --------------------------------------------------------------------------
+// CUPnPPlaybackSession::RemoveDlnaProfileFromResElementsL
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::RemoveDlnaProfileFromResElementsL()
+    {
+    __LOG( "CUPnPPlaybackSession::RemoveDlnaProfileFromResElementsL" );
+    RUPnPElementsArray& elements = const_cast<RUPnPElementsArray&>(
+                                                iCurrentItem->GetElements());
+
+    for( TInt resIndex(0); resIndex < elements.Count(); ++resIndex )
+        {
+        if( elements[resIndex]->Name() == KElementRes() )
+            {
+            const RUPnPAttributesArray& array = 
+                                    elements[resIndex]->GetAttributes();
+            CUpnpElement* elem = CUpnpElement::NewLC( KElementRes() );
+            for( TInt i = 0; i < array.Count(); i++ )
+                {
+                _LIT8( KProtocolInfo, "protocolInfo" );
+                _LIT8( KDlnaOrgPn, "DLNA.ORG_PN=" );
+                _LIT8( KDlnaOrgPnEnd, ";" );
+                
+                if( array[ i ]->Name() == KProtocolInfo() )
+                    {
+                    // remove dlna profile from protocolinfo
+                    TPtrC8 protValue( array[ i ]->Value() );
+                    TInt length = 0;
+                    TInt index = 0;
+                    
+                    __LOG8_1("CUPnPPlaybackSession::RemoveDlnaProfileFromRes protocol info = %S", &protValue);
+                    
+                    index = protValue.Find( KDlnaOrgPn() );
+                    if (index != KErrNotFound)
+                        {
+                        length = protValue.Mid(index).Find( KDlnaOrgPnEnd() );
+                        }
+                    __LOG1( "CUPnPPlaybackSession::RemoveDlnaProfileFromRes ElementsL DLNA profile found protinfo index = %d", index );
+                    if( index > 0 && length > 0 )
+                        {                        
+                        ++length;    
+                        
+                        CUpnpAttribute* attribute = CUpnpAttribute::NewLC( 
+                                                     array[ i ]->Name() );
+                        HBufC8* tmp = HBufC8::NewLC( 
+                        protValue.Length() - 
+                        protValue.Mid( index, length ).Length() );
+                        
+                        tmp->Des().Copy( protValue.Mid ( 0, index ) );                        
+                        tmp->Des().Append( protValue.Mid( index + length ) );
+                                              
+                        attribute->SetValueL( *tmp );
+                        
+                        CleanupStack::PopAndDestroy( tmp );                                                
+                        elem->AddAttributeL(attribute);
+                        CleanupStack::Pop( attribute );
+                        }
+                    else
+                        {
+                        // just clean if profile not found
+                        CleanupStack::PopAndDestroy( elem );
+                        elem = NULL;
+                        break;
+                        }
+                    }
+                else
+                    {
+                    CUpnpAttribute* attribute = CUpnpAttribute::NewLC( 
+                                                 array[ i ]->Name() );
+                    attribute->SetValueL( array[ i ]->Value() );
+                    elem->AddAttributeL(attribute);
+                    CleanupStack::Pop( attribute );
+                    }
+                }     
+            if( elem )
+                {
+                elem->SetValueL( elements[resIndex]->Value() );
+                CleanupStack::Pop( elem );
+                
+                if( elements.Insert( elem, resIndex ) )
+                    {
+                    delete elem;
+                    continue;
+                    }
+                
+                delete elements[++resIndex];
+                elements.Remove(resIndex);                    
+
+                __LOG( "CUPnPPlaybackSession::RemoveDlnaProfileFromResElementsL\
+                res found and replaced protocol info without dlna profile" );
+                }
+            }
+        }
+    __LOG( "CUPnPPlaybackSession::RemoveDlnaProfileFromResElementsL end" );
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::SendGetMediaInfoActionL
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::SendGetMediaInfoActionL()
+    {
+    __LOG( "CUPnPPlaybackSession::SendGetMediaInfoActionL" );
+
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            CpDeviceL(), KAVTransport, KGetMediaInfo );
+    
+    TBuf8<KMaxIntLength> buf;
+    buf.Num( iAVTInstanceId );
+    action->SetArgumentL( KInstanceID, buf );
+
+    iServer.ControlPoint().SendL( action );
+    CleanupStack::Pop( action );
+    if (action->SessionId() < 0) User::Leave(action->SessionId());
+    iIPSessionIdCommand = action->SessionId();
+
+    // Register
+    iServer.Dispatcher().RegisterL( iIPSessionIdCommand, *this );
+
+    __LOG( "CUPnPPlaybackSession::SendGetMediaInfoActionL - end" );
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::SendGetTransportInfoActionL
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::SendGetTransportInfoActionL()
+    {
+    __LOG( "CUPnPPlaybackSession::SendGetTransportInfoActionL" );
+
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            CpDeviceL(), KAVTransport, KGetTransportInfo );
+    
+    TBuf8<KMaxIntLength> buf;
+    buf.Num( iAVTInstanceId );
+    action->SetArgumentL( KInstanceID, buf );
+
+    iServer.ControlPoint().SendL( action );
+    CleanupStack::Pop( action );
+    if (action->SessionId() < 0) User::Leave(action->SessionId());
+    iIPSessionIdCommand = action->SessionId();
+
+    // Register
+    iServer.Dispatcher().RegisterL( iIPSessionIdCommand, *this );
+
+    __LOG( "CUPnPPlaybackSession::SendGetTransportInfoActionL - end" );
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::PlayingEventReceived
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::PlayingEventReceived()
+    {
+    __LOG( "CUPnPPlaybackSession::PlayingEventReceived" );
+    
+    if( iExpectedEvent == EEventPlaying )
+        {
+        // We were expecting a state change from stopped to playing since we
+        // sent the play action.        
+        __LOG( "CUPnPPlaybackSession::PlayingEventReceived - \
+Response to play" );
+        __ASSERT( iCommandMessage, __FILE__, __LINE__ );
+        iTimer->Cancel();
+        // Unregister from the dispatcher. This way we do not get 
+        // ::AvtPlayResponse callback (it would be ignored, anyway)        
+        iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
+        iIPSessionIdCommand = KErrNotFound;         
+        iCommandMessage->Complete( EAVControllerPlayCompleted );
+        delete iCommandMessage; iCommandMessage = NULL;
+        iExpectedEvent = EEventNone;
+        }
+    else if( iPlaybackState == EPaused  )
+        {
+        // Unsolicited play event from the renderer. This means that device
+        // is playing. Propagate the event.
+        __LOG( "CUPnPPlaybackSession::PlayingEventReceived - \
+Unsolicited play" );
+        TUnsolicitedEventC event;
+        event.iEvent = EPlay; event.iValue = KErrNone;
+        PropagateEvent( event );
+        }
+    else if( iInitialEventMsg )
+        {
+        __LOG( "CUPnPPlaybackSession::PlayingEventReceived - \
+initial event" );
+        iTimer->Cancel();
+        TUnsolicitedEventE event( EPlay );
+        TPckg<TUnsolicitedEventE> resp1( event );
+        TInt err = iInitialEventMsg->Write( 1, resp1 );
+        iInitialEventMsg->Complete( err );        
+        delete iInitialEventMsg; iInitialEventMsg = NULL; 
+        iInitialEventReceived = ETrue;
+        }
+    else if( iPlaybackState == EPlaying || iPlaybackState == EStopped)
+        {            
+        // Unsolicited play event when we already were in playing state
+        // or already swithced to stopped state due to previous unsolicited play    
+        // - most probably someone else has issued play command, check current URI
+        __LOG( "CUPnPPlaybackSession::PlayingEventReceived - \
+Unsolicited play event, check if renderer is hijacked" );
+            
+        TRAPD( aErr, SendGetMediaInfoActionL() )
+        if( aErr != KErrNone )
+            {
+            __LOG1( "CUPnPPlaybackSession::CmPrepareResponse - \
+            SendGetMediaInfoActionL failed with code %d", aErr  );             
+            }
+        else
+            {
+            iCheckForHijackedRenderer = ETrue;
+            }
+        }
+    
+    iPlaybackState = EPlaying;  
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::StoppedEventReceived
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::StoppedEventReceived()
+    {
+    __LOG( "CUPnPPlaybackSession::StoppedEventReceived" );
+        
+    if( iExpectedEvent == EEventStopped )
+        {
+        // We were expecting a state change from playing/paused to stopped
+        // since we sent the stop action.
+        RespondToStopRequest();
+        }
+    else if( iPlaybackState == EPlaying ||
+             iPlaybackState == EPaused )
+        {
+        // Unsolicted stop event from the renderer. This means that playback
+        // stopped. Propagate the event.
+        __LOG( "CUPnPPlaybackSession::StoppedEventReceived - \
+Unsolicted stop" );
+        TUnsolicitedEventC event;
+        event.iEvent = EStop; event.iValue = KErrNone; 
+        PropagateEvent( event );
+        }
+    else if( iInitialEventMsg )
+        {
+        __LOG( "CUPnPPlaybackSession::StoppedEventReceived - \
+initial event" );
+        iTimer->Cancel();
+        TUnsolicitedEventE event( EStop );
+        TPckg<TUnsolicitedEventE> resp1( event );
+        TInt err = iInitialEventMsg->Write( 1, resp1 );
+        iInitialEventMsg->Complete( err );        
+        delete iInitialEventMsg; iInitialEventMsg = NULL; 
+        }
+    iPlaybackState = EStopped;
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::PausedEventReceived
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::PausedEventReceived()
+    {
+    __LOG( "CUPnPPlaybackSession::PausedEventReceived - \
+PauseUser received" );
+    
+    if( iExpectedEvent == EEventPaused )
+        {
+        // We were expecting a state change from playing to paused
+        // since we sent the pause action.
+        __LOG( "CUPnPPlaybackSession::PausedEventReceived - \
+Response to pause" ); 
+        __ASSERT( iCommandMessage, __FILE__, __LINE__ );
+        iTimer->Cancel();
+        // Unregister from the dispatcher. This way we do not get 
+        // ::AvtPauseResponse callback (it would be ignored, anyway)
+        iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
+        iIPSessionIdCommand = KErrNotFound;        
+        iCommandMessage->Complete( EAVControllerPauseCompleted );
+        delete iCommandMessage; iCommandMessage = NULL;
+        iExpectedEvent = EEventNone;
+        }
+    else if( iPlaybackState == EPlaying ) 
+        {
+        // Unsolicted pause event from the renderer. This means that playback
+        // paused. Propagate the event.
+        __LOG( "CUPnPPlaybackSession::PausedEventReceived - \
+Unsolicted pause" );
+        TUnsolicitedEventC event;
+        event.iEvent = EPause; event.iValue = KErrNone;
+        PropagateEvent( event );
+        }
+    else if( iInitialEventMsg )
+        {
+        __LOG( "CUPnPPlaybackSession::PausedEventReceived - \
+initial event" );
+        iTimer->Cancel();
+        TUnsolicitedEventE event( EPause );
+        TPckg<TUnsolicitedEventE> resp1( event );
+        TInt err = iInitialEventMsg->Write( 1, resp1 );
+        iInitialEventMsg->Complete( err );        
+        delete iInitialEventMsg; iInitialEventMsg = NULL; 
+        iInitialEventReceived = ETrue;
+        }     
+    iPlaybackState = EPaused; 
+    }
+void CUPnPPlaybackSession::NoMediaEventReceived()
+    {
+    __LOG( "CUPnPPlaybackSession::NoMediaEventReceived" );
+
+    if( iInitialEventMsg )
+        {
+        __LOG( "CUPnPPlaybackSession::NoMediaEventReceived - \
+initial event" );
+        iTimer->Cancel();
+        TUnsolicitedEventE event( EStop );
+        TPckg<TUnsolicitedEventE> resp1( event );
+        TInt err = iInitialEventMsg->Write( 1, resp1 );
+        iInitialEventMsg->Complete( err );        
+        delete iInitialEventMsg; iInitialEventMsg = NULL; 
+        }
+    else if( iExpectedEvent == EEventStopped )
+        {
+        // After reconnecting to renderer, a stop command may
+        // result to no media present event. 
+        RespondToStopRequest();
+        }
+    
+    if( iPlaybackState == EStopped || iPlaybackState == EUninitialized )
+        {
+        iPlaybackState = ENoMedia;
+        }
+    else
+        {
+        __LOG( "CUPnPPlaybackSession::NoMediaEventReceived - \
+illegal NO_MEDIA_PRESENT -> ignore" );        
+        }
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::CurrentTrackUriEventReceived
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::AVTransportUriEventReceived( const TDesC8& aUri,
+    CUPnPAVTEvent::TTransportState aTransportState )
+    {
+    __LOG8_1( "CUPnPPlaybackSession::AVTransportUriEventReceived, uri: %S",
+            &aUri );
+  
+    if( iExpectedEvent == EEventAVTransportUri )
+        {
+        // We were expecting to get AVTransportUri from the renderer
+        // since we sent the SetAVTransportUri - action
+        __LOG( "CUPnPPlaybackSession::AVTransportUriEventReceived - \
+complete seturi" );
+           
+        __ASSERT( iCommandMessage, __FILE__, __LINE__ );
+        // Unregister from the dispatcher. This way we do not get 
+        // ::AvtSetUriResponse callback (it would be ignored, anyway)
+        iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
+        iIPSessionIdCommand = KErrNotFound;
+        iTimer->Cancel();
+        iCommandMessage->Complete( EAVControllerSetURICompleted );
+        delete iCommandMessage; iCommandMessage = NULL;
+        iExpectedEvent = EEventNone;
+        iPlaybackState = EStopped;          
+        }
+    else if( iCurrentUri && ( *iCurrentUri != aUri ) )
+        {
+        __LOG( "CUPnPPlaybackSession::AVTransportUriEventReceived - \
+different AVTransportUri - propagate a stop event" );  
+        
+        // Uri changes. Some malicous Control Point captured our device
+        // or something else is wrong. Propagate a stop event with error
+        // code KErrNotReady
+        iPlaybackState = EHalted;
+        TUnsolicitedEventC event;
+        event.iEvent = EStop;
+        event.iValue = KErrNotReady;
+        PropagateEvent( event );
+        }
+    else if( iInitialEventMsg )
+        {
+        __LOG( "CUPnPPlaybackSession::AVTransportUriEventReceived - \
+initial event" );
+        iTimer->Cancel();
+        TUnsolicitedEventE event( EStop );
+        iPlaybackState = EStopped;
+        if( aTransportState == CUPnPAVTEvent::EPlaying )
+            {
+            event = EPlay;
+            iPlaybackState = EPlaying;
+            }
+        else if( aTransportState == CUPnPAVTEvent::EPausedPlayback )
+            {
+            event = EPause;
+            iPlaybackState = EPaused;
+            }
+        TPckg<TUnsolicitedEventE> resp1( event );
+        TInt err = iInitialEventMsg->Write( 1, resp1 );
+        iInitialEventMsg->Complete( err );        
+        delete iInitialEventMsg; iInitialEventMsg = NULL; 
+        }    
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::PropagateEvent
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::PropagateEvent( TUnsolicitedEventC event )
+    {
+    __LOG( "CUPnPPlaybackSession::PropagateEvent" );
+    
+    if( iEventMessage )
+        {
+        TPckg<TUnsolicitedEventC> resp1( event );
+        TInt err = iEventMessage->Write( 1, resp1 );
+        iEventMessage->Complete( err ); 
+        delete iEventMessage; iEventMessage = NULL;
+        }
+    else
+        {
+        __LOG( "CUPnPPlaybackSession::PropagateEvent - add event to queu" );
+        iEventQue.Append( event );
+        }                                        
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::UPnPAVTimerCallback
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::UPnPAVTimerCallback(
+    CUPnPAVTimer::TAVTimerType /*aType*/ )
+    {
+    __LOG( "CUPnPPlaybackSession::UPnPAVTimerCallback" );
+
+    // Fail safe timer expired. Check what event we were expecting
+    if( iExpectedEvent == EEventAVTransportUri )
+        {   
+        __LOG( "CUPnPPlaybackSession::UPnPAVTimerCallback - \
+CurrentTrackUri" );
+        __ASSERT( iCommandMessage, __FILE__, __LINE__ );
+        iCommandMessage->Complete( EAVControllerSetURICompleted );
+        delete iCommandMessage; iCommandMessage = NULL;
+        iExpectedEvent = EEventNone;
+        iPlaybackState = EStopped;                       
+        }
+    else if( iExpectedEvent == EEventStopped )
+        {
+        __LOG( "CUPnPPlaybackSession::UPnPAVTimerCallback - Stop" );
+        __ASSERT( iCommandMessage, __FILE__, __LINE__ );
+        iCommandMessage->Complete( EAVControllerStopCompleted );
+        delete iCommandMessage; iCommandMessage = NULL;
+        iExpectedEvent = EEventNone;
+        iPlaybackState = EStopped;                  
+        }
+    else if( iExpectedEvent == EEventPlaying )
+        {
+        __LOG( "CUPnPPlaybackSession::UPnPAVTimerCallback - Play" );
+        __ASSERT( iCommandMessage, __FILE__, __LINE__ );
+        iCommandMessage->Complete( EAVControllerPlayCompleted );
+        delete iCommandMessage; iCommandMessage = NULL;
+        iExpectedEvent = EEventNone;
+        iPlaybackState = EPlaying;                          
+        }
+    else if( iExpectedEvent == EEventPaused )
+        {
+        __LOG( "CUPnPPlaybackSession::UPnPAVTimerCallback - Pause" );
+        __ASSERT( iCommandMessage, __FILE__, __LINE__ );
+        iCommandMessage->Complete( EAVControllerPauseCompleted );
+        delete iCommandMessage; iCommandMessage = NULL;
+        iExpectedEvent = EEventNone;
+        iPlaybackState = EPaused;                          
+        }
+    else if( iInitialEventMsg )
+        {
+        __LOG( "CUPnPPlaybackSession::UPnPAVTimerCallback - initial event" );
+        TUnsolicitedEventE event( EStop );
+        TPckg<TUnsolicitedEventE> resp1( event );
+        TInt err = iInitialEventMsg->Write( 1, resp1 );
+        iInitialEventMsg->Complete( err );        
+        delete iInitialEventMsg; iInitialEventMsg = NULL; 
+        }
+    else
+        {
+        __LOG( "CUPnPPlaybackSession::UPnPAVTimerCallback - Not Expected!" );
+        __PANIC( __FILE__, __LINE__ );
+        }
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPPlaybackSession::RespondToStopRequest
+// See upnpplaybacksession.h
+// --------------------------------------------------------------------------
+void CUPnPPlaybackSession::RespondToStopRequest()
+    {
+    __LOG( "CUPnPPlaybackSession::RespondToStopRequest - \
+Response to stop" );
+    __ASSERT( iCommandMessage, __FILE__, __LINE__ );
+    iTimer->Cancel();
+    // Unregister from the dispatcher. This way we do not get 
+    // ::AvtStopResponse callback (it would be ignored, anyway)        
+    iServer.Dispatcher().UnRegister( iIPSessionIdCommand );
+    iIPSessionIdCommand = KErrNotFound;        
+    iCommandMessage->Complete( EAVControllerStopCompleted );
+    delete iCommandMessage; iCommandMessage = NULL;
+    iExpectedEvent = EEventNone;
     }
 
 // end of file

@@ -24,9 +24,9 @@
 
 // Include Files
 #include <e32base.h>
-#include <e32def.h> //CArrayFix
-#include <badesca.h> //CDesCArray
+#include <badesca.h>
 
+#include "upnpcontentserverdefs.h" //TUpnpMediaType
 
 /**
  * Helper class to store information about ongoing/pending sharing request
@@ -38,50 +38,66 @@ public :
 
     /**
      * 2 phased contructor
-     * @since S60 3.1
-     * @param aKind Type of sharing request( images&videos or music )
-     * @param aArr Indexes of selection relative to albums or playlists
-     * @param aNameArray Names of containers to share
+     * @since S60 5.2
+     * @param aMediaType Type of sharing request (EImageAndVideo or EPlaylist)
+     * @param aSharingType Type of sharing request (EShareNone, EShareAll, 
+     *         EShareMany)
      */
-    static CUpnpSharingRequest* NewL(
-        TInt aKind,
-        const RArray<TInt>& aArr,
-        CDesCArray* aIdArray = NULL,
-        CDesCArray* aNameArray = NULL );
+    static CUpnpSharingRequest* NewL( 
+            UpnpContentServer::TUpnpMediaType aMediaType, 
+            TInt aSharingType );
 
     /**
-     * 2nd phase constructor.
-     * @since S60 3.1
-     * @param aArr Indexes of selection relative to albums or playlists
-     * @param aNameArray Names of containers to share
+     * Sets the share, unshare and clfids arrays
+     * @since S60 5.2
+     * @param aShareArr Files to be shared
+     * @param aUnshareArr Files to be unshared
+     * @param aClfIds Indexes of selection relative to albums or playlists
      */
-    void ConstructL( const RArray<TInt>& aArr,
-                    CDesCArray* aIdArray,
-                    CDesCArray* aNameArray );
-
-    /**
-     * Constructor
-     * @since S60 3.1
-     * @param aKind Type of sharing request( images&videos or music )
-     */
-    CUpnpSharingRequest( TInt aKind );
+    void SetSharingRequestInfo( 
+            RArray<TFileName>* aShareArr,
+            RArray<TFileName>* aUnshareArr,
+            CDesCArray* aClfIds );
 
     /**
      * Destructor
      */
     virtual ~CUpnpSharingRequest();
 
+private:
+
+    /**
+     * 2nd phase constructor.
+     * @since S60 5.2
+     */
+    void ConstructL() {};
+
+    /**
+     * Constructor
+     * @since S60 5.2
+     * @param aMediaType Type of sharing request (EImageAndVideo or EPlaylist)
+     * @param aSharingType Type of sharing request (EShareNone, EShareAll, 
+     *         EShareMany)
+     */
+    CUpnpSharingRequest( 
+            UpnpContentServer::TUpnpMediaType aMediaType,
+            TInt aSharingType );
+
 public :
+// (These member variables are used without getters or setters in 
+// contentserver, which is why they are public. CUpnpSharingRequest is
+// only a data storage)
+
     /**
      * Determines the type of sharing:
      * images&videos or music
      */
-    TInt iKind;
+    UpnpContentServer::TUpnpMediaType iMediaType;
 
     /**
-     * The number of items in selection
+     * Type of sharing request( EShareNone, EShareAll, EShareMany )
      */
-    TInt iItemCount;
+    TInt iSharingType;
 
     /**
      * The progress of sharing if it is ongoing
@@ -89,20 +105,25 @@ public :
     TInt iProgress;
 
     /**
-     * Selections for the sharing request
+     * Files to be shared
+     * owned
      */
-    RArray<TInt> iSelections;
-
+    RArray<TFileName>* iShareArr;
+      
     /**
-     * Array for object IDs
+     * Files to be unshared
+     * owned
      */
-    CDesCArray* iObjectIds;
-    
+    RArray<TFileName>* iUnshareArr;   
+  
     /**
-     * Array for object names
+     * Ids of selection relative to albums or playlists
+     * owned
      */
-    CDesCArray* iObjectNames;
+    CDesCArray* iClfIds;
+  
     };
 
-
 #endif // __UPNPSHARINGREQUEST_H__
+
+// End of file

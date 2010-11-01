@@ -24,9 +24,7 @@ PRJ_EXPORTS
 PRJ_MMPFILES
 
     // both the command interface and the interface implementation
-    #ifdef FF_UPNP_FRAMEWORK_2_0  // UPnP feature flag
-    upnpcommandplugin.mmp
-    #endif // FF_UPNP_FRAMEWORK_2_0
+    //upnpcommandplugin.mmp
     upnpcommand.mmp
 
 // End of file

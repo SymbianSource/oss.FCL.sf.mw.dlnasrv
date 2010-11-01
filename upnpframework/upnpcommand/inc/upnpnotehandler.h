@@ -128,6 +128,11 @@ class CUpnpNoteHandler : public CBase
          * @since Series 60 3.2
          */
         void ShowPlaybackFailedNoteL();
+        
+        /**
+         * Show "%U is already in use. Please try again later." error note.
+         */
+        void ShowRendererInUseNoteL( const TDesC& aDeviceName );
 
         /**
          * Reset iDrmNoteShown

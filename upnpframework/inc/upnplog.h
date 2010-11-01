@@ -180,7 +180,7 @@ inline void __Dummy_KComponentLogfile()
     { \
     __LOG2( "Panic: %s %d", \
         file, line ); \
-    User::Panic( _L(file), line ) \
+    User::Panic( _L(file), line ); \
     }
 
 #ifdef __UPNP_DEBUG_ASSERT

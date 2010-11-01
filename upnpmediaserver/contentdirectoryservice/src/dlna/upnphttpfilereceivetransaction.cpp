@@ -39,7 +39,7 @@ CUpnpHttpFileReceiveTransaction* CUpnpHttpFileReceiveTransaction::NewL(
     }
 
 // ---------------------------------------------------------------------------
-// CUpnpHttpFileServeTransaction::ConstructL
+// CUpnpHttpFileReceiveTransaction::ConstructL
 // 
 // ---------------------------------------------------------------------------
 //

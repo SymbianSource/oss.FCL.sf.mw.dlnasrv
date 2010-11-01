@@ -27,6 +27,8 @@
 
 #include <e32base.h>    // CBase
 #include <e32std.h>     // TBuf
+#include <f32file.h>
+#include <badesca.h>
 
 // CONSTANTS
 const TInt KMaxFriendlyNameLength( 64 );

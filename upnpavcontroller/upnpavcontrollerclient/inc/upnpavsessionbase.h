@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -46,27 +46,6 @@ public:
      */
     virtual const CUpnpAVDevice& Device() const = 0;
         
-    /**
-     * Reserves local Media Server services.
-     *
-     * @since Series 60 3.1     
-     */
-    virtual void ReserveLocalMSServicesL() = 0; 
-
-    /**
-     * Cancels reserving of local Media Server services.
-     *
-     * @since Series 60 3.1     
-     */
-    virtual void CancelReserveLocalMSServicesL() = 0; 
-
-    /**
-     * Releases local Media Server services.
-     *
-     * @since Series 60 3.1     
-     */
-    virtual void ReleaseLocalMSServicesL() = 0; 
-
 protected:
     
     virtual ~MUPnPAVSessionBase() {};

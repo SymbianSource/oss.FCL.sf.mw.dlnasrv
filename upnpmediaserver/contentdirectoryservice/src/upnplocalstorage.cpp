@@ -495,7 +495,7 @@ void CUpnpLocalStorage::UnshareItemListL( RArray<TInt>& aObjList,
         parentId = iMetadataStorage->GetParentIdL( aObjList[i] );
         if ( parentId>=0 )
             {
-            objCommitedList.AppendL(parentId);
+            objCommitedList.Append(parentId);
             // commit every KCommitEveryNum inserts
             if( !( i%KCommitEveryNum ) ) 
                 {

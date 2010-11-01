@@ -65,10 +65,10 @@ LIBRARY         euser.lib
 LIBRARY         bafl.lib
 LIBRARY         cone.lib
 LIBRARY         efsrv.lib 
-LIBRARY         PlatformEnv.lib
+LIBRARY         platformenv.lib
 LIBRARY         avkon.lib
 LIBRARY         eikctl.lib
-LIBRARY         CommonEngine.lib 
+LIBRARY         commonengine.lib 
 
 // S60 Upnp Stack
 LIBRARY         upnpipserversutils.lib

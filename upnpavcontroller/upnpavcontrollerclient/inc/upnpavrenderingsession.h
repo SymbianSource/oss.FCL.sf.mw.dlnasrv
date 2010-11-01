@@ -25,8 +25,8 @@
 
 #include <e32std.h>
 #include "upnpavsessionbase.h"
+#include "upnpavrenderingsessionobserver.h"
 
-class MUPnPAVRenderingSessionObserver;
 class CUpnpItem;
 
 /**
@@ -167,6 +167,21 @@ public:
      */
     virtual void GetPositionInfoL() = 0;
     
+    /**
+     * Sends a AVTransport Seek operation with type REL_TIME to the renderer.
+     *
+     * @since Series 60 3.2.3
+     * @param aDesiredTime the time where to seek
+     */
+    virtual void SeekRelTimeL( const TTime& aDesiredTime ) = 0;
+        
+    /**
+     * Returns current state of the renderer
+     *
+     * @since Series 60 5.2
+     * @return TUPnPAVInteractOperation rendrer state
+     */
+    virtual TUPnPAVInteractOperation GetRendererStateL() = 0;
     };
 
 

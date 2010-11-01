@@ -121,7 +121,7 @@ public: // the interface
      */
     void ResolveL(
         MUPnPItemResolverObserver& aObserver
-        );
+        , CUpnpAVDevice* aDevice = NULL);
 
     /**
      * see UPnPItemResolver
@@ -270,7 +270,8 @@ private: // members
     RFile iFile;
     
     // selector interface to use
-    MUPnPResourceSelector& iSelector;
+    MUPnPResourceSelector& iSelector;   
+
     };
 
 

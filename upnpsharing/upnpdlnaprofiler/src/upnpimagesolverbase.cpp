@@ -50,6 +50,8 @@ const TInt KJpeg_smico_max_width = 48;
 const TInt KJpeg_smico_max_height = 48;
 const TInt KJpeg_lrgico_max_width = 120;
 const TInt KJpeg_lrgico_max_height = 120;
+const TInt KJpeg_tn_max_width = 160;
+const TInt KJpeg_tn_max_height = 160;
 const TInt KJpeg_sm_max_width = 640;
 const TInt KJpeg_sm_max_height = 480;
 const TInt KJpeg_med_max_width = 1024;
@@ -218,6 +220,12 @@ HBufC* CUpnpImageSolverBase::ProfileForFileL( const TDesC& /*aFilename*/,
             {
             retval = HBufC::NewL( KJpeg_lrg_ico().Length() );
             retval->Des().Append( KJpeg_lrg_ico() );
+            }
+        else if ( imageResolution.iWidth <= KJpeg_tn_max_width && 
+             imageResolution.iHeight <= KJpeg_tn_max_height ) 
+            {
+            retval = HBufC::NewL( KJpeg_tn().Length() );
+            retval->Des().Append( KJpeg_tn() );
             }
         else if ( imageResolution.iWidth <= KJpeg_sm_max_width && 
              imageResolution.iHeight <= KJpeg_sm_max_height ) 

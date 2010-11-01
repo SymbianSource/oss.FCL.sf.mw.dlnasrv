@@ -69,7 +69,7 @@ SOURCE          upnptransfercontroller.cpp
 SOURCE          upnptransferhandler.cpp
 
 SOURCE          dlna/upnpdlnafilter.cpp 
-SOURCE          dlna/upnphttpfileservetransaction.cpp
+SOURCE          dlna/upnphttpdataservetransaction.cpp
 SOURCE          dlna/upnphttpfilereceivetransaction.cpp
 SOURCE          dlna/upnpdlnafilterheaders.cpp
 

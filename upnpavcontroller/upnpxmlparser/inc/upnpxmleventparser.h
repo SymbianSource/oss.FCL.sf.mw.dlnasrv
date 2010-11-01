@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006-2007 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2006-2007,2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -15,11 +15,6 @@
 *
 */
 
-
-
-
-
-
 #ifndef C_UPNPXMLEVENTPARSER_H_
 #define C_UPNPXMLEVENTPARSER_H_
 
@@ -28,6 +23,7 @@
 #include <xml/contenthandler.h>
 
 // FORWARD DECLARATIONS
+class CUPnPAVTEvent;
 
 using namespace Xml;
 
@@ -40,18 +36,23 @@ using namespace Xml;
 class CUPnPXMLEventParser :  public CBase,
                              public MContentHandler
     {
+        
+private:
 
-public:
-
+    /**
+     * Internal parser state.
+     */
     enum TParserState
         {
         EEvent = 0,
         EInstanceID,
         EVolume,
         EMute,
+        ETransportState,
+        ETransportURI,
         ENotSupported // Brightness etc.
-        };    
-
+        }; 
+        
 public:
 
     /**
@@ -67,12 +68,25 @@ public:
 public:
 
     /**
-     * Parses xml data to the array of objects.
-     * @param aResultArray, An array for objects in xml root.
+     * Parses xml event data to values.
+     * 
      * @param aData, xml data.
+     * @param aInstanceId, instance id of current session
+     * @return CUPnPAVTEvent*   contains event data. Ownership of event
+     *                          is transferred.
      */
-    IMPORT_C void ParseResultDataL( const TDesC8& aData,
-        TInt& aInstanceId, TInt& aVolume, TBool& aMute );
+    IMPORT_C CUPnPAVTEvent* ParseRcEventDataL( const TDesC8& aData,
+            TInt aInstanceId );
+        
+    /**
+     * Parses xml event data to values.
+     * @param aData, xml data.
+     * @param aInstanceId, instance id of current session
+     * @return CUPnPAVTEvent*   contains event data. Ownership of event
+     *                          is transferred.
+     */
+    IMPORT_C CUPnPAVTEvent* ParseAvtEventDataL( const TDesC8& aData,
+            TInt aInstanceId );
                     
 protected: // from MContentHandler
 
@@ -181,23 +195,39 @@ private:
      */
     void ConstructL();
     
-private:    
-
+private:  
+  
+    /**
+     * Sets class member variables
+     * @param RAttributeArray& aAttributes
+     * @return None.
+     */
     void SetAttributesL( const RAttributeArray& aAttributes );
-
+    
+    /**
+     * Reset temporary variables that are used when parsing event
+     */
     void Reset();
+    
+    /**
+     * Resets variables where event values are stored
+     */
+     void ResetResult();
     
 private: // data
     
     TParserState    iParserState;
-        
-    TInt            iInstanceID;
     
-    TInt            iMute;
+    TInt            iSessionInstanceID;
+    
+    TInt            iMasterVolumeState;
+    
 
-    TInt            iVolume;
-    //ETrue:Master Volume is set.EFalse:Master Volume is not set.
-    TBool           iMasterVolumeState;
+    // variables used when parsing current event
+    CUPnPAVTEvent*   iAvtEvent;          // own
+    
+    // variables where data from a valid event is stored
+    CUPnPAVTEvent*   iAvtResultEvent;    // own
     };
 
 #endif // C_UPNPXMLEVENTPARSER_H_

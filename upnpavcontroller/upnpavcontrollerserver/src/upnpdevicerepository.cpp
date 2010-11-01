@@ -24,10 +24,12 @@
 #include "upnpdevicerepository.h"
 
 #include "upnpavdeviceextended.h"
+#include "upnpavcontrolpoint.h"
 
 #include <upnpservice.h>
 #include <upnpdevice.h>
-#include <upnpavcontrolpoint.h>
+#include <upnpicon.h>
+#include "upnpavcontrollerglobals.h"    // For KRel_Time
 
 // CONSTANTS
 _LIT8( KSearch,                     "Search" );
@@ -40,9 +42,11 @@ _LIT8( KGetMute,                    "GetMute");
 _LIT8( KSetMute,                    "SetMute");
 _LIT8( KMediaServer,                "MediaServer" );
 _LIT8( KFriendlyName,               "friendlyName" );
+_LIT8( KModelName,                  "modelName" );
 _LIT8( KAVTransportService,         "AVTransport" );
 _LIT8( KRenderingControlService,    "RenderingControl" );
 _LIT8( KSetNextUri,                 "SetNextAVTransportURI" );
+_LIT8( KPrepareForConnection,       "PrepareForConnection" );
 _LIT8( KDestroyObject,              "DestroyObject" );
 _LIT8( KDlnaDoc,                    "dlna:X_DLNADOC" );
 _LIT8( KDlnaCap,                    "dlna:X_DLNACAP" );
@@ -53,6 +57,14 @@ _LIT8( KCreateChildContainer,       "create-child-container" );
 _LIT8( KDMS,                        "DMS" );
 _LIT8( KDMP,                        "DMP" );
 _LIT8( KDMR,                        "DMR" );
+_LIT8( KJpg,                        "jpg" );
+_LIT8( KJpeg,                       "jpeg" );
+_LIT8( KPng,                        "png" );
+// Prefer 48x48 color icons and then greater size color icons
+const TInt KPreferredIconSize = 48;
+
+// Seek mode argument type string
+_LIT8( KArgumentTypeSeekMode, "A_ARG_TYPE_SeekMode" );
 
 const TInt KFirstSubscription = 1;
 
@@ -114,7 +126,7 @@ void CUPnPDeviceRepository::ConstructL()
 // CUPnPDeviceRepository::AddDeviceL
 // See upnpdevicerepository.h
 // --------------------------------------------------------------------------
-void CUPnPDeviceRepository::AddDeviceL( CUpnpDevice& aDevice )
+CUpnpAVDeviceExtended& CUPnPDeviceRepository::AddDeviceL( CUpnpDevice& aDevice )
     {
     __LOG( "CUPnPDeviceRepository::AddDeviceL" );
         
@@ -177,13 +189,19 @@ void CUPnPDeviceRepository::AddDeviceL( CUpnpDevice& aDevice )
 
     dev->SetFriendlyNameL( aDevice.DescriptionProperty( KFriendlyName ) );
 
+    dev->SetModelNameL( aDevice.DescriptionProperty( KModelName ) );
+    
     dev->SetUuidL( aDevice.Uuid() );   
     
     dev->SetLocal( aDevice.Local() );
-    
+
     ParseDeviceServicesL( aDevice, *dev );
+
+    SelectDeviceIconL( aDevice, *dev );
+
     CleanupStack::Pop( dev );
     iDevices.AppendL( dev );
+    return *dev;
     }
     
 // --------------------------------------------------------------------------
@@ -486,6 +504,10 @@ found" );
         }           
     }
 
+// --------------------------------------------------------------------------
+// CUPnPDeviceRepository::ConnectionLost
+// See upnpdevicerepository.h
+// --------------------------------------------------------------------------
 void CUPnPDeviceRepository::ConnectionLost()
     {
     __LOG( "CUPnPDeviceRepository::ConnectionLost" );
@@ -493,10 +515,61 @@ void CUPnPDeviceRepository::ConnectionLost()
     iDevices.ResetAndDestroy();
     }
 
+// --------------------------------------------------------------------------
+// CUPnPDeviceRepository::IsWlanActive
+// See upnpdevicerepository.h
+// --------------------------------------------------------------------------
 TBool CUPnPDeviceRepository::IsWlanActive()
     {
     __LOG1( "CUPnPDeviceRepository::IsWlanActive, %d", (TInt)iIsWlanActive );
     return iIsWlanActive;
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPDeviceRepository::SetMaxVolume
+// See upnpdevicerepository.h
+// --------------------------------------------------------------------------
+void CUPnPDeviceRepository::SetMaxVolume(CUpnpStateVariable* aVolumeState,
+        CUpnpAVDeviceExtended& aTarget)
+    {
+    if( aVolumeState )
+        {
+        // If volume info found, save it to the device
+        TInt maxVolume = aVolumeState->MaxValue();
+        // If max volume not defined, it is set to 100
+        if( maxVolume == KErrNotFound )
+            {
+            maxVolume = 100;
+            }
+        aTarget.SetMaxVolume( maxVolume );
+        }
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPDeviceRepository::SetSeekCapabilityL
+// See upnpdevicerepository.h
+// --------------------------------------------------------------------------
+void CUPnPDeviceRepository::SetSeekCapabilityL(CUpnpStateVariable* seekModeStateVariable,
+        CUpnpAVDeviceExtended& aTarget)
+    {
+    if ( seekModeStateVariable ) 
+        {
+        CDesC8Array* allowedSeekModes = 
+            seekModeStateVariable->AllowedValuesLC();
+        if ( allowedSeekModes ) 
+            {
+            for ( TInt i=0 ; i < allowedSeekModes->Count() ; i++ ) 
+                {
+                if ( 0 == allowedSeekModes->
+                            operator[](i).CompareC( KRel_Time() ) )
+                    {
+                    aTarget.SetSeekCapability( CUpnpAVDevice::ERelTime );
+                    break;
+                    }
+                }               
+            }
+        CleanupStack::PopAndDestroy( allowedSeekModes );
+        }
     }
 
 // --------------------------------------------------------------------------
@@ -514,30 +587,25 @@ void CUPnPDeviceRepository::ParseDeviceServicesL( CUpnpDevice& aSource,
     TBool getVolumeSupported = EFalse;
     TBool setVolumeSupported = EFalse;
 
-    RPointerArray<CUpnpService>services = aSource.ServiceList();
+    RPointerArray<CUpnpService>& services = aSource.ServiceList();
 
     TInt i;
     TInt count = services.Count(); 
     for( i = 0; i < count; i++ )
         {
-        // Get max volume if it exists
-        CUpnpStateVariable* volumeState = 
+       CUpnpStateVariable* volumeState = 
                 services[ i ]->StateVariable( KVolume );
 
-        // If volume info found, save it to the device
-        if( volumeState )
-            {
-            TInt maxVolume = volumeState->MaxValue();
-            // If max volume not defined, it is set to 100
-            if( maxVolume == KErrNotFound )
-                {
-                maxVolume = 100;
-                }
-            aTarget.SetMaxVolume( maxVolume );
-            }
+       SetMaxVolume(volumeState, aTarget);
+
+        CUpnpStateVariable* seekModeStateVariable = 
+            services[i]->StateVariable( KArgumentTypeSeekMode() );
+        
+        SetSeekCapabilityL(seekModeStateVariable, aTarget);
 
         // Get the actions
         RPointerArray<CUpnpAction> actions;
+        // 'actions' cannot be closed, it is the same instance that is inside 'service'
         services[ i ]->GetActionList( actions );
 
         // Go through the action elements
@@ -584,7 +652,11 @@ void CUPnPDeviceRepository::ParseDeviceServicesL( CUpnpDevice& aSource,
                 if( actionName.Find( KDestroyObject ) >= 0 )
                     {
                     aTarget.SetDestroyObject( ETrue );
-                    }                    
+                    }
+                if( actionName.Find( KPrepareForConnection ) >= 0 )
+                    {
+                    aTarget.SetPrepareForConnection( ETrue );
+                    }
                 }
             }
         }
@@ -608,6 +680,72 @@ void CUPnPDeviceRepository::ParseDeviceServicesL( CUpnpDevice& aSource,
         {
         aTarget.SetMuteCapability( ETrue );
         }
-    }        
+        
+     }
+
+// --------------------------------------------------------------------------
+// CUPnPDeviceRepository::SelectDeviceIconL
+// See upnpdevicerepository.h
+// --------------------------------------------------------------------------
+void CUPnPDeviceRepository::SelectDeviceIconL( CUpnpDevice& aSource,
+    CUpnpAVDeviceExtended& aTarget )
+    {
+    // Icon selection rules:
+    // 1. Select any if none selected
+    // 2. Select the most colorful
+    // 3. Select greater until preferred size reached
+    // 4. Select the closest greater size after preferred size has passed
+    TPtrC8 deviceName( aTarget.FriendlyName() );
+    __LOG8_1( "CUPnPDeviceRepository::SelectDeviceIconL - Device: %S", &deviceName );
+    RPointerArray< CUpnpIcon >& icons( aSource.Icons() );
+    TInt iconCount( icons.Count() );
+    CUpnpIcon* selectedIcon = NULL;
+    TInt selectedDepth( 0 );
+    TInt selectedWd( 0 );
+    TInt selectedHd( 0 );
+    TInt selectedWhdSquare( 0 );
+    for ( TInt i( 0 ); i < iconCount; ++i )
+        {
+        CUpnpIcon* icon = icons[ i ];
+        TPtrC8 iconMimeType( icon->MimeType() );
+        __LOG8_1( "CUPnPDeviceRepository::SelectDeviceIconL - Found: %S", &iconMimeType );
+        __LOG3( "CUPnPDeviceRepository::SelectDeviceIconL - Width: %d Height: %d Depth: %d",
+                icon->Width(), icon->Height(), icon->Depth() );
+        if ( iconMimeType.FindF( KJpg ) != KErrNotFound ||
+             iconMimeType.FindF( KJpeg ) != KErrNotFound ||
+             iconMimeType.FindF( KPng ) != KErrNotFound )
+            {
+            TInt depth( icon->Depth() );
+            TInt wd( icon->Width() - KPreferredIconSize ); // Width diff to preferred size
+            TInt hd( icon->Height() - KPreferredIconSize ); // Height diff to preferred size
+            TInt whdSquare( wd * wd + hd * hd ); // Diffs combined
+            if ( !selectedIcon || // Rule 1
+                 ( depth >= selectedDepth && // Rule 2
+                   ( ( selectedWd < 0 && selectedWd < 0 && ( wd > selectedWd || hd > selectedHd ) ) || // Rule 3
+                     ( whdSquare < selectedWhdSquare && ( wd >= 0 || hd >= 0 ) ) ) // Rule 4
+                   )
+                 )
+                {
+                selectedIcon = icon;
+                selectedDepth = depth;
+                selectedWd = wd;
+                selectedHd = hd;
+                selectedWhdSquare = whdSquare;
+                }
+            }
+        }
+    if ( selectedIcon )
+        {
+        TPtrC8 iconMimeType( selectedIcon->MimeType() );
+        __LOG8_1( "CUPnPDeviceRepository::SelectDeviceIconL - Selected: %S", &iconMimeType );
+        __LOG3( "CUPnPDeviceRepository::SelectDeviceIconL - Width: %d Height: %d Depth: %d",
+                selectedIcon->Width(), selectedIcon->Height(), selectedIcon->Depth() );
+        aTarget.SetIconUrlL( aSource.Address(), aSource.UrlBase(), selectedIcon->Url() );
+        }
+    else
+        {
+        __LOG( "CUPnPDeviceRepository::SelectDeviceIconL - None selected" );
+        }
+    }
 
 // end of file

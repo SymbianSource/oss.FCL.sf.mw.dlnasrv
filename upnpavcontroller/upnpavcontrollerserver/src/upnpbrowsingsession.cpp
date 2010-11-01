@@ -16,10 +16,6 @@
 */
 
 
-
-
-
-
 // INCLUDE FILES
 // System
 #include <utf.h> 
@@ -29,8 +25,10 @@
 // upnp stack api
 #include <upnpstring.h>
 #include <upnpdevice.h>
-#include <upnpcontainer.h>
 #include <upnpservice.h>
+
+// dlnasrv / mediaserver api
+#include <upnpcontainer.h>
 #include <upnpitem.h>
 #include <upnpelement.h>
 #include <upnpmediaserversettings.h>
@@ -38,27 +36,22 @@
 #include <upnpmediaservernotifier.h>
 #include <upnpfiletransferevent.h>
 
-#include <upnpavcontrolpoint.h>
-
-// upnpframework / avcontroller api
+// dlnasrv / avcontroller api
 #include "upnpavrenderingsessionobserver.h"
 
-// upnpframework / avcontroller helper api
+// dlnasrv / avcontroller helper api
 #include "upnpconstantdefs.h" // for upnp-specific stuff
 #include "upnpfileutility.h"
 #include "upnpitemutility.h"
 
-// upnpframework / xml parser api
+// dlnasrv / xmlparser api
 #include "upnpxmlparser.h"
 
-// upnpframework / internal api's
-#include "upnpcontentservercrkeys.h"
-#include "upnpcommonutils.h"
+// dlnasrv / internal api's
 #include "upnpcdsreselementutility.h"
 #include "upnpmetadatafetcher.h"
 
-// avcontroller internal
-#include "upnpfilesharingactive.h"
+// dlnasrv / avcontroller internal
 #include "upnpavdispatcher.h"
 #include "upnpavbrowserequest.h"
 #include "upnpavrequest.h"
@@ -67,16 +60,23 @@
 #include "upnpdevicerepository.h"
 #include "upnpavbrowserespparams.h"
 #include "upnpavcontrollerserver.h"
+#include "upnpavcpstrings.h"
 #include "upnpbrowsingsession.h"
+#include "upnpavcontrolpoint.h"
+
+using namespace UpnpAVCPStrings;
+
 
 // CONSTANTS
 _LIT8( KDirectChildren,         "BrowseDirectChildren" );
 _LIT8( KMetaData,               "BrowseMetadata" );
-_LIT8( KImportUri,              "importUri" );
-_LIT8( KCreateClass,            "upnp:createClass" );
 _LIT8( KBrowseMetadata,         "BrowseMetadata" );
+_LIT8( KDefaultStartingIndex,   "0" );
+_LIT8( KDefaultRequestedCount,  "1" );
+
 const TInt KDefaultInstanceId   = 0;
 const TInt KExpectedCount       = 1;
+const TInt KMaxIntLength        = 10;
 
 _LIT( KComponentLogfile, "upnpavcontrollerserver.txt");
 #include "upnplog.h"
@@ -90,14 +90,13 @@ _LIT( KComponentLogfile, "upnpavcontrollerserver.txt");
 // --------------------------------------------------------------------------
 CUPnPBrowsingSession* CUPnPBrowsingSession::NewL
     (
-    RUpnpMediaServerClient& aClient,
     CUpnpAVControllerServer& aServer,
     TInt aSessionId,
     const TDesC8& aUuid
     )
     {
     CUPnPBrowsingSession* self = new (ELeave) CUPnPBrowsingSession(
-        aClient, aServer, aSessionId );
+        aServer, aSessionId );
     CleanupStack::PushL( self );    
     
     self->ConstructL( aUuid );
@@ -111,22 +110,16 @@ CUPnPBrowsingSession* CUPnPBrowsingSession::NewL
 // --------------------------------------------------------------------------
 CUPnPBrowsingSession::CUPnPBrowsingSession
     (
-    RUpnpMediaServerClient& aClient,
     CUpnpAVControllerServer& aServer,
     TInt aSessionId
     ):
-    iMediaServer( aClient ),
     iServer( aServer ),
     iSessionId( aSessionId ),
     
     iInstanceId( KDefaultInstanceId ),
     iIPSessionId( KErrNotFound ),
 
-    iTransferId( KErrNotFound ),
-
-    iTransferEventReceived( EFalse ),
-    iInternalState( ENone ),
-    iCopyState( EIdle )
+    iInternalState( ENone )
     {
     }
 
@@ -142,27 +135,9 @@ CUPnPBrowsingSession::~CUPnPBrowsingSession()
     delete iRespBuf;
     delete iRespBuf2;
     
-    delete iImportURI;
-    delete iSourceURI;
-    
     delete iItemId;
     
-    delete iContainerId;
-    
-    delete iSharedItem;
-    
-    delete iMediaServerNotifier;
-    
-    delete iFileSharing;      
-    
     delete iLocalMediaServerUuid; 
-    
-    delete iOriginalLocation;
-    
-    delete iFilePath;
-    
-    delete iMSSettings; 
-    delete iAppSettings;
     
     delete iActionMessage;
     delete iDeviceMessage;
@@ -175,9 +150,6 @@ CUPnPBrowsingSession::~CUPnPBrowsingSession()
 void CUPnPBrowsingSession::ConstructL( const TDesC8& aUuid )
     {
     __LOG( "CUPnPBrowsingSession::ConstructL" );
-    
-    iMediaServerNotifier = CUpnpMediaServerNotifier::NewL( this );
-    iFileSharing = CUPnPFileSharingActive::NewL();
 
     // Get the local Media Server Uuid, if available
     const RPointerArray<CUpnpAVDeviceExtended>& devList =
@@ -188,12 +160,12 @@ void CUPnPBrowsingSession::ConstructL( const TDesC8& aUuid )
         {
         if( devList[ i ]->Local() )
             {
-            __ASSERTD( !iLocalMediaServerUuid, __FILE__, __LINE__ );
+            __ASSERT( !iLocalMediaServerUuid, __FILE__, __LINE__ );
             iLocalMediaServerUuid = devList[i]->Uuid().AllocL();
             }
         if( devList[ i ]->Uuid() == aUuid )
             {
-            __ASSERTD( !iDevice, __FILE__, __LINE__ );
+            __ASSERT( !iDevice, __FILE__, __LINE__ );
             iDevice = CUpnpAVDeviceExtended::NewL( *devList[ i ] );
             }             
         }
@@ -208,332 +180,147 @@ void CUPnPBrowsingSession::ConstructL( const TDesC8& aUuid )
             User::Leave( KErrNotFound );    
             }    
         }
+    else
+        {
+        //
+        // Gets related control point device (CUpnpDevice) only if aUuid 
+        // is provided. It is needed when CUpnpAVControlPoint is really 
+        // used.
+        //
+        // In some cases CUPnPBrowsingSession is be instantiated with dummy
+        // device uuid (KNullDesC8). In these cases we shouldn't leave nor
+        // get the control point device.
+        iCpDevice = iServer.ControlPoint().Device( aUuid );
+        if ( !iCpDevice ) 
+            {
+            User::Leave( KErrNotFound );
+            }
+        }
+    }
+
+
+
+// --------------------------------------------------------------------------
+// CUPnPBrowsingSession::ActionResponseL
+// --------------------------------------------------------------------------
+void CUPnPBrowsingSession::ActionResponseL(CUpnpAction* aAction)
+    {
+    __ASSERT( aAction->SessionId()==iIPSessionId, __FILE__, __LINE__ );
+
+    if (aAction->Name().Compare(KGetSearchCapabilities) == 0)
+        {
+        CdsSearchCapabilitiesResponse(
+            aAction->Error(),
+            aAction->ArgumentValue( KSearchCaps ) );
+        }
+    else if (aAction->Name().Compare(KBrowse) == 0)
+        {
+        const TDesC8& numberReturned = aAction->ArgumentValue( 
+                KNumberReturned );
+        TLex8 returnedLex( numberReturned );
+        TInt numberReturnedInt;
+        User::LeaveIfError( returnedLex.Val( numberReturnedInt ) );
         
-    iMSSettings = CUpnpMediaServerSettings::NewL();
-    iAppSettings = CRepository::NewL( KCrUidUpnpContentserver );   
+        const TDesC8& totalmatches = aAction->ArgumentValue( KTotalMatches );
+        TLex8 matchesLex( totalmatches );
+        TInt totalMatchesInt;
+        User::LeaveIfError( matchesLex.Val( totalMatchesInt ) );
+   
+        CdsBrowseResponseL(
+            aAction->Error(),
+            aAction->ArgumentValue( KBrowseFlag ),
+            aAction->ArgumentValue( KResult ),
+            numberReturnedInt,
+            totalMatchesInt,
+            aAction->ArgumentValue( KUpdateID ) );
+        }
+    else if (aAction->Name().Compare(KSearch) == 0)
+        {		
+        const TDesC8& numberReturned = aAction->ArgumentValue( 
+                KNumberReturned );
+        TLex8 returnedLex( numberReturned );
+        TInt numberReturnedInt;
+        User::LeaveIfError( returnedLex.Val( numberReturnedInt ) );
+
+        const TDesC8& totalmatches = aAction->ArgumentValue( KTotalMatches );
+        TLex8 matchesLex( totalmatches );
+        TInt totalMatchesInt;
+        User::LeaveIfError( matchesLex.Val( totalMatchesInt ) );
+
+        CdsSearchResponse(
+            aAction->Error(),
+            aAction->ArgumentValue( KResult ),
+            numberReturnedInt,
+            totalMatchesInt,
+            aAction->ArgumentValue( KUpdateID )
+            );
+        }
+    else if (aAction->Name().Compare(KDestroyObject) == 0)
+        {		
+        CdsDestroyObjectResponse(
+            aAction->Error() );
+        }
+    else if (aAction->Name().Compare(KCreateObject) == 0)
+        {
+        CdsCreateObjectResponse(
+            aAction->Error(),
+            aAction->ArgumentValue(KObjectID), 
+            aAction->ArgumentValue(KResult)
+            );
+        }
+    else
+        {
+        __LOG( "response not expected, ignore" );
+        }
     }
 
 // --------------------------------------------------------------------------
-// CUPnPBrowsingSession::RcSetVolumeResponse
-// See upnpbrowsingsession.h
+// CUPnPBrowsingSession::StateUpdatedL
 // --------------------------------------------------------------------------
-void CUPnPBrowsingSession::RcSetVolumeResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/, 
-    const TDesC8& /*aInstance*/, 
-    const TDesC8& /*aChannel*/, 
-    const TDesC8& /*aDesiredVolume*/ )
+void CUPnPBrowsingSession::StateUpdatedL(CUpnpService* /*aService*/)
     {
     // No implementation required        
     }
 
 // --------------------------------------------------------------------------
-// CUPnPBrowsingSession::RcVolumeResponse
-// See upnpbrowsingsession.h
+// CUPnPBrowsingSession::HttpResponseL
 // --------------------------------------------------------------------------
-void CUPnPBrowsingSession::RcVolumeResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/, 
-    const TDesC8& /*aInstance*/, 
-    const TDesC8& /*aChannel*/, 
-    const TDesC8& /*aCurrentVolume*/)
-    {
-    // No implementation required                           
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::RcSetMuteResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::RcSetMuteResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/, 
-    const TDesC8& /*aInstance*/, 
-    const TDesC8& /*aChannel*/, 
-    const TDesC8& /*aDesiredMute*/ )
-    {
-    // No implementation required   
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::RcMuteResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::RcMuteResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/, 
-    const TDesC8& /*aInstance*/, 
-    const TDesC8& /*aChannel*/, 
-    const TDesC8& /*aCurrentMute*/ )
-    {
-    // No implementation required                      
-    }
-
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::AvtSetTransportUriResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::AvtSetTransportUriResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aCurrentUri*/,
-    const TDesC8& /*aCurrentUriMetaData*/)
+void CUPnPBrowsingSession::HttpResponseL(CUpnpHttpMessage* /*aMessage*/)
     {
     // No implementation required        
     }
 
 // --------------------------------------------------------------------------
-// CUPnPBrowsingSession::AvtSetNextTransportUriResponse
-// See upnpbrowsingsession.h
+// CUPnPBrowsingSession::DeviceDiscoveredL
 // --------------------------------------------------------------------------
-void CUPnPBrowsingSession::AvtSetNextTransportUriResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aNextUri*/,
-    const TDesC8& /*aNextUriMetaData*/)
-    {
-    // No implementation required        
-    }
-  
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::AvtMediaInfoResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::AvtMediaInfoResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aNrTracks*/,
-    const TDesC8& /*aMediaDuration*/,
-    const TDesC8& /*aCurrentUri*/,
-    const TDesC8& /*aCurrentUriMetaData*/,
-    const TDesC8& /*aNextUri*/,
-    const TDesC8& /*aNextUriMetaData*/,
-    const TDesC8& /*aPlayMedium*/,
-    const TDesC8& /*aRecordMedium*/,
-    const TDesC8& /*aWriteStatus*/)
+void CUPnPBrowsingSession::DeviceDiscoveredL(CUpnpDevice* /*aDevice*/)
     {
     // No implementation required        
     }
 
 // --------------------------------------------------------------------------
-// CUPnPBrowsingSession::AvtGetTransportInfoResponse
-// See upnpbrowsingsession.h
+// CUPnPBrowsingSession::DeviceDisappearedL
 // --------------------------------------------------------------------------
-void CUPnPBrowsingSession::AvtGetTransportInfoResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aCurrenTransportState*/,
-    const TDesC8& /*aCurrentTransportStatus*/,
-    const TDesC8& /*aCurrentSpeed*/)
+void CUPnPBrowsingSession::DeviceDisappearedL(CUpnpDevice* /*aDevice*/)
     {
     // No implementation required        
     }
 
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::AvtPositionInfoResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::AvtPositionInfoResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aTrack*/,
-    const TDesC8& /*aTrackDuration*/,
-    const TDesC8& /*aTrackMetaData*/,
-    const TDesC8& /*aTrackURI*/,
-    const TDesC8& /*aRelTime*/,
-    const TDesC8& /*aAbsTime*/,
-    const TDesC8& /*aRelCount*/,
-    const TDesC8& /*aAbsCount*/)
-    {
-    // No implementation required                
-    }
 
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::AvtDeviceCapabilitiesResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::AvtDeviceCapabilitiesResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aPlayMedia*/,
-    const TDesC8& /*aRecMedia*/,
-    const TDesC8& /*aRecQualityMode*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::AvtTransportSettingsResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::AvtTransportSettingsResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aPlayMode*/,
-    const TDesC8& /*aRecQualityMode*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::AvtStopResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::AvtStopResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::AvtPlayResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::AvtPlayResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aSpeed*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::AvtPauseResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::AvtPauseResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::AvtRecordResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::AvtRecordResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::AvtSeekResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::AvtSeekResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aUnit*/,
-    const TDesC8& /*aTarget*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::AvtNextResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::AvtNextResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::AvtPreviousResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::AvtPreviousResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::AvtSetPlayModeResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::AvtSetPlayModeResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aNewPlayMode*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::AvtSetRecordModeResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::AvtSetRecordModeResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aInstanceId*/,
-    const TDesC8& /*aNewRecordQuality*/)
-    {
-    // No implementation required        
-    }
 
 // --------------------------------------------------------------------------
 // CUPnPBrowsingSession::CdsSearchCapabilitiesResponse
 // See upnpbrowsingsession.h
 // --------------------------------------------------------------------------
 void CUPnPBrowsingSession::CdsSearchCapabilitiesResponse(
-    const TDesC8& /*aUuid*/,
-    TInt aSessionId,
     TInt aErr,
     const TDesC8& aSearchCaps)
     {
     __LOG1( "CUPnPBrowsingSession::CdsSearchCapabilitiesResponse: %d",
         aErr );
-    
-    __ASSERTD( iIPSessionId == aSessionId, __FILE__, __LINE__ );
-    
+
     iServer.Dispatcher().UnRegister( iIPSessionId );
     iIPSessionId = KErrNotFound;
-    //iActionPending = EFalse;
     
     if( iActionMessage )
         {
@@ -548,12 +335,12 @@ void CUPnPBrowsingSession::CdsSearchCapabilitiesResponse(
                 iRespBuf = aSearchCaps.Alloc();
                 if( iRespBuf )
                     {
-                    TPckg<TInt> resp1( aSearchCaps.Length() );
+                    TPckgBuf<TInt> resp1( aSearchCaps.Length() );
                     iActionMessage->Write( 1, resp1 );
                     }
                 else
                     {
-                    TPckg<TInt> resp1( 0 );
+                    TPckgBuf<TInt> resp1( 0 );
                     iActionMessage->Write( 1, resp1 );
                     }
                 
@@ -563,7 +350,7 @@ void CUPnPBrowsingSession::CdsSearchCapabilitiesResponse(
                 }
             else
                 {
-                TPckg<TInt> resp1( 0 );
+                TPckgBuf<TInt> resp1( 0 );
                 iActionMessage->Write( 1, resp1 );
 
                 iActionMessage->Complete(
@@ -583,55 +370,21 @@ void CUPnPBrowsingSession::CdsSearchCapabilitiesResponse(
         }
     }
 
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CdsSortCapabilitiesResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CdsSortCapabilitiesResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aSortCaps*/)
-    {
-    // No implementation required        
-    }
 
 // --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CdsSystemUpdateIdResponse
+// CUPnPBrowsingSession::CdsBrowseResponseL
 // See upnpbrowsingsession.h
 // --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CdsSystemUpdateIdResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    TInt /*aSystemUpdateId*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CdsBrowseResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CdsBrowseResponse(
-    const TDesC8& aUuid,
-    TInt aSessionId,
+void CUPnPBrowsingSession::CdsBrowseResponseL(
     TInt aErr,
-    const TDesC8& /*aObjectID*/,
     const TDesC8&  aBrowseFlag,
-    const TDesC8&  /*aFilter*/,
-    TInt /*aIndex*/,
-    TInt /*aRequest*/,
-    const TDesC8&  /*aSortCriteria*/,
     const TDesC8&  aResult,
     TInt aReturned,
     TInt aMatches,
     const TDesC8&  aUpdateID )
     {
-    __LOG1( "CUPnPBrowsingSession::CdsBrowseResponse: %d", aErr );
-    
-    __ASSERTD( iIPSessionId == aSessionId, __FILE__, __LINE__ );
-    
+    __LOG1( "CUPnPBrowsingSession::CdsBrowseResponseL: %d", aErr );
+
     iServer.Dispatcher().UnRegister( iIPSessionId );
     iIPSessionId = KErrNotFound;
     
@@ -647,36 +400,15 @@ void CUPnPBrowsingSession::CdsBrowseResponse(
             {
             aErr = UPnPAVErrorHandler::ConvertToSymbianErrorCode( aErr,
             EUPnPContentDirectoryError );
-            __LOG1( "CUPnPBrowsingSession::CdsBrowseResponse:001 %d", aErr );
+            __LOG1( "CUPnPBrowsingSession::CdsBrowseResponseL:001 %d", 
+                    aErr );
             }    
     
         if( aErr == KErrNone )
             {
-            if(  aResult != KNullDesC8 )
+            if( aResult != KNullDesC8 )
                 {
-                
-                if( iInternalState == ECopyToPhone )
-                    {
-                    TRAP( aErr, SendCreateObjectActionL(
-                        *iLocalMediaServerUuid, KContainerIdAny, aResult ) );
-                    if( aErr )
-                        {
-                        iInternalState = ENone;
-                        iActionMessage->Complete( aErr );
-                        delete iActionMessage; iActionMessage = NULL;
-                        }                    
-                    }
-                else if( iInternalState == ECopyLocal )
-                    {
-                    TRAP( aErr, CheckAndSendCreateObjectActionL( aResult ) );
-                    if( aErr )
-                        {
-                        iInternalState = ENone;
-                        iActionMessage->Complete( aErr );
-                        delete iActionMessage; iActionMessage = NULL;
-                        }
-                    }
-                else if( iInternalState == EDestroyObject )
+                if( iInternalState == EDestroyObject )
                     {
                     TRAP( aErr, CheckAndSendDestroyObjectActionL( aResult) );
                     if( aErr )    
@@ -746,14 +478,14 @@ void CUPnPBrowsingSession::CdsBrowseResponse(
             iActionMessage->Complete( aErr );
             delete iActionMessage; iActionMessage = NULL;
             if ( KErrCouldNotConnect == aErr || KErrHostUnreach == aErr )
-                {                 
-                iServer.DeviceDisappearedL( aUuid );
+                {
+                iServer.DeviceDisappearedL( iDevice->Uuid() );
                 }
             }            
         }
     else
         {
-        __LOG( "CdsBrowseResponse - no msg" );
+        __LOG( "CdsBrowseResponseL - no msg" );
         }    
     
     }
@@ -763,26 +495,15 @@ void CUPnPBrowsingSession::CdsBrowseResponse(
 // See upnpbrowsingsession.h
 // --------------------------------------------------------------------------
 void CUPnPBrowsingSession::CdsSearchResponse(
-    const TDesC8& /*aUuid*/,
-    TInt aSessionId,
     TInt aErr,
-    const TDesC8& /*aContainerId*/,
-    const TDesC8& /*aSearchCriteria*/,
-    const TDesC8& /*aFilter*/,
-    TInt /*aIndex*/,
-    TInt /*aRequest*/,
-    const TDesC8& /*aSortCriteria*/,
     const TDesC8& aResult,
     TInt aReturned,
     TInt aMatches,
     const TDesC8& aUpdateID )
     {
     __LOG1( "CUPnPBrowsingSession::CdsSearchResponse: %d", aErr );
-    
-    __ASSERTD( iIPSessionId == aSessionId, __FILE__, __LINE__ );
-    
+
     iServer.Dispatcher().UnRegister( iIPSessionId );
-    //iActionPending = EFalse;
     iIPSessionId = KErrNotFound;
     
     if( iActionMessage )
@@ -851,18 +572,13 @@ void CUPnPBrowsingSession::CdsSearchResponse(
 // See upnpbrowsingsession.h
 // --------------------------------------------------------------------------
 void CUPnPBrowsingSession::CdsDestroyObjectResponse(
-    const TDesC8& /*aUuid*/,
-    TInt aSessionId,
-    TInt aErr,
-    const TDesC8& /*aObjectId*/ )
+    TInt aErr )
     {
     __LOG1( "CUPnPBrowsingSession::CdsDestroyObjectResponse: %d", aErr );
-    
-    __ASSERTD( iIPSessionId == aSessionId, __FILE__, __LINE__ );
-    
+
     iServer.Dispatcher().UnRegister( iIPSessionId );
     iIPSessionId = KErrNotFound;
-    
+
     iInternalState = ENone;
     
     if( iActionMessage )
@@ -887,576 +603,58 @@ void CUPnPBrowsingSession::CdsDestroyObjectResponse(
         }      
     }
 
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CdsUpdateObjectResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CdsUpdateObjectResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aObjectId*/,
-    const TDesC8& /*aCurrentTagValue*/,
-    const TDesC8& /*aNewTagValue*/ )
-    {
-    // No implementation required        
-    }
 
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CdsImportResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CdsImportResponse(
-    const TDesC8& /*aUuid*/,
-    TInt aSessionId,
-    TInt aErr,
-    const TDesC8& /*aSourceURI*/,
-    const TDesC8& /*aDestinationURI*/,
-    const TDesC8& aTransferId )
-    {
-    __LOG1( "CUPnPBrowsingSession::CdsImportResponse: %d", aErr );
-    
-    __ASSERTD( iIPSessionId == aSessionId, __FILE__, __LINE__ );
-    
-    iServer.Dispatcher().UnRegister( iIPSessionId );
-    iIPSessionId = KErrNotFound;
-    
-    aErr = UPnPAVErrorHandler::ConvertToSymbianErrorCode( aErr,
-        EUPnPContentDirectoryError );    
-    
-    if( aErr == KErrNone )
-        {
-        
-        TLex8 lex( aTransferId );
-        aErr = lex.Val( iTransferId );
-        
-        CopyFinished( aErr, EFalse );
-        }
-    else
-        {
-        CopyFinished( aErr, EFalse );
-        }
-    }
 
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CdsExportResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CdsExportResponse(
-    const TDesC8& /*aUuid*/,
-    TInt aSessionId,
-    TInt aErr,
-    const TDesC8& /*aSourceURI*/,
-    const TDesC8& /*aDestinationURI*/,
-    const TDesC8& aTransferId )
-    {
-    __LOG1( "CUPnPBrowsingSession::CdsExportResponse: %d", aErr );
-    
-    __ASSERTD( iIPSessionId == aSessionId, __FILE__, __LINE__ );
-    
-    iServer.Dispatcher().UnRegister( iIPSessionId );
-    iIPSessionId = KErrNotFound;
-    
-    aErr = UPnPAVErrorHandler::ConvertToSymbianErrorCode( aErr,
-        EUPnPContentDirectoryError );    
-    
-    if( aErr == KErrNone )
-        {
-        TLex8 lex( aTransferId );
-        aErr = lex.Val( iTransferId );        
 
-        CopyFinished( aErr, EFalse );            
-        }
-    else
-        {
-                    
-        CopyFinished( aErr, EFalse );
-        }
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CdsStopTransferResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CdsStopTransferResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aTransferId*/ )
-    {
-    // No implementation required
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CdsCTransferProgressResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CdsCTransferProgressResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aTransferId*/,
-    const TDesC8& /*aTransferStatus*/,
-    const TDesC8& /*aTransferLength*/,            
-    const TDesC8& /*aTransferTotal*/ )
-    { 
-    // No implementation required              
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CdsDeleteResourceResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CdsDeleteResourceResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aResourceUri*/ )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CdsCreateReferenceResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CdsCreateReferenceResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aContainerId*/, 
-    const TDesC8& /*aObjectId*/, 
-    const TDesC8& /*aNewId*/ )
-    {
-    // No implementation required            
-    }
 
 // --------------------------------------------------------------------------
 // CUPnPBrowsingSession::CdsCreateObjectResponse
 // See upnpbrowsingsession.h
 // --------------------------------------------------------------------------
 void CUPnPBrowsingSession::CdsCreateObjectResponse(
-    const TDesC8& /*aUuid*/,
-    TInt aSessionId,
     TInt aErr,
-    const TDesC8& /*aContainerID*/, 
-    const TDesC8& /*aElements*/, 
     const TDesC8& aObjectID, 
-    const TDesC8& aResult )
+    const TDesC8& /*aResult*/ )
     {
     __LOG1( "CUPnPBrowsingSession::CdsCreateObjectResponse: %d" , aErr );
     
-    __ASSERTD( iIPSessionId == aSessionId, __FILE__, __LINE__ );
-    
     iServer.Dispatcher().UnRegister( iIPSessionId );
-    //iActionPending = EFalse;
     iIPSessionId = KErrNotFound;
     
     aErr = UPnPAVErrorHandler::ConvertToSymbianErrorCode( aErr,
         EUPnPContentDirectoryError );
-        
+
     if( aErr == KErrNone )
         {
-        if( iInternalState == ECopyLocal ||
-            iInternalState == ECopyToPhone )
-            {      
-            delete iImportURI; iImportURI = NULL;
-            TRAP( aErr, iImportURI = ParseCreateObjectResponseL( aResult ) );
-            if( aErr == KErrNone )
+        if( iActionMessage )
+            {
+            HBufC8* objectID = HBufC8::New( aObjectID.Length() );
+            if( objectID )
                 {
-                if( iSourceURI )
-                    {
-                    if( iInternalState == ECopyLocal )
-                        {
-                        // Export from the local Media Server to the
-                        // Remote Media Server
-                        delete iItemId;
-                        iItemId = aObjectID.Alloc(); // Null ok at this point
-                        
-                        TRAP( aErr, SendExportActionL() );
-                        if( aErr )
-                            {
-                            CopyFinished( aErr, EFalse );
-                            }                                          
-                        }
-                    else // iInternalState == ECopyToPhone
-                        {
-                        TRAP( aErr, SendImportActionL() );
-                        if( aErr )
-                            {
-                            CopyFinished( aErr, EFalse );
-                            }
-                        }        
-                    }
-                else
-                    {
-                    CopyFinished( KErrGeneral, EFalse );
-                    }                
+                objectID->Des().Copy( aObjectID );
+                iActionMessage->Write( 1, *objectID );
+                iActionMessage->Complete(
+                    EAVControllerCreateContainerCompleted );
+                delete objectID;                
                 }
             else
                 {
-                CopyFinished( aErr, EFalse );
-                } 
+                iActionMessage->Write( 1, KNullDesC8 );
+                iActionMessage->Complete( KErrNoMemory );
+                }    
+            delete iActionMessage; iActionMessage = NULL;
             }
-        else // Create container
-            {
-            if( iActionMessage )
-                {
-                HBufC8* objectID = HBufC8::New( aObjectID.Length() );
-                if( objectID )
-                    {
-                    objectID->Des().Copy( aObjectID );
-                    iActionMessage->Write( 1, *objectID );
-                    iActionMessage->Complete(
-                        EAVControllerCreateContainerCompleted );
-                    delete objectID;                
-                    }
-                else
-                    {
-                    iActionMessage->Write( 1, KNullDesC8 );
-                    iActionMessage->Complete( KErrNoMemory );
-                    }    
-                delete iActionMessage; iActionMessage = NULL;
-                }
-            iInternalState = ENone;                                
-            }                
+        iInternalState = ENone;                                
         }
     else
         {
-        if( iInternalState == ECopyLocal ||
-            iInternalState == ECopyToPhone )
-            {
-            CopyFinished( aErr, EFalse );
-            }
-        else
-            {
-            // Create container failed
-            iInternalState = ENone;
-            iActionMessage->Complete( aErr );
-            delete iActionMessage; iActionMessage = NULL;                    
-            }
+        // Create container failed
+        iInternalState = ENone;
+        iActionMessage->Complete( aErr );
+        delete iActionMessage; iActionMessage = NULL;                    
         }                                       
     }
 
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CmProtocolInfoResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CmProtocolInfoResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aSource*/, 
-    const TDesC8& /*aSink*/ )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CmPrepareResponse
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CmPrepareResponse(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aRemoteProtocolInfo*/,
-   const TDesC8& /*aPeerConnectionManager*/,
-    const TDesC8& /*aPeerConnectionId*/,
-    const TDesC8& /*aDirection*/,
-    TInt /*aConnection*/,
-    TInt /*aTransport*/,
-    TInt /*aRsc*/ )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CmComplete
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CmComplete(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    TInt /*aConnection*/ )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CmCurrentConnections
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CmCurrentConnections(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    const TDesC8& /*aConnections*/)
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CmCurrentInfo
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CmCurrentInfo(
-    const TDesC8& /*aUuid*/,
-    TInt /*aSessionId*/,
-    TInt /*aErr*/,
-    TInt /*rscId*/, 
-    TInt /*transportId*/, 
-    const TDesC8& /*aProtocolInfo*/,
-    const TDesC8& /*aPeerConnectionManager*/, 
-    TInt /*peerId*/, 
-    const TDesC8& /*aDirection*/, 
-    const TDesC8& /*aStatus*/ )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CdsUpdateEvent
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CdsUpdateEvent(
-        const TDesC8& /*aUuid*/,
-        TInt /*aSystemUpdateId*/
-        )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CdsContainerEvent
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CdsContainerEvent(
-        const TDesC8& /*aUuid*/,
-        const TDesC8& /*aConteinerIds*/
-        )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CdsTransferEvent
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CdsTransferEvent(
-        const TDesC8& /*aUuid*/,
-        const TDesC8& /*aTransferIds*/
-        )
-    {
-    // No implementation required
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::RcLastChangeEvent
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::RcLastChangeEvent(
-        const TDesC8& /*aUuid*/,
-        const TDesC8& /*aLastChange*/
-        )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::AvtLastChangeEvent
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::AvtLastChangeEvent(
-        const TDesC8& /*aUuid*/,
-        const TDesC8& /*aLastChange*/
-        )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CmSourceEvent
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CmSourceEvent(
-        const TDesC8& /*aUuid*/,
-        const TDesC8& /*aSource*/
-        )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CmSinkEvent
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CmSinkEvent(
-        const TDesC8& /*aUuid*/,
-        const TDesC8& /*aSink*/
-        )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CmConnectionsEvent
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CmConnectionsEvent(
-        const TDesC8& /*aUuid*/,
-        const TDesC8& /*aConnections*/
-        )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::HttpResponseL
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::HttpResponseL( CUpnpHttpMessage* /*aMessage*/ )
-    {
-    // No implementation required        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::DeviceDiscoveredL
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::DeviceDiscoveredL( CUpnpDevice* /*aDevice*/ )
-    {
-    // No implementation required            
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::DeviceDisappearedL
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::DeviceDisappearedL( CUpnpDevice* /*aDevice*/ )
-    {
-    // No implementation required                  
-    }    
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::FileTransferEvent
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::FileTransferEvent(
-    CUpnpFileTransferEvent *aEvent )
-    {
-    __ASSERTD( aEvent, __FILE__, __LINE__ );
-    
-    __LOG1( "CUPnPBrowsingSession::FileTransferEvent, %d",
-        aEvent->ErrorCode() );
-    
-    TInt err = UPnPAVErrorHandler::ConvertToSymbianErrorCode(
-        aEvent->ErrorCode(), EUPnPContentDirectoryError );    
-
-    if( aEvent->TransferId() == iTransferId )
-        {
-        iTransferId = KErrNotFound;            
-        if( iInternalState == ECopyLocal )
-            {
-            if( iActionMessage )
-                {
-                CopyFinished( err, ETrue );    
-                }
-            else
-                {
-                // Msg not received, set the flag instead
-                iAsyncErr = err;
-                iTransferEventReceived = ETrue;
-                }                  
-            }
-        else if( iInternalState == ECopyToPhone )
-            {                  
-            TRAPD( err, HandleCopyToPhoneEventL( *aEvent, err ) );
-            if ( err )
-                {
-                 __LOG1( "CUPnPBrowsingSession::FileTransferEvent, %d",
-                         err );
-                }                                          
-            }
-        }
-
-    delete aEvent;        
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::HandleCopyToPhoneEventL
-// Handle CopyToPhoneEvent,and all leave function will move 
-// to this function
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::HandleCopyToPhoneEventL( 
-         CUpnpFileTransferEvent& aEvent,
-         TInt aError )
-    {
-    HBufC8* filepath = HBufC8::NewL( KMaxPath );
-    CleanupStack::PushL( filepath );
-    
-    HBufC8* eventpath = CnvUtfConverter::ConvertFromUnicodeToUtf8L( 
-        aEvent.FilePath() );
-    filepath->Des().Copy( *eventpath );
-    delete eventpath;
-    eventpath = NULL;
-
-    if ( iActionMessage )
-        {
-        TInt res = iActionMessage->Write( 1, *filepath );
-        if ( res )
-            {
-            __LOG1( "CUPnPBrowsingSession::HandleCopyToPhoneEventL, %d",
-                    res );
-            }
-        // clean up
-        CleanupStack::PopAndDestroy( filepath );
-        }
-    else
-        {
-        iFilePath = filepath;
-        
-        // clean up
-        CleanupStack::Pop( filepath );        
-        }
-
-    if ( iActionMessage )
-        {
-        CopyFinished( aError, ETrue );
-        }
-    else
-        {
-        // Msg not received yet, set the flag instead
-        iAsyncErr = aError;
-        iTransferEventReceived = ETrue;
-        }  
-    
-    }
-    
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::NotifierError
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::NotifierError( TInt aError )
-    {
-    __LOG( "CUPnPBrowsingSession::NotifierError" );
-    
-    if( iActionMessage )
-        {
-        if( iInternalState == ECopyLocal ||
-            iInternalState == ECopyToPhone )
-            {
-            CopyFinished( aError, ETrue );
-            }
-        }
-    else
-        {
-        // Msg not received yet, set the flag instead
-        iAsyncErr = aError;
-        iTransferEventReceived = ETrue;        
-        }    
-    }
 
 // --------------------------------------------------------------------------
 // CUPnPBrowsingSession::DeviceDisappearedL
@@ -1466,7 +664,7 @@ void CUPnPBrowsingSession::DeviceDisappearedL(
     CUpnpAVDeviceExtended& aDevice )
     {
     __LOG( "CUPnPBrowsingSession::DeviceDisappearedL" );
-    
+
     if( aDevice.Local() )
         {
         delete iLocalMediaServerUuid; iLocalMediaServerUuid = NULL; 
@@ -1530,47 +728,42 @@ void CUPnPBrowsingSession::GetBrowseResponseSizeL(
     CUpnpAVBrowseRequest* tmpRequest = CUpnpAVBrowseRequest::NewLC();
     
     ReadBrowseReqFromMessageL( aMessage, 1, tmpRequest );
-        
+
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            iCpDevice, KContentDirectory, KBrowse );
+    
+    TBuf8<KMaxIntLength> startingIndexStr;
+    startingIndexStr.Num(tmpRequest->StartIndex());
+    TBuf8<KMaxIntLength> requestedCountStr;
+    requestedCountStr.Num(tmpRequest->RequestedCount());
+    action->SetArgumentL( KObjectID, tmpRequest->Id() );
     if( tmpRequest->BrowseFlag() == MUPnPAVBrowsingSession::EDirectChildren )
         {
-        iIPSessionId = iServer.ControlPoint().CdsBrowseActionL(
-                iDevice->Uuid(),
-                tmpRequest->Id(),
-                KDirectChildren,
-                tmpRequest->Filter(), 
-                tmpRequest->StartIndex(),
-                tmpRequest->RequestedCount(),
-                tmpRequest->SortCriteria() );        
+        action->SetArgumentL( KBrowseFlag, KDirectChildren ); 
         }
     else
         {
-        iIPSessionId = iServer.ControlPoint().CdsBrowseActionL(
-                iDevice->Uuid(),
-                tmpRequest->Id(),
-                KMetaData,
-                tmpRequest->Filter(), 
-                tmpRequest->StartIndex(),
-                tmpRequest->RequestedCount(),
-                tmpRequest->SortCriteria() );                
-        }    
-    
+        action->SetArgumentL( KBrowseFlag, KMetaData ); 
+        }
+    action->SetArgumentL( KFilter, tmpRequest->Filter() ); 
+    action->SetArgumentL( KStartingIndex, startingIndexStr ); 
+    action->SetArgumentL( KRequestedCount, requestedCountStr ); 
+    action->SetArgumentL( 
+            UpnpAVCPStrings::KSortCriteria, 
+            tmpRequest->SortCriteria() ); 
 
+    iServer.ControlPoint().SendL( action );
+    CleanupStack::Pop( action );
+    if (action->SessionId() < 0) User::Leave( action->SessionId() );
+    iIPSessionId = action->SessionId();
     CleanupStack::PopAndDestroy( tmpRequest );
    
-     if( iIPSessionId > 0 )
-        {
-        // Register
-        iInternalState = EBrowse;
-        iServer.Dispatcher().RegisterL( iIPSessionId, *this );
-        }
-    else
-        {
-        User::Leave( iIPSessionId );
-        }
-        
+    // Register
+    iInternalState = EBrowse;
+    iServer.Dispatcher().RegisterL( iIPSessionId, *this );
     iActionMessage = new (ELeave) RMessage2( aMessage );    
     }
- 
+
 
 // --------------------------------------------------------------------------
 // CUPnPBrowsingSession::CancelGetBrowseResponseSizeL
@@ -1616,7 +809,7 @@ void CUPnPBrowsingSession::GetBrowseResponseL( const RMessage2& aMessage )
         User::Leave( KErrNoMemory );
         }
     }
-    
+
 // --------------------------------------------------------------------------
 // CUPnPBrowsingSession::GetSearchResponseSizeL
 // See upnpbrowsingsession.h
@@ -1630,31 +823,34 @@ void CUPnPBrowsingSession::GetSearchResponseSizeL(
 
     ResetL();
     
-    
     CUpnpAVBrowseRequest* tmpRequest = CUpnpAVBrowseRequest::NewLC();
     
     ReadBrowseReqFromMessageL( aMessage, 1, tmpRequest );
-  
-    iIPSessionId = iServer.ControlPoint().CdsSearchActionL(
-        iDevice->Uuid(),
-        tmpRequest->Id(),
-        tmpRequest->SearchCriteria(),
-        tmpRequest->Filter(), 
-        tmpRequest->StartIndex(),
-        tmpRequest->RequestedCount(),
-        tmpRequest->SortCriteria() );                
 
-    CleanupStack::PopAndDestroy( tmpRequest );
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            iCpDevice, KContentDirectory, KSearch );
     
-     if( iIPSessionId > 0 )
-        {
-        // Register
-        iServer.Dispatcher().RegisterL( iIPSessionId, *this );
-        }
-    else
-        {
-        User::Leave( iIPSessionId );
-        }
+    TBuf8<KMaxIntLength> startingIndexStr;
+    startingIndexStr.Num(tmpRequest->StartIndex());
+    TBuf8<KMaxIntLength> requestedCountStr;
+    requestedCountStr.Num(tmpRequest->RequestedCount());
+    action->SetArgumentL( KContainerID, tmpRequest->Id() );
+    action->SetArgumentL( KSearchCriteria, tmpRequest->SearchCriteria() ); 
+    action->SetArgumentL( KFilter, tmpRequest->Filter() ); 
+    action->SetArgumentL( KStartingIndex, startingIndexStr ); 
+    action->SetArgumentL( KRequestedCount, requestedCountStr ); 
+    action->SetArgumentL( 
+            UpnpAVCPStrings::KSortCriteria, 
+            tmpRequest->SortCriteria() ); 
+
+    iServer.ControlPoint().SendL( action );
+    CleanupStack::Pop( action );
+    if (action->SessionId() < 0) User::Leave( action->SessionId() );
+    iIPSessionId = action->SessionId();
+    CleanupStack::PopAndDestroy( tmpRequest );
+
+    // Register
+    iServer.Dispatcher().RegisterL( iIPSessionId, *this );
     iActionMessage = new (ELeave) RMessage2( aMessage );      
     }
 
@@ -1715,19 +911,17 @@ void CUPnPBrowsingSession::GetSearchCapabitiesSizeL(
     __ASSERTD( !iActionMessage, __FILE__, __LINE__ );
 
     ResetL();
-  
-    iIPSessionId = iServer.ControlPoint().CdsSearchCapabilitiesActionL(
-        iDevice->Uuid() );
+
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            iCpDevice, KContentDirectory, KGetSearchCapabilities );
     
-    if( iIPSessionId > 0 )
-        {
-        // Register
-        iServer.Dispatcher().RegisterL( iIPSessionId, *this );
-        }
-    else
-        {
-        User::Leave( iIPSessionId );
-        }
+    iServer.ControlPoint().SendL( action );
+    CleanupStack::Pop( action );
+    if (action->SessionId() < 0) User::Leave( action->SessionId() );
+    iIPSessionId = action->SessionId();
+
+    // Register
+    iServer.Dispatcher().RegisterL( iIPSessionId, *this );
     iActionMessage = new (ELeave) RMessage2( aMessage );    
     }
     
@@ -1772,7 +966,7 @@ void CUPnPBrowsingSession::CreateContainerL( const RMessage2& aMessage )
     __ASSERTD( !iActionMessage, __FILE__, __LINE__ );
     
     ResetL();
-        
+
     // Title
     TInt len = aMessage.GetDesMaxLength( 1 );
     HBufC8* tempTitle = HBufC8::NewLC( len );
@@ -1817,28 +1011,28 @@ void CUPnPBrowsingSession::CreateContainerL( const RMessage2& aMessage )
 
     HBufC8* xmlDoc = CUPnPXMLParser::ContainerToXmlLC( *tmpContainer );  
 
-    iIPSessionId = iServer.ControlPoint().CdsCreateObjectActionL(
-        iDevice->Uuid(), *tempId, *xmlDoc );
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            iCpDevice, KContentDirectory, KCreateObject );
+    
+    action->SetArgumentL( KContainerID, *tempId );
+    action->SetArgumentL( KElements, *xmlDoc );
 
+    iServer.ControlPoint().SendL( action );
+    CleanupStack::Pop( action );
+    if (action->SessionId() < 0) User::Leave( action->SessionId() );
+    iIPSessionId = action->SessionId();
 
     CleanupStack::PopAndDestroy( xmlDoc );
     CleanupStack::PopAndDestroy( tmpContainer );
     CleanupStack::PopAndDestroy( tempId );
     CleanupStack::PopAndDestroy( tempTitle );
    
-     if( iIPSessionId > 0 )
-        {
-        // Register
-        iServer.Dispatcher().RegisterL( iIPSessionId, *this );
-        iInternalState = ECreateContainer; 
-        }
-    else
-        {
-        User::Leave( iIPSessionId );
-        }
+    // Register
+    iServer.Dispatcher().RegisterL( iIPSessionId, *this );
+    iInternalState = ECreateContainer; 
     iActionMessage = new (ELeave) RMessage2( aMessage );         
     }
-    
+
 // --------------------------------------------------------------------------
 // CUPnPBrowsingSession::CancelCreateContainerL
 // See upnpbrowsingsession.h
@@ -1875,22 +1069,24 @@ void CUPnPBrowsingSession::DeleteObjectL( const RMessage2& aMessage )
     CleanupStack::Pop( tempId );
     delete iItemId;
     iItemId = tempId;
+
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            iCpDevice, KContentDirectory, KBrowse );
     
-            
-    iIPSessionId = iServer.ControlPoint().CdsBrowseActionL(
-        iDevice->Uuid(), *iItemId, KMetaData, KFilterCommon, 0, 1,
-        KNullDesC8 );                
-    
-    if( iIPSessionId > 0 )
-        {
-        // Register
-        iInternalState = EDestroyObject;
-        iServer.Dispatcher().RegisterL( iIPSessionId, *this );
-        }
-    else
-        {
-        User::Leave( iIPSessionId );
-        }
+    action->SetArgumentL( KObjectID, *iItemId );
+    action->SetArgumentL( KBrowseFlag, KMetaData ); 
+    action->SetArgumentL( KFilter, KFilterCommon ); 
+    action->SetArgumentL( KStartingIndex, KDefaultStartingIndex ); 
+    action->SetArgumentL( KRequestedCount, KDefaultRequestedCount ); 
+
+    iServer.ControlPoint().SendL( action );
+    CleanupStack::Pop( action );
+    if (action->SessionId() < 0) User::Leave( action->SessionId() );
+    iIPSessionId = action->SessionId();
+
+    // Register
+    iInternalState = EDestroyObject;
+    iServer.Dispatcher().RegisterL( iIPSessionId, *this );
     iActionMessage = new (ELeave) RMessage2( aMessage );   
     }
         
@@ -1939,180 +1135,6 @@ void CUPnPBrowsingSession::CancelDeviceDisappearedRequestL()
         }
     }
 
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::ParseCreateObjectResponseL
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-HBufC8* CUPnPBrowsingSession::ParseCreateObjectResponseL(
-    const TDesC8& aResponse )
-    {
-    __LOG( "CUPnPBrowsingSession::ParseCreateObjectResponseL" );          
-    
-    HBufC8* importURI = NULL;
-    
-    CUPnPXMLParser* parser = CUPnPXMLParser::NewL();
-    CleanupStack::PushL( parser );
-    
-    RPointerArray<CUpnpObject> array;
-    CleanupResetAndDestroyPushL( array );
-    
-    parser->ParseResultDataL( array, aResponse );
-    
-    if( array.Count() == KExpectedCount )
-        {
-        if( array[ 0 ]->ObjectType() == EUPnPItem )
-            {
-            HBufC8* tmp = array[ 0 ]->Id().AllocL(); 
-            delete iItemId;
-            iItemId = tmp;
-            
-            if( array[ 0 ]->ObjectClass().Find( KClassAudio )
-                != KErrNotFound )
-                {
-                iMusic = ETrue;
-                }
-            
-            // Get the res-elements
-            RUPnPElementsArray elArray;
-            CleanupClosePushL( elArray );
-            UPnPItemUtility::GetResElements( *array[ 0 ], elArray );
-            
-            // Find the import uri            
-            for( TInt i = 0; i < elArray.Count(); i++ )
-                {
-                const CUpnpAttribute* attribute = NULL;
-                TRAPD( err, attribute =
-                    &UPnPItemUtility::FindAttributeByNameL(
-                    *elArray[ i ], KImportUri ) );
-                if( err == KErrNone )
-                    {
-                    // import uri found!
-                    i = elArray.Count();
-                    importURI = attribute->Value().AllocL();
-                    }
-                }
-                        
-            CleanupStack::PopAndDestroy( &elArray );
-            }
-        else
-            {
-            User::Leave( KErrGeneral );
-            }    
-        }
-    else
-        {
-        User::Leave( KErrGeneral );
-        }    
-    
-    CleanupStack::PopAndDestroy( &array );
-    CleanupStack::PopAndDestroy( parser );  
-          
-    if( !importURI )
-        {
-        User::Leave( KErrGeneral );
-        }
-    
-    if( !UpnpCdsResElementUtility::IsUriAbsolute( *importURI ) )
-        {
-        // Import uri is not absolute
-        delete importURI; importURI = NULL;
-        User::Leave( KErrGeneral );
-        }
-      
-    return importURI;
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CheckIsCreateObjectSupportedL
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CheckIsCreateObjectSupportedL(
-    const TDesC8& aResponse )
-    {
-    __LOG( "CUPnPBrowsingSession::CheckIsCreateObjectSupportedL" );
-    
-    CUPnPXMLParser* parser = CUPnPXMLParser::NewL();
-    CleanupStack::PushL( parser );
-    
-    RPointerArray<CUpnpObject> array;
-    CleanupResetAndDestroyPushL( array );
-    
-    parser->ParseResultDataL( array, aResponse );
-    
-    if( array.Count() == KExpectedCount )
-        {
-        if( array[ 0 ]->ObjectType() == EUPnPContainer )
-            {
-            // Try to get upnp:createClass elements
-            const CUpnpElement* elem = UPnPItemUtility::FindElementByName(
-                *array[ 0 ], KCreateClass );
-
-            if ( !elem )
-                {
-                // No createClass elements, copy not supported
-                User::Leave( KErrNotSupported );
-                }
-
-            RUPnPElementsArray resultArray;
-            CleanupClosePushL( resultArray );
-            UPnPItemUtility::GetResElements( *array[ 0 ], resultArray );
-            TInt count = resultArray.Count();
-
-            for( TInt i = 0; i < count; i++ )
-                {
-                if( iSharedItem->ObjectClass().Find( KClassAudio ) !=
-                    KErrNotFound )
-                    {
-                    // We are going to create a music item, check that the
-                    // target container supports that
-                    if( resultArray[ i ]->Value().Find( KClassAudio ) ==
-                    KErrNotFound )
-                        {
-                        User::Leave( KErrNotSupported );
-                        }
-                    }
-                else if( iSharedItem->ObjectClass().Find( KClassImage ) !=
-                    KErrNotFound )
-                    {
-                    // We are going to create an image item, check that the
-                    // target container supports that
-                    if( resultArray[ i ]->Value().Find( KClassImage ) ==
-                    KErrNotFound )
-                        {
-                        User::Leave( KErrNotSupported );
-                        }                    
-                    }
-                else if( iSharedItem->ObjectClass().Find( KClassVideo ) !=
-                    KErrNotFound )
-                    {
-                    // We are going to create a video item, check that the
-                    // target container supports that
-                    if( resultArray[ i ]->Value().Find( KClassVideo ) ==
-                    KErrNotFound )
-                        {
-                        User::Leave( KErrNotSupported );
-                        }                                        
-                    }
-                else
-                    {
-                    // Unknown object class, leave
-                    User::Leave( KErrNotSupported );
-                    }      
-                }                            
-            CleanupStack::PopAndDestroy( &resultArray );
-            }
-        else
-            {
-            User::Leave( KErrNotSupported );
-            }            
-        }
-    else
-        {
-        User::Leave( KErrGeneral );
-        }    
-    CleanupStack::PopAndDestroy( &array );
-    CleanupStack::PopAndDestroy( parser );              
-    }
 
 // --------------------------------------------------------------------------
 // CUPnPBrowsingSession::CheckAndSendDestroyObjectActionL
@@ -2140,17 +1162,19 @@ void CUPnPBrowsingSession::CheckAndSendDestroyObjectActionL(
         else
             {
             // Not restricted, ok to destroy
-            TInt sessionId = iServer.ControlPoint().CdsDestroyObjectActionL(
-                iDevice->Uuid(), *iItemId );
-            if( sessionId > 0 )
+            CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+                    iCpDevice, KContentDirectory, KDestroyObject );
+            
+            action->SetArgumentL( KObjectID, *iItemId );
+
+            iServer.ControlPoint().SendL( action );
+            CleanupStack::Pop( action );
+            if (action->SessionId() < 0) 
                 {
-                iServer.Dispatcher().RegisterL( sessionId, *this );
-                iIPSessionId = sessionId;                   
+                User::Leave( action->SessionId() );   
                 }
-            else
-                {
-                User::Leave( sessionId );
-                }                
+            iIPSessionId = action->SessionId();
+            iServer.Dispatcher().RegisterL( iIPSessionId, *this );
             }    
         }
     else
@@ -2161,230 +1185,7 @@ void CUPnPBrowsingSession::CheckAndSendDestroyObjectActionL(
     CleanupStack::PopAndDestroy( parser );    
     }
 
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CheckAndSendCreateObjectActionL
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CheckAndSendCreateObjectActionL( 
-    const TDesC8& aResponse )
-    {
-    __LOG( "CUPnPBrowsingSession::CheckAndSendCreateObjectActionL" );
-      
-    CheckIsCreateObjectSupportedL( aResponse );
-    
-    HBufC8* xmlDoc = CUPnPXMLParser::XmlForCreateObjectLC( *iSharedItem );
-    SendCreateObjectActionL( iDevice->Uuid(), *iContainerId, *xmlDoc );
-    CleanupStack::PopAndDestroy( xmlDoc );   
-    }
 
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::SendCreateObjectActionL
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::SendCreateObjectActionL( const TDesC8& aUUid,
-    const TDesC8& aContainerId, const TDesC8& aResponse )
-    {
-    __LOG( "CUPnPBrowsingSession::SendCreateObjectActionL" );
-    
-    TInt sessionId = iServer.ControlPoint().CdsCreateObjectActionL( aUUid,
-        aContainerId, aResponse );
-    
-    if( sessionId > 0 )
-        {
-        iServer.Dispatcher().RegisterL( sessionId, *this );
-        iIPSessionId = sessionId;                   
-        }
-    else
-        {
-        User::Leave( sessionId );
-        }    
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::SendExportActionL
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::SendExportActionL()
-    {
-    __LOG( "CUPnPBrowsingSession::SendExportActionL" );
-    //__LOG8( *iSourceURI );
-    //__LOG8( *iImportURI );
-    
-    HBufC8* tempSourceUri = UpnpString::EncodeXmlStringL( 
-                                            iSourceURI );
-    delete iSourceURI;
-    iSourceURI = tempSourceUri;
-    tempSourceUri = NULL;
-    
-    TInt sessionId = iServer.ControlPoint().CdsExportResourceActionL(
-        *iLocalMediaServerUuid, *iSourceURI, *iImportURI );
-    if( sessionId > 0 )
-        {
-        iServer.Dispatcher().RegisterL( sessionId, *this );
-        iIPSessionId = sessionId;
-        }
-    else
-        {
-        User::Leave( sessionId );
-        }
-    }
-    
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::SendImportActionL
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::SendImportActionL()
-    {
-    __LOG( "CUPnPBrowsingSession::SendImportActionL" );
-    //__LOG8( *iSourceURI );
-    //__LOG8( *iImportURI );
-
-    HBufC8* tempSourceUri = UpnpString::EncodeXmlStringL( 
-                                            iSourceURI );
-    delete iSourceURI;
-    iSourceURI = tempSourceUri;
-    tempSourceUri = NULL;
-    
-    TInt sessionId = iServer.ControlPoint().CdsImportResourceActionL(
-        *iLocalMediaServerUuid, *iSourceURI, *iImportURI );
-    if( sessionId > 0 )
-        {
-        iServer.Dispatcher().RegisterL( sessionId, *this );
-        iIPSessionId = sessionId;
-        }
-    else
-        {
-        User::Leave( sessionId );
-        }    
-    }
-
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CopyFinished
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::CopyFinished( TInt aError, TBool aFinished )
-    {
-    __LOG( "CUPnPBrowsingSession::CopyFinished" );
-          
-    if( iInternalState == ECopyLocal ) // Local to remote copy
-        {
-        if( aError == KErrNone )
-            {
-            if( aFinished )
-                {
-                // Local to remote copy completed successfully!
-
-                if( iSharedItem )
-                    {
-                    // Remove shared item
-                    TRAP_IGNORE( iFileSharing->UnShareItemL(
-                        iSharedItem->Id() ) );    
-                    delete iSharedItem; iSharedItem = NULL;        
-                    }
-
-                iInternalState = ENone;
-                if( iActionMessage )
-                    {
-                    iActionMessage->Complete(
-                        EAVControllerCopyLocalItemFinishCompleted );
-                    delete iActionMessage; iActionMessage = NULL;
-                    }
-                }
-            else
-                {
-                // First phase of copy completed (export action succeeded)
-                if( iActionMessage )
-                    {
-                    iActionMessage->Complete(
-                        EAVControllerCopyLocalItemStartCompleted );
-                    delete iActionMessage; iActionMessage = NULL;
-                    }
-                }                
-            }
-        else // Error occured, cleanup.
-            {
-            if( iSharedItem )
-                {
-                // Remove shared item     
-                TRAP_IGNORE( iFileSharing->UnShareItemL(
-                    iSharedItem->Id() ) );    
-                }
-            delete iSharedItem; iSharedItem = NULL;        
-            if( iItemId )
-                {
-                // Destroy object from the remote media server                
-                TRAP_IGNORE( iServer.ControlPoint().CdsDestroyObjectActionL( 
-                    iDevice->Uuid(), *iItemId ) );
-                delete iItemId; iItemId = NULL;
-                }
-            
-            iInternalState = ENone;
-            if( iActionMessage )
-                {
-                iActionMessage->Complete( aError );
-                delete iActionMessage; iActionMessage = NULL;    
-                }
-            
-            }    
-        }
-    else if( iInternalState == ECopyToPhone ) // Remote to local copy
-        {        
-        if( aError == KErrNone )
-            {
-            if( aFinished )
-                {
-                // Remote to local copy successful, check sharing status
-                CheckSharingStatus();
-                
-                // Restore original download settings
-                RestoreDownloadSettings(); // ignore error
-                                
-                iInternalState = ENone;
-                if( iActionMessage )
-                    {
-                    iActionMessage->Complete(
-                        EAVControllerCopyToPhoneFinishCompleted );
-                    delete iActionMessage; iActionMessage = NULL;
-                    }
-                }
-            else
-                {
-                // First phase of copy completed (import action succeeded)
-                if( iActionMessage )
-                    {
-                    iActionMessage->Complete(
-                        EAVControllerCopyToPhoneStartCompleted );
-                    delete iActionMessage; iActionMessage = NULL;
-                    }
-                }    
-            }
-        else // Error occured, cleanup.
-            {
-            // Restore original download settings
-            RestoreDownloadSettings(); // ignore error
-
-            if( iItemId )
-                {
-                // Destroy object from the local media server
-                TRAP_IGNORE( iServer.ControlPoint().CdsDestroyObjectActionL( 
-                    *iLocalMediaServerUuid, *iItemId ) );
-                delete iItemId; iItemId = NULL;
-                }
-
-            iInternalState = ENone;
-            if( iActionMessage )
-                {
-                iActionMessage->Complete( aError );
-                delete iActionMessage; iActionMessage = NULL;
-                }
-            }        
-        }
-    else
-        {      
-        __PANICD( __FILE__, __LINE__ );     
-        }    
-    }
 
 // --------------------------------------------------------------------------
 // CUPnPBrowsingSession::ResetL
@@ -2477,7 +1278,7 @@ void CUPnPBrowsingSession::ReadBrowseReqFromMessageL(
     CleanupStack::PopAndDestroy( &stream );
     CleanupStack::PopAndDestroy( buf );
     }
-    
+
 // --------------------------------------------------------------------------
 // CUPnPBrowsingSession::ReadBufFromMessageLC
 // See upnpbrowsingsession.h
@@ -2492,127 +1293,5 @@ HBufC8* CUPnPBrowsingSession::ReadBufFromMessageLC(
     User::LeaveIfError( aMessage.Read( aSlot, ptr ) );        
     return buf;
     }    
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::SetDownloadSettingsL
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-void CUPnPBrowsingSession::SetDownloadSettingsL(
-    MUPnPAVBrowsingSession::TMemoryType aType )
-    {
-    if( aType == MUPnPAVBrowsingSession::EDefault )
-        {
-        // Downloading to default location is the only supported target
-        }
-    else
-        {
-        User::Leave( KErrNotSupported );
-        }    
-    
-    // EMemoryCard, ERAMDrive or EPhone are not supported, but the code is
-    // left in place for possible future use
-    /*    
-    // Read the original download location and store it
-    HBufC8* buf = iMSSettings->GetL(
-        UpnpMediaServerSettings::EUploadDirectory );
-    delete iOriginalLocation;
-    iOriginalLocation = buf;
-   
-    // Set the new download location
-    if( aType == MUPnPAVBrowsingSession::EMemoryCard )
-        {
-        User::LeaveIfError( iMSSettings->SetL(
-            UpnpMediaServerSettings::EUploadDirectory,
-            KDownloadMemoryCard ) );
-        }
-    else if( aType == MUPnPAVBrowsingSession::ERAMDrive )
-        {
-        User::LeaveIfError( iMSSettings->SetL(
-            UpnpMediaServerSettings::EUploadDirectory,
-            KDownloadRAMDrive ) );        
-        }
-    else if( aType == MUPnPAVBrowsingSession::EPhone )
-        {
-        User::LeaveIfError( iMSSettings->SetL(
-            UpnpMediaServerSettings::EUploadDirectory,
-            KDownloadPhoneMemory ) );        
-        }
-    else
-        {
-        // Default, no change needed
-        }
-    */    
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::RestoreDownloadSettings
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-TInt CUPnPBrowsingSession::RestoreDownloadSettings()
-    {
-    // Restore the download settings
-    TInt err = KErrNone;
-    
-    if( iOriginalLocation && iShareFlag !=
-        MUPnPAVBrowsingSession::EDefault )
-        {
-        TRAP( err, err = iMSSettings->SetL(
-            UpnpMediaServerSettings::EUploadDirectory,
-            *iOriginalLocation ) );        
-        }
-    else
-        {
-        err = KErrGeneral;
-        } 
-            
-    return err;    
-    }
-    
-// --------------------------------------------------------------------------
-// CUPnPBrowsingSession::CheckSharingStatus
-// See upnpbrowsingsession.h
-// --------------------------------------------------------------------------
-TInt CUPnPBrowsingSession::CheckSharingStatus()
-    {
-    TInt err = KErrNone;
-
-    if( iShareFlag == MUPnPAVBrowsingSession::EFileIsNotShared )
-        {
-        // Unshare the item
-        if( iItemId )
-            {
-            TRAP( err, iFileSharing->UnShareItemL( *iItemId ) );
-            delete iItemId; iItemId = NULL;
-            }
-        }
-    else if( MUPnPAVBrowsingSession::EShareBySettings )
-        {
-        // Check settings to determine should we keep the item shared or not
-        TInt share = 0;
-        if( iMusic ) // It's a music item
-            {       
-            err = iAppSettings->Get( KUPnPAppShareAllMusicFiles, share );
-            }
-        else // Image or video item
-            {
-            err = iAppSettings->Get( KUPnPAppShareAllVisualFiles, share );
-            }    
-        
-        if( err == KErrNone && !share )
-            {
-            if( iItemId )
-                {
-                TRAP( err, iFileSharing->UnShareItemL( *iItemId ) );
-                delete iItemId; iItemId = NULL;
-                }            
-            }
-        }
-    else
-        {
-        // File is shared already, do nothing
-        }    
-
-    return err;
-    }
     
 // End of file

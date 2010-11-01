@@ -56,7 +56,8 @@ void CUpnpCommandCallbackAdapter::CommandEvent(
             {
             iObserver->CommandComplete( aStatusCode );
             }
-        else if ( aEventType == UpnpCommand::EEventProgress && aStatusCode > 0 )
+        else if ( aEventType == UpnpCommand::EEventProgress 
+                                                        && aStatusCode > 0 )
             {
             // Convert progress events to CommandComplete methods of the observer
             // ONLY if the progress code is a positive value. Therefore it does not

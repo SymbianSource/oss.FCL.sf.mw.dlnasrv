@@ -55,9 +55,9 @@ LIBRARY         euser.lib
 // Upnp stack
 LIBRARY         upnpserviceframework.lib
 LIBRARY         upnpipserversutils.lib
-LIBRARY         avmediaserverclient.lib
 
-// Upnp security
+// dlnasrv
+LIBRARY         avmediaserverclient.lib
 LIBRARY         upnpsecurity.lib
 
 // Logging

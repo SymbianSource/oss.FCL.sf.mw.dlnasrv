@@ -130,7 +130,7 @@ resources not allocated, leave" );
         
     TRAPD( status, ExecuteFileTransferL
         ( ETrue, transferredFiles ) );
-    __LOG1( "[UpnpCommand]\t CUpnpMoveTask::ExecuteL done status %d", status );
+    __LOG1( "[UpnpCommand]\t ExecuteL done status %d", status );
 
     // inform user
     if( status == KErrNone )

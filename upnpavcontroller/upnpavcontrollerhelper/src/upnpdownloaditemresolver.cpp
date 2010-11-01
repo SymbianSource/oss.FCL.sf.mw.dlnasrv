@@ -25,31 +25,31 @@
 #include <pathinfo.h>
 #include <bautils.h>
 
-// upnp stack api's
+// dlnasrv / mediaserver api
 #include <upnpobject.h>
 #include <upnpitem.h>
 #include <upnpelement.h>
 #include <upnpattribute.h> // for getting resource protocol info
 #include <upnpdlnaprotocolinfo.h> // for resolving object mimetype
 
-// upnpframework / avcontroller api
+// dlnasrv / avcontroller api
 #include "upnpavcontroller.h" // avcontrol services
 #include "upnpavdevice.h" // avcontroller device class
 #include "upnpavbrowsingsession.h" // avcontrol browsing session
 #include "upnpfiledownloadsession.h" // avcontrol download session
 
-// upnpframework / avcontroller helper api
+// dlnasrv / avcontroller helper api
 #include "upnpconstantdefs.h" // for element names
 #include "upnpitemutility.h" // for FindAttributeByName
 #include "upnpresourceselector.h" // MUPnPResourceSelector
 #include "upnpitemresolverobserver.h" // observer for this class
 #include "upnpdlnautility.h"  // IsSupportedDlnaProfile
 
-// upnpframework / internal api's
+// dlnasrv / internal api's
 #include "upnpcommonutils.h" // for FileExtensionByMimeTypeL
 #include "upnpsettingsengine.h" // get selected download location
 
-// avcontroller helper internal
+// dlnasrv / avcontroller helper internal
 #include "upnpremoteitemresolver.h" // remote item resolver impl.
 #include "upnpdownloaditemresolver.h" // download item resolver impl.
 
@@ -134,7 +134,7 @@ CUPnPDownloadItemResolver::~CUPnPDownloadItemResolver()
 // CUPnPDownloadItemResolver::ResolveL
 //---------------------------------------------------------------------------
 void CUPnPDownloadItemResolver::ResolveL(
-    MUPnPItemResolverObserver& aObserver )
+    MUPnPItemResolverObserver& aObserver, CUpnpAVDevice* /*aDevice*/ )
     {
     __LOG( "DownloadItemResolver:Resolve()" );
     __ASSERTD( iState == EStateIdle, __FILE__, __LINE__ );
@@ -572,6 +572,7 @@ void CUPnPDownloadItemResolver::IsLocallySupportedL( const CUpnpElement& aRes )
     // parse protocol info
     CUpnpDlnaProtocolInfo* pInfo = NULL;
     pInfo = CUpnpDlnaProtocolInfo::NewL( attr->Value() );
+    CleanupStack::PushL(pInfo);
     
     //if DLNA compliant item
     if ( pInfo->PnParameter() != KNullDesC8() )
@@ -590,6 +591,8 @@ void CUPnPDownloadItemResolver::IsLocallySupportedL( const CUpnpElement& aRes )
             }
         
         }
+		
+    CleanupStack::PopAndDestroy(pInfo);
     }
 
 

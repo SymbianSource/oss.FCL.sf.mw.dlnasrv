@@ -839,7 +839,7 @@ TInetAddr CUpnpMediaServer::GetAddress()
 void CUpnpMediaServer::SubscribeEvents(
     MUpnpContentDirectoryEventObserver* aObserver )
     {
-    iObserverList.AppendL( aObserver );
+    iObserverList.Append( aObserver );
     }
 
 // -----------------------------------------------------------------------------

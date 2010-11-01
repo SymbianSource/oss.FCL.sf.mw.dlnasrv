@@ -30,8 +30,6 @@
 // FORWARD DECLARATIONS
 class CUpnpObjectLite;
 class CUPnPObjectStackLite; 
-//class CUpnpItem;
-//class CUpnpContainer;
 
 using namespace Xml;
 
@@ -75,7 +73,8 @@ public:
      * 
      */
     IMPORT_C void ParseResultDataL( RPointerArray<CUpnpObjectLite>&
-        aResultArray, const TDesC8& aData, const TDesC& aFormatString = KNullDesC );
+        aResultArray, const TDesC8& aData, const TDesC& aFormatString =
+        KNullDesC );
                     
 protected: // from MContentHandler
 

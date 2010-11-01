@@ -26,10 +26,12 @@
 
 // upnp stack api
 #include <upnpstring.h>
+
+// dlnasrv / mediaserver api
 #include <upnpitem.h>
 #include <upnpdlnaprotocolinfo.h>
 
-// upnpframework / avcontroller helper api
+// dlnasrv / avcontroller helper api
 #include "upnpconstantdefs.h" // for upnp definitions
 #include "upnpitemutility.h"
 
@@ -59,6 +61,7 @@ _LIT8(KItemPInfoMiddle,         ">");
 _LIT8(KItemPInfoEnd,            "</res>");
 _LIT8(KItemPInfoEnd2,            "\"></res>");
 _LIT8(KItemEnd,                 "</item>");
+_LIT8(KEqual,                   "=");
 
 _LIT8(KQuotationMark,           "\" ");
 _LIT8(KItemSize,                "size=\"");
@@ -75,6 +78,7 @@ _LIT8(KItemAlbumEnd,            "</upnp:album>");
 _LIT8(KItemGenreBegin,          "<upnp:genre>");
 _LIT8(KItemGenreEnd,            "</upnp:genre>");
 _LIT8(KItemAlbumArtURIBegin,    "<upnp:albumArtURI>");
+_LIT8(KItemAlbumArtURI,         "<upnp:albumArtURI ");
 _LIT8(KItemAlbumArtURIEnd,      "</upnp:albumArtURI>");
 
 _LIT8(KDIDLBeginXmlEscaped,
@@ -296,10 +300,29 @@ HBufC8* CUpnpItemToXML::AsXmlL( const TBool /*aIncludeChilds = ETrue */ )
         //stream.WriteL( Genre() );
         stream.WriteL( KItemGenreEnd );
         } 
-    const TDesC8& albumarturi = GetValueFromElement( KElementAlbumArtUri );     
+    const TDesC8& albumarturi = GetValueFromElement( KElementAlbumArtUri );
     if ( albumarturi != KNullDesC8 )
         {
-        stream.WriteL( KItemAlbumArtURIBegin );
+        CUpnpElement* elem = 
+        (CUpnpElement*)(UPnPItemUtility::FindElementByName( *iItem, KElementAlbumArtUri() ));
+        if( elem )
+            {
+            stream.WriteL( KItemAlbumArtURI );
+            const RUPnPAttributesArray& attrArray = elem->GetAttributes();
+            for( TInt i(0); i < attrArray.Count(); ++i )
+                {
+                stream.WriteL( attrArray.operator [](i)->Name() );
+                stream.WriteL( KEqual );
+                stream.WriteL( KCriteriaQuot );
+                stream.WriteL( attrArray.operator [](i)->Value() ); 
+                stream.WriteL( KCriteriaQuot );
+                }            
+            stream.WriteL( KItemPInfoMiddle );
+            }
+        else
+            {
+            stream.WriteL( KItemAlbumArtURIBegin );
+            }
         // xml encoding added
         encodeTemp = HBufC8::NewLC( albumarturi.Length() );
         encodeTemp->Des().Copy( albumarturi );
@@ -378,7 +401,7 @@ HBufC8* CUpnpItemToXML::AsXmlL( const TBool /*aIncludeChilds = ETrue */ )
             stream.WriteL( KCriteriaSpace );                        
             }        
         const CUpnpAttribute* attrduration = UPnPItemUtility
-            ::FindAttributeByName( *elArray[ i ], KAttributeDuration );        
+            ::FindAttributeByName( *elArray[ i ], KAttributeDuration );
         if ( attrduration )
             {           
             if( ValidateDurationL( attrduration->Value() ) )
@@ -446,6 +469,132 @@ HBufC8* CUpnpItemToXML::AsXmlL( const TBool /*aIncludeChilds = ETrue */ )
     return retBuffer;
     }
 
+void CUpnpItemToXML::FillMetaDataL(RBufWriteStream& aStream)
+    {
+    HBufC8* encodeTemp = NULL;
+    HBufC8* tempPtr = NULL;
+    const TDesC8& artist = GetValueFromElement( KElementArtist ); 
+    if ( artist != KNullDesC8 )
+        {
+        aStream.WriteL( KItemArtistBegin );
+        // xml encoding added
+        encodeTemp = HBufC8::NewLC( artist.Length() );
+        encodeTemp->Des().Copy( artist );
+
+        tempPtr = UpnpString::EncodeXmlStringL( encodeTemp );
+        CleanupStack::PushL( tempPtr );
+
+        aStream.WriteL( *tempPtr );
+        CleanupStack::PopAndDestroy( tempPtr );
+        tempPtr = NULL;
+        
+        CleanupStack::PopAndDestroy( encodeTemp );
+        encodeTemp = NULL;
+
+        aStream.WriteL( KItemArtistEnd );
+        }
+    const TDesC8& creator = GetValueFromElement( KElementCreator ); 
+    if ( creator != KNullDesC8 )
+        {
+        aStream.WriteL( KItemCreatorBegin );
+        // xml encoding added
+        encodeTemp = HBufC8::NewLC( creator.Length() );
+        encodeTemp->Des().Copy( creator );
+
+        tempPtr = UpnpString::EncodeXmlStringL( encodeTemp );
+        CleanupStack::PushL( tempPtr );
+
+        aStream.WriteL( *tempPtr );
+        CleanupStack::PopAndDestroy( tempPtr );
+        tempPtr = NULL;
+        
+        CleanupStack::PopAndDestroy( encodeTemp );
+        encodeTemp = NULL;
+
+        aStream.WriteL( KItemCreatorEnd );        
+        }
+    const TDesC8& album = GetValueFromElement( KElementAlbum ); 
+    if ( album != KNullDesC8 )
+        {
+        aStream.WriteL( KItemAlbumBegin );
+        // xml encoding added
+        encodeTemp = HBufC8::NewLC( album.Length() );
+        encodeTemp->Des().Copy( album );
+        
+        tempPtr = UpnpString::EncodeXmlStringL( encodeTemp );
+        CleanupStack::PushL( tempPtr );
+
+        aStream.WriteL( *tempPtr );
+        CleanupStack::PopAndDestroy( tempPtr );
+        tempPtr = NULL;
+
+        CleanupStack::PopAndDestroy( encodeTemp );
+        encodeTemp = NULL;
+        //aStream.WriteL( Album() );
+        aStream.WriteL( KItemAlbumEnd );        
+        }
+    const TDesC8& genre = GetValueFromElement( KElementGenre );     
+    if ( genre != KNullDesC8 )
+        {
+        aStream.WriteL( KItemGenreBegin );
+        // xml encoding added
+        encodeTemp = HBufC8::NewLC( genre.Length() );
+        encodeTemp->Des().Copy( genre );
+
+        tempPtr = UpnpString::EncodeXmlStringL( encodeTemp );
+        CleanupStack::PushL( tempPtr );
+
+        aStream.WriteL( *tempPtr );
+        CleanupStack::PopAndDestroy( tempPtr );
+        tempPtr = NULL;
+
+        CleanupStack::PopAndDestroy( encodeTemp );
+        encodeTemp = NULL;
+        //aStream.WriteL( Genre() );
+        aStream.WriteL( KItemGenreEnd );        
+        }
+    const TDesC8& albumarturi = GetValueFromElement( KElementAlbumArtUri );
+    if ( albumarturi != KNullDesC8 )
+        {
+        aStream.WriteL( KItemAlbumArtURIBegin );
+        // xml encoding added
+        encodeTemp = HBufC8::NewLC( albumarturi.Length() );
+        encodeTemp->Des().Copy( albumarturi );
+
+        tempPtr = UpnpString::EncodeXmlStringL( encodeTemp );
+        CleanupStack::PushL( tempPtr );
+
+        aStream.WriteL( *tempPtr );
+        CleanupStack::PopAndDestroy( tempPtr );
+        tempPtr = NULL;
+
+        CleanupStack::PopAndDestroy( encodeTemp );
+        encodeTemp = NULL;       
+        aStream.WriteL( KItemAlbumArtURIEnd );        
+        }
+    const TDesC8& date = GetValueFromElement( KElementDate );         
+    if ( date != KNullDesC8 )
+        {
+        if( ValidateDateL( date ) )
+            {
+            aStream.WriteL( KItemDateBegin );
+            // xml encoding added
+            encodeTemp = HBufC8::NewLC( date.Length() );
+            encodeTemp->Des().Copy( date );
+
+            tempPtr = UpnpString::EncodeXmlStringL( encodeTemp );
+            CleanupStack::PushL( tempPtr );
+
+            aStream.WriteL( *tempPtr );
+            CleanupStack::PopAndDestroy( tempPtr );
+            tempPtr = NULL;
+
+            CleanupStack::PopAndDestroy( encodeTemp );
+            encodeTemp = NULL;
+            aStream.WriteL( KItemDateEnd );
+            }       
+        }
+    }
 // --------------------------------------------------------------------------
 // CUpnpItemToXML::AsXmlEmptyL
 // Returns object's XML description. This version of the method is used to
@@ -484,129 +633,8 @@ HBufC8* CUpnpItemToXML::AsXmlEmptyL()
     
     stream.WriteL( iItem->ObjectClass() );
     stream.WriteL( KItemClassEnd() );
-    
-    // Music meta data information
-    const TDesC8& artist = GetValueFromElement( KElementArtist ); 
-    if ( artist != KNullDesC8 )
-        {
-        stream.WriteL( KItemArtistBegin );
-        // xml encoding added
-        encodeTemp = HBufC8::NewLC( artist.Length() );
-        encodeTemp->Des().Copy( artist );
 
-        tempPtr = UpnpString::EncodeXmlStringL( encodeTemp );
-        CleanupStack::PushL( tempPtr );
-
-        stream.WriteL( *tempPtr );
-        CleanupStack::PopAndDestroy( tempPtr );
-        tempPtr = NULL;
-        
-        CleanupStack::PopAndDestroy( encodeTemp );
-        encodeTemp = NULL;
-
-        stream.WriteL( KItemArtistEnd );
-        }
-    const TDesC8& creator = GetValueFromElement( KElementCreator ); 
-    if ( creator != KNullDesC8 )
-        {
-        stream.WriteL( KItemCreatorBegin );
-        // xml encoding added
-        encodeTemp = HBufC8::NewLC( creator.Length() );
-        encodeTemp->Des().Copy( creator );
-
-        tempPtr = UpnpString::EncodeXmlStringL( encodeTemp );
-        CleanupStack::PushL( tempPtr );
-
-        stream.WriteL( *tempPtr );
-        CleanupStack::PopAndDestroy( tempPtr );
-        tempPtr = NULL;
-        
-        CleanupStack::PopAndDestroy( encodeTemp );
-        encodeTemp = NULL;
-
-        stream.WriteL( KItemCreatorEnd );        
-        }
-    const TDesC8& album = GetValueFromElement( KElementAlbum ); 
-    if ( album != KNullDesC8 )
-        {
-        stream.WriteL( KItemAlbumBegin );
-        // xml encoding added
-        encodeTemp = HBufC8::NewLC( album.Length() );
-        encodeTemp->Des().Copy( album );
-        
-        tempPtr = UpnpString::EncodeXmlStringL( encodeTemp );
-        CleanupStack::PushL( tempPtr );
-
-        stream.WriteL( *tempPtr );
-        CleanupStack::PopAndDestroy( tempPtr );
-        tempPtr = NULL;
-    
-        CleanupStack::PopAndDestroy( encodeTemp );
-        encodeTemp = NULL;
-        //stream.WriteL( Album() );
-        stream.WriteL( KItemAlbumEnd );        
-        }
-    const TDesC8& genre = GetValueFromElement( KElementGenre );     
-    if ( genre != KNullDesC8 )
-        {
-        stream.WriteL( KItemGenreBegin );
-        // xml encoding added
-        encodeTemp = HBufC8::NewLC( genre.Length() );
-        encodeTemp->Des().Copy( genre );
-
-        tempPtr = UpnpString::EncodeXmlStringL( encodeTemp );
-        CleanupStack::PushL( tempPtr );
-
-        stream.WriteL( *tempPtr );
-        CleanupStack::PopAndDestroy( tempPtr );
-        tempPtr = NULL;
-    
-        CleanupStack::PopAndDestroy( encodeTemp );
-        encodeTemp = NULL;
-        //stream.WriteL( Genre() );
-        stream.WriteL( KItemGenreEnd );        
-        }
-    const TDesC8& albumarturi = GetValueFromElement( KElementAlbumArtUri );     
-    if ( albumarturi != KNullDesC8 )
-        {
-        stream.WriteL( KItemAlbumArtURIBegin );
-        // xml encoding added
-        encodeTemp = HBufC8::NewLC( albumarturi.Length() );
-        encodeTemp->Des().Copy( albumarturi );
-
-        tempPtr = UpnpString::EncodeXmlStringL( encodeTemp );
-        CleanupStack::PushL( tempPtr );
-
-        stream.WriteL( *tempPtr );
-        CleanupStack::PopAndDestroy( tempPtr );
-        tempPtr = NULL;
-    
-        CleanupStack::PopAndDestroy( encodeTemp );
-        encodeTemp = NULL;       
-        stream.WriteL( KItemAlbumArtURIEnd );        
-        }
-    const TDesC8& date = GetValueFromElement( KElementDate );         
-    if ( date != KNullDesC8 )
-        {
-        if( ValidateDateL( date ) )
-            {
-            stream.WriteL( KItemDateBegin );
-            // xml encoding added
-            encodeTemp = HBufC8::NewLC( date.Length() );
-            encodeTemp->Des().Copy( date );
-
-            tempPtr = UpnpString::EncodeXmlStringL( encodeTemp );
-            CleanupStack::PushL( tempPtr );
-
-            stream.WriteL( *tempPtr );
-            CleanupStack::PopAndDestroy( tempPtr );
-            tempPtr = NULL;
-
-            CleanupStack::PopAndDestroy( encodeTemp );
-            encodeTemp = NULL;
-            stream.WriteL( KItemDateEnd );
-            }       
-        }
+    FillMetaDataL(stream);    
     
     // Create dlna compliant protocolinfo
     const RUPnPElementsArray& elms = iItem->GetElements();
@@ -620,75 +648,77 @@ HBufC8* CUpnpItemToXML::AsXmlEmptyL()
         if( elms[ i ]->Name() == KElementRes )
             {
             const RUPnPAttributesArray& attr = elms[ i ]->GetAttributes();
+            //pInfo must be checked first
             for( TInt j = 0; j < attr.Count(); j++ )
                 {
                 if( attr[ j ]->Name() == KAttributeProtocolInfo )
                     {
-                    pInfo = CUpnpDlnaProtocolInfo::NewL( attr[ j ]->Value() );
+                    pInfo = CUpnpDlnaProtocolInfo::NewL(
+                            attr[ j ]->Value() );
                     if ( pInfo )
                         {
                         CleanupStack::PushL( pInfo );
                         info = HBufC8::NewLC( KBufLen );
+
+                        info->Des().Copy( KItemPInfoEmptyDlna );
+                        info->Des().Append( pInfo->ThirdField() ); // Third param )
+                        info->Des().Append( KColon );
+                        if( pInfo->PnParameter().Length() > 0 )
+                            {
+                            info->Des().Append( KDlnaPn );
+                            info->Des().Append( pInfo->PnParameter() ); // Fourth param )
+                            }
+                        else
+                            {
+                            info->Des().Append( KAsterisk );
+                            }   
+                        break;
                         }
                     }
-                if ( attr[ j ]->Name() == KAttributeDuration )
-                    {
-                    duration= HBufC8::NewLC( attr[ j ]->Value().Length() );
-                    duration->Des().Copy( attr[ j ]->Value() );
-                    }
-                if ( attr[ j ]->Name() == KAttributeSize )
-                    {
-                    size = HBufC8::NewLC( attr[ j ]->Value().Length() );
-                    size->Des().Copy( attr[ j ]->Value() );
-                    }
-                if ( attr[ j ]->Name() == KAttributeResolution )
-                    {
-                    resolution = HBufC8::NewLC( attr[ j ]->Value().Length() );
-                    resolution->Des().Copy( attr[ j ]->Value() );
-                    }
                 }
+            //if there is pInfo we can continue with other elements
+                if (pInfo)
+                    {
+                    for (TInt j = 0; j < attr.Count(); j++)
+                        {
+                        if ( attr[ j ]->Name() == KAttributeDuration )
+                            {
+                            duration= HBufC8::NewLC( attr[ j ]->Value().Length() );
+                            duration->Des().Copy( attr[ j ]->Value() );
+                            info->Des().Append( KQuotationMark );
+                            info->Des().Append( KItemDuration );
+                            info->Des().Append( *duration );
+                            CleanupStack::PopAndDestroy( duration );
+                            duration = NULL;
+                            }
+                        if ( attr[ j ]->Name() == KAttributeSize )
+                            {
+                            size = HBufC8::NewLC( attr[ j ]->Value().Length() );
+                            size->Des().Copy( attr[ j ]->Value() );
+                            info->Des().Append( KQuotationMark );
+                            info->Des().Append( KItemSize );
+                            info->Des().Append( *size );
+                            CleanupStack::PopAndDestroy( size );
+                            size = NULL;
+                            }
+                        if ( attr[ j ]->Name() == KAttributeResolution )
+                            {
+                            resolution = HBufC8::NewLC( attr[ j ]->Value().Length() );
+                            resolution->Des().Copy( attr[ j ]->Value() );
+                            info->Des().Append( KQuotationMark );
+                            info->Des().Append( KItemResolution );
+                            info->Des().Append( *resolution );
+                            CleanupStack::PopAndDestroy( resolution );
+                            resolution = NULL;
+                            }
+                        }
+                    }
             i = elms.Count();
             }
         }
     
     if( pInfo )
         {
-        info->Des().Copy( KItemPInfoEmptyDlna );
-        info->Des().Append( pInfo->ThirdField() ); // Third param )
-        info->Des().Append( KColon );
-        if( pInfo->PnParameter().Length() > 0 )
-            {
-            info->Des().Append( KDlnaPn );
-            info->Des().Append( pInfo->PnParameter() ); // Fourth param )
-            }
-        else
-            {
-            info->Des().Append( KAsterisk );
-            }    
-        if ( resolution )
-            {
-            info->Des().Append( KQuotationMark );
-            info->Des().Append( KItemResolution );
-            info->Des().Append( *resolution );
-            CleanupStack::PopAndDestroy( resolution );
-            resolution = NULL;
-            }
-        if ( duration )
-            {
-            info->Des().Append( KQuotationMark );
-            info->Des().Append( KItemDuration );
-            info->Des().Append( *duration );
-            CleanupStack::PopAndDestroy( duration );
-            duration = NULL;
-            }
-        if ( size )
-            {
-            info->Des().Append( KQuotationMark );
-            info->Des().Append( KItemSize );
-            info->Des().Append( *size );
-            CleanupStack::PopAndDestroy( size );
-            size = NULL;
-            }
         
         info->Des().Append( KItemPInfoEnd2 );
         stream.WriteL( *info );
@@ -717,9 +747,9 @@ HBufC8* CUpnpItemToXML::AsXmlEmptyL()
 // --------------------------------------------------------------------------
 // CUpnpItemToXML::AsResultArgumentL
 // Returns object's XML description that is embedded inside a DIDL-LITE tag. 
-// The <res> tag of xml description is empty.The returned value is xml encoded
-// can therefore be used for example when creating a CreateObject action.
-// (other items were commented in a header).
+// The <res> tag of xml description is empty.The returned value is xml
+// encoded can therefore be used for example when creating a CreateObject
+// action. (other items were commented in a header).
 // --------------------------------------------------------------------------
 HBufC8* CUpnpItemToXML::AsResultArgumentL()
     {

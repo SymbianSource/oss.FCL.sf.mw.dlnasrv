@@ -27,6 +27,7 @@
 #include <e32base.h>
 #include <badesca.h>
 
+#include "upnpcontentserverdefs.h"
 
 /**
  * Callback class for informing about completion of unsharing, sharing and

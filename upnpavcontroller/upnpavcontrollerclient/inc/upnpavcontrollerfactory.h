@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -64,14 +64,6 @@ public:
      * @return instance of AV Controller
      */
     IMPORT_C static MUPnPAVController* NewUPnPAVControllerLC();
-
-    /**
-     * Return ETrue is some application is using the local Media Server
-     * services via AV Controller server.
-     *
-     * @return EFalse/ETrue
-     */
-    IMPORT_C static TBool MSServicesInUse();
 
     /**
      * Returns the operational state of AV Controller Server

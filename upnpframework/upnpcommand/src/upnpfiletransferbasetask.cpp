@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -150,8 +150,8 @@ ExecuteFileTransferL resources not allocated, leave" );
     NoteHandler()->ResetDrmNoteCount();
     
     TInt status = KErrNone;
-    TInt origFileCount = FilePipe()->Count();;    
-    TInt failedFileCount = 0;   
+    TInt origFileCount = FilePipe()->Count();
+    TInt failedFileCount = 0;
 
     // Initialise and execute the UpnpFileTransferEngine
     CUpnpFileTransferEngine* ftEngine = NULL;

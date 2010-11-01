@@ -146,6 +146,8 @@ private:
      */
     void ParseToDelimeter( TLex8& aLex, TChar aDelimeter );    
 
+    void FillMetaDataL(RBufWriteStream& aStream);
+	
 private:
 
     /**

@@ -170,7 +170,8 @@ _LIT8( KAttributeProtocolInfo, "protocolInfo" );
 // bitrate. used in
 _LIT8( KAttributeBitrate,      "bitrate" );
 
-
+// attribute for album art element
+_LIT8( KAttributeProfileId,    "dlna:profileID" );
 
 // ***************************************************
 // * Filters and sorting

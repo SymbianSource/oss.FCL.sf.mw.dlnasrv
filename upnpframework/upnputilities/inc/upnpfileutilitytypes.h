@@ -167,5 +167,3 @@ _LIT( KRAExt,      ".ra" );
 _LIT8( KVideoTts,   "video/vnd.dlna.mpeg-tts" );
 _LIT( KTtsExt,       ".tts" );
 
-
-

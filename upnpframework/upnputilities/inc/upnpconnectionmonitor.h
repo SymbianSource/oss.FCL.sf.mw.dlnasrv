@@ -23,26 +23,7 @@
 #include <e32base.h>
 #include <rconnmon.h>
 
-#include <f32file.h> 
-
 #include "upnpconnectionmonitorobserver.h"
-
-// CONSTANTS
-// none
-
-// MACROS
-// none
-
-// DATA TYPES
-// none
-
-// FUNCTION PROTOTYPES
-// none
-
-// FORWARD DECLARATIONS
-// none
-
-// CLASS DECLARATION
 
 /**
 * CUPnPConnectionMonitor class provides a WLAN connection monitor
@@ -60,8 +41,7 @@ public:  // Constructors and destructor
     /**
      * Two-phased constructor.
      */
-    IMPORT_C static CUPnPConnectionMonitor* NewL(
-        MUPnPConnectionMonitorObserver& aObserver, TInt aAccessPoint );
+    IMPORT_C static CUPnPConnectionMonitor* NewL( TInt aAccessPoint );
     
     /**
      * Destructor.
@@ -69,19 +49,26 @@ public:  // Constructors and destructor
     virtual ~CUPnPConnectionMonitor();
 
     /**
-     * Simulate connection lost case. Calling this method will cause all
-     * instances of the CUPnPConnectionMonitor to call back "ConnectionLost"
-     * via the observer API.
-     *
-     * This method is for module test use only.
+     * Sets connection observer. Can be used if observer changes 
+     * after creation of connection monitor.
+     * @param aObserver Observer.
      */
-    IMPORT_C static void DebugSimulateConnectionLostL();
+    IMPORT_C void SetObserver( MUPnPConnectionMonitorObserver& aObserver );
     
     /**
-     * Checks current connection ids what is wlan id
-     * and stores it to iConnectionId
+     * Requests a notification when requested access point is available.
+     * To avoid high power consumption, access point is observed some
+     * minutes. If access point is available earlier, IapAvailable is 
+     * called and monitoring stopped. Observation of access point can 
+     * be canceled with NotifyIapCancel at any point.
+     * @param aAccessPoint Access point from which notification is requested.
      */
-    void  ParseCurrentConnections();
+    IMPORT_C void NotifyIap( TInt aAccessPoint );
+    
+    /**
+     * Stops scanning of access point started with NotifyIap.
+     */
+    IMPORT_C void NotifyIapCancel();
     
 protected: // From CActive
 
@@ -104,8 +91,7 @@ private:
     /**
      * C++ default constructor.
      */
-    CUPnPConnectionMonitor( MUPnPConnectionMonitorObserver& aObserver,
-        TInt aAccessPoint );
+    CUPnPConnectionMonitor( TInt aAccessPoint );
 
     /**
      * By default Symbian 2nd phase constructor is private.
@@ -117,23 +103,64 @@ private:
      */
     TBool IsWlanConnection( TInt aConnectionId);
 
+    /**
+     * Checks current connection ids what is wlan id
+     * and stores it to iConnectionId
+     */
+    void  ParseCurrentConnections();
+    
+    /**
+     * Callback for iap observation stop timer.
+     */
+    static TInt TimeoutCallback( TAny* aSelf );
+
+    /**
+     * Implementation of timeout handling.
+     */
+    void StopIapObservation();
+    
+    /**
+     * Cancels and deletes timeout timer.
+     */
+    void DeleteTimeoutTimer();
+
+private:
+    
+    enum EMonitorState
+        {
+        EMonitorStateWait,
+        EMonitorStateIap
+        };
 
 private:    // Data
-
-    // file server (used only in debugging services)
-    RFs iFs;
 
     // Connection monitor server
     RConnectionMonitor              iConnectionMonitor;
 
-    // Connection id
+    // Connection id on connection creation
+    TInt                            iConnectionIdOnCreate;
+
+    // Connection id on connection deletion
     TInt                            iConnectionId;
 
     // Callback pointer, not owned
-    MUPnPConnectionMonitorObserver& iObserver;
+    MUPnPConnectionMonitorObserver* iObserver;
 
     // Accesspoint to be observed
     TInt                            iAccessPoint;
+    
+    // Indication of scan request
+    TBool                           iMonitorState;
+    
+    // Buffer for iap information
+    TConnMonIapInfoBuf              iIapBuf;
+    
+    // Timer used when scanning iap at intervals
+    RTimer                          iTimer;
+    
+    // Timer used to avoid scanning of access point
+    // forever if client does not stop scanning.
+    CPeriodic*                      iTimeout;
     };
 
 #endif // C_UPNPCONNECTIONMMONITOR_H

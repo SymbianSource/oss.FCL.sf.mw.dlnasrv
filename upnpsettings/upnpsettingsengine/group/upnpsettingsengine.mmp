@@ -62,6 +62,7 @@ LIBRARY commdb.lib
 
 // Connection Manager, new APIs for getting IAPs, etc.
 LIBRARY cmmanager.lib
+LIBRARY apengine.lib 
 
 DEBUGLIBRARY flogger.lib
 

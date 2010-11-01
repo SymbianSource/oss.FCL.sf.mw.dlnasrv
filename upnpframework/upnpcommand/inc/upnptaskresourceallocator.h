@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -25,14 +25,13 @@
 
 // upnpframework / avcontroller api
 #include "upnpavdeviceobserver.h" // base class
-#include "upnpavbrowsingsessionobserver.h" // base class
+
 
 // FORWARD DECLARATIONS
 class CUPnPCommonUI;
 class CUpnpNoteHandler;
 class MUPnPAVController;
 class CUpnpAVDevice;
-class MUPnPAVBrowsingSession;
 class CUpnpNoteHandler;
 
 /**
@@ -41,7 +40,6 @@ class CUpnpNoteHandler;
 class CUpnpTaskResourceAllocator
     : public CAsyncOneShot
     , public MUPnPAVDeviceObserver
-    , public MUPnPAVBrowsingSessionObserver
     {
     public:
 
@@ -53,8 +51,6 @@ class CUpnpTaskResourceAllocator
             {
             // open AV controller resource
             EResourceAvController            = 0x0001,
-            // start local mediaserver
-            EResourceLocalMediaServer        = 0x0002,
             // select an image-capable renderer
             EResourceSelectImageRenderer     = 0x0100,
             // select a copy-capable server
@@ -173,39 +169,6 @@ class CUpnpTaskResourceAllocator
 
         void WLANConnectionLost();
        
-        
-    public: // Call back methods of MUPnPAVBrowsingSessionObserver
-
-        void BrowseResponse(
-            const TDesC8& aBrowseResponse,
-            TInt aError,
-            TInt aMatches,
-            TInt aTotalCount,
-            const TDesC8& aUpdateId
-            );
-
-        void SearchResponse( 
-            const TDesC8& aSearchResponse,
-            TInt aError,
-            TInt aMatches,
-            TInt aTotalCount,
-            const TDesC8& aUpdateId
-            );
-
-        void SearchCapabilitiesResponse( 
-            TInt aError,
-            const TDesC8& aSearchCapabilities 
-            );
-
-        void CreateContainerResponse( TInt aError, 
-            const TDesC8& aObjectId );
-
-        void DeleteObjectResponse( TInt aError );
-
-        void MediaServerDisappeared(
-            TUPnPDeviceDisconnectedReason aReason );
-
-        void ReserveLocalMSServicesCompleted( TInt aError );
 
     protected:
 
@@ -216,7 +179,6 @@ class CUpnpTaskResourceAllocator
             {
             EStateIdle = 0, // class constructed, allocation not started yet
             EStateAllocating, // allocation in progress
-            EStateWaitingForLMS, // rest done,waiting for local media server
             EStateReady, // allocation succesful
             EStateError  // allocation failed
             };
@@ -241,18 +203,8 @@ class CUpnpTaskResourceAllocator
         // selected device
         CUpnpAVDevice*                iSelectedDevice;
 
-        // the mediaserver keepalive browsing session
-        MUPnPAVBrowsingSession*       iMediaServerSession;
-
         // error occurred in some asynchronous operation
         TInt                          iErrorCode;
-
-        // flag for local mediaserver start state
-        TBool                         iLocalMSStarted;
-
-        // flag for local mediaserver callback
-        TBool                         iLocalMSSCompleted;
-
         
     };
 

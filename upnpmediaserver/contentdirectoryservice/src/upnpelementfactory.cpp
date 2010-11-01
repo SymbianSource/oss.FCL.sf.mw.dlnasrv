@@ -19,7 +19,7 @@
 // INCLUDE FILES
 #include <sysutil.h>
 #include <uri8.h>
-#include <xml/dom/xmlengdomparser.h>
+#include <xmlengdomparser.h>
 
 #include "upnpelementfactory.h"
 #include "upnpcontentdirectoryglobals.h"
@@ -107,8 +107,15 @@ void CUpnpElementFactory::ConstructL(const TDesC& aObjectsXmlPath)
         TFileName path;
         User::LeaveIfError(fs.PrivatePath(path));
 
+        // Load dll file
+        TFileName objectsXmlFileName( KObjectsXmlFileName() );
+        TFileName dllName;
+        Dll::FileName( dllName );
+        TBuf<2> drive = dllName.Left( 2 ); // Drive letter followed by ':' 
+        objectsXmlFileName.Insert( 0, drive );
+        
         TParse fp;
-        fp.Set(KObjectsXmlFileName(),&path, 0);
+        fp.Set(objectsXmlFileName,&path, 0);
         path = fp.FullName();
 
         iDocument = parser.ParseFileL( path );        
@@ -134,6 +141,27 @@ CUpnpElementFactory::CUpnpElementFactory()
 }
 
 // -----------------------------------------------------------------------------
+// CUpnpElementFactory::CheckRestrictedValue()
+// -----------------------------------------------------------------------------
+//
+TBool CUpnpElementFactory::CheckRestrictedValue (TPtrC8& restrVal)
+    {
+    TBool retVal = EFalse;
+
+    if ( 
+    (UpnpCD::Kfalse().Compare( restrVal ) != 0) &&
+    (UpnpCD::KZero().Compare( restrVal ) != 0) &&
+    (UpnpCD::Ktrue().Compare( restrVal ) != 0) &&
+    (UpnpCD::KOne().Compare( restrVal ) != 0)
+    )
+        {
+        retVal = ETrue;
+        }
+    return retVal;
+    }
+
+
+// -----------------------------------------------------------------------------
 // CUpnpElementFactory::ValidateNewObjectL()
 // Function to validate a new object given by Control Point, especially 
 // upnp:class element field eg. object.item.musictrack
@@ -144,7 +172,6 @@ CUpnpElementFactory::CUpnpElementFactory()
 
 TUpnpErrorCode CUpnpElementFactory::ValidateNewObjectL( const TXmlEngElement& aNewElement, TBool aNew, TBool aLocalSharing)
 {
-    /*
     TInt i;    
     TPtrC8 objectType = KItem();
 
@@ -176,15 +203,11 @@ TUpnpErrorCode CUpnpElementFactory::ValidateNewObjectL( const TXmlEngElement& aN
                            
     // restriced value
     TPtrC8 restrVal = UpnpDomInterface::GetAttrValueL( object,  KRestricted );
-    if ( 
-    (UpnpCD::Kfalse().Compare( restrVal ) != 0) &&
-    (UpnpCD::KZero().Compare( restrVal ) != 0) &&
-    (UpnpCD::Ktrue().Compare( restrVal ) != 0) &&
-    (UpnpCD::KOne().Compare( restrVal ) != 0)
-    )
-    {
-        User::Leave( EBadMetadata );
-    }
+    
+    if (CheckRestrictedValue(restrVal))
+        {
+        User::Leave ( EBadMetadata);
+        }
     
     // for convenience later, take now a reference to the children of the object
     RXmlEngNodeList<TXmlEngElement> children;
@@ -270,8 +293,7 @@ TUpnpErrorCode CUpnpElementFactory::ValidateNewObjectL( const TXmlEngElement& aN
         
                 const TDesC8& propertyType = UpnpDomInterface::GetAttrValueL( ps, KType() );
 
-                TBool elementFound;
-                
+                TBool elementFound(EFalse);
 
                 // check each property
                 while ( properties.HasNext() )
@@ -279,320 +301,13 @@ TUpnpErrorCode CUpnpElementFactory::ValidateNewObjectL( const TXmlEngElement& aN
                     
                     TXmlEngElement el = properties.Next();
 
-                    // Validate element
-                    if ( propertyType == KElement() )
-                    {
-                        elementFound = EFalse;
-                        
-                        // Check if this element is requiered
-                        const TDesC8& required = UpnpDomInterface::GetAttrValueL( el, KRequiredObject() );
-
-                        TPtrC8 elementName = UpnpDomInterface::GetAttrValueL( el, KName() );
-
-                        // If it's required then check it's existence
-
-                        if ( required == UpnpCD::KOne() || elementName == KRes()  ||  elementName == KAlbumArtURI() )
-                        {
-                        if( !KRes().Compare(elementName) ||  !KAlbumArtURI().Compare(elementName))
-                        {
-                            elementFound = ETrue;
-                        }
-                            // get children once more, because this kind of list does not have any reset function
-                            object.GetChildElements( children );
-                            while ( children.HasNext() )
-                            {
-                                
-                                TXmlEngElement child = children.Next();
-                                
-                                HBufC8* nameWithNs = NameWithNsLC( child );
-
-                                if ( *nameWithNs == elementName )
-                                {
-                                    // local sharing
-                                    if(aNew && *nameWithNs == KRes)
-                                    {
-                                        TUriParser8 up;
-                                        TPtrC8 rv(child.Text());
-                                        if(rv.Length())
-                                        {
-                                            User::LeaveIfError( up.Parse(child.Text()) );
-                                            TPtrC8 path( up.Extract(EUriPath) );
-                                            TPtrC8 scheme( up.Extract(EUriScheme) );
-
-                                            if(aLocalSharing)
-                                            { // local action
-                                                if( scheme == UpnpHTTP::KSchemeFile8())
-                                                {
-                                                    // The path can be: /c:/....
-                                                    // or /c/... - without colon.
-                                                    // Both situation are correct but 
-                                                    // in further operations we assume 
-                                                    // there is not any colon next to the drive letter.
-                                                    // Therefore, remove it if second element of path table equals ':'
-                                                    if(path[2] == KColon8()[0])
-                                                    { // There IS a colon next to the drive letter.
-                                                        // Here is an example uri:
-                                                        // file:///c:/...
-                                                        // As you can see the second colon must be removed
-                                                        HBufC8* uri = child.Text().AllocLC();
-                                                        TPtr8 uriPtr(uri->Des());
-                                                        TPtrC8 tmp(uri->Des());
-                                                        TInt second = 2;
-                                                        TInt colonPos = 0;
-                                                        for(TInt i = 0; i < second; i++)
-                                                        {
-                                                            colonPos += tmp.Find(KColon8) + 1;
-                                                            tmp.Set( uriPtr.Mid(colonPos) );                                                    
-                                                        }
-                                                        // remove the colon
-                                                        uriPtr.Replace(colonPos - 1, KColon8().Length(), KNullString8);
-                                                        // set TXmlEngElement value
-                                                        child.SetTextL(uriPtr);
-                                                        
-                                                        // clean up             
-                                                        CleanupStack::PopAndDestroy(uri);                                               
-                                                    }
-                        
-                                                    // check other  restrictions
-                                                    TUriParser8 up;
-                                                    User::LeaveIfError( up.Parse(child.Text()) );
-                                                    TPtrC8 path( up.Extract(EUriPath) );
-
-                                                    // sharing from Z: drive is forbidden
-                                                    // second character is a drive letter
-                                                    if(path[1] == KForbiddenDrivez()[0] || path[1] == KForbiddenDriveZ()[0])
-                                                    {
-                                                        User::Leave(EArgumentValue);
-                                                    }
-                                                    
-                                                    // cannot share from private directory
-                                                    if(!path.Match(KForbiddenPrivatePattern))
-                                                    {
-                                                        User::Leave(EArgumentValue);
-                                                    }
-                                                    
-                                                }
-                                            }
-                                            else
-                                            { // not local action
-                                                // "file" schema is forbidden here
-                                                if(scheme == UpnpHTTP::KSchemeFile8())
-                                                {
-                                                    User::Leave(EArgumentValue);
-                                                }
-                                            }
-                                        }
-                                    }
-
-
-                                    if ( elementFound ) 
-                                    {
-                                        // multiple values for one element!
-                                        const TDesC8& multiple = UpnpDomInterface::GetAttrValueL( el, KMultiple() );
-                                        
-                                        // if it's not allowed for this element, leave!
-                                        if ( !multiple.Length() )
-                                        {
-                                            User::Leave( EInvalidArgs );
-                                        }
-                                    }
-                                    elementFound = ETrue;
-                                    // mark the element required - if not res
-                                    if( KRes().Compare(elementName) && KAlbumArtURI().Compare(elementName))
-                                    {
-                                        child.AddNewAttributeL(KRequiredAtrName,KTrueValue8);
-                                    }
-                                    
-                                    // nested validation 
-                                    RXmlEngNodeList<TXmlEngElement> nestEls;
-                                    CleanupClosePushL(nestEls);
-                                    el.GetChildElements(nestEls);
-                                    while(nestEls.HasNext())
-                                    {
-                                        TXmlEngElement nestPs = nestEls.Next();
-
-                                        // take the properties
-                                        RXmlEngNodeList<TXmlEngElement> nestProperties;
-                                        nestPs.GetChildElements( nestProperties );
-                                        const TDesC8& nestPropertyType = UpnpDomInterface::GetAttrValueL( nestPs, KType() );
-                                        // Validate attribute   
-                                        if ( nestPropertyType == KAttribute() )
-                                        {
-                                            while(nestProperties.HasNext())
-                                            {   
-                                                TXmlEngElement nestEl = nestProperties.Next();
-                                                //TBool nestElementFound;
-
-                                                //nestElementFound = EFalse;
-                                                
-                                                const TDesC8& nestRequired = UpnpDomInterface::GetAttrValueL( nestEl, KRequiredObject() );
-                                                TPtrC8 nestElementName = UpnpDomInterface::GetAttrValueL( nestEl, KName() );
-                                                if ( nestRequired == UpnpCD::KOne() || nestElementName == KDlnaProfileID)
-                                                {
-                                                    TPtrC8 nestCurrentValue = UpnpDomInterface::GetAttrValueL( child, nestElementName );
-                                                    
-                                                    TPtrC8 nameOfAttr;
-                                                    TPtrC8 valOfAttr;
-                                                    nameOfAttr.Set( nestElementName );
-                                                    
-                                                    // Start of 'dlna:profileID' attribute case                                                 
-                                                    if( nameWithNs->Des() == KAlbumArtURI && nestElementName == KDlnaProfileID) // ---------------- 1 ------------
-                                                    {   
-                                                        TXmlEngAttr profId = child.AttributeNodeL(KProfileID, KXmlnsDlna);
-                                                        if(profId.NotNull())
-                                                        {
-                                                            if (profId.Value().Compare(KDefaultProfileID))
-                                                            {
-                                                                User::Leave( EBadMetadata );
-                                                            }
-                                                            // setting real name of attribute -> localName
-                                                            nestElementName.Set(KProfileID); // descriptor  
-                                                            nameOfAttr.Set( nestElementName ); // related TString
-                                                                                                                                                                                                                                                                                            
-                                                            // generating a new value of 'dlna:profileID'
-                                                            HBufC8* albumArtURIelemValue = UpnpDomInterface::GetElementValueL(child).AllocLC();
-                                                            TPtr8 albumArtURIelemValuePtr( albumArtURIelemValue->Des() );                                                       
-                                                            
-                                                            albumArtURIelemValuePtr.Trim(); // deletes leading and trailing whitespace characters                                                   
-                                                            child.SetValueL(albumArtURIelemValuePtr); // sets new trimmed value to albumArtURI
-                                                                                                                                                        
-                                                            CUpnpDlnaProtocolInfo* tempProtocolInfo = NULL;
-                                                            TInt error = iContentDirectory->GetProtocolInfoL( albumArtURIelemValuePtr, tempProtocolInfo );
-                                                            TPtrC8 tempPnParam;
-                                                            if( error >=0 )
-                                                            {
-                                                                tempPnParam.Set( tempProtocolInfo->PnParameter() );
-                                                                    
-                                                                nestCurrentValue.Set(tempPnParam); // descriptor
-                                                                valOfAttr.Set(tempPnParam); // related TString                                                         
-                                                            }
-                                                            else 
-                                                            {
-                                                                User::Leave( EBadMetadata );
-                                                            }                                                       
-                                                            CleanupStack::PopAndDestroy(albumArtURIelemValue);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-                                                            // if albumArtURI doesn't contain profileID -> it creates one and also related namespace
-                                                            // if albumArtURI contains profileID -> it modifies profileID's value
-                                                            child.SetAttributeL( nameOfAttr, valOfAttr, KXmlnsDlna(), KDlnaPrefix() );
-                                                                                                                    
-                                                            delete tempProtocolInfo;
-                                                            tempProtocolInfo = NULL;    
-                                                        }
-                                                        
-                                                    } // End of 'dlna:profileID' attribute case
-                                                    else                    
-                                                    {
-                                                        if ( !nestCurrentValue.Length() )  
-                                                        {
-                                                            
-                                                            if(nestElementName == KprotocolInfo)
-                                                            {
-                                                                if( ! aLocalSharing )
-                                                                {
-                                                                    valOfAttr.Set( KEmptyProtocolInfoVal8() );
-                                                                }
-                                                                else 
-                                                                {
-                                                                    User::Leave( EBadMetadata );
-                                                                }
-                                                            }                                                                                                   //------- 2 -----                                                                                    //------- 2 -----                  
-                                                            else
-                                                            {
-                                                                valOfAttr.Set( KNullDesC8() );
-                                                            }
-                                
-                                                            child.AddNewAttributeL( nameOfAttr, valOfAttr );                                                            
-                                                        }
-                                                        else 
-                                                        {
-                                                            if(nestElementName == KprotocolInfo) 
-                                                            {
-                                                                HBufC8* protInfoValue = NULL;
-                                                                TRAPD(err, protInfoValue = ValidateProtocolInfoInResL( nestCurrentValue, aLocalSharing ));
-                                                                if(err)
-                                                                {
-                                                                    User::Leave(EBadMetadata);
-                                                                }
-                                                                CleanupStack::PushL( protInfoValue );
-                                                                valOfAttr.Set( *protInfoValue );
-                                                                child.SetAttributeL( nameOfAttr, valOfAttr );
-                                                                CleanupStack::PopAndDestroy( protInfoValue );                                                           
-                                                            }                                                                                                 //------- 3 -----                                                                                         //------- 3 -----
-                                                        }
-                                                    }                                                                                                                                                                                                                                                                                                                                                                                       
-                                                                                                        
-
-                                                    // if not main tag mark the attr is required
-                                                    if( !IsMainObjectTagL(child) && nestElementName != KDlnaProfileID)
-                                                    {
-                                                       
-                                                        HBufC8* attrReq = HBufC8::NewLC(
-                                                            nestElementName.Length()
-                                                            +KRequiredAtrSuf().Length() );
-                                                        TPtr8 attrReqPtr(attrReq->Des());
-                                                        attrReqPtr = nestElementName;
-                                                        attrReqPtr.Append(KRequiredAtrSuf);
-                                                        child.AddNewAttributeL( attrReqPtr, KTrueValue8 );
-                                                        CleanupStack::PopAndDestroy(attrReq);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    
-                                    }
-                                    CleanupStack::PopAndDestroy(&nestEls);
-                                }
-                                CleanupStack::PopAndDestroy( nameWithNs );
-                                
-                            }
-                                
-                            // If not found, add it
-                            if ( !elementFound )
-                            {
-                                User::Leave(EBadMetadata);
-                            }
-                        } 
-                    }
+                    elementFound = ValidateElementL (object, propertyType, el, elementFound, aNew, aLocalSharing);
                         
                     // Validate attribute   
                     if ( propertyType == KAttribute() )
                     {
                         elementFound = EFalse;
-                        
-                        const TDesC8& required = UpnpDomInterface::GetAttrValueL( el, KRequiredObject() );
-                        if ( required == UpnpCD::KOne() )
-                        {
-
-                            const TDesC8& elementName = UpnpDomInterface::GetAttrValueL( el, KName() );
-
-                            const TDesC8& currentValue = UpnpDomInterface::GetAttrValueL( object, elementName );
-                            
-                            if ( !currentValue.Length() )  
-                            {
-                                TXmlEngAttr attr = object.AttributeNodeL( elementName );
-
-                                if(attr.NotNull())
-                                {
-                                    attr.SetValueL(KNullDesC8);
-                                }
-                                else
-                                {
-                                    object.AddNewAttributeL( elementName, KNullDesC8 );
-                                }                               
-                            }
-                            // if not main tag mark the attr is required
-                            if(!IsMainObjectTagL(object))
-                            {
-                                HBufC8* attrReq = HBufC8::NewLC(
-                                    elementName.Length()+KRequiredAtrSuf().Length() );
-                                TPtr8 attrReqPtr(attrReq->Des());
-                                attrReqPtr = elementName;
-                                attrReqPtr.Append(KRequiredAtrSuf);
-                                object.AddNewAttributeL( attrReqPtr, KTrueValue8 );
-                                CleanupStack::PopAndDestroy(attrReq);
-                            }
-                        }
+                        ValidateAttributeL(el, object);
                     }
                 }
                 CleanupStack::PopAndDestroy(&properties);
@@ -607,9 +322,351 @@ TUpnpErrorCode CUpnpElementFactory::ValidateNewObjectL( const TXmlEngElement& aN
     // * has the all required fields (if some were missing, they are added)
     // * had a proper xml structure (_not_ using UpnpDomInterface:: functions that do not care)
     // * has for sure a mostly proper object structure 
-*/
+
     return EUndefined;
 }
+
+TBool CUpnpElementFactory::ValidateElementL (TXmlEngElement aObject, 
+        const TDesC8& aPropertyType, TXmlEngElement aEl, TBool aElementFound, TBool aNew,
+        TBool aLocalSharing)
+    {
+        TBool elementFound = aElementFound;
+        RXmlEngNodeList<TXmlEngElement> children;
+        // Validate element
+        if ( aPropertyType == KElement() )
+        {
+            elementFound = EFalse;
+            
+            // Check if this element is requiered
+            const TDesC8& required = UpnpDomInterface::GetAttrValueL( aEl, KRequiredObject() );
+    
+            TPtrC8 elementName = UpnpDomInterface::GetAttrValueL( aEl, KName() );
+    
+            // If it's required then check it's existence
+    
+            if ( required == UpnpCD::KOne() || elementName == KRes()  ||  elementName == KAlbumArtURI() )
+            {
+                if( !KRes().Compare(elementName) ||  !KAlbumArtURI().Compare(elementName))
+                {
+                    elementFound = ETrue;
+                }
+                // get children once more, because this kind of list does not have any reset function
+                aObject.GetChildElements( children );
+    
+                elementFound = HandleChildrenL (children, aNew, aLocalSharing, elementFound, aEl);
+                    
+                // If not found, add it
+                if ( !elementFound )
+                {
+                    User::Leave(EBadMetadata);
+                }
+            } 
+        }
+        return elementFound;
+    }
+
+TBool CUpnpElementFactory::HandleChildrenL (RXmlEngNodeList<TXmlEngElement> aChildren, TBool aNew, TBool aLocalSharing,
+        TBool aElementFound, TXmlEngElement aEl)
+    {
+    TBool elementFound = aElementFound;
+    TPtrC8 elementName = UpnpDomInterface::GetAttrValueL( aEl, KName() );
+    
+    while ( aChildren.HasNext() )
+    {
+        TXmlEngElement child = aChildren.Next();
+        
+        HBufC8* nameWithNs = NameWithNsLC( child );
+
+        if ( *nameWithNs == elementName )
+        {
+            // local sharing
+            if(aNew && *nameWithNs == KRes)
+            {
+                TUriParser8 up;
+                TPtrC8 rv(child.Text());
+                if(rv.Length())
+                {
+                    User::LeaveIfError( up.Parse(child.Text()) );
+                    TPtrC8 path( up.Extract(EUriPath) );
+                    TPtrC8 scheme( up.Extract(EUriScheme) );
+
+                    if(aLocalSharing)
+                    { // local action
+                        if( scheme == UpnpHTTP::KSchemeFile8())
+                        {
+                            // The path can be: /c:/....
+                            // or /c/... - without colon.
+                            // Both situation are correct but 
+                            // in further operations we assume 
+                            // there is not any colon next to the drive letter.
+                            // Therefore, remove it if second element of path table equals ':'
+                            if(path[2] == KColon8()[0])
+                            { // There IS a colon next to the drive letter.
+                                // Here is an example uri:
+                                // file:///c:/...
+                                // As you can see the second colon must be removed
+                                HBufC8* uri = child.Text().AllocLC();
+                                TPtr8 uriPtr(uri->Des());
+                                TPtrC8 tmp(uri->Des());
+                                TInt second = 2;
+                                TInt colonPos = 0;
+                                for(TInt i = 0; i < second; i++)
+                                {
+                                    colonPos += tmp.Find(KColon8) + 1;
+                                    tmp.Set( uriPtr.Mid(colonPos) );                                                    
+                                }
+                                // remove the colon
+                                uriPtr.Replace(colonPos - 1, KColon8().Length(), KNullString8);
+                                // set TXmlEngElement value
+                                child.SetTextL(uriPtr);
+                                
+                                // clean up             
+                                CleanupStack::PopAndDestroy(uri);                                               
+                            }
+
+                            // check other  restrictions
+                            TUriParser8 up;
+                            User::LeaveIfError( up.Parse(child.Text()) );
+                            TPtrC8 path( up.Extract(EUriPath) );
+
+                            // sharing from Z: drive is forbidden
+                            // second character is a drive letter
+                            if(path[1] == KForbiddenDrivez()[0] || path[1] == KForbiddenDriveZ()[0])
+                            {
+                                User::Leave(EArgumentValue);
+                            }
+                            
+                            // cannot share from private directory
+                            if(!path.Match(KForbiddenPrivatePattern))
+                            {
+                                User::Leave(EArgumentValue);
+                            }
+                            
+                        }
+                    }
+                    else
+                    { // not local action
+                        // "file" schema is forbidden here
+                        if(scheme == UpnpHTTP::KSchemeFile8())
+                        {
+                            User::Leave(EArgumentValue);
+                        }
+                    }
+                }
+            }
+
+
+            if ( elementFound ) 
+            {
+                // multiple values for one element!
+                const TDesC8& multiple = UpnpDomInterface::GetAttrValueL( aEl, KMultiple() );
+                
+                // if it's not allowed for this element, leave!
+                if ( !multiple.Length() )
+                {
+                    User::Leave( EInvalidArgs );
+                }
+            }
+            elementFound = ETrue;
+            // mark the element required - if not res
+            if( KRes().Compare(elementName) && KAlbumArtURI().Compare(elementName))
+            {
+                child.AddNewAttributeL(KRequiredAtrName,KTrueValue8);
+            }
+            
+            // nested validation 
+            RXmlEngNodeList<TXmlEngElement> nestEls;
+            CleanupClosePushL(nestEls);
+            aEl.GetChildElements(nestEls);
+            CheckNestedElementsL(nestEls, child, aLocalSharing);
+            CleanupStack::PopAndDestroy(&nestEls);
+        }
+        CleanupStack::PopAndDestroy( nameWithNs );
+        
+    }
+
+    return elementFound;
+}
+
+
+void CUpnpElementFactory::CheckNestedElementsL(RXmlEngNodeList<TXmlEngElement> aNestEls, TXmlEngElement aChild,
+        TBool aLocalSharing)
+{
+    HBufC8* nameWithNs = NameWithNsLC( aChild );
+    while(aNestEls.HasNext())
+    {
+        TXmlEngElement nestPs = aNestEls.Next();
+    
+        // take the properties
+        RXmlEngNodeList<TXmlEngElement> nestProperties;
+        nestPs.GetChildElements( nestProperties );
+        const TDesC8& nestPropertyType = UpnpDomInterface::GetAttrValueL( nestPs, KType() );
+        // Validate attribute   
+        if ( nestPropertyType == KAttribute() )
+        {
+            while(nestProperties.HasNext())
+            {   
+                TXmlEngElement nestEl = nestProperties.Next();
+                //TBool nestElementFound;
+    
+                //nestElementFound = EFalse;
+                
+                const TDesC8& nestRequired = UpnpDomInterface::GetAttrValueL( nestEl, KRequiredObject() );
+                TPtrC8 nestElementName = UpnpDomInterface::GetAttrValueL( nestEl, KName() );
+                if ( nestRequired == UpnpCD::KOne() || nestElementName == KDlnaProfileID)
+                {
+                    TPtrC8 nestCurrentValue = UpnpDomInterface::GetAttrValueL( aChild, nestElementName );
+                    
+                    TPtrC8 nameOfAttr;
+                    TPtrC8 valOfAttr;
+                    nameOfAttr.Set( nestElementName );
+                    
+                    // Start of 'dlna:profileID' attribute case                                                 
+                    if( nameWithNs->Des() == KAlbumArtURI && nestElementName == KDlnaProfileID) // ---------------- 1 ------------
+                    {   
+                        TXmlEngAttr profId = aChild.AttributeNodeL(KProfileID, KXmlnsDlna);
+                        if(profId.NotNull())
+                        {
+                            if (profId.Value().Compare(KDefaultProfileID))
+                            {
+                                User::Leave( EBadMetadata );
+                            }
+                            // setting real name of attribute -> localName
+                            nestElementName.Set(KProfileID); // descriptor  
+                            nameOfAttr.Set( nestElementName ); // related TString
+                                                                                                                                                                                                                                                            
+                            // generating a new value of 'dlna:profileID'
+                            HBufC8* albumArtURIelemValue = UpnpDomInterface::GetElementValueL(aChild).AllocLC();
+                            TPtr8 albumArtURIelemValuePtr( albumArtURIelemValue->Des() );                                                       
+                            
+                            albumArtURIelemValuePtr.Trim(); // deletes leading and trailing whitespace characters                                                   
+                            aChild.SetValueL(albumArtURIelemValuePtr); // sets new trimmed value to albumArtURI
+                                                                                                                        
+                            CUpnpDlnaProtocolInfo* tempProtocolInfo = NULL;
+                            TInt error = iContentDirectory->GetProtocolInfoL( albumArtURIelemValuePtr, tempProtocolInfo );
+                            TPtrC8 tempPnParam;
+                            if( error >=0 )
+                            {
+                                tempPnParam.Set( tempProtocolInfo->PnParameter() );
+                                    
+                                nestCurrentValue.Set(tempPnParam); // descriptor
+                                valOfAttr.Set(tempPnParam); // related TString                                                         
+                            }
+                            else 
+                            {
+                                User::Leave( EBadMetadata );
+                            }                                                       
+                            CleanupStack::PopAndDestroy(albumArtURIelemValue);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                            // if albumArtURI doesn't contain profileID -> it creates one and also related namespace
+                            // if albumArtURI contains profileID -> it modifies profileID's value
+                            aChild.SetAttributeL( nameOfAttr, valOfAttr, KXmlnsDlna(), KDlnaPrefix() );
+                                                                                    
+                            delete tempProtocolInfo;
+                            tempProtocolInfo = NULL;    
+                        }
+                        
+                    } // End of 'dlna:profileID' attribute case
+                    else                    
+                    {
+                        if ( !nestCurrentValue.Length() )  
+                        {
+                            
+                            if(nestElementName == KprotocolInfo)
+                            {
+                                if( ! aLocalSharing )
+                                {
+                                    valOfAttr.Set( KEmptyProtocolInfoVal8() );
+                                }
+                                else 
+                                {
+                                    User::Leave( EBadMetadata );
+                                }
+                            }                                                                                                   //------- 2 -----                                                                                    //------- 2 -----                  
+                            else
+                            {
+                                valOfAttr.Set( KNullDesC8() );
+                            }
+    
+                            aChild.AddNewAttributeL( nameOfAttr, valOfAttr );                                                            
+                        }
+                        else 
+                        {
+                            if(nestElementName == KprotocolInfo) 
+                            {
+                                HBufC8* protInfoValue = NULL;
+                                TRAPD(err, protInfoValue = ValidateProtocolInfoInResL( nestCurrentValue, aLocalSharing ));
+                                if(err)
+                                {
+                                    User::Leave(EBadMetadata);
+                                }
+                                CleanupStack::PushL( protInfoValue );
+                                valOfAttr.Set( *protInfoValue );
+                                aChild.SetAttributeL( nameOfAttr, valOfAttr );
+                                CleanupStack::PopAndDestroy( protInfoValue );                                                           
+                            }                                                                                                 //------- 3 -----                                                                                         //------- 3 -----
+                        }
+                    }                                                                                                                                                                                                                                                                                                                                                                                       
+                                                                        
+    
+                    // if not main tag mark the attr is required
+                    if( !IsMainObjectTagL(aChild) && nestElementName != KDlnaProfileID)
+                    {
+                       
+                        HBufC8* attrReq = HBufC8::NewLC(
+                            nestElementName.Length()
+                            +KRequiredAtrSuf().Length() );
+                        TPtr8 attrReqPtr(attrReq->Des());
+                        attrReqPtr = nestElementName;
+                        attrReqPtr.Append(KRequiredAtrSuf);
+                        aChild.AddNewAttributeL( attrReqPtr, KTrueValue8 );
+                        CleanupStack::PopAndDestroy(attrReq);
+                    }
+                }
+            }
+        }
+    
+    }
+}
+
+void CUpnpElementFactory::ValidateAttributeL(TXmlEngElement aElement, TXmlEngElement aObject)
+    {
+        
+        const TDesC8& required = UpnpDomInterface::GetAttrValueL( aElement, KRequiredObject() );
+        if ( required == UpnpCD::KOne() )
+        {
+
+            const TDesC8& elementName = UpnpDomInterface::GetAttrValueL( aElement, KName() );
+
+            const TDesC8& currentValue = UpnpDomInterface::GetAttrValueL( aObject, elementName );
+            
+            if ( !currentValue.Length() )  
+            {
+                TXmlEngAttr attr = aObject.AttributeNodeL( elementName );
+
+                if(attr.NotNull())
+                {
+                    attr.SetValueL(KNullDesC8);
+                }
+                else
+                {
+                    aObject.AddNewAttributeL( elementName, KNullDesC8 );
+                }                               
+            }
+            // if not main tag mark the attr is required
+            if(!IsMainObjectTagL(aObject))
+            {
+                HBufC8* attrReq = HBufC8::NewLC(
+                    elementName.Length()+KRequiredAtrSuf().Length() );
+                TPtr8 attrReqPtr(attrReq->Des());
+                attrReqPtr = elementName;
+                attrReqPtr.Append(KRequiredAtrSuf);
+                aObject.AddNewAttributeL( attrReqPtr, KTrueValue8 );
+                CleanupStack::PopAndDestroy(attrReq);
+            }
+        }
+    }
+
 // -----------------------------------------------------------------------------
 // CUpnpElementFactory::ValidatePropertiesL()
 // Function leaves on error.
@@ -924,7 +981,7 @@ TXmlEngElement CUpnpElementFactory::ActiveElementL( const RXmlEngDocument& aDocu
         RXmlEngNodeList<TXmlEngElement> children;
         CleanupClosePushL(children);
         root.GetChildElements( children );
-    //    children.HasNext();
+        children.HasNext();
         CleanupStack::PopAndDestroy(&children);
         return children.Next();
     }
@@ -944,7 +1001,7 @@ RXmlEngDocument CUpnpElementFactory::ExtractActiveElementL( const RXmlEngDocumen
     ret.OpenL(iDOMImpl);
     CleanupClosePushL(ret);
 
- /*    if( aDocument.IsNull() || aDocument.DocumentElement().IsNull() )
+    if( aDocument.IsNull() || aDocument.DocumentElement().IsNull() )
     {
         User::Leave( KErrNotFound );            
     }
@@ -964,7 +1021,7 @@ RXmlEngDocument CUpnpElementFactory::ExtractActiveElementL( const RXmlEngDocumen
         CleanupStack::PopAndDestroy(&children);
     }
     ret.SetDocumentElement(active);
-   */    
+    
     CleanupStack::Pop(&ret);
     
     return ret;
@@ -1150,6 +1207,25 @@ HBufC8* CUpnpElementFactory::NameWithNsLC(const TXmlEngElement& aElement)
     }
 }
 
+void CUpnpElementFactory::CheckElementValidity (TXmlEngElement& aElement)
+{
+    if ( aElement.IsNull() ) 
+    {
+        // no <class> element! leave
+        User::Leave( EBadMetadata );
+    }
+    
+    // check that does the new element have all the required fields for its type
+    // and also check that it does not have whatever fields (only optional allowed)
+    
+    TPtrC8 content = aElement.Text();
+    if( !content.Length() )
+    {
+        User::Leave( EBadMetadata );
+    }
+}
+
+
 // -----------------------------------------------------------------------------
 // CUpnpElementFactory::ClassesL()
 // Gets classes descriptions for given object.
@@ -1164,21 +1240,9 @@ void CUpnpElementFactory::ClassesL( const TXmlEngElement& aObject, RArray<TXmlEn
     TXmlEngElement type;
     UpnpDomInterface::GetElementL ( aObject, type, KClass() );
 
-    if ( type.IsNull() ) 
-    {
-        // no <class> element! leave
-        User::Leave( EBadMetadata );
-    }
-
-    // check that does the new element have all the required fields for its type
-    // and also check that it does not have whatever fields (only optional allowed)
+    CheckElementValidity (type);
     RPointerArray<TPtrC8> objectFields;
     
-    TPtrC8 content = type.Text();
-    if( !content.Length() )
-    {
-        User::Leave( EBadMetadata );
-    }
     //--- removing white spaces ------------------      
     HBufC8* tempBuffer = type.Text().AllocLC(); 
     TPtr8 tmpPtr(tempBuffer->Des());
@@ -1210,7 +1274,7 @@ void CUpnpElementFactory::ClassesL( const TXmlEngElement& aObject, RArray<TXmlEn
         // if such type found
         if ( objectDescription.NotNull() ) 
         {
-            aArray.AppendL( objectDescription );
+            aArray.Append( objectDescription );
         }
         /* This case is valid for any numeric value of containerID used in CreateObject() action
         *  We do some checking starting from 3rd string of <upnp:class> element, if the string isn't

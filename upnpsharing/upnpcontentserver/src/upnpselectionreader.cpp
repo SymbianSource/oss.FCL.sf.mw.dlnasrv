@@ -31,8 +31,9 @@
 #include <MCLFItem.h>
 #include "upnpcontentservercrkeys.h"
 #include "upnpselectionreader.h"
-#include "upnpcontentmetadatautility.h"
 #include "upnpcontentserverdefs.h"
+#include "upnpplaylistservices.h"
+#include "upnpalbumservices.h"
 
 _LIT( KComponentLogfile, "contentserver.txt");
 #include "upnplog.h"
@@ -46,6 +47,7 @@ const TInt KDefaultSelectionGranularity( 2 );
 const TInt KShareNoneIndex = 0;
 const TInt KShareAllIndex = 1;
 const TInt KPredefinedSelections = 2; // Share none and share all
+const TInt KUiSelectionOffset = 2;
 
 using namespace UpnpContentServer;
 
@@ -56,15 +58,14 @@ using namespace UpnpContentServer;
 // Two-phased constructor.
 // --------------------------------------------------------------------------
 //
-EXPORT_C CUpnpSelectionReader* CUpnpSelectionReader::NewL(
-                        CUpnpContentMetadataUtility* aUtility )
+EXPORT_C CUpnpSelectionReader* CUpnpSelectionReader::NewL()
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
     CUpnpSelectionReader* self =
         new(ELeave) CUpnpSelectionReader();
 
     CleanupStack::PushL(self);
-    self->ConstructL( aUtility );
+    self->ConstructL();
     CleanupStack::Pop(self);
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     return self;
@@ -76,12 +77,9 @@ EXPORT_C CUpnpSelectionReader* CUpnpSelectionReader::NewL(
 // Symbian 2nd phase constructor can leave.
 // --------------------------------------------------------------------------
 //
-void CUpnpSelectionReader::ConstructL(
-                        CUpnpContentMetadataUtility* aUtility  )
+void CUpnpSelectionReader::ConstructL()
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-
-    iMetadataUtility = aUtility;
 
     iPlIdArray = new (ELeave) CDesCArrayFlat( KDefaultStringArrGranularity );
     iCollIdArray = new (ELeave) 
@@ -125,8 +123,6 @@ CUpnpSelectionReader::CUpnpSelectionReader()
 CUpnpSelectionReader::~CUpnpSelectionReader()
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-
-    iMetadataUtility = NULL;
 
     if ( iSelectedImages )
         {
@@ -180,7 +176,7 @@ void CUpnpSelectionReader::FetchCollectionsL( CDesCArray*
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
 
-/*    if ( !aSettingsTextArray )
+    if ( !aSettingsTextArray )
         {
         User::Leave( KErrGeneral );
         }
@@ -255,7 +251,7 @@ void CUpnpSelectionReader::FetchCollectionsL( CDesCArray*
     iContainerCount = aSettingsTextArray->MdcaCount();
 
     CleanupStack::PopAndDestroy( sharedStuff );
-    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );*/
+    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
 
 
@@ -268,7 +264,7 @@ void CUpnpSelectionReader::FetchPlaylistsL( CDesCArray* aSettingsTextArray )
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
 
- /*   if ( !aSettingsTextArray )
+    if ( !aSettingsTextArray )
         {
         User::Leave( KErrGeneral );
         }
@@ -343,7 +339,7 @@ void CUpnpSelectionReader::FetchPlaylistsL( CDesCArray* aSettingsTextArray )
         iSelectedMusic->AppendL( KShareNoneIndex );
         }
     iContainerCount = aSettingsTextArray->MdcaCount();
-    CleanupStack::PopAndDestroy( sharedStuff );*/
+    CleanupStack::PopAndDestroy( sharedStuff );
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
 
@@ -507,7 +503,6 @@ void CUpnpSelectionReader::GetSelectionIndexesL(
         {
         if ( !iSelectedImages )
             {
-
             iImageContainers->Reset();
             FetchCollectionsL( iImageContainers );
             iImageContainers->Reset();
@@ -653,16 +648,119 @@ TInt CUpnpSelectionReader::CollectionIdsL( CDesCArray& aCollectionIds,
     }
 
 // --------------------------------------------------------------------------
-// CUpnpSelectionReader::SetMetadata
+// CUpnpSelectionReader::GetCollectionItemsL
 // (other items are commented in header )
 // --------------------------------------------------------------------------
 //
-void CUpnpSelectionReader::SetMetadata( CUpnpContentMetadataUtility*
-    aMetaData )
+TPtrC CUpnpSelectionReader::GetCollectionItemsL( const TInt aSelectionIndex, 
+    CDesCArray& aFilenames )
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-    iMetadataUtility = aMetaData;
+    TPtrC collId;
+    TInt index = aSelectionIndex - KUiSelectionOffset;
+    if ( index < 0 || index >= iCollIdArray->Count() )
+        {
+        // index is not valid
+        collId.Set( KNullDesC );
+        }
+    else
+        {
+        // Find out collection id
+        collId.Set( iCollIdArray->MdcaPoint( index ) );
+        
+        // Fetch collection items
+        CUPnPAlbumServices* albums = CUPnPAlbumServices::NewL();
+        CleanupStack::PushL( albums );
+        albums->OpenAlbumL( collId, aFilenames );
+        TInt count = aFilenames.Count();
+        CleanupStack::PopAndDestroy( albums );        
+        }
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
+    return collId;
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpSelectionReader::GetPlaylistItemsL
+// (other items are commented in header )
+// --------------------------------------------------------------------------
+//
+TPtrC CUpnpSelectionReader::GetPlaylistItemsL( const TInt aSelectionIndex, 
+    CDesCArray& aFilenames )    
+    {
+    __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
+    TPtrC plId;
+    TInt index = aSelectionIndex - KUiSelectionOffset;    
+    if ( index < 0 || index >= iPlIdArray->Count() )    
+        {
+        // index is not valid
+        plId.Set( KNullDesC );
+        }
+    else
+        {
+        // Find out playlist id
+        plId.Set( iPlIdArray->MdcaPoint( index ) );
+
+        // Fetch playlist items
+        CUPnPPlaylistServices* playlists = CUPnPPlaylistServices::NewL();
+        CleanupStack::PushL( playlists );
+        playlists->OpenPlaylistL( iPlIdArray->MdcaPoint( index ), aFilenames );
+        CleanupStack::PopAndDestroy( playlists );        
+        }
+    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
+    return plId;
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPFileSharingEngine::GetSelectionIndexesL
+// Reads shared container IDs from file
+// --------------------------------------------------------------------------
+//
+TInt CUpnpSelectionReader::GetSelectionIndexL(
+    const TUpnpMediaType& aType,
+    TPtrC aClfId )
+    {
+    __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
+    TInt selectionIndex( KErrNotFound );
+
+    // image and video
+    if ( aType == EImageAndVideo && iCollIdArray->Count() )
+        {
+        iCollIdArray->Find( aClfId, selectionIndex );
+        if ( selectionIndex >= iCollIdArray->Count() )
+            {
+            // not found in iCollIdArray
+            selectionIndex = KErrNotFound;
+            }
+        else
+            {
+            selectionIndex = 
+                selectionIndex + KUiSelectionOffset;
+            }
+        }
+    // music
+    else if ( aType == EPlaylist && iPlIdArray->Count() )
+        {
+        iPlIdArray->Find( aClfId, selectionIndex );
+        if ( selectionIndex >= iPlIdArray->Count() )
+            {
+            // not found in iPlIdArray
+            selectionIndex = KErrNotFound;
+            }
+        else
+            {
+            selectionIndex = 
+                selectionIndex + KUiSelectionOffset;
+            }
+        }
+    else
+        {
+        // invalid type or the array is empty
+        selectionIndex = KErrNotFound;
+        }
+
+    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
+    // return selection index taking into count Ui offset
+    return selectionIndex;
     }
 
 // End of file

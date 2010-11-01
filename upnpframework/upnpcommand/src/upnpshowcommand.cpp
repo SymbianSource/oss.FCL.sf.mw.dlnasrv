@@ -94,6 +94,7 @@ CUpnpShowCommand::~CUpnpShowCommand()
 //
 void CUpnpShowCommand::ConstructL()
     {
+
     iCommand = UpnpCommandMain::LoadL( UpnpCommand::ECommandShow );
 
     // Register to observer
@@ -111,6 +112,7 @@ void CUpnpShowCommand::ConstructL()
 //
 EXPORT_C void CUpnpShowCommand::StartShowingL()
     {
+
     // Allocate Upnp Fw resources
     iCommand->AllocateResourcesL();
     }
@@ -122,6 +124,7 @@ EXPORT_C void CUpnpShowCommand::StartShowingL()
 //
 EXPORT_C void CUpnpShowCommand::StopShowingL()
     {
+    
     // Release Upnp Fw resources
     iCommand->ReleaseResources();
 
@@ -136,6 +139,7 @@ EXPORT_C void CUpnpShowCommand::StopShowingL()
 //
 EXPORT_C void CUpnpShowCommand::ShowImageL( const TDesC& aFilename )
     {
+    
     // Check param
     if( aFilename == KNullDesC )
         {
@@ -157,6 +161,7 @@ EXPORT_C void CUpnpShowCommand::ShowImageL( const TDesC& aFilename )
 //
 EXPORT_C void CUpnpShowCommand::ShowVideoL( const TDesC& aFilename )
     {
+    
     // Check param
     if( aFilename == KNullDesC )
         {
@@ -182,7 +187,8 @@ EXPORT_C TBool CUpnpShowCommand::IsAvailableL()
     // then query command availability.
     TBool available = EFalse;
     TRAP_IGNORE(
-        CUpnpCommand* temp = UpnpCommandMain::LoadL( UpnpCommand::ECommandShow );
+        CUpnpCommand* temp = UpnpCommandMain::LoadL( 
+                                        UpnpCommand::ECommandShow );
         CleanupStack::PushL( temp );
         available = temp->IsAvailableL();
         CleanupStack::PopAndDestroy( temp );

@@ -28,7 +28,7 @@
 #include <upnpdlnaprotocolinfo.h> // CUpnpDlnaProtocolInfo
 #include <imageconversion.h> // CImageDecoder
 #include <caf/caftypes.h> // ContentAccess
-#include <3gplibrary/mp4lib.h> // MP4ParseRequestAudioDescription
+#include <3gplibrary/mp4lib.h>  // MP4ParseRequestAudioDescription
 #include <escapeutils.h> // EscapeUtils::ConvertFromUnicodeToUtf8L
 
 // user includes
@@ -68,6 +68,9 @@ CUpnpResResolver::CUpnpResResolver() : iDuration(0)
 void CUpnpResResolver::ConstructL()
     {
     __LOG( "[UPnPDlnaProfiler] CUpnpResResolver::ConstructL" );
+    
+    // open semaphore
+    User::LeaveIfError( iSemaphore.CreateLocal( 0 ) );
     }
 
 
@@ -105,15 +108,17 @@ EXPORT_C CUpnpResResolver* CUpnpResResolver::NewLC()
 CUpnpResResolver::~CUpnpResResolver()
     {
     __LOG( "[UPnPDlnaProfiler] CUpnpResResolver destructor" );
+    
+    iSemaphore.Close();
+    delete iAVFile;
     }
-
 
 // --------------------------------------------------------------------------
 // CUpnpResResolver::GetResParametersL
 // --------------------------------------------------------------------------
 //
-EXPORT_C CUpnpResParameters* CUpnpResResolver::GetResParametersL( 
-                                                    const TDesC& aFilename ) 
+EXPORT_C CUpnpResParameters* CUpnpResResolver::GetResParametersL(
+    const TDesC& aFilename ) 
     {
     __LOG( "[UPnPDlnaProfiler] CUpnpResResolver::GetResParametersL" );
     // check that aFileName is reasonable
@@ -232,7 +237,6 @@ EXPORT_C CUpnpResParameters* CUpnpResResolver::GetResParametersL(
     CleanupStack::PopAndDestroy( &fsSession );
     CleanupStack::Pop( retval );
     return retval;
-
     }
 
 
@@ -255,7 +259,12 @@ HBufC8* CUpnpResResolver::GetMimetypeL( RFile& aFile )
     
     // close session handle
     CleanupStack::PopAndDestroy( &sess );
-
+   
+    if( mimeResult.iDataType.Des8().Length() == 0 )
+        {
+        User::Leave( KErrGeneral );
+        }
+    
     // Data recognition done. Check results.
     retval = mimeResult.iDataType.Des8().AllocL();
     return retval;
@@ -333,33 +342,32 @@ void CUpnpResResolver::GetAudioDurationL( const TDesC& aFilename )
     {
     __LOG( "[UPnPDlnaProfiler] CUpnpResResolver::GetAudioDurationL" );
 
-    // create audioplayer if it does not exist
-    if ( !iAudioplayer ) 
-        {
-        iAudioplayer = CMdaAudioPlayerUtility::NewL( *this );
-        }
+    TInt err = KErrNone;
 
-    // Create iWait if it does not exist. Create it here rather than after 
-    // OpenL-call so that there will be no problems if somehow OpenFileL 
-    // calls MapcInitComplete-callback before iWait is created and started.
-    if ( !iWait ) 
-        {
-        iWait = new( ELeave ) CActiveSchedulerWait;
-        }
-
-    // Open file specified in aFilename. This is an asynchronic operation. 
-    // Calls MapcInitComplete callback after completed.
-    iAudioplayer->OpenFileL( aFilename );
+    // store current av file
+    HBufC* avFile = aFilename.AllocL();
+    delete iAVFile;
+    iAVFile = avFile;
     
-    // start CActiveSchedulerWait which is completed in MapcInitComplete
-    iWait->Start();
-
-    // clean up
-    delete iAudioplayer;
-    iAudioplayer = NULL;
+    // create audio resolving thread
+    RThread thread;
+    User::LeaveIfError( thread.Create(
+        KNullDesC, ThreadFunction, KDefaultStackSize, &User::Allocator(), this ) );
     
-    delete iWait;
-    iWait = NULL;
+    __LOG( "[UPnPDlnaProfiler] CUpnpResResolver::GetAudioDurationL: Created audio resolving thread" );
+    
+    // start thread and wait until it has finished
+    thread.Resume();
+    iSemaphore.Wait();
+    
+    // check return value and close thread
+    err = thread.ExitReason();
+    thread.Close();
+    
+    __LOG1( "[UPnPDlnaProfiler] CUpnpResResolver::GetAudioDurationL: Finished audio resolving thread with code (%d)", err );
+
+    // leave if could not resolve audio duration
+    User::LeaveIfError( err );
     }
 
 
@@ -380,8 +388,8 @@ TInt CUpnpResResolver::GetFileSizeL( RFile& aFile )
 // CUpnpResResolver::GetImageResolutionL
 // --------------------------------------------------------------------------
 //  
-TSize CUpnpResResolver::GetImageResolutionL( RFile& aFile, 
-                                             const TDesC8& aMimetype )
+TSize CUpnpResResolver::GetImageResolutionL( RFile& aFile,
+    const TDesC8& aMimetype )
     {
     __LOG( "[UPnPDlnaProfiler] CUpnpResResolver::GetImageResolutionL" );
     CImageDecoder* imageDecoder = NULL;
@@ -411,7 +419,7 @@ CreateError" );
 //
 void CUpnpResResolver::MapcPlayComplete( TInt /*aError*/ ) 
     {
-    //this callback is not needed
+    // not used.
     }
 
 // --------------------------------------------------------------------------
@@ -420,9 +428,8 @@ void CUpnpResResolver::MapcPlayComplete( TInt /*aError*/ )
 // CMdaAudioConvertUtility::OpenL has completed.
 // --------------------------------------------------------------------------
 //
-void CUpnpResResolver::MapcInitComplete( 
-                                TInt aError, 
-                                const TTimeIntervalMicroSeconds& aDuration ) 
+void CUpnpResResolver::MapcInitComplete( TInt aError,
+    const TTimeIntervalMicroSeconds& aDuration ) 
     {
     __LOG( "[UPnPDlnaProfiler] CUpnpResResolver::MapcInitComplete" );
  
@@ -431,10 +438,74 @@ void CUpnpResResolver::MapcInitComplete(
         {
         iDuration = aDuration;
         }
+    
+    // stop scheduler for audio resolving thread
+    CActiveScheduler::Stop();
+    }
 
-    // continue execution in GetAudioDurationL-method by stopping 
-    // ActiveSchedulerWait
-    iWait->AsyncStop();
+// -----------------------------------------------------------------------------
+// CUpnpResResolver::ThreadFunction
+// -----------------------------------------------------------------------------
+//
+TInt CUpnpResResolver::ThreadFunction( TAny* aSelf )
+    {
+    __LOG( "[UPnPDlnaProfiler] CUpnpResResolver::ThreadFunction" );
+    
+    TInt err = KErrNone;
+    
+    CUpnpResResolver* self = static_cast<CUpnpResResolver*>( aSelf );
+    
+    // create cleanup stack
+    CTrapCleanup* cleanupStack = CTrapCleanup::New();
+    if( cleanupStack )
+        {
+        // execute thread function
+        TRAP( err, self->ResolveAudioDurationL() );
+        
+        // cleanup
+        delete cleanupStack;
+        }
+
+    // reset scheduler for this thread
+    CActiveScheduler::Install( NULL );
+    
+    // signal main thread so that it can continue
+    self->iSemaphore.Signal();
+    
+    return err;
+    }
+
+// -----------------------------------------------------------------------------
+// CUpnpResResolver::ResolveAudioDurationL
+// -----------------------------------------------------------------------------
+//
+void CUpnpResResolver::ResolveAudioDurationL()
+    {
+    __LOG( "[UPnPDlnaProfiler] CUpnpResResolver::ResolveAudioDurationL" );
+    
+    CActiveScheduler* scheduler = new( ELeave ) CActiveScheduler;
+    if( scheduler )
+        {        
+        CleanupStack::PushL( scheduler );
+        
+        // install the new scheduler in use for this thread
+        CActiveScheduler::Install( scheduler );
+        
+        // create audio player utility
+        CMdaAudioPlayerUtility* audioPlayerUtility =
+            CMdaAudioPlayerUtility::NewL( *this );
+        CleanupStack::PushL( audioPlayerUtility );
+        
+        // open file and wait until the audio clip initialization is ready
+        audioPlayerUtility->OpenFileL( *iAVFile );
+        
+        // start scheduler
+        CActiveScheduler::Start();
+        
+        // cleanup
+        CleanupStack::PopAndDestroy( audioPlayerUtility );
+        CleanupStack::PopAndDestroy( scheduler );
+        }
     }
 
 // end of file

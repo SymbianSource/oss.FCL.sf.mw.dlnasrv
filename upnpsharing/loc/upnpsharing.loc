@@ -15,13 +15,9 @@
 *
 */
 
-
-
-
-
-
-// LOCALISATION STRINGS
-
+// --------------------------------------------------------------------------
+// UpnpSecurity
+// --------------------------------------------------------------------------
 
 //d:Confirmation query when remote Upnp device wants to connect to us.
 //l:popup_note_window/opt2
@@ -29,5 +25,57 @@
 //
 #define qtn_iupnp_incoming_device   "Accept connection from Home Media?"
 
+
+// --------------------------------------------------------------------------
+// UpnpSharingAlgorithm
+// --------------------------------------------------------------------------
+
+//d:Media root container name for music items
+//l:(Not an UI component. Max length 256 chars.)
+//r:5.2
+// 
+#define qtn_iupnp_share_music                        "Music"
+
+//d:Media root container name for image items
+//l:(Not an UI component. Max length 256 chars.)
+//r:5.2
+//
+#define qtn_iupnp_share_images                       "Images"
+
+//d:Media root container name for video items
+//l:(Not an UI component. Max length 256 chars.)
+//r:5.2
+//
+#define qtn_iupnp_share_videos                       "Videos"
+
+//d:Default container name for media items
+//l:(Not an UI component. Max length 256 chars.)
+//r:5.2
+//
+#define qtn_iupnp_share_all                          "All"
+
+//d:Container for "by date" reference items
+//l:(Not an UI component. Max length 256 chars.)
+//r:5.2
+// 
+#define qtn_iupnp_share_by_date                      "By Date"
+
+//d:Container for "by album" reference items
+//l:(Not an UI component. Max length 256 chars.)
+//r:5.2
+// 
+#define qtn_iupnp_share_by_album                     "By Album"
+
+//d:Container for "by artist" reference items
+//l:(Not an UI component. Max length 256 chars.)
+//r:5.2
+// 
+#define qtn_iupnp_share_by_artist                    "By Artist"
+
+//d:Container for "by genre" reference items
+//l:(Not an UI component. Max length 256 chars.)
+//r:5.2
+// 
+#define qtn_iupnp_share_by_genre                     "By Genre"
 
 // End of File

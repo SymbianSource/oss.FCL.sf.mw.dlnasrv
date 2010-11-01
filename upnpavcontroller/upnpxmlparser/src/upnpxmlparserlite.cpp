@@ -21,7 +21,7 @@
 
 
 // INCLUDE FILES
-// xml parser
+// system / xml parser
 #include <xml/parser.h>
 #include <xml/parserfeature.h>
 #include <xml/matchdata.h>
@@ -29,11 +29,11 @@
 // upnp stack api
 #include <upnpstring.h>
 
-// upnpframework / xmlparser api
+// dlnasrv / xmlparser api
 #include "upnpxmlparserlite.h"
 #include "upnpobjectlite.h"
 
-// xmlparser internal
+// dlnasrv / xmlparser internal
 #include "upnpobjectstacklite.h"
 
 
@@ -186,7 +186,8 @@ void CUPnPXMLParserLite::OnStartElementL( const RTagInfo& aElement,
                                       const RAttributeArray& aAttributes,
                                       TInt aErrorCode )
     {
-    __LOG1( "CUPnPXMLParserLite::OnStartElementL, error code: %d", aErrorCode );
+    __LOG1( "CUPnPXMLParserLite::OnStartElementL, error code: %d",
+            aErrorCode );
     if ( aErrorCode != KErrNone )
         {
         return;
@@ -289,15 +290,19 @@ void CUPnPXMLParserLite::OnEndElementL( const RTagInfo& aElement,
                 CleanupStack::PushL( tempBuf );
                 HBufC* buf = HBufC::NewL( iFormatString->Length() +
                     tempBuf->Length() );
+                CleanupStack::PushL( buf );
                 buf->Des().Format( *iFormatString, tempBuf );
-                CleanupStack::PopAndDestroy( tempBuf );
                 obj->SetTitleL( buf );
+                CleanupStack::Pop( buf );
+                CleanupStack::PopAndDestroy( tempBuf );	
                 }
             else
                 {
                 HBufC* buf = HBufC::NewL( iTitleBuf->Length() );
+                CleanupStack::PushL( buf );
                 buf->Des().Copy( *iTitleBuf );
                 obj->SetTitleL( buf );
+                CleanupStack::Pop( buf );
                 }
             delete iTitleBuf; iTitleBuf = NULL;
             }

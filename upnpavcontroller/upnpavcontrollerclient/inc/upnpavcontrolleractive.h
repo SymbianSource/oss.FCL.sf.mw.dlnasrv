@@ -191,9 +191,14 @@ protected: // From MUPnPAVController
      */
     void StopDownloadSession( MUPnPFileDownloadSession& aSession );
     
+    /**
+     * See upnpavcontroller.h
+     */
+    HBufC8* GetDeviceIconL( const TDesC8& aUuid );
+    
 protected: // From CUPnPConnectionMonitorObserver
 
-    void ConnectionLost();    
+    void ConnectionLost( TBool aUserOriented );
 
 private:
     
@@ -218,8 +223,6 @@ private:
     TPckg<TAVControllerDeviceDiscovery>         iDiscoveredPkg;
     
     TBool iAlive;
-    
-    CActiveSchedulerWait                        iWait;
     
     TReleaseState                               iReleaseState;
 

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -61,22 +61,13 @@ CUpnpTaskResourceAllocator::CUpnpTaskResourceAllocator(
     iState = EStateIdle;
     iErrorCode = KErrNone;
     iMode = aMode;
-    iLocalMSSCompleted = EFalse;
 
-    if ( iMode & EResourceLocalMediaServer ||
-         iMode & EResourceSelectDevice )
+    if ( iMode & EResourceSelectDevice )
         {
-        // if any of these flags are set, AVCONTROLLER flag is mandatory.
+        // AVCONTROLLER flag is mandatory.
         // assert that.
         __ASSERTD( iMode & EResourceAvController, __FILE__, __LINE__ );
         }
-
-    if ( iMode & EResourceLocalMediaServer )
-        {
-        // if this flag is set, one of the device selection flags is mandatory.
-        __ASSERTD( iMode & EResourceSelectDevice, __FILE__, __LINE__ );
-        }
-
     }
 
 // --------------------------------------------------------------------------
@@ -107,35 +98,14 @@ void CUpnpTaskResourceAllocator::Cleanup()
 
     delete iSelectedDevice;
     iSelectedDevice = 0;
-    
-    if ( iMediaServerSession )
-        {
-        // Stop local file sharing (release)
-        TRAPD( error, iMediaServerSession->ReleaseLocalMSServicesL() );
-        if( error != KErrNone )
-            {
-            __LOG1( "[UpnpCommand]\t CUpnpTaskResourceAllocator::\
-ReleaseLocalMSService failed %d", error );
-            }
-        
-        // Stop observing the rendering session
-        iMediaServerSession->RemoveObserver();
-
-        // Stop session
-        iAVController->StopBrowsingSession( *iMediaServerSession );
-        iMediaServerSession = NULL;
-        }
-
+            
     if( iAVController )
         {
         iAVController->RemoveDeviceObserver();
         iAVController->Release(); // Fixes ESLX-7BMJBN
         iAVController = NULL;
         }
-
     }
-
-
 
 
 // --------------------------------------------------------------------------
@@ -223,33 +193,9 @@ void CUpnpTaskResourceAllocator::RunL()
     // make sure we are still on the go
     if ( iState == EStateAllocating )
         {
-        // start the local mediaserver
-        StartLocalMediaServerL();
-        }
-    else
-        {
-        __LOG1( "[UpnpCommand]\t CUpnpTaskResourceAllocator::RunL \
-    StartLocalMediaServerL not done in state %d", iState );
-        }        
-    // make sure we are still on the go
-    if ( iState == EStateAllocating )
-        {
-        // if local media server was started but not yet completed,
-        // wait for callback
-        if ( iMode & EResourceLocalMediaServer
-            && !iLocalMSSCompleted )
-            {
-            __LOG( "[UpnpCommand]\t CUpnpTaskResourceAllocator::RunL \
-    waiting for ReserveLocalMSServicesCompleted" );
-            iState = EStateWaitingForLMS;
-            }
-        // otherwise we are done now
-        else
-            {
-            // close the wait note
-            __ASSERTD( iNoteHandler, __FILE__, __LINE__ );
-            iNoteHandler->CloseWaitNote();
-            }
+        // close the wait note
+        __ASSERTD( iNoteHandler, __FILE__, __LINE__ );
+        iNoteHandler->CloseWaitNote();
         }
     else
         {
@@ -299,31 +245,6 @@ StartAvControllerL" );
     AvController not started" );
         }
     }
-
-// --------------------------------------------------------------------------
-// CUpnpTaskResourceAllocator::StartLocalMediaServerL
-// --------------------------------------------------------------------------
-void CUpnpTaskResourceAllocator::StartLocalMediaServerL()
-    {
-    if ( iMode & EResourceLocalMediaServer )
-        {
-        __LOG( "[UpnpCommand]\t CUpnpTaskResourceAllocator::\
-StartLocalMediaServerL" );
-
-        // create a dummy device
-        CUpnpAVDevice* dummyDevice = CUpnpAVDevice::NewLC();
-        dummyDevice->SetUuidL( KNullDesC8 );
-        dummyDevice->SetDeviceType(CUpnpAVDevice::EMediaServer);    
-        // create a session for mediaserver resources keepalive
-        iMediaServerSession =
-            &iAVController->StartBrowsingSessionL( *dummyDevice );
-        iMediaServerSession->SetObserver( *this );
-        CleanupStack::PopAndDestroy( dummyDevice );
-        // now reserve
-        iMediaServerSession->ReserveLocalMSServicesL();
-        }
-    }
-
 
 // --------------------------------------------------------------------------
 // CUpnpTaskResourceAllocator::SelectDeviceL
@@ -418,7 +339,7 @@ void CUpnpTaskResourceAllocator::WLANConnectionLost()
     {
     __LOG( "[UpnpCommand]\t CUpnpTaskResourceAllocator::WLANConnectionLost" );
 
-    if ( iState == EStateAllocating || iState == EStateWaitingForLMS )
+    if ( iState == EStateAllocating )
         {
         __ASSERTD( iNoteHandler, __FILE__, __LINE__ );
         SetErrorCode( KErrDisconnected );
@@ -436,7 +357,7 @@ void CUpnpTaskResourceAllocator::UPnPDeviceDisappeared(
     const CUpnpAVDevice& aDevice )
     {
     __ASSERTD( iNoteHandler, __FILE__, __LINE__ );
-    if ( ( iState == EStateAllocating || iState == EStateWaitingForLMS )
+    if ( ( iState == EStateAllocating )
          && iSelectedDevice != 0 )
         {
         if ( aDevice.Uuid() == iSelectedDevice->Uuid() )
@@ -448,81 +369,6 @@ void CUpnpTaskResourceAllocator::UPnPDeviceDisappeared(
             }
         }
     }
-    
-    
-// ==========================================================================
-// Methods for AVController browsing session observer
-// ==========================================================================
-
-// --------------------------------------------------------------------------
-// CUpnpTaskResourceAllocator::ReserveLocalMSServicesCompleted
-// --------------------------------------------------------------------------
-void CUpnpTaskResourceAllocator::ReserveLocalMSServicesCompleted( TInt aError )
-    {
-    __LOG1( "[UpnpCommand]\t CUpnpTaskResourceAllocator::\
-ReserveLocalMSServicesCompleted: %d", aError );
-
-    if ( iState == EStateAllocating 
-        || iState == EStateWaitingForLMS )
-        {
-        iLocalMSSCompleted = ETrue;
-        SetErrorCode( aError );
-        if ( aError == KErrNone )
-            {
-            iLocalMSStarted = ETrue;
-            iMediaServerSession->RemoveObserver();
-            }
-        // allocation done, just waiting for this callback
-        // close note and we are done
-        if( iState == EStateWaitingForLMS )
-            {
-            iNoteHandler->CloseWaitNote();
-            }
-        }
-    }
-
-
-void CUpnpTaskResourceAllocator::BrowseResponse(
-    const TDesC8& /*aBrowseResponse*/,
-    TInt /*aError*/,
-    TInt /*aMatches*/,
-    TInt /*aTotalCount*/,
-    const TDesC8& /*aUpdateId*/ )
-    {
-    }
-
-void CUpnpTaskResourceAllocator::SearchResponse( 
-    const TDesC8& /*aSearchResponse*/,
-    TInt /*aError*/,
-    TInt /*aMatches*/,
-    TInt /*aTotalCount*/,
-    const TDesC8& /*aUpdateId*/ )
-    {
-    }
-
-void CUpnpTaskResourceAllocator::SearchCapabilitiesResponse( 
-    TInt /*aError*/,
-    const TDesC8& /*aSearchCapabilities*/ )
-    {
-    }
-
-void CUpnpTaskResourceAllocator::CreateContainerResponse(
-    TInt /*aError*/, 
-    const TDesC8& /*aObjectId*/ )
-    {
-    }
-
-void CUpnpTaskResourceAllocator::DeleteObjectResponse(
-    TInt /*aError*/ )
-    {
-    }
- 
-void CUpnpTaskResourceAllocator::MediaServerDisappeared(
-    TUPnPDeviceDisconnectedReason /*aReason*/ )
-    {
-    }
-
-
 
 // --------------------------------------------------------------------------
 // CUpnpTaskResourceAllocator::SetNoteHandlerL

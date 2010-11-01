@@ -53,6 +53,17 @@ public:
         EMediaRenderer
         };    
     
+    /** 
+     * Enumeration to define the different seek modes.
+     * Use with bitwise operations.
+     */
+    enum TSeekMode 
+        {
+        ETrackNr = 0x1, 
+        ERelTime = 0x2, 
+        EAbsTime = 0x4
+        };
+    
 public:  // Constructors and destructor
         
     /**
@@ -144,6 +155,20 @@ public: // New methods
      * @return friendly name
      */
     IMPORT_C const TDesC8& FriendlyName() const;
+    
+    /**
+     * Sets the model name of the device
+     * 
+     * @param aName name
+     */
+    IMPORT_C void SetModelNameL( const TDesC8& aName );
+
+    /**
+     * Return model name
+     * 
+     * @return model name
+     */
+    IMPORT_C const TDesC8& ModelName() const;
     
     /**
      * Sets the Uuid of the device
@@ -348,7 +373,7 @@ public: // UPnP media rendering capability getters and setters
      */
     IMPORT_C TBool VideoCapability() const;
 
-public: // DLNA releated
+public: // DLNA related
 
     /**
      * Sets if the device is Dlna compatible
@@ -363,6 +388,22 @@ public: // DLNA releated
      * @return ETrue if the device is dlna compatible
      */    
     IMPORT_C TBool DlnaCompatible() const;
+
+public: // seek related
+    /**
+     * Sets the supported seek modes.
+     * 
+     * @param aSeekCapability
+     */    
+    IMPORT_C void SetSeekCapability( TSeekMode aSeekCapability );
+    
+    /**
+     * Return the supported seek modes.
+     * 
+     * @return TSeekMode the bitwise flag which seek modes are supported. 
+     *              See TSeekModes.
+     */    
+    IMPORT_C TSeekMode SeekCapability() const;
 
 protected:
     
@@ -395,6 +436,12 @@ protected:
     TInt iMaxVolume;            
     
     TBool iDlnaCompatible;            
+    
+    // Seek capabilities of this device. See TSeekModes for different seek 
+    // modes.
+    TSeekMode iSeekCapability;   
+    
+    HBufC8* iModelName; // Owned
     };
 
 

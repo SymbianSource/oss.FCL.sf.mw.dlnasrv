@@ -21,7 +21,7 @@
 
 
 // INCLUDE FILES
-// upnp stack api's
+// dlnasrv / mediaserver api
 #include <upnpobject.h>
 #include <upnpitem.h>
 #include <upnpcontainer.h>
@@ -29,19 +29,19 @@
 #include <upnpattribute.h>
 #include <upnpdlnaprotocolinfo.h>
 
-// upnpframework / avcontroller api
+// dlnasrv / avcontroller api
 #include "upnpavbrowsingsession.h" // browsing session
 
-// upnpframework / avcontroller helper api
+// dlnasrv / avcontroller helper api
 #include "upnpresourceselector.h" // MUPnPResourceSelector
 #include "upnpitemresolverobserver.h" // observer for this class
 #include "upnpitemutility.h" // for ResourceFromItem
 #include "upnpconstantdefs.h" // for browsing param: KSortNone
 
-// upnpframework / xml parser api
+// dlnasrv / xmlparser api
 #include "upnpxmlparser.h" // for xml parsing
 
-// avcontrollerhelper internal
+// dlnasrv / avcontroller helper internal
 #include "upnpremoteitemresolver.h"
 
 _LIT( KComponentLogfile, "upnpavcontrollerhelper.txt");
@@ -114,7 +114,7 @@ CUPnPRemoteItemResolver::~CUPnPRemoteItemResolver()
 // CUPnPRemoteItemResolver::ResolveL
 //---------------------------------------------------------------------------
 void CUPnPRemoteItemResolver::ResolveL(
-    MUPnPItemResolverObserver& aObserver )
+    MUPnPItemResolverObserver& aObserver, CUpnpAVDevice* /*aDevice*/ )
     {
     __LOG( "RemoteItemResolver:Resolve()" );
     __ASSERTD( iState == EStateIdle, __FILE__, __LINE__ );
@@ -249,7 +249,7 @@ void CUPnPRemoteItemResolver::BrowseResponseL( const TDesC8& aBrowseResponse )
 void CUPnPRemoteItemResolver::ProcessResultObjectL(
     const CUpnpObject* aResult )
     {
-  /*  if ( aResult->ObjectType() != EUPnPItem )
+    if ( aResult->ObjectType() != EUPnPItem )
         {
         User::Leave( KErrArgument );
         }
@@ -305,7 +305,7 @@ void CUPnPRemoteItemResolver::ProcessResultObjectL(
     if( item )
         {
         CleanupStack::PopAndDestroy( item );
-        }*/
+        }
     }
 
 

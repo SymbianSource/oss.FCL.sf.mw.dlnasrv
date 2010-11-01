@@ -19,8 +19,8 @@
 // INCLUDE FILES
 
 #include <e32svr.h>
-#include <xml/dom/xmlengdom.h>
-#include <xml/dom/xmlengnodefilter.h>
+#include <xmlengdom.h>
+#include <xmlengnodefilter.h>
 
 //using namespace Xml;
 

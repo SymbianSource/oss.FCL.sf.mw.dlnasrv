@@ -18,10 +18,12 @@
 
 PRJ_EXPORTS
 
-../inc/upnpcontentdirectoryservice.h |../../inc/upnpcontentdirectoryservice.h
-../inc/upnpcontentdirectoryeventobserver.h |../../inc/upnpcontentdirectoryeventobserver.h
-../inc/upnpcontentdirectoryglobals.h |../../inc/upnpcontentdirectoryglobals.h
-../inc/upnpcdsettings.h |../../inc/upnpcdsettings.h 
+../inc/upnpcontentdirectoryservice.h        |../../inc/upnpcontentdirectoryservice.h
+../inc/upnpcontentdirectoryeventobserver.h  |../../inc/upnpcontentdirectoryeventobserver.h
+../inc/upnpcontentdirectoryglobals.h        |../../inc/upnpcontentdirectoryglobals.h
+../inc/upnpcdsettings.h                     |../../inc/upnpcdsettings.h 
+../inc/dlna/upnpdlnafilter.h                |../../../inc/upnpdlnafilter.h
+../inc/upnpcontentdirectorydatafinder.h     |../../../inc/upnpcontentdirectorydatafinder.h		
 
 PRJ_MMPFILES
 contentdirectoryservice.mmp

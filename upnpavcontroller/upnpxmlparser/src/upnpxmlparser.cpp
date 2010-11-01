@@ -21,23 +21,24 @@
 
 
 // INCLUDE FILES
-// xml parser api
+// system / xml parser api
 #include <xml/parser.h>
 #include <xml/parserfeature.h>
 #include <xml/matchdata.h>
 #include <xml/xmlparsererrors.h>
 
 // upnp stack api
-#include "upnpstring.h"
+#include <upnpstring.h>
+
+// dlnasrv / mediaserver api
 #include <upnpcontainer.h>
 #include <upnpitem.h>
-#include "upnpelement.h"
-#include "upnpxmlparser.h"
+#include <upnpelement.h>
 
-// upnpframework / internal api's
+// dlnasrv / internal api's
 #include "upnpcdsreselementutility.h"
 
-// xmlparser internal
+// dlnasrv / xmlparser internal
 #include "upnpobjectstack.h"
 #include "upnpitemtoxml.h"
 #include "upnpxmlstringutility.h"

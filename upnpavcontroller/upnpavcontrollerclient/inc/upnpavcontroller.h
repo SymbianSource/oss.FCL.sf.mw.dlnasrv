@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -185,17 +185,16 @@ public:
      * @return device list
      */
     virtual CUpnpAVDeviceList* GetMediaRenderersL() = 0;
-    
-public: // Destructor    
 
     /**
-     * Destructor
-     * DEPRACATED, usage of Release() recommended. Will be removed in the
-     * future. Safe deletion is not guaranteed.
-     *
-     * @since Series 60 3.1
-     */   
-    virtual ~MUPnPAVController() {};
+     * Return device specific icon as image data (e.g. jpg, png etc) read into descriptor.
+     * 
+     * @param aUuid uuid of media device
+     * @return Image data or empty buffer if there is no icon. Ownership is transferred.
+     */
+    virtual HBufC8* GetDeviceIconL( const TDesC8& aUuid ) = 0;
+
+public: // Destructor    
     
     /**
      * Destructor. Ensures safe deletion (also during WLAN disconnection).

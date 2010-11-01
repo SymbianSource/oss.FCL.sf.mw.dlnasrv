@@ -122,7 +122,10 @@ void CUpnpCommandParameters::SetL(
             // do nothing
             break;
         default:
+            {
             __PANICD( __FILE__, __LINE__ );
+            }
+            break;
         }
 
     }

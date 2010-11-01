@@ -203,7 +203,7 @@
 //l:navi_text_pane_t1
 //r:wk49/2008
 //
-#define qtn_iupnp_nof_file                  "%N file"
+#define qtn_iupnp_nof_file                  "1 file"
 
 //d:result window error note text
 //d:error note is shown when too many result files are found
@@ -212,6 +212,21 @@
 //
 #define qtn_iupnp_too_big_cache_note_text   "Too many items, showing only %N"
 
+//d:Copy file error note
+//l:popup_note_window/opt2
+//r:wk08/2009
+//
+#define qtn_iupnp_copy_failed               "Copy failed. Some files may not be copied."
+
+//d:Used to describe when there is no memory while the user is copying files
+//l:popup_note_window/opt2
+//r:wk08/2009
+#define qtn_iupnp_running_out_of_memory     "Running out of memory. Some files might not be copied."
+
+//d:progress info when data is being found from a media server
+//l:navi_text_pane_t1
+//r:wk08/2009
+#define qtn_iupnp_finding                   "Finding %N%"
 
 // --------------------------------------------------------------------------
 // 
@@ -322,6 +337,12 @@
 //
 #define qtn_iupnp_info_copy_one                 "1 file copied"
 
+//d:Used to describe the result when no files copied
+//l:popup_note_window/opt2
+//r:2.1
+//
+#define qtn_iupnp_info_copy_none                "No files were copied"
+
 //d:Used to describe the result of copying multiple files
 //l:popup_note_window/opt2
 //r:2.1
@@ -353,6 +374,40 @@
 //
 #define qtn_iupnp_no_items_to_play_text         "Container does not contain any supported items"
 
+//d:Wait note shown while opening a server for browsing
+//l:popup_note_wait_window
+//r:wk08/2009
+//
+#define qtn_iupnp_wait_opening_server           "Opening"
+
+//d:progress info when data is being retrieved from a media server
+//l:navi_text_pane_t1
+//r:wk10/2009
+#define qtn_iupnp_updating                      "Updating %N%"
+
+//d:Information note header for music playback device selection
+//l:heading_pane_t1
+//r:wk10/2009
+//
+#define qtn_iupnp_popup_play                    "Play:"
+
+//d:Information note header for image/video playback device selection
+//l:heading_pane_t1
+//r:wk10/2009
+//
+#define qtn_iupnp_popup_show                    "Show:"
+
+//d:Show or play an item on the handset
+//l:list_single_pane_t1_cp2
+//r:wk10/2009
+//
+#define qtn_iupnp_popup_on_device               "On device"
+
+//d:Show or play an item via network - on a remote device
+//l:list_single_pane_t1_cp2
+//r:wk10/2009
+//
+#define qtn_iupnp_popup_via_home_net            "Via Home net"
 
 // --------------------------------------------------------------------------
 // 
@@ -400,5 +455,12 @@
 //r:2.1
 //
 #define qtn_iupnp_err_conn_lost                 "Connection lost, some files may not be moved"
+
+//d:Used to describe when rendering is failed
+//d:while some other controlpoint is using rendere
+//l:popup_note_window/opt2
+//r:2.1
+//
+#define qtn_iupnp_renderer_in_use               "%U is already in use. Please try again later."
 
 // End of File

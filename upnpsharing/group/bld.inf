@@ -22,21 +22,24 @@ PRJ_PLATFORMS
 
 PRJ_EXPORTS
 
+// LOC files
+UPNP_LOC_EXPORT(upnpsharing.loc)
+
 PRJ_MMPFILES
 
-// The DLNA profiler
-#include "../upnpdlnaprofiler/group/bld.inf"
+    // The DLNA profiler
+    #include "../upnpdlnaprofiler/group/bld.inf"
 
-// upnp security
-#include "../upnpsecurity/group/bld.inf"
+    // upnp security
+    #include "../upnpsecurity/group/bld.inf"
 
-// content server and server client
-#include "../upnpcontentserver/group/bld.inf"
+    // upnpsharingalgorithm
+    #include "../upnpsharingalgorithm/group/bld.inf"
 
-// content server API
-#include "../applicationengine/group/bld.inf"
+    // content server and server client
+    #include "../upnpcontentserver/group/bld.inf"
 
-// Exports for upnpsharing
-#include "../rom/bld.inf"
+    // gstreamer wrapper
+    #include "../upnpgstwrapper/group/bld.inf"
 
-// end of file
+// End of file

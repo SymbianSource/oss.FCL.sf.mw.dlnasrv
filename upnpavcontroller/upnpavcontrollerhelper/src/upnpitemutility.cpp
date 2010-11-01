@@ -24,11 +24,11 @@
 // System
 #include <e32std.h>
 
-// upnp stack api
+// dlnasrv / mediaserver api
 #include <upnpitem.h>
 #include <upnpdlnaprotocolinfo.h>
 
-// upnpframework / avcontroller helper api
+// dlnasrv / avcontroller helper api
 #include "upnpconstantdefs.h" // for KValueNotImplemented
 #include "upnpitemutility.h"
 

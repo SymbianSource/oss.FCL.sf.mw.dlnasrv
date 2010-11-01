@@ -151,4 +151,13 @@ RESOURCE TBUF r_command_err_con_failed_text
     buf = qtn_iupnp_err_con_failed;
     }
 
+// --------------------------------------------------------------------------
+// r_command_renderer_in_use_text
+// --------------------------------------------------------------------------
+//
+RESOURCE TBUF r_command_renderer_in_use_text
+    {
+    buf = qtn_iupnp_renderer_in_use;
+    }
+
 // End of file

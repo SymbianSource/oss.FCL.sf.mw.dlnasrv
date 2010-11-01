@@ -24,11 +24,7 @@
 #ifndef UPNPPLATFORMVAR_HRH
 #define UPNPPLATFORMVAR_HRH
 
-#ifndef __SERIES60_32__
 #include <platform_paths.hrh>
-#else
-#include <platform_paths.hrh>
-#endif
 
 // LOC export for MCL SDKs.
 // Loc files have to be exported to /epoc32/include/... in MCL SDKs.
@@ -40,5 +36,8 @@
 // But they need to be defined.
 #define UPNP_LOC_INCLUDE_PATH_COMPONENT
 #define UPNP_LOC_INCLUDE_PATH_SUBCOMPONENT
+
+// Define this flag if gstreamer is used for transcoding
+#undef UPNP_USE_GSTREAMER
 
 #endif // UPNPPLATFORMVAR_HRH

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -22,19 +22,20 @@
 
 // INCLUDE FILES
 // upnp stack api
+#include <upnpaction.h>
 #include <upnpdevice.h>
-#include <upnpcontainer.h>
 #include <upnpservice.h>
 #include <upnpstatevariable.h>
-#include <upnpaction.h>
-#include <upnpobjectlist.h>
-#include <upnpavcontrolpoint.h>
 
-// upnpframework / avcontroller api
+// dlnasrv / mediaserver api
+#include <upnpcontainer.h>
+#include <upnpobjectlist.h>
+
+// dlnasrv / avcontroller api
 #include "upnpavdeviceobserver.h"
 #include "upnpavdevicelist.h"
 
-// avcontroller internal
+// dlnasrv / avcontroller internal
 #include "upnpavcontrollerimpl.h"
 #include "upnpavcontrollerserver.h"
 #include "upnpavdispatcher.h"
@@ -62,11 +63,10 @@ _LIT( KComponentLogfile, "upnpavcontrollerserver.txt");
 // See upnpavcontrollerimpl.h
 // --------------------------------------------------------------------------
 CUPnPAVControllerImpl* CUPnPAVControllerImpl::NewL(
-    RUpnpMediaServerClient& aClient,
     CUpnpAVControllerServer& aServer )
     {
     CUPnPAVControllerImpl* self = new (ELeave) CUPnPAVControllerImpl( 
-        aClient, aServer );
+        aServer );
     CleanupStack::PushL( self );
     self->ConstructL();
     CleanupStack::Pop( self );
@@ -78,9 +78,7 @@ CUPnPAVControllerImpl* CUPnPAVControllerImpl::NewL(
 // See upnpavcontrollerimpl.h
 // --------------------------------------------------------------------------
 CUPnPAVControllerImpl::CUPnPAVControllerImpl(
-    RUpnpMediaServerClient& aClient,
     CUpnpAVControllerServer& aServer ) :
-    iMediaServer( aClient ),
     iServer( aServer ),
     iDeviceDiscoveryEnabled( EFalse),
     iDeviceMsgQue( CUpnpDeviceDiscoveryMessage::LinkOffset() ),
@@ -113,8 +111,8 @@ CUPnPAVControllerImpl::~CUPnPAVControllerImpl()
         delete devMsg;
         };    
 
-    delete iConnectionMsg; iConnectionMsg = NULL;
-    delete iDeviceDiscoveryMsg; iDeviceDiscoveryMsg = NULL;        
+    delete iConnectionMsg;
+    delete iDeviceDiscoveryMsg;
     }
 
 // --------------------------------------------------------------------------
@@ -137,13 +135,7 @@ void CUPnPAVControllerImpl::ConnectionLost()
         {
         iConnectionMsg->Complete( EAVControllerConnectionLost );
         delete iConnectionMsg; iConnectionMsg = NULL;
-        
         }
-    else
-        {
-        // No msg, no can do
-        }    
-    
     }
 
 // --------------------------------------------------------------------------
@@ -187,8 +179,8 @@ void CUPnPAVControllerImpl::DeviceDiscoveredL(
             
             // Write back to the client that a device was discovered
             // of the device and the size
-            TPckg<TAVControllerDeviceDiscovery> resp0( EAVDeviceDiscovered );
-            TPckg<TInt> resp1( iDeviceRespBuf->Length() );
+            TPckgBuf<TAVControllerDeviceDiscovery> resp0( EAVDeviceDiscovered );
+            TPckgBuf<TInt> resp1( iDeviceRespBuf->Length() );
             
             iDeviceDiscoveryMsg->WriteL( 0, resp0 );
             iDeviceDiscoveryMsg->WriteL( 1, resp1 );
@@ -284,9 +276,9 @@ void CUPnPAVControllerImpl::DeviceDisappearedL(
             
             // Write back to the client that a device was discovered
             // and the size of the device
-            TPckg<TAVControllerDeviceDiscovery> resp0(
+            TPckgBuf<TAVControllerDeviceDiscovery> resp0(
                 EAVDeviceDisappeared );
-            TPckg<TInt> resp1( iDeviceRespBuf->Length() );
+            TPckgBuf<TInt> resp1( iDeviceRespBuf->Length() );
             
             iDeviceDiscoveryMsg->WriteL( 0, resp0 );
             iDeviceDiscoveryMsg->WriteL( 1, resp1 );
@@ -308,6 +300,39 @@ void CUPnPAVControllerImpl::DeviceDisappearedL(
     }    
 
 // --------------------------------------------------------------------------
+// CUPnPAVControllerImpl::DeviceIconDownloadedL
+// See upnpavcontrollerimpl.h
+// --------------------------------------------------------------------------
+void CUPnPAVControllerImpl::DeviceIconDownloadedL( CUpnpAVDeviceExtended& aDevice )
+    {
+    if( iDeviceDiscoveryEnabled )
+        {
+        CUpnpAVDevice* tempDev = CUpnpAVDevice::NewL( aDevice );
+        if( iDeviceDiscoveryMsg )
+            {
+            CleanupStack::PushL( tempDev );
+            delete iDeviceRespBuf;
+            iDeviceRespBuf = NULL;
+            iDeviceRespBuf = tempDev->ToDes8L();
+            CleanupStack::PopAndDestroy( tempDev );
+            TPckgBuf<TAVControllerDeviceDiscovery> resp0( EAVDeviceIconDownloaded );
+            TPckgBuf<TInt> resp1( iDeviceRespBuf->Length() );
+            iDeviceDiscoveryMsg->WriteL( 0, resp0 );
+            iDeviceDiscoveryMsg->WriteL( 1, resp1 );
+            iDeviceDiscoveryMsg->Complete( EAVControllerDeviceCompleted );
+            delete iDeviceDiscoveryMsg;
+            iDeviceDiscoveryMsg = NULL;
+            }
+        else
+            {
+            CUpnpDeviceDiscoveryMessage* tmpDevMsg = CUpnpDeviceDiscoveryMessage::NewL(
+                tempDev, EAVDeviceIconDownloaded );
+            iDeviceMsgQue.AddLast( *tmpDevMsg );
+            }
+        }
+    }
+
+// --------------------------------------------------------------------------
 // CUPnPAVControllerImpl::EnableDeviceDiscoveryL
 // See upnpavcontrollerimpl.h
 // --------------------------------------------------------------------------
@@ -316,7 +341,7 @@ void CUPnPAVControllerImpl::EnableDeviceDiscoveryL(
     {
     __LOG( "CUPnPAVControllerImpl::EnableDeviceDiscoveryL" );
     
-    __ASSERTD( !iDeviceDiscoveryMsg, __FILE__, __LINE__ );
+    __ASSERT( !iDeviceDiscoveryMsg, __FILE__, __LINE__ );
     
     if( !iDeviceDiscoveryEnabled )
         {
@@ -337,10 +362,6 @@ void CUPnPAVControllerImpl::EnableDeviceDiscoveryL(
         iDeviceMsgQue.Remove( *devMsg );
         delete devMsg;
         }
-    else
-        {
-        // Empty else
-        }             
     }
 
 // --------------------------------------------------------------------------
@@ -358,7 +379,7 @@ void CUPnPAVControllerImpl::DequeDeviceL( const CUpnpAVDevice& aDevice,
     HBufC8* tmp = aDevice.ToDes8L();
     CleanupStack::PushL( tmp );
 
-    TPckg<TInt> resp1( tmp->Length() );            
+    TPckgBuf<TInt> resp1( tmp->Length() );            
     iDeviceDiscoveryMsg->WriteL( 1, resp1 );
     
     CleanupStack::Pop( tmp );
@@ -368,8 +389,6 @@ void CUPnPAVControllerImpl::DequeDeviceL( const CUpnpAVDevice& aDevice,
             
     iDeviceDiscoveryMsg->Complete( EAVControllerDeviceCompleted );
     delete iDeviceDiscoveryMsg; iDeviceDiscoveryMsg = NULL;
-     
-
     }
     
 // --------------------------------------------------------------------------
@@ -440,11 +459,14 @@ void CUPnPAVControllerImpl::GetDeviceListSizeL( const RMessage2& aMessage )
                     {
                     CUpnpAVDevice* tempDev = CUpnpAVDevice::NewL(
                         *devList[i] );
+                    CleanupStack::PushL( tempDev );
                     // Ownership of tempDev transferred
                     tempList->AppendDeviceL( *tempDev );
+                    CleanupStack::Pop( tempDev );
                     }
                 }
             }
+        __LOG1( "CUPnPAVControllerImpl::GetDeviceListSizeL servers: %d", tempList->Count() );
         iDeviceListRespBuf = tempList->ToDes8L();
         CleanupStack::PopAndDestroy( tempList );
         }
@@ -461,19 +483,24 @@ void CUPnPAVControllerImpl::GetDeviceListSizeL( const RMessage2& aMessage )
                     {
                     CUpnpAVDevice* tempDev = CUpnpAVDevice::NewL(
                         *devList[i] );
+                    CleanupStack::PushL( tempDev );
                     // Ownership of tempDev transferred
-                    tempList->AppendDeviceL( *tempDev );                    
+                    tempList->AppendDeviceL( *tempDev );
+                    CleanupStack::Pop( tempDev );
                     }
                 }
             }
+        __LOG1( "CUPnPAVControllerImpl::GetDeviceListSizeL renderers: %d", tempList->Count() );
         iDeviceListRespBuf = tempList->ToDes8L();
         CleanupStack::PopAndDestroy( tempList ); 
         }    
     
     // Write the size back to the client
-    TPckg<TInt> resp1( iDeviceListRespBuf->Length() );
+    TPckgBuf<TInt> resp1( iDeviceListRespBuf->Length() );
     aMessage.WriteL( 1, resp1 );
     aMessage.Complete( KErrNone );
+
+    __LOG( "CUPnPAVControllerImpl::GetDeviceListSizeL end" );
     }
 
 // --------------------------------------------------------------------------
@@ -489,6 +516,31 @@ void CUPnPAVControllerImpl::GetDeviceListL( const RMessage2& aMessage )
     aMessage.WriteL( 0, *iDeviceListRespBuf );
     aMessage.Complete( KErrNone );
     delete iDeviceListRespBuf; iDeviceListRespBuf = NULL;    
+
+    __LOG( "CUPnPAVControllerImpl::GetDeviceListL end" );
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPAVControllerImpl::GetDeviceIconRequestL
+// See upnpavcontrollerimpl.h
+// --------------------------------------------------------------------------
+void CUPnPAVControllerImpl::GetDeviceIconRequestL( const RMessage2& aMessage )
+    {
+    __LOG( "CUPnPAVControllerImpl::GetDeviceIconRequestL" );
+
+    TInt uuidLen = aMessage.GetDesLengthL( 0 );
+    if ( uuidLen < 0 || uuidLen > KMaxTInt/2 ) // to avoid alloc panic
+        {
+        User::Leave( KErrArgument );
+        }
+    HBufC8* uuid = HBufC8::NewLC( uuidLen );
+    TPtr8 uuidPtr = uuid->Des();
+    aMessage.ReadL( 0, uuidPtr );
+    // Message is completed by the transfer
+    iServer.TransferDeviceIconFileToClientL( aMessage, 1, uuidPtr );
+    CleanupStack::PopAndDestroy( uuid );
+
+    __LOG( "CUPnPAVControllerImpl::GetDeviceIconRequestL end" );
     }
 
 // --------------------------------------------------------------------------
@@ -511,10 +563,10 @@ void CUPnPAVControllerImpl::CreateRenderingSessionL(
     User::LeaveIfError( aMessage.Read( 1, ptr ) );
 
     CUPnPPlaybackSession* tempPtr = CUPnPPlaybackSession::NewL(
-        iMediaServer, iServer, id, *buf );
+        iServer, id, *buf );
 
     CleanupStack::PopAndDestroy( buf );
-    iPlaybackSessions.AppendL( tempPtr );
+    iPlaybackSessions.Append( tempPtr );
     
     aMessage.Complete( KErrNone );
     }
@@ -1139,6 +1191,88 @@ void CUPnPAVControllerImpl::CancelGetPositionInfoL(
     }
 
 // --------------------------------------------------------------------------
+// CUPnPAVControllerImpl::SeekRelTimeL
+// See upnpavcontrollerimpl.h
+// --------------------------------------------------------------------------
+void CUPnPAVControllerImpl::SeekRelTimeL( const RMessage2& aMessage )
+    {
+    TInt id = aMessage.Int0();
+    
+    // Find the session
+    TInt count = iPlaybackSessions.Count();
+    TBool found = EFalse;
+    for( TInt i = 0; i < count; i++ )
+        {
+        if( iPlaybackSessions[ i ]->SessionId() == id )
+            {
+            iPlaybackSessions[ i ]->SeekRelTimeL( aMessage );
+            found = ETrue;
+            i = count;
+            }
+        }
+    if( !found )
+        {
+        aMessage.Complete( KErrNotFound );
+        }        
+    }
+    
+// --------------------------------------------------------------------------
+// CUPnPAVControllerImpl::CancelSeekRelTimeL
+// See upnpavcontrollerimpl.h
+// --------------------------------------------------------------------------
+void CUPnPAVControllerImpl::CancelSeekRelTimeL(
+    const RMessage2& aMessage )
+    {
+    TInt id = aMessage.Int0();
+    
+    // Find the session
+    TInt count = iPlaybackSessions.Count();
+    TBool found = EFalse;
+    for( TInt i = 0; i < count; i++ )
+        {
+        if( iPlaybackSessions[ i ]->SessionId() == id )
+            {
+            iPlaybackSessions[ i ]->CancelSeekRelTimeL();
+            found = ETrue;
+            i = count;
+            aMessage.Complete( KErrNone );
+            }
+        }
+    if( !found )
+        {
+        aMessage.Complete( KErrNotFound );
+        }                    
+    }
+
+
+// --------------------------------------------------------------------------
+// CUPnPAVControllerImpl::GetRendererStateL
+// See upnpavcontrollerimpl.h
+// --------------------------------------------------------------------------
+void CUPnPAVControllerImpl::GetRendererStateL( const RMessage2& aMessage)
+    {
+    TInt id = aMessage.Int0();
+    
+    // Find the session
+    TInt count = iPlaybackSessions.Count();
+    TBool found = EFalse;
+    for( TInt i = 0; i < count; i++ )
+        {
+        if( iPlaybackSessions[ i ]->SessionId() == id )
+            {
+            iPlaybackSessions[ i ]->GetRendererStateL( aMessage );
+            found = ETrue;
+            i = count;
+            //aMessage.Complete( KErrNone );
+            }
+        }
+    if( !found )
+        {
+        aMessage.Complete( KErrNotFound );
+        }    
+    }
+
+// --------------------------------------------------------------------------
 // CUPnPAVControllerImpl::CreateBrowsingSessionL
 // See upnpavcontrollerimpl.h
 // --------------------------------------------------------------------------
@@ -1158,10 +1292,10 @@ void CUPnPAVControllerImpl::CreateBrowsingSessionL(
     User::LeaveIfError( aMessage.Read( 1, ptr ) );
     
     CUPnPBrowsingSession* tempPtr = CUPnPBrowsingSession::NewL(
-        iMediaServer, iServer, id, *buf );
+        iServer, id, *buf );
 
     CleanupStack::PopAndDestroy( buf );
-    iBrowsingSessions.AppendL( tempPtr );
+    iBrowsingSessions.Append( tempPtr );
     
     aMessage.Complete( KErrNone );    
     }
@@ -1694,7 +1828,7 @@ void CUPnPAVControllerImpl::CreateDownloadSessionL(
     CUPnPDownloadSession* tempPtr = CUPnPDownloadSession::NewL(
         iServer, id, *buf );
     CleanupStack::PopAndDestroy( buf );
-    iDownloadSessions.AppendL( tempPtr );
+    iDownloadSessions.Append( tempPtr );
     
     aMessage.Complete( KErrNone );    
     }
@@ -1733,6 +1867,10 @@ void CUPnPAVControllerImpl::DestroyDownloadSessionL(
         }        
     }
 
+// --------------------------------------------------------------------------
+// CUPnPAVControllerImpl::StartDownloadL
+// See upnpavcontrollerimpl.h
+// --------------------------------------------------------------------------
 void CUPnPAVControllerImpl::StartDownloadL( const RMessage2& aMessage )
     {
     TInt id = aMessage.Int0();
@@ -1755,6 +1893,10 @@ void CUPnPAVControllerImpl::StartDownloadL( const RMessage2& aMessage )
         }                       
     }
 
+// --------------------------------------------------------------------------
+// CUPnPAVControllerImpl::StartDownloadFHL
+// See upnpavcontrollerimpl.h
+// --------------------------------------------------------------------------
 void CUPnPAVControllerImpl::StartDownloadFHL( const RMessage2& aMessage )
     {
     TInt id = aMessage.Int0();
@@ -1776,7 +1918,11 @@ void CUPnPAVControllerImpl::StartDownloadFHL( const RMessage2& aMessage )
         aMessage.Complete( KErrNotFound );
         }                       
     }
-    
+
+// --------------------------------------------------------------------------
+// CUPnPAVControllerImpl::CancelDownloadL
+// See upnpavcontrollerimpl.h
+// --------------------------------------------------------------------------
 void CUPnPAVControllerImpl::CancelDownloadL( const RMessage2& aMessage )
     {
     TInt id = aMessage.Int0();
@@ -1799,6 +1945,10 @@ void CUPnPAVControllerImpl::CancelDownloadL( const RMessage2& aMessage )
         }                           
     }
 
+// --------------------------------------------------------------------------
+// CUPnPAVControllerImpl::CancelAllDownloadsL
+// See upnpavcontrollerimpl.h
+// --------------------------------------------------------------------------
 void CUPnPAVControllerImpl::CancelAllDownloadsL( const RMessage2& aMessage )
     {
     TInt id = aMessage.Int0();
@@ -1820,7 +1970,11 @@ void CUPnPAVControllerImpl::CancelAllDownloadsL( const RMessage2& aMessage )
         aMessage.Complete( KErrNotFound );
         }                           
     }
-    
+
+// --------------------------------------------------------------------------
+// CUPnPAVControllerImpl::StartTrackingDownloadProgressL
+// See upnpavcontrollerimpl.h
+// --------------------------------------------------------------------------    
 void CUPnPAVControllerImpl::StartTrackingDownloadProgressL(
     const RMessage2& aMessage )
     {
@@ -1845,6 +1999,10 @@ void CUPnPAVControllerImpl::StartTrackingDownloadProgressL(
         }                           
     }
 
+// --------------------------------------------------------------------------
+// CUPnPAVControllerImpl::StopTrackingDownloadProgressL
+// See upnpavcontrollerimpl.h
+// --------------------------------------------------------------------------
 void CUPnPAVControllerImpl::StopTrackingDownloadProgressL(
     const RMessage2& aMessage )
     {
@@ -1869,6 +2027,10 @@ void CUPnPAVControllerImpl::StopTrackingDownloadProgressL(
         }                           
     }
 
+// --------------------------------------------------------------------------
+// CUPnPAVControllerImpl::GetDownloadEventL
+// See upnpavcontrollerimpl.h
+// --------------------------------------------------------------------------
 void CUPnPAVControllerImpl::GetDownloadEventL( const RMessage2& aMessage )
     {
     TInt id = aMessage.Int0();
@@ -1891,7 +2053,11 @@ void CUPnPAVControllerImpl::GetDownloadEventL( const RMessage2& aMessage )
         aMessage.Complete( KErrNotFound );
         }                               
     }
-    
+
+// --------------------------------------------------------------------------
+// CUPnPAVControllerImpl::CancelGetDownloadEventL
+// See upnpavcontrollerimpl.h
+// --------------------------------------------------------------------------    
 void CUPnPAVControllerImpl::CancelGetDownloadEventL(
     const RMessage2& aMessage )
     {
@@ -1938,7 +2104,7 @@ void CUPnPAVControllerImpl::CreateUploadSessionL(
     CUPnPUploadSession* tempPtr = CUPnPUploadSession::NewL(
         iServer, id, *buf );
     CleanupStack::PopAndDestroy( buf );
-    iUploadSessions.AppendL( tempPtr );
+    iUploadSessions.Append( tempPtr );
     
     aMessage.Complete( KErrNone );        
     }

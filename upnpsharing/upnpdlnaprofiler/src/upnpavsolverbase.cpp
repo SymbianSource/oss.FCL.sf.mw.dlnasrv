@@ -23,7 +23,7 @@
 
 // includes
 #include <badesca.h> // CDesC16ArrayFlat
-#include <3gplibrary/mp4lib.h>
+#include <3gplibrary/mp4lib.h> 
 #include "upnpavsolverbase.h"
 
 _LIT( KComponentLogfile, "dlnaprofiler.txt");
@@ -35,10 +35,16 @@ _LIT8( KVideoMp4, "video/mp4" );
 _LIT( KMpeg4_p2_mp4_sp_l2_aac,      "MPEG4_P2_MP4_SP_L2_AAC" );
 _LIT( KMpeg4_p2_mp4_sp_aac,         "MPEG4_P2_MP4_SP_AAC" );
 _LIT( KMpeg4_p2_mp4_sp_vga_aac,     "MPEG4_P2_MP4_SP_VGA_AAC" );
+_LIT( KMpeg4_p2_mp4_asp_l4_so_aac,  "MPEG4_P2_MP4_ASP_L4_SO_AAC" );
 _LIT( KMpeg4_p2_mp4_sp_l5_aac,      "MPEG4_P2_MP4_SP_L5_AAC" );
 
 _LIT( KAvc_mp4_bl_cif15_aac,        "AVC_MP4_BL_CIF15_AAC" );
 _LIT( KAvc_mp4_bl_cif15_aac_520,    "AVC_MP4_BL_CIF15_AAC_520" );
+
+_LIT( KAvc_mp4_mp_hd_720p_aac,      "AVC_MP4_MP_HD_720p_AAC" );
+_LIT( KAvc_mp4_hp_hd_aac,           "AVC_MP4_HP_HD_AAC" );
+
+_LIT( KAvc_mp4_bl_l31_hd_aac,       "AVC_MP4_BL_L31_HD_AAC" );
 
 const TUint32 KSimpleProfileLevel2 = 0x02;
 const TUint32 KSimpleProfileLevel3 = 0x03;
@@ -50,6 +56,9 @@ const mp4_u32 KMaxXResolutionCif = 352;
 const mp4_u32 KMaxYResolutionCif = 288;
 const mp4_u32 KMaxXResolutionVga = 640;
 const mp4_u32 KMaxYResolutionVga = 480;
+
+const TUint32 KAvcLevel31 = 31;
+const TUint32 KAvcLevel40 = 40;
 
 //const TInt  KBitrateAverageToMaxFactor = 20;
 //const mp4_u32 KMaxBitrateCif520 = 520;
@@ -206,6 +215,12 @@ TInt CUpnpAvSolverBase::SupportedProfilesL(
             {
             aProfiles->AppendL( KMpeg4_p2_mp4_sp_vga_aac() );
             }
+        if ( aProfiles->Find( KMpeg4_p2_mp4_asp_l4_so_aac(), 
+                              tempPos, 
+                              ECmpFolded ) ) 
+            {
+            aProfiles->AppendL( KMpeg4_p2_mp4_asp_l4_so_aac() );
+            }
         if ( aProfiles->Find( KMpeg4_p2_mp4_sp_l5_aac(), 
                               tempPos, 
                               ECmpFolded ) ) 
@@ -224,6 +239,24 @@ TInt CUpnpAvSolverBase::SupportedProfilesL(
             {
             aProfiles->AppendL( KAvc_mp4_bl_cif15_aac_520() );
             }
+        if ( aProfiles->Find( KAvc_mp4_mp_hd_720p_aac(), 
+                              tempPos, 
+                              ECmpFolded ) ) 
+            {
+            aProfiles->AppendL( KAvc_mp4_mp_hd_720p_aac() );
+            }
+        if ( aProfiles->Find( KAvc_mp4_hp_hd_aac(), 
+                              tempPos, 
+                              ECmpFolded ) ) 
+            {
+            aProfiles->AppendL( KAvc_mp4_hp_hd_aac() );
+            }
+        if ( aProfiles->Find( KAvc_mp4_bl_l31_hd_aac(), 
+                              tempPos, 
+                              ECmpFolded ) ) 
+            {
+            aProfiles->AppendL( KAvc_mp4_bl_l31_hd_aac() );
+            }
         }
 
     return retval;
@@ -240,17 +273,15 @@ HBufC* CUpnpAvSolverBase::ProfileForFileL( const TDesC& /*aFilename*/,
                                            const TDesC8& aMimetype, 
                                            RFile& aFile )
     {
-    __LOG( "[UPnPDlnaProfiler] CUpnpAvSolverBase::\
-ProfileForFileL" );
+    __LOG( "[UPnPDlnaProfiler] CUpnpAvSolverBase::ProfileForFileL" );
     HBufC* retval = NULL;
 
-
-    
     if ( aMimetype.Compare( KVideoMp4() ) == 0 ) 
         {
         GetVideoFileInformationL( aFile );
 
-
+        __LOG2( "[UPnPDlnaProfiler] CUpnpAvSolverBase::ProfileForFileL: Video type = 0x%x, Audio type = 0x%x",
+            iVideoType, iAudioType );
 
         if ( iVideoType == MP4_TYPE_MPEG4_VIDEO &&
              iAudioType == MP4_TYPE_MPEG4_AUDIO )
@@ -265,8 +296,7 @@ ProfileForFileL" );
             if ( level == KSimpleProfileLevel2 )
                 {
                 // Simple profile level 2
-                retval = HBufC::NewL( KMpeg4_p2_mp4_sp_l2_aac().Length() );
-                retval->Des().Append( KMpeg4_p2_mp4_sp_l2_aac() ); 
+                retval = KMpeg4_p2_mp4_sp_l2_aac().AllocL(); 
                 }
             else if ( level == KSimpleProfileLevel3 )
                 {
@@ -275,31 +305,26 @@ ProfileForFileL" );
                     iVideoResolutionY <= KMaxYResolutionCif )
                     {
                     // resolution below CIF standard
-                    retval = HBufC::NewL( KMpeg4_p2_mp4_sp_aac().Length() );
-                    retval->Des().Append( KMpeg4_p2_mp4_sp_aac() ); 
+                    retval = KMpeg4_p2_mp4_sp_aac().AllocL(); 
                     }
                 else if ( iVideoResolutionX <= KMaxXResolutionVga &&
                     iVideoResolutionY <= KMaxYResolutionVga )
                     {
                     // resolution below VGA standard
-                    retval = HBufC::NewL(
-                        KMpeg4_p2_mp4_sp_vga_aac().Length() );
-                    retval->Des().Append( KMpeg4_p2_mp4_sp_vga_aac() ); 
+                    retval = KMpeg4_p2_mp4_sp_vga_aac().AllocL(); 
                     }
                 }
 
             else if ( level == KSimpleProfileLevel4 )
                 {
                 // Simple profile level 4a
-                retval = HBufC::NewL( KMpeg4_p2_mp4_sp_vga_aac().Length() );
-                retval->Des().Append( KMpeg4_p2_mp4_sp_vga_aac() ); 
+                retval = KMpeg4_p2_mp4_asp_l4_so_aac().AllocL();
                 }
             
             else if ( level == KSimpleProfileLevel5 )
                 {
                 // Simple profile level 5
-                retval = HBufC::NewL( KMpeg4_p2_mp4_sp_l5_aac().Length() );
-                retval->Des().Append( KMpeg4_p2_mp4_sp_l5_aac() ); 
+                retval = KMpeg4_p2_mp4_sp_l5_aac().AllocL();
                 }                
                 
 /*
@@ -332,16 +357,32 @@ Not needed yet:
             	if (iVideoResolutionX <= KMaxXResolutionCif && 
             		iVideoResolutionY <= KMaxYResolutionCif )
             	{
-                    retval = HBufC::NewL( KAvc_mp4_bl_cif15_aac_520().Length() );
-                    retval->Des().Append( KAvc_mp4_bl_cif15_aac_520() );            		
+            	    retval = KAvc_mp4_bl_cif15_aac_520().AllocL();            		
             	}
-        	
+            	else
+            	{
+                    TUint32 level = (iCodecInfo.iData[0] & 0xFF000000) >> 24;
+                    
+                    __LOG1( "[UPnPDlnaProfiler] CUpnpAvSolverBase::ProfileForFileL: Level = %d", level );
+                    
+                    if ( level == KAvcLevel31 )
+                    {
+                        retval = KAvc_mp4_bl_l31_hd_aac().AllocL();
+                    }
+            	}
             }
             
+        else if ( iVideoType == MP4_TYPE_AVC_PROFILE_MAIN && 
+                iAudioType == MP4_TYPE_MPEG4_AUDIO )
+            {
+            TUint32 level = (iCodecInfo.iData[0] & 0xFF000000) >> 24;
             
-
-        }
-           
+            if ( level == KAvcLevel31 )
+                {
+                retval = KAvc_mp4_mp_hd_720p_aac().AllocL();
+                }
+            }
+        }           
     return retval;
     }
 
@@ -353,8 +394,8 @@ Not needed yet:
 //
 TInt CUpnpAvSolverBase::GetVideoFileInformationL( RFile& aFile )
     {
-    __LOG( "[UPnPDlnaProfiler] CUpnpAvSolverBase::\
-GetVideoFileInformationL" );
+    __LOG( "[UPnPDlnaProfiler] CUpnpAvSolverBase::GetVideoFileInformationL" );
+	
     TInt retval = KErrNone;
 
     // video description
@@ -391,7 +432,6 @@ GetVideoFileInformationL" );
             User::Leave( KErrGeneral );
             }
 
-
         requesterr = MP4ParseRequestAudioDescription( 
                                             myMp4Handle, 
                                             &audiolength, 
@@ -425,7 +465,11 @@ GetVideoFileInformationL" );
                                             (mp4_u8*)&iDecoderInfo,
                                             sizeof( iDecoderInfo ),
                                             &decoderInfoSize );
-       
+        if ( requesterr != MP4_OK )
+            {
+            MP4ParseClose( myMp4Handle );
+            User::Leave( KErrGeneral );
+            }
 
 		iCodecInfo = iDecoderInfo;
         // close mp4 file handle

@@ -95,11 +95,11 @@ EXPORT_C void CUPnPMetaDataUtility::LoadMetaDataL( const TDesC& aFileName )
     
     RArray<TMetaDataFieldId> wantedFields;
     CleanupClosePushL( wantedFields );
-    wantedFields.AppendL( EMetaDataSongTitle );
-    wantedFields.AppendL( EMetaDataArtist );
-    wantedFields.AppendL( EMetaDataAlbum );
-    wantedFields.AppendL( EMetaDataGenre );
-    wantedFields.AppendL( EMetaDataDate );
+    wantedFields.Append( EMetaDataSongTitle );
+    wantedFields.Append( EMetaDataArtist );
+    wantedFields.Append( EMetaDataAlbum );
+    wantedFields.Append( EMetaDataGenre );
+    wantedFields.Append( EMetaDataDate );
     
     // Reset to be sure that no allocations are left over
     iMetaDataUtility->ResetL();

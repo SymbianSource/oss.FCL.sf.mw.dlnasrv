@@ -85,7 +85,7 @@ LIBRARY         centralrepository.lib // CRepository
 LIBRARY         avkon.lib
 
 // StringLoader
-LIBRARY         CommonEngine.lib
+LIBRARY         commonengine.lib
 
 // ECom
 LIBRARY         ecom.lib
@@ -96,7 +96,7 @@ DEBUGLIBRARY    flogger.lib
 // Char conversion
 LIBRARY         charconv.lib
 
-// Upnp Framework
+// dlnasrv
 LIBRARY         upnputilities.lib
 LIBRARY         upnpavobjects.lib
 LIBRARY         upnpavcontrollerclient.lib
@@ -106,5 +106,9 @@ LIBRARY         upnpfiletransferengine.lib
 LIBRARY         upnpappwizard.lib
 LIBRARY         upnpapplicationengine.lib
 LIBRARY         upnpsettingsengine.lib
+LIBRARY         upnprenderingstatemachine.lib
+
+// Upnp Stack
+LIBRARY         upnpipserversutils.lib
 
 // End of file

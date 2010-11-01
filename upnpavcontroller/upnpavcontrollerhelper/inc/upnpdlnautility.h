@@ -26,7 +26,8 @@
 // INCLUDES
 #include <e32base.h>
 #include <badesca.h>
-    
+#include <stringpool.h>
+
 /**
 * Utility for working with dlna profiles and mime types
 *
@@ -77,7 +78,28 @@ public: // Business logic methods
          * @return TBool Can the DLNA profile possibly be playable on device.
          */
         IMPORT_C static TBool IsSupportedDlnaProfile( const TDesC8& aProfile );
+        
+private:
+    
+        /**
+         * IsSupported
+         * 
+         * @param  aTable
+         * @param  aType
+         * @return boolean is type supported
+         */
+        static TBool IsSupported( const TStringTable& aTable , const TDesC8& aType );
+        
+        /**
+         * static string table
+         */
+        static const TStringTable iMimeTypes; 
 
+        /**
+         * static string table
+         */
+        static const TStringTable iDlnaTypes;
+        
     };
 
 #endif  // UPNPDLNAUTILITY_H

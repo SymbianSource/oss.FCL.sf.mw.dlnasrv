@@ -83,7 +83,8 @@ class CUpnpCommand : public CBase
          * @param aCommandId (UpnpCommand::TUpnpCommandId) the command ID
          * @return ETrue if command is available and can be executed
          */
-        virtual TBool IsAvailableL( UpnpCommand::TUpnpCommandId aCommandId ) = 0;
+        virtual TBool IsAvailableL( 
+                        UpnpCommand::TUpnpCommandId aCommandId ) = 0;
 
     public: // Business logic methods
 

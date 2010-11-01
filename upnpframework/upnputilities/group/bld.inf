@@ -29,10 +29,11 @@ PRJ_EXPORTS
 ../inc/upnpmetadatautility.h          		  |../../../inc/upnpmetadatautility.h
 ../inc/upnpfileutilitytypes.h        		  |../../../inc/upnpfileutilitytypes.h
 ../inc/upnpperiodic.h        		          |../../../inc/upnpperiodic.h
-
+../inc/upnppathutility.h            		  |../../../inc/upnppathutility.h
 
 PRJ_MMPFILES
 upnputilities.mmp
+upnpconnmon.mmp
 
 PRJ_TESTMMPFILES
 // None

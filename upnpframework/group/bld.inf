@@ -15,7 +15,6 @@
 *
 */
 
-
 // For compatibility with S60 3.2 and IAD branch
 #include "../../group/upnpplatformvar.hrh"
 
@@ -23,42 +22,34 @@ PRJ_PLATFORMS
 DEFAULT
 
 PRJ_EXPORTS
-// none
+
+// LOC files
+UPNP_LOC_EXPORT(upnpframework.loc)
+
+// upnpframework common headers
+../inc/upnpframeworkfeatures_mmp.hrh    |../../inc/upnpframeworkfeatures_mmp.hrh
+../inc/upnplogging.h                    |../../inc/upnplogging.h
+../inc/upnppanic.h                      |../../inc/upnppanic.h
+../inc/upnplog.h                        |../../inc/upnplog.h
 
 PRJ_MMPFILES
-// none
+// None
 
 // Build subprojects
 
-// UpnpUtilities
-#include "../upnputilities/group/bld.inf"
+    // Upnpthumbnail
+    #include "../upnpthumbnail/group/bld.inf"
+    
+    // UpnpUtilities
+    #include "../upnputilities/group/bld.inf"
 
-#ifdef FF_UPNP_FRAMEWORK_2_0  // UPnP feature flag
-     // UPnP (Home Media) Extension plugin interface
-    #include "../upnpextensionpluginif/group/bld.inf"
-
+    // UpnpCommand
+    #include "../upnpcommand/group/bld.inf"
+    
     // UpnpFileTransferEngine
-    #include "../upnpfiletransferengine/group/bld.inf"
+    #include "../upnpfiletransferengine/group/bld.inf"    
 
-    // UpnpCommonUi
-    #include "../upnpcommonui/group/bld.inf"
-
-        // UpnpAiwEngine
-    #include "../upnpaiwengine/group/bld.inf"
-
-    // UpnpAiwProvider
-    #include "../upnpaiwprovider/group/bld.inf"
-
-#endif // FF_UPNP_FRAMEWORK_2_0
-
-// UpnpMusicAdapter
-#include "../upnpmusicadapter/group/bld.inf"
-
-// UpnpCommand
-#include "../upnpcommand/group/bld.inf"
-
-// Exports for upnpframework
-#include "../rom/bld.inf"
-
+    // UpnpMusicAdapter
+    #include "../upnpmusicadapter/group/bld.inf"    
 
 // End of file

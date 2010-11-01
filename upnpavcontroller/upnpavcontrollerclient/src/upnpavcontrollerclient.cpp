@@ -21,16 +21,19 @@
 
 
 // INCLUDE FILES
-// Sysatem
+// System
 #include <e32math.h>
 #include <s32mem.h>
 #include <f32file.h>
 
-// upnpframework / avcontroller api
+// dlnasrv / avcontroller api
 #include "upnpavcontrollerglobals.h"
 
-// avcontroller internal
+// dlnasrv / avcontroller internal
 #include "upnpavcontrollerclient.h"
+
+_LIT( KComponentLogfile, "upnpavcontrollerclient.txt");
+#include "upnplog.h"
 
 // Number of message slots to reserve for this client server session.
 const TInt KDefaultMessageSlots = -1;
@@ -58,6 +61,8 @@ RUPnPAVControllerClient::RUPnPAVControllerClient()
 // --------------------------------------------------------------------------
 TInt RUPnPAVControllerClient::Connect()
     {
+    __LOG( "RUPnPAVControllerClient::Connect" );
+    
     TInt error = ::StartServer();
 
     if ( KErrNone == error )
@@ -85,10 +90,10 @@ TVersion RUPnPAVControllerClient::Version() const
 // RUPnPAVControllerClient::StartUp
 // See upnpavcontrollerclient.h
 // --------------------------------------------------------------------------
-void RUPnPAVControllerClient::StartUp( TRequestStatus& aStatus )
+TInt RUPnPAVControllerClient::StartUp()
     {
     TIpcArgs args( TIpcArgs::ENothing );
-    SendReceive( EAVControllerStartupRequest, args, aStatus );    
+    return SendReceive( EAVControllerStartupRequest, args );    
     }
 
 
@@ -154,34 +159,16 @@ TInt RUPnPAVControllerClient::GetDeviceList( TDes8& aList )
     }
 
 // --------------------------------------------------------------------------
-// RUPnPAVControllerClient::ReleaseMediaServer
+// RUPnPAVControllerClient::GetDeviceIcon
 // See upnpavcontrollerclient.h
 // --------------------------------------------------------------------------
-TInt RUPnPAVControllerClient::ReleaseMediaServer( TInt aId )
+TInt RUPnPAVControllerClient::GetDeviceIcon( const TDesC8& aUuid, RFile& aFile )
     {
-    TIpcArgs args( aId );
-    return SendReceive( EAVControllerStopMediaServer, args );    
-    }
-
-// --------------------------------------------------------------------------
-// RUPnPAVControllerClient::ReserveMediaServer
-// See upnpavcontrollerclient.h
-// --------------------------------------------------------------------------
-void RUPnPAVControllerClient::ReserveMediaServer( TInt aId,
-    TRequestStatus& aStatus )
-    {
-    TIpcArgs args( aId );
-    SendReceive( EAVControllerStartMediaServer, args, aStatus );
-    }
-
-// --------------------------------------------------------------------------
-// RUPnPAVControllerClient::CancelReserveMediaServer
-// See upnpavcontrollerclient.h
-// --------------------------------------------------------------------------
-TInt RUPnPAVControllerClient::CancelReserveMediaServer( TInt aId )
-    {
-    TIpcArgs args( aId );
-    return SendReceive( EAVControllerCancelStartMediaServer, args );
+    TPckgBuf< TInt > fileHandlePckg( 0 );
+    TIpcArgs args( &aUuid, &fileHandlePckg );
+    TInt fsHandle( SendReceive( EAVControllerGetDeviceIconRequest, args ) );
+    return ( fsHandle < 0 ? fsHandle : aFile.AdoptFromServer( fsHandle,
+            fileHandlePckg() ) );
     }
 
 // --------------------------------------------------------------------------
@@ -437,6 +424,39 @@ TInt RUPnPAVControllerClient::CancelGetPositionInfo( TInt aId )
     }
 
 // --------------------------------------------------------------------------
+// RUPnPAVControllerClient::SeekRelTime
+// See upnpavcontrollerclient.h
+// --------------------------------------------------------------------------
+void RUPnPAVControllerClient::SeekRelTime( 
+    TInt aId, 
+    TDes8& aTargetTime, 
+    TRequestStatus& aStatus  )
+    {
+    TIpcArgs args( aId, &aTargetTime );
+    SendReceive( EAVControllerSeekRelTime, args, aStatus );     
+    }
+    
+// --------------------------------------------------------------------------
+// RUPnPAVControllerClient::CancelSeekRelTime
+// See upnpavcontrollerclient.h
+// --------------------------------------------------------------------------
+TInt RUPnPAVControllerClient::CancelSeekRelTime( TInt aId )
+    {
+    TIpcArgs args( aId );
+    return SendReceive( EAVControllerCancelSeekRelTime, args ); 
+    }
+
+// --------------------------------------------------------------------------
+// RUPnPAVControllerClient::GetRendererState
+// See upnpavcontrollerclient.h
+// --------------------------------------------------------------------------
+TInt RUPnPAVControllerClient::GetRendererState( TInt aId, TDes8& aState )
+    {
+    TIpcArgs args( aId, &aState );
+    return SendReceive( EAVControllerGetRendererState, args );
+    }
+
+// --------------------------------------------------------------------------
 // RUPnPAVControllerClient::CreateBrowsingSession
 // See upnpavcontrollerclient.h
 // --------------------------------------------------------------------------
@@ -636,17 +656,6 @@ TInt RUPnPAVControllerClient::CancelMonitorConnection()
     TIpcArgs args( TIpcArgs::ENothing );
     return SendReceive( EAVControllerCancelMonitorConnection, args );    
     }
-
-// --------------------------------------------------------------------------
-// RUPnPAVControllerClient::MSServicesInUse
-// See upnpavcontrollerclient.h
-// --------------------------------------------------------------------------
-TInt RUPnPAVControllerClient::MSServicesInUse( TDes8& aInUse )
-    {
-    TIpcArgs args( &aInUse );
-    return SendReceive( EAVControllerMSServicesInUse, args ); 
-    }
-
 // --------------------------------------------------------------------------
 // RUPnPAVControllerClient::CreateDownloadSession
 // See upnpavcontrollerclient.h
@@ -829,6 +838,8 @@ TInt RUPnPAVControllerClient::CancelAllUploads( TInt aId )
 // --------------------------------------------------------------------------
 static TInt StartServer()
     {
+    __LOG( "StartServer" );
+    
     TInt result;
 
     TFindServer findAVControllerServer( KAVControllerName );
@@ -856,6 +867,7 @@ static TInt CreateServerProcess()
     RProcess server;
 
     result = server.Create( KAVControllerFilename, KNullDesC, serverUid );
+    __LOG2( "Process create for '%S' completed with code %d", &KAVControllerFilename, result );
     if ( result != KErrNone )
         {
         return  result;

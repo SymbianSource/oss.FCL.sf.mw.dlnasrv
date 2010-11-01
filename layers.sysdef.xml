@@ -14,7 +14,6 @@
     <layer name="api_test_layer">
       <module name="hcdo_api_tests">
 <!--
-        <unit unitID="hcdo.avcontrolframework.test" name="avcontrolframework.test" bldFile="&layer_real_source_path;/upnpavcontrolpoint/avcontrolframework/tsrc/public/basic/group" mrp="" />
         <unit unitID="hcdo.avobjects.test" name="avobjects.test" bldFile="&layer_real_source_path;/upnpmediaserver/avobjects/tsrc/public/basic/group" mrp="" />
         <unit unitID="hcdo.mediaserverclient.test" name="mediaserverclient.test" bldFile="&layer_real_source_path;/upnpmediaserver/mediaserverclient/tsrc/public/basic/group" mrp="" />
         <unit unitID="hcdo.controlpointbase.test" name="controlpointbase.test" bldFile="&layer_real_source_path;/upnpstack/controlpointbase/tsrc/public/basic/group" mrp="" />

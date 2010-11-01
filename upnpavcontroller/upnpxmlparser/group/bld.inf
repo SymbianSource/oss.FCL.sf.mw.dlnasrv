@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2006, 2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -15,11 +15,6 @@
 *
 */
 
-
-
-
-
-
 #include "../../../group/upnpplatformvar.hrh"
 
 PRJ_PLATFORMS
@@ -29,8 +24,10 @@ PRJ_EXPORTS
 ../inc/upnpxmlparser.h                  |../../../inc/upnpxmlparser.h
 ../inc/upnpxmlparserlite.h              |../../../inc/upnpxmlparserlite.h
 ../inc/upnpobjectlite.h                 |../../../inc/upnpobjectlite.h
+
 // subsystem internal interfaces
 ../inc/upnpxmleventparser.h             |../../inc/upnpxmleventparser.h
+../inc/upnpavtevent.h                   |../../inc/upnpavtevent.h
 
 PRJ_MMPFILES
 upnpxmlparser.mmp

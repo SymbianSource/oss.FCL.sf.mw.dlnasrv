@@ -58,7 +58,9 @@ void CUpnpItem::ConstructL(  )
 EXPORT_C CUpnpItem* CUpnpItem::NewL( )
     {
     CUpnpItem* self = new( ELeave ) CUpnpItem;    
+    CleanupStack::PushL( self );
 	self->ConstructL();
+	CleanupStack::Pop( self );
     return self;
     }
 

@@ -181,6 +181,7 @@ TBool CUpnpCommandImplementation::IsAvailableL()
 TBool CUpnpCommandImplementation::IsAvailableL(
     UpnpCommand::TUpnpCommandId aCommandId )
     {
+    TBool available( EFalse );
     switch( aCommandId )
         {
         case UpnpCommand::ECommandShow: // flow through
@@ -189,18 +190,23 @@ TBool CUpnpCommandImplementation::IsAvailableL(
         case UpnpCommand::ECommandBrowse:
             {
             // available if upnp is configured
-            return IsUpnpConfiguredL();
+            available = IsUpnpConfiguredL();
             }
+            break;
         case UpnpCommand::ECommandSetup:
             {
             // setup is always available
-            return ETrue;
+            available = ETrue;
             }
+            break;
         default:
-            __PANICD( __FILE__, __LINE__ );
+            {
+            __PANIC( __FILE__, __LINE__ );
+            }
+            break;
         }
 
-    return EFalse;
+    return available;
     }
 
 // --------------------------------------------------------------------------
@@ -258,7 +264,7 @@ void CUpnpCommandImplementation::AllocateResourcesL()
     // leave code.
     if( allocateError != KErrNone )
         {
-        __LOG1( "[UpnpCommand]\t CUpnpCommandImplementation::AllocateResourcesL \
+        __LOG1( "[UpnpCommand]\t AllocateResourcesL \
 failed %d", allocateError );
         // show note only if operation was not cancelled by user
         if( allocateError != KErrCancel )
@@ -308,7 +314,7 @@ void CUpnpCommandImplementation::ExecuteL()
     // Allocates Upnp Fw resources if not yet allocated
     if( !iTask )
         {
-	    __LOG( "[UpnpCommand]\t CUpnpCommandImplementation::ExecuteL task deleted, leave" );
+        __LOG( "[UpnpCommand]\t ExecuteL task deleted, leave" );
         User::Leave( KErrNotReady );
         }
 

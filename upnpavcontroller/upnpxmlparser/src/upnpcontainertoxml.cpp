@@ -27,9 +27,11 @@
 
 // upnp stack api
 #include <upnpstring.h>
+
+// dlnasrv / mediaserver api
 #include <upnpcontainer.h>
 
-// upnpframework / avcontroller helper api
+// dlnasrv / avcontroller helper api
 #include "upnpconstantdefs.h"
 
 // xmlparser internal

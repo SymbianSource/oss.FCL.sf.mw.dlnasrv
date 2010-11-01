@@ -47,18 +47,12 @@ SOURCEPATH ../src
 
 SOURCE upnpcontentserver.cpp
 SOURCE upnpcontentserversession.cpp
-SOURCE upnpcontentserverhandler.cpp
-SOURCE upnpcontentsharingao.cpp
-SOURCE upnpsharingrequest.cpp
-SOURCE upnpcontainercheckerao.cpp
-SOURCE upnpunsharerao.cpp
-
-// From old applicationengine
-SOURCE upnpcontentmetadatautility.cpp
-SOURCE upnpcustomgrouper.cpp
-SOURCE upnppostfilter.cpp
-SOURCE upnpselectionreader.cpp
-SOURCE upnpselectionwriter.cpp
+SOURCE upnpsharingrequest.cpp 
+SOURCE upnpcontentmetadatautility.cpp  
+SOURCE upnpselectionreader.cpp 
+SOURCE upnpselectionwriter.cpp 
+SOURCE upnpcontentserverhandler.cpp 
+SOURCE upnpcontentsharerao.cpp
 
 LIBRARY euser.lib 
 LIBRARY bafl.lib 
@@ -67,6 +61,7 @@ LIBRARY ws32.lib
 LIBRARY efsrv.lib 
 LIBRARY PlatformEnv.lib
 LIBRARY centralrepository.lib
+LIBRARY inetprotutil.lib            // for EscapeUtils
 // Content listing framework (metadata)
 LIBRARY contentlistingframework.lib
 // CUpnpElement etc..
@@ -74,12 +69,14 @@ LIBRARY upnpavobjects.lib
 // CUpnpFileSharing
 LIBRARY avmediaserverclient.lib
 LIBRARY upnpserviceframework.lib
+LIBRARY upnpsharingalgorithm.lib
 
 // UpnpString..
 LIBRARY upnpipserversutils.lib
 
 // upnputilities
 LIBRARY upnputilities.lib
+LIBRARY upnpconnmon.lib
 LIBRARY upnpavcontrollerhelper.lib
 
 LIBRARY dlnaprofiler.lib

@@ -21,11 +21,11 @@
 
 
 // INTERNAL INCLUDES
-// upnpframework / avcontroller api
+// dlnasrv / avcontroller api
 #include "upnpavdevice.h"
 #include "upnpfiletransfersessionobserver.h"
 
-// avcontroller internal
+// dlnasrv / avcontroller internal
 #include "upnpfileuploadsessionimpl.h"
 #include "upnpavcontrollerclient.h"
 #include "upnpfiletransferitem.h"

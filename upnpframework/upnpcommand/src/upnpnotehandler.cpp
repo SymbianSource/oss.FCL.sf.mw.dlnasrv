@@ -81,15 +81,21 @@ CUpnpNoteHandler::~CUpnpNoteHandler()
     // If wait note is running, finish it
     if( iWaitNote )
         {
+        __LOG( "[UpnpCommand]\t CUpnpNoteHandler::Destructor\
+        iWaitNote->ProcessFinishedL " );
         TRAP_IGNORE( iWaitNote->ProcessFinishedL() );
         }
 
     // Un-load resource file
     if ( iResFileOffset )
         {
+        __LOG( "[UpnpCommand]\t CUpnpNoteHandler::Destructor\
+        Un-load resource file " );
         CEikonEnv::Static()->DeleteResourceFile( iResFileOffset );
         iResFileOffset = 0;
         }
+        
+    __LOG( "[UpnpCommand]\t CUpnpNoteHandler::Destructor - end" );
     }
 
 // --------------------------------------------------------------------------
@@ -321,6 +327,30 @@ void CUpnpNoteHandler::ShowPlaybackFailedNoteL()
     
     ShowErrorNoteL( R_COMMAND_ERR_RENDERING_FAILED_UNKNOWN_TEXT );
     }
+
+
+// --------------------------------------------------------------------------
+// CUpnpNoteHandler::ShowRendererInUseNoteL
+// Show "%U is already in use. Please try again later." - note.
+// --------------------------------------------------------------------------
+//
+void CUpnpNoteHandler::ShowRendererInUseNoteL( const TDesC& aDeviceName )
+    {
+    __LOG( "[UpnpCommand]\t CUpnpNoteHandler::ShowRendererInUseNoteL" );
+
+    // Load note text
+    HBufC* textFormat = StringLoader::LoadLC( 
+                                      R_COMMAND_RENDERER_IN_USE_TEXT );
+    HBufC* noteText = HBufC::NewLC( textFormat->Length() 
+                                  + aDeviceName.Length() );
+    noteText->Des().Format( textFormat->Des() , &aDeviceName );
+    // Create and launch the error note
+    CAknErrorNote* errorNote = new( ELeave ) CAknErrorNote;
+    errorNote->ExecuteLD( *noteText );
+    CleanupStack::PopAndDestroy( noteText );
+    CleanupStack::PopAndDestroy( textFormat );
+    }
+
 
 // --------------------------------------------------------------------------
 // CUpnpNoteHandler::RunWaitNote

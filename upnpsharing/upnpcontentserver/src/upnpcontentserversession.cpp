@@ -137,7 +137,9 @@ void CUpnpContentServerSession::ServiceL( const RMessage2& aMessage )
 void CUpnpContentServerSession::DispatchMessageL( const RMessage2& aMessage )
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
+    iHandler->InitializeL();
     iHandler->SetContentSharingObserverL( this );
+    
     switch( aMessage.Function() )
         {
     case ERequestSelectionContent :

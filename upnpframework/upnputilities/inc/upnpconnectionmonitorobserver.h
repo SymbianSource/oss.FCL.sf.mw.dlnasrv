@@ -37,7 +37,18 @@ public:
      *
      * @since S60 3.1
      */    
-    virtual void ConnectionLost() = 0;
+    virtual void ConnectionLost( TBool aUserOriented ) = 0;
+    /**
+     * This function will be called when Wlan connection is created
+     * @param aConnectionId Id of created connection.
+     */    
+    virtual void ConnectionCreated( TInt /*aConnectionId*/ ){}
+    /**
+     * This function will be called when access point requested 
+     * in NotifyIap function call is available.
+     * @param aIapId Id of access point.
+     */    
+    virtual void IapAvailable( TInt /*aIapId*/ ){}
     };
 
 #endif // M_UPNPCONNECTIONMONITOROBSERVER_H

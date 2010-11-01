@@ -34,7 +34,7 @@
 class CVideoRecorderUtility;
 
 // constants
-const TInt TMP4DecoderSpecificInfoSize = 16;
+const TInt TMP4DecoderSpecificInfoSize = 17;
 
 // NONE
 

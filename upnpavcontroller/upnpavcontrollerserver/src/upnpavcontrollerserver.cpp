@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -28,57 +28,49 @@
 
 // upnp stack
 #include <upnpdevice.h>
-
-// upnpframework / avcontroller api
-#include "upnpavcontrollerglobals.h"
-
-// upnpframework / internal api's
-#include "upnpconnectionmonitor.h"
-
-#include "upnpsecaccesscontroller.h"
-
-
-// avcontroller server internal
-#include "upnpavcontrollerserver.h"
-#include "upnpavcontrollersession.h"
-
 #include <upnpsettings.h>
 
+// dlnasrv / avcontroller api
+#include "upnpavcontrollerglobals.h"
+
+// dlnasrv / internal api's
+#include "upnpconnectionmonitor.h"
+
+// dlnasrv / avcontroller server internal
+#include "upnpavcontrollerserver.h"
+#include "upnpavcontrollersession.h"
 #include "upnpavcontrolpoint.h"
-
-
 #include "upnpavdispatcher.h"
 #include "upnpdevicerepository.h"
 #include "upnpavdeviceextended.h"
 #include "upnpaverrorhandler.h"
+#include "upnpavcpstrings.h"
 
 _LIT( KComponentLogfile, "upnpavcontrollerserver.txt" );
 #include "upnplog.h"
 
+using namespace UpnpAVCPStrings;
+
 // CONSTANTS
-_LIT8( KMediaServer,                    "MediaServer" );
 _LIT8( KUPnPRootDevice,                 "upnp:rootdevice" );
 
-const TInt KMaxDepth = 4;
-const TInt KMaxDeviceCount = 6;
+const TUint KMyRangeCount = 3;
 
-const TUint myRangeCount = 3;
-
-const TInt myRanges[ myRangeCount ] = 
+const TInt KMyRanges[ KMyRangeCount ] = 
     {
     0, // numbers 0-18
-    18, // numbers 18-81 
-    81 // numbers 81-KMaxInt
+    18, // numbers 18-EAVControllerRqstLast
+    EAVControllerRqstLast // numbers EAVControllerRqstLast-KMaxInt
     };
 
-const TUint8 myElementsIndex[ myRangeCount ] = 
+const TUint8 KMyElementsIndex[ KMyRangeCount ] = 
     {
     0, 
     1, 
     CPolicyServer::ENotSupported
     };
     
-const CPolicyServer::TPolicyElement myElements[] = 
+const CPolicyServer::TPolicyElement KMyElements[] = 
     {
     {_INIT_SECURITY_POLICY_C3(ECapabilityNetworkServices,
         ECapabilityReadUserData, ECapabilityWriteUserData ),
@@ -87,13 +79,13 @@ const CPolicyServer::TPolicyElement myElements[] =
         CPolicyServer::EFailClient}
     };
     
-const CPolicyServer::TPolicy myPolicy =
+const CPolicyServer::TPolicy KMyPolicy =
     {
     CPolicyServer::EAlwaysPass, //specifies all connect attempts should pass
-    myRangeCount,                   
-    myRanges,
-    myElementsIndex,
-    myElements,
+    KMyRangeCount,                   
+    KMyRanges,
+    KMyElementsIndex,
+    KMyElements,
     };
 
 // ============================ MEMBER FUNCTIONS ============================
@@ -103,9 +95,9 @@ const CPolicyServer::TPolicy myPolicy =
 // See upnpavcontrollerserver.h
 // --------------------------------------------------------------------------
 CUpnpAVControllerServer::CUpnpAVControllerServer( TInt aPriority ):
-    CPolicyServer( aPriority, myPolicy ),
+    CPolicyServer( aPriority, KMyPolicy ),
     iShutdownTimeoutValue( KTimerCycle10 ),
-    iServerState( EStateUndefined )
+    iState( EStateUndefined )
     {    
     }
 
@@ -116,17 +108,25 @@ CUpnpAVControllerServer::CUpnpAVControllerServer( TInt aPriority ):
 void CUpnpAVControllerServer::ConstructL()
     {
     __LOG( "CUpnpAVControllerServer::ConstructL" );
-                               
+
+    ChangeState( EStateStartingServer );
+
+    __LOG( "ConstructL - Starting server" );
+
+    // create av dispatcher
     iDispatcher = CUPnPAVDispatcher::NewL( *this );
+
+    // create av control point
+    iAVControlPoint = CUpnpAVControlPoint::NewL( *iDispatcher );    
     
-    iServerState = EStateStartingUp;
-
-    CUpnpSettings* settings = CUpnpSettings::NewL( KCRUidUPnPStack );
-    settings->Get( CUpnpSettings::KUPnPStackIapId, iIAP );
-    delete settings;    
-
-    User::LeaveIfError( iMediaServer.Connect() );
-    iMonitor = CUPnPConnectionMonitor::NewL( *this, iIAP );
+    // create device repository
+    iDeviceRepository = CUPnPDeviceRepository::NewL( *iAVControlPoint );
+    
+    iUpnpSettings = CUpnpSettings::NewL( KCRUidUPnPStack );
+    iUpnpSettings->Get( CUpnpSettings::KUPnPStackIapId, iIAP );
+    
+    iMonitor = CUPnPConnectionMonitor::NewL( iIAP );
+    iMonitor->SetObserver( *this );
     
     StartL( KAVControllerName );   
     
@@ -134,8 +134,9 @@ void CUpnpAVControllerServer::ConstructL()
         CUPnPAVTimer::ETimerServerShutdown );
     
     iServerTimer->Start( iShutdownTimeoutValue );
-    
-    iMSTimer = CUPnPAVTimer::NewL( *this, CUPnPAVTimer::ETimerMediaServer );
+
+    iIconDownloader = CUpnpDeviceIconDownloader::NewL( *this, iIAP );
+
     __LOG( "CUpnpAVControllerServer::ConstructL - Finished" );
     }
 
@@ -147,42 +148,41 @@ void CUpnpAVControllerServer::StartUpL()
     {
     __LOG( "CUpnpAVControllerServer::StartUpL" );
 
-    TInt error = KErrNone;
-    if( iServerState == EStateStartingUp )
+    if( iState == EStateStartingServer )
         {
-        __LOG( "StartUpL - Starting up" );
-              
-        
-        if( !iAVControlPoint )
-            {
-            __LOG( "CUpnpAVControllerServer::StartUpL - CP" );
+        ChangeState( EStateStartingControlPoint );
 
-            TRAP( error, iAVControlPoint = CUpnpAVControlPoint::NewL( 
-                                                               *iDispatcher ));
-            // If operation fails for some reason , the 10 second timeout 
-            // is completely useless and wrong in this case. 
-            // The server should be shut down immediately   
-            if( error != KErrNone )
-                {
-                iShutdownTimeoutValue = 0;   
-                User::Leave( error );
-                }
-            }
-        if( !iDeviceRepository )
+        __LOG( "StartUpL - Starting control point" );
+        
+        // start SSPD search
+        TInt err = KErrNone;
+        TRAP( err, iAVControlPoint->StartUpL() );
+        if( err == KErrNone )
             {
-            iDeviceRepository = CUPnPDeviceRepository::NewL( *iAVControlPoint );
+            __LOG( "StartUpL - Searching root device" );
+            
+            iAVControlPoint->SearchL( KUPnPRootDevice );
+            ChangeState( EStateRunning );
             }
-        iServerState = EStateRunning;  
-        }
-    else if( iServerState == EStateShuttingDown )
+        else
+            {
+            iShutdownTimeoutValue = 0;
+            User::Leave( err );
+            }
+        }        
+    else if( iState == EStateShuttingDown )
         {
         __LOG( "StartUpL - Wlan disconnected or shutting down, leave" );
         User::Leave( KErrDisconnected );
         }
+    else if( iState == EStateStartingControlPoint )
+        {
+        __LOG( "StartUpL - Already starting control point" );
+        }
     else
         {
-        __LOG( "StartUpL - Server running" );
-        }        
+        __LOG( "StartUpL - Server already running" );
+        }
 
     __LOG( "StartUpL - Completed" );    
     }
@@ -229,15 +229,9 @@ CUpnpAVControllerServer::~CUpnpAVControllerServer()
    
     delete iMonitor;
     delete iServerTimer;
-    delete iMSTimer;
-
-    iMediaServer.Close();
-
-    for( TInt i = 0; i < iStartMessages.Count(); i++ )
-        {
-        iStartMessages[ i ]->Complete( KErrCancel );
-        }
-    iStartMessages.ResetAndDestroy();  
+    
+    delete iUpnpSettings;
+    delete iIconDownloader;
     }
 
 // --------------------------------------------------------------------------
@@ -245,40 +239,92 @@ CUpnpAVControllerServer::~CUpnpAVControllerServer()
 // See upnpavcontrollerserver.h
 // --------------------------------------------------------------------------
 CSession2* CUpnpAVControllerServer::NewSessionL( const TVersion& aVersion,
-    const RMessage2& aMessage ) const
+    const RMessage2& /*aMessage*/ ) const
     {
     __LOG( "CUpnpAVControllerServer::NewSessionL" );
     
-    if( iServerState == EStateShuttingDown )
+    TInt err = KErrNone;
+    
+    // check if the server is shutting down
+    if( iState == EStateShuttingDown )
         {
-        __LOG( "NewSessionL - server shutting down, no new sessions \
-are allowed at this point" );
-        User::Leave( KErrDisconnected );
-        }
-    else if( iServerState == EStateStartingUp && iSessionCount > 0 )
-        {
-        __LOG( "NewSessionL - server starting up, no new sessions \
-are allowed at this point" );
-        User::Leave( KErrServerBusy );
+        __LOG( "NewSessionL - server shutting down, no new sessions are allowed at this point" );
+        err = KErrDisconnected;
         }
         
     // Check we're the right version
-    if ( !User::QueryVersionSupported( TVersion( 
+    else if ( !User::QueryVersionSupported( TVersion( 
             KAVControllerMajorVersionNumber,
             KAVControllerMinorVersionNumber,
             KAVControllerBuildVersionNumber ),
             aVersion ) )
         {
-        User::Leave( KErrNotSupported );
+        __LOG( "NewSessionL - incorrect client version" );
+        err = KErrNotSupported;
         }
+    
+    // leave if error
+    User::LeaveIfError( err );
 
     // Make new session
-    RThread client;
-    aMessage.Client(client);  
     return CUpnpAVControllerSession::NewL(
-        *(CUpnpAVControllerServer*)this );
+        const_cast<CUpnpAVControllerServer&>( *this ) );
     }
     
+// --------------------------------------------------------------------------
+// CUpnpAVControllerServer::ActionResponseL
+// From MUpnpAVControlPointObserver
+// --------------------------------------------------------------------------
+void CUpnpAVControllerServer::ActionResponseL( CUpnpAction* aAction )
+    {
+    if (aAction->Name().Compare( KGetProtocolInfo ) == 0)
+        {
+        const TDesC8& uuid = aAction->Service().Device().Uuid();
+        CmProtocolInfoResponse(
+            uuid,
+            aAction->Error(),
+            aAction->ArgumentValue( KSource ), 
+            aAction->ArgumentValue( KSink )
+            );
+        iDispatcher->UnRegister(aAction->SessionId());
+        }
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpAVControllerServer::StateUpdatedL
+// From MUpnpAVControlPointObserver
+// --------------------------------------------------------------------------
+void CUpnpAVControllerServer::StateUpdatedL( CUpnpService* /*aService*/ )
+    {
+    // No implementation required        
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpAVControllerServer::HttpResponseL
+// From MUpnpAVControlPointObserver
+// --------------------------------------------------------------------------
+void CUpnpAVControllerServer::HttpResponseL( CUpnpHttpMessage* /*aMessage*/ )
+    {
+    // No implementation required        
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpAVControllerServer::DeviceDiscoveredL
+// From MUpnpAVControlPointObserver
+// --------------------------------------------------------------------------
+void CUpnpAVControllerServer::DeviceDiscoveredL( CUpnpDevice* /*aDevice*/ )
+    {
+    // No implementation required        
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpAVControllerServer::DeviceDisappearedL
+// From MUpnpAVControlPointObserver
+// --------------------------------------------------------------------------
+void CUpnpAVControllerServer::DeviceDisappearedL(CUpnpDevice* /*aDevice*/)
+    {
+    // No implementation required        
+    }
 
 // --------------------------------------------------------------------------
 // CUpnpAVControllerServer::UPnPAVTimerCallback
@@ -292,46 +338,16 @@ void CUpnpAVControllerServer::UPnPAVTimerCallback(
 
     if( aType == CUPnPAVTimer::ETimerServerShutdown )
         {
-        iServerState = EStateShuttingDown;
-           
-        if( iMSTimer->IsActive() )
-            {
-            // if the Media Server timer is still running for some reason
-            iMSTimer->Cancel();
-            StopMediaServer();
-            }
+        ChangeState( EStateShutDown );
         CActiveScheduler::Stop();
         }
-    else if( aType == CUPnPAVTimer::ETimerMediaServer )
-        {
-        if( iStartingMS )
-            {
-            StopMediaServer();
-            TInt count = iStartMessages.Count();
-            for( TInt i = 0; i < count; i++ )
-                {
-                iStartMessages[ i ]->Complete( KErrTimedOut );
-                }
-            iStartMessages.ResetAndDestroy();
-            
-            iStartingMS = EFalse;
-            }
-        else // Shutting down
-            {
-            StopMediaServer();
-            }            
-        }
-    else
-        {
-        
-        }        
     }
 
 // --------------------------------------------------------------------------
 // CUpnpAVControllerServer::ConnectionLost
 // See upnpavcontrollerserver.h
 // --------------------------------------------------------------------------
-void CUpnpAVControllerServer::ConnectionLost()
+void CUpnpAVControllerServer::ConnectionLost( TBool /*aUserOriented*/ )
     {
     __LOG( "CUpnpAVControllerServer::ConnectionLost" );
     
@@ -339,9 +355,10 @@ void CUpnpAVControllerServer::ConnectionLost()
     // shut down the server immidiately after the last session has been
     // closed
     
-    if( iServerState == EStateRunning && iDeviceRepository )
+    if( iState == EStateRunning && iDeviceRepository )
         {
         __LOG( "ConnectionLost - Server running" );
+        
         iDeviceRepository->ConnectionLost();    
 
         CSession2* s;
@@ -355,12 +372,13 @@ void CUpnpAVControllerServer::ConnectionLost()
                 sess->ConnectionLost();    
                 }
             };  
-        iServerState = EStateShuttingDown;
+        ChangeState( EStateShuttingDown );
         }
-    else if (iServerState == EStateStartingUp )
+    else if( iState == EStateStartingServer )
         {
-        __LOG( "ConnectionLost - Server starting up" );
-        iServerState = EStateShuttingDown;
+        __LOG( "ConnectionLost - Server starting" );
+        
+        ChangeState( EStateShuttingDown );
         }    
 
     // If don't have any clients connect to server and current WLAN connection
@@ -381,13 +399,14 @@ void CUpnpAVControllerServer::ConnectionLost()
 // --------------------------------------------------------------------------
 TInt CUpnpAVControllerServer::RunError( TInt aError )
     {
-    __LOG( "CUpnpAVControllerServer::RunError" );
-       
+    __LOG2( "CUpnpAVControllerServer::RunError msg: %d err: %d",
+        Message().Function(), aError );
+
     if ( aError == KErrBadDescriptor )
         {
         PanicClient( Message(), EAVControllerServerBadDescriptor );
         }
-    else
+    else if ( !Message().IsNull() )
         {
         Message().Complete( aError );
         }
@@ -407,7 +426,7 @@ TInt CUpnpAVControllerServer::RunError( TInt aError )
 void CUpnpAVControllerServer::PanicClient(const RMessage2& aMessage,
     TAVControllerServerPanic aPanic)
     {
-    __LOG( "CUpnpAVControllerServer::PanicClient" );
+    __LOG1( "CUpnpAVControllerServer::PanicClient %d", aPanic );
        
     aMessage.Panic( KAVControllerName, aPanic );
     }
@@ -418,7 +437,7 @@ void CUpnpAVControllerServer::PanicClient(const RMessage2& aMessage,
 // --------------------------------------------------------------------------
 void CUpnpAVControllerServer::PanicServer(TAVControllerServerPanic aPanic)
     {
-    __LOG( "CUpnpAVControllerServer::PanicServer" );
+    __LOG1( "CUpnpAVControllerServer::PanicServer %d", aPanic );
     
     User::Panic( KAVControllerName, aPanic );
     }
@@ -449,101 +468,8 @@ void CUpnpAVControllerServer::ThreadFunctionL()
              
     CleanupStack::PopAndDestroy( server );  
     CleanupStack::PopAndDestroy( activeScheduler );
-    
-    }
 
-// --------------------------------------------------------------------------
-// CUpnpAVControllerServer::HandleEmbeddedDiscoveredDevicesL
-// See upnpavcontrollerserver.h
-// --------------------------------------------------------------------------
-void CUpnpAVControllerServer::HandleEmbeddedDiscoveredDevicesL(
-    CUpnpDevice& aDevice, TInt aDepth )
-    {
-    __LOG( "CUpnpAVControllerServer::HandleEmbeddedDiscoveredDevicesL" );
-    
-    if( aDepth <= KMaxDepth && iDiscoveredDeviceCount <= KMaxDeviceCount )
-        {
-        RPointerArray<CUpnpDevice>& devList = aDevice.DeviceList();
-        TInt count = devList.Count();
-        for( TInt i = 0; i < count; i++ )
-            {
-            iDeviceRepository->AddDeviceL( *devList[ i ] );
-            TInt sessionId = iAVControlPoint->CmProtocolInfoActionL(
-                devList[ i ]->Uuid() );
-            iDiscoveredDeviceCount++;    
-            
-            HandleEmbeddedDiscoveredDevicesL( *devList[ i ], ++aDepth );
-            }        
-        }
-    else
-        {
-        __LOG( "HandleEmbeddedDiscoveredDevicesL - max depth \
-or count reached" );
-        }    
-    }
-
-// --------------------------------------------------------------------------
-// CUpnpAVControllerServer::HandleEmbeddedDisappearedDevicesL
-// See upnpavcontrollerserver.h
-// --------------------------------------------------------------------------
-void CUpnpAVControllerServer::HandleEmbeddedDisappearedDevicesL(
-    CUpnpDevice& aDevice, TInt aDepth )
-    {
-    __LOG( "CUpnpAVControllerServer::HandleEmbeddedDisappearedDevicesL" );
-    
-    if( aDepth <= KMaxDepth && iDisappearedDeviceCount <= KMaxDeviceCount )
-        {
-        RPointerArray<CUpnpDevice>& devList = aDevice.DeviceList();
-        TInt count = devList.Count();
-        for( TInt i = 0; i < count; i++ )
-            {
-            CUpnpAVDeviceExtended& ext = iDeviceRepository->FindDeviceL(
-                devList[ i ]->Uuid() );
-            
-            CSession2* s;
-            iSessionIter.SetToFirst(); 
-            while ( ( s = iSessionIter++ ) != NULL )
-                {
-                CUpnpAVControllerSession* sess =
-                    static_cast<CUpnpAVControllerSession*>(s);
-                if( sess )
-                    {
-                    sess->DeviceDisappearedL( ext );    
-                    }
-                };        
-
-            iDeviceRepository->Remove( ext.Uuid() );
-            
-            iDisappearedDeviceCount++;    
-            
-            HandleEmbeddedDisappearedDevicesL( *devList[ i ], ++aDepth );
-            }        
-        }
-    else
-        {
-        __LOG( "HandleEmbeddedDisappearedDevicesL - max depth \
-or count reached" );
-        }    
-    }
-
-// --------------------------------------------------------------------------
-// CUpnpAVControllerServer::StopMediaServer
-// See upnpavcontrollerserver.h
-// --------------------------------------------------------------------------
-void CUpnpAVControllerServer::StopMediaServer()
-    {
-    __LOG( "CUpnpAVControllerServer::StopMediaServer" );
-    
-    if( iShutdownTimeoutValue )
-        {
-        __LOG( "StopMediaServer - normal shutdown" );
-        iMediaServer.Stop( RUpnpMediaServerClient::EStopNormal );
-        }
-    else
-        {
-        __LOG( "StopMediaServer - silent shutdown" );
-        iMediaServer.Stop( RUpnpMediaServerClient::EStopSilent );
-        }
+    __LOG( "CUpnpAVControllerServer::ThreadFunctionL end" );
     }
 
 // --------------------------------------------------------------------------
@@ -576,6 +502,8 @@ TInt CUpnpAVControllerServer::ThreadFunction()
        
     __UHEAP_MARKEND;
 
+    __LOG1( "CUpnpAVControllerServer::ThreadFunction end %d", err );
+
     return err;
     }
 
@@ -585,18 +513,14 @@ TInt CUpnpAVControllerServer::ThreadFunction()
 // --------------------------------------------------------------------------
 void CUpnpAVControllerServer::IncrementSessions() 
     {
-    __LOG( "CUpnpAVControllerServer::IncrementSessions" );
+    __LOG2( "CUpnpAVControllerServer::IncrementSessions, %d, %d", 
+            iSessionCount, iState );
     
     iSessionCount++;
     if( iServerTimer->IsActive() )
         {
         iServerTimer->Cancel();
-        __LOG( "IncrementSessions - make a search" );
-        if( iAVControlPoint )
-            {
-            TRAP_IGNORE( iAVControlPoint->SearchL( KUPnPRootDevice ) );
-            }
-        }   
+        }
     }
 
 // --------------------------------------------------------------------------
@@ -605,16 +529,20 @@ void CUpnpAVControllerServer::IncrementSessions()
 // --------------------------------------------------------------------------
 void CUpnpAVControllerServer::DecrementSessions()
     {
-    __LOG( "CUpnpAVControllerServer::DecrementSessions" );
+    __LOG2( "CUpnpAVControllerServer::DecrementSessions, %d, %d", 
+            iSessionCount, iState );
     
     iSessionCount--;
-    if ( iSessionCount <= 0 )
+    if( iState != EStateShutDown )
         {
-        if( iServerTimer->IsActive() )
+        if ( iSessionCount <= 0 )
             {
-            iServerTimer->Cancel();
+            if( iServerTimer->IsActive() )
+                {
+                iServerTimer->Cancel();
+                }
+            iServerTimer->Start( iShutdownTimeoutValue );
             }
-        iServerTimer->Start( iShutdownTimeoutValue );
         }
     }
 
@@ -626,30 +554,14 @@ void CUpnpAVControllerServer::DeviceDiscoveredL( CUpnpDevice& aDevice )
     {
     __LOG( "CUpnpAVControllerServer::DeviceDiscoveredL" );
 
-    if( aDevice.Local() && aDevice.DeviceType().Find( KMediaServer )
-        != KErrNotFound )
-        {
-        // It's the local S60 MS
-        
-        if( iStartingMS )
-            {
-            iMSTimer->Cancel();
-            }   
-        CUpnpSecAccessController* accessController = 
-            CUpnpSecAccessController::NewL();
-            __LOG( "CUpnpAVControllerServer::DeviceDiscoveredL \
-adding the local media server IP to the list of authorized addresses." );
-
-        accessController->AddAllowedAddress( aDevice.Address() );
-        delete accessController; 
-        accessController = NULL;
-        }
-        
     iDeviceRepository->AddDeviceL( aDevice );
-    TInt sessionId = iAVControlPoint->CmProtocolInfoActionL(
-        aDevice.Uuid() );
-    iDiscoveredDeviceCount = 1; // First (root) device
 
+    CUpnpAction* action = iAVControlPoint->CreateActionLC( 
+            &aDevice, KConnectionManager, KGetProtocolInfo );
+
+    iAVControlPoint->SendL( action ); // takes ownership
+    CleanupStack::Pop( action );
+    iDispatcher->RegisterL( action->SessionId(), *this );
     }
 
 // --------------------------------------------------------------------------
@@ -659,13 +571,6 @@ adding the local media server IP to the list of authorized addresses." );
 void CUpnpAVControllerServer::DeviceDisappearedL( CUpnpDevice& aDevice )
     {
     __LOG( "CUpnpAVControllerServer::DeviceDisappearedL" );
-    
-    if( aDevice.Local() && aDevice.DeviceType().Find( KMediaServer )
-        != KErrNotFound )
-        {  
-        // It's the local S60 MS
-        iMediaServerOnline = EFalse;
-        }
     
     // Get a corresponding device from the device repository
     CUpnpAVDeviceExtended& tmp = iDeviceRepository->FindDeviceL(
@@ -682,11 +587,12 @@ void CUpnpAVControllerServer::DeviceDisappearedL( CUpnpDevice& aDevice )
             {
             sess->DeviceDisappearedL( tmp );    
             }
-        };        
-            // Remove from the device repository
-    iDeviceRepository->Remove( aDevice.Uuid() );
-    iDisappearedDeviceCount = 1;
-    
+        };
+    // Remove from the device repository
+    TPtrC8 uuid( aDevice.Uuid() );
+    iDeviceRepository->Remove( uuid );
+    // Ensure that icon download is canceled
+    iIconDownloader->CancelDownload( uuid );
     }
 
 // --------------------------------------------------------------------------
@@ -714,133 +620,18 @@ void CUpnpAVControllerServer::DeviceDisappearedL( const TDesC8& aUuid )
         }       
     // Remove from the device repository
     iDeviceRepository->Remove( aUuid );
-    iDisappearedDeviceCount = 1;
+    // Ensure that icon download is canceled
+    iIconDownloader->CancelDownload( aUuid );
+
     __LOG( "CUpnpAVControllerServer::DeviceDisappearedL uid End" );
     }
 
-// --------------------------------------------------------------------------
-// CUpnpAVControllerServer::StartMediaServerL
-// See upnpavcontrollerserver.h
-// --------------------------------------------------------------------------
-void CUpnpAVControllerServer::StartMediaServerL( const RMessage2& aMessage )
-    {
-    __LOG( "CUpnpAVControllerServer::StartMediaServerL" );
-
-    if( iMediaServerOnline )
-        {
-        // Started already, complete the msg
-        iMSTimer->Cancel();
-        aMessage.Complete( EAVControllerStartMediaServerCompleted );
-        iServerUserCount++;
-        }
-    else
-        {
-        // Start the media server and timer
-        if( iStartMessages.Count() > 0 )
-            {
-            RMessage2* message = new (ELeave) RMessage2( aMessage );
-            iStartMessages.AppendL( message );
-            }
-        else
-            {
-            // Check if the stack's security is enabled
-            TBool upnpSecurityEnabled = EFalse;
-            TRAPD( secCheckError, upnpSecurityEnabled = 
-                CUpnpSecAccessController::IsMediaServerSecurityEnabledL() );
-
-            // If the security is not enabled, enable it now
-            if( secCheckError == KErrNone &&
-                !upnpSecurityEnabled )
-                {
-                TRAP_IGNORE( 
-                    CUpnpSecAccessController::EnableMediaServerSecurityL() );
-                }
-
-            RMessage2* message = new(ELeave) RMessage2( aMessage );
-            iStartMessages.AppendL( message );
-            User::LeaveIfError( iMediaServer.Start() );
-            iMSTimer->Start( iShutdownTimeoutValue );
-            iStartingMS = ETrue;
-            }    
-        }            
-    }
-    
-// --------------------------------------------------------------------------
-// CUpnpAVControllerServer::CancelStartMediaServerL
-// See upnpavcontrollerserver.h
-// --------------------------------------------------------------------------
-void CUpnpAVControllerServer::CancelStartMediaServerL(
-    const RMessage2& aMessage )
-    {
-    __LOG( "CUpnpAVControllerServer::CancelStartMediaServerL" );
-
-    if( !iMSActivatedBeforeStart )
-        {
-        StopMediaServer();
-        }
-
-    TInt count = iStartMessages.Count();
-    for( TInt i = 0; i < count; i++ )
-        {
-        iStartMessages[ i ]->Complete( KErrCancel );
-        }
-    iStartMessages.ResetAndDestroy();
-    iMSTimer->Cancel();
-    
-    aMessage.Complete( KErrNone );
-        
-    }
-
-// --------------------------------------------------------------------------
-// CUpnpAVControllerServer::StopMediaServerL
-// See upnpavcontrollerserver.h
-// --------------------------------------------------------------------------
-void CUpnpAVControllerServer::StopMediaServerL( const RMessage2& aMessage )
-    {
-    __LOG( "CUpnpAVControllerServer::StopMediaServerL" );
-    
-    if( iMediaServerOnline )
-        {
-        iServerUserCount--;
-        if( iServerUserCount <= 0 )
-            {
-            if( !iMSActivatedBeforeStart )
-                {
-                iMSTimer->Start( iShutdownTimeoutValue );
-                }
-            iServerUserCount = 0;
-            }
-        }
-    aMessage.Complete( KErrNone );
-    }
-
-// --------------------------------------------------------------------------
-// CUpnpAVControllerServer::MSServicesInUse
-// See upnpavcontrollerserver.h
-// --------------------------------------------------------------------------
-void CUpnpAVControllerServer::MSServicesInUse( const RMessage2& aMessage )
-    {
-    if( iServerUserCount > 0 || iStartingMS
-         || iMSTimer->IsActive()
-        )        
-        {
-        TPckg<TBool> resp0( ETrue );
-        aMessage.Write( 0, resp0 );        
-        }
-    else
-        {
-        TPckg<TBool> resp0( EFalse );
-        aMessage.Write( 0, resp0 );                
-        }    
-    aMessage.Complete( KErrNone );    
-    }
-    
 // --------------------------------------------------------------------------
 // CUpnpAVControllerServer::CmProtocolInfoResponse
 // See upnpavcontrollerserver.h
 // --------------------------------------------------------------------------
 void CUpnpAVControllerServer::CmProtocolInfoResponse( const TDesC8& aUuid,
-    TInt /*aSessionId*/, TInt aErr, const TDesC8& aSource,
+    TInt aErr, const TDesC8& aSource,
     const TDesC8& aSink )
     {
     __LOG1( "CUpnpAVControllerServer::CmProtocolInfoResponse, \
@@ -858,6 +649,12 @@ aErr = %d", aErr );
         if( err == KErrNone )    
             {
             // Device discovered and protocolinfo was retrieved successfully
+            // Start icon download if icon url is defined
+            TPtrC8 iconUrl( dev->IconUrl() );
+            if ( iconUrl.Length() > 0 )
+                {
+                TRAP_IGNORE( iIconDownloader->StartDownloadL( dev->Uuid(), iconUrl ) );
+                }
             CSession2* s;
             iSessionIter.SetToFirst(); 
             while ( ( s = iSessionIter++ ) != NULL )
@@ -868,32 +665,7 @@ aErr = %d", aErr );
                     {
                     TRAP_IGNORE( sess->DeviceDiscoveredL( *dev ) );    
                     }
-                };        
-            
-            if( dev->Local() )
-                {
-                iMediaServerOnline = ETrue;
-                
-                if( iStartingMS )
-                    {
-                    TInt count = iStartMessages.Count();
-                    for( TInt i = 0; i < count; i++ )
-                        {
-                        iStartMessages[ i ]->Complete(
-                            EAVControllerStartMediaServerCompleted );
-                        iServerUserCount++;    
-                        }
-                    iStartMessages.ResetAndDestroy();        
-                    
-                    iStartingMS = EFalse;                
-                    }
-                else
-                    {
-                    __LOG( "Sharing was enabled before AVC server start" );
-                    iMSActivatedBeforeStart = ETrue;
-                    }    
-                
-                }    
+                };
             }
         else
             {
@@ -910,39 +682,42 @@ aErr = %d", aErr );
         }        
     }
 
+// --------------------------------------------------------------------------
+// CUpnpAVControllerServer::TransferDeviceIconFileToClientL
+// See upnpavcontrollerserver.h
+// --------------------------------------------------------------------------
+void CUpnpAVControllerServer::TransferDeviceIconFileToClientL(
+        const RMessage2& aMessage, TInt aSlot, const TDesC8& aDeviceUuid )
+    {
+    return iIconDownloader->TransferFileToClientL( aMessage, aSlot, aDeviceUuid );
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpAVControllerServer::HandleFailedProtocolInfoResponse
+// See upnpavcontrollerserver.h
+// --------------------------------------------------------------------------
 void CUpnpAVControllerServer::HandleFailedProtocolInfoResponse(
     const TDesC8& aUuid )
     {
     __LOG( "CUpnpAVControllerServer::HandleFailedProtocolInfoResponse" );
     
-    CUpnpAVDeviceExtended* dev = NULL;
-    TRAPD( err, dev = &iDeviceRepository->FindDeviceL( aUuid ) )
-    if( err == KErrNone )
-        {
-        if( iStartingMS && dev->Local() )
-            {
-            __LOG( "HandleFailedProtocolInfoResponse - local, stop and \
-complete messages" );
-            
-            StopMediaServer();
-            
-            TInt count = iStartMessages.Count();
-            for( TInt i = 0; i < count; i++ )
-                {
-                iStartMessages[ i ]->Complete( err );
-                iServerUserCount++;    
-                }
-            iStartMessages.ResetAndDestroy();        
-            
-            iStartingMS = EFalse;
-            }                           
-        }
-    else
-        {
-        // Not found, no can do
-        __LOG( "HandleFailedProtocolInfoResponse - not found" );
-        }    
     iDeviceRepository->Remove( aUuid );
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpAVControllerServer::ChangeState
+// See upnpavcontrollerserver.h
+// --------------------------------------------------------------------------
+void CUpnpAVControllerServer::ChangeState( TAVControllerServerState aState )
+    {
+    __LOG( "CUpnpAVControllerServer::ChangeState" );
+    
+    if( iState != aState )
+        {
+        __LOG2( "ChangeState: Changing state [%d] -> [%d]",
+            iState, aState );
+        iState = aState;
+        }
     }
 
 // --------------------------------------------------------------------------
@@ -954,15 +729,6 @@ CUpnpAVControlPoint& CUpnpAVControllerServer::ControlPoint()
     return *iAVControlPoint;
     }
 
-// --------------------------------------------------------------------------
-// CUpnpAVControllerServer::MediaServer
-// See upnpavcontrollerserver.h
-// --------------------------------------------------------------------------
-RUpnpMediaServerClient& CUpnpAVControllerServer::MediaServer()
-    {
-    return iMediaServer;
-    }
-    
 // --------------------------------------------------------------------------
 // CUpnpAVControllerServer::Dispatcher
 // See upnpavcontrollerserver.h
@@ -981,11 +747,44 @@ CUPnPDeviceRepository& CUpnpAVControllerServer::DeviceRepository()
     return *iDeviceRepository;
     }
 
+// --------------------------------------------------------------------------
+// CUpnpAVControllerServer::IAP
+// See upnpavcontrollerserver.h
+// --------------------------------------------------------------------------
 TInt CUpnpAVControllerServer::IAP()
     {
     return iIAP;
     }
-    
+
+// --------------------------------------------------------------------------
+// CUpnpAVControllerServer::DeviceIconDownloadedL
+// See upnpavcontrollerserver.h
+// --------------------------------------------------------------------------
+void CUpnpAVControllerServer::DeviceIconDownloadedL( const TDesC8& aDeviceUuid,
+        TInt aError )
+    {
+    __LOG( "CUpnpAVControllerServer::DeviceIconDownloadedL" );
+    if ( aError == KErrNone )
+        {
+        // Get a corresponding device from the device repository
+        CUpnpAVDeviceExtended& tmp = iDeviceRepository->FindDeviceL(
+            aDeviceUuid );
+        // Let the clients know about downloaded icon
+        CSession2* s;
+        iSessionIter.SetToFirst(); 
+        while ( ( s = iSessionIter++ ) != NULL )
+            {
+            CUpnpAVControllerSession* sess =
+                static_cast<CUpnpAVControllerSession*>( s );
+            if ( sess )
+                {
+                sess->DeviceIconDownloadedL( tmp );
+                }
+            }
+        }
+    __LOG( "CUpnpAVControllerServer::DeviceIconDownloadedL End" );
+    }
+
 // ============================= LOCAL FUNCTIONS ============================
 
 // --------------------------------------------------------------------------

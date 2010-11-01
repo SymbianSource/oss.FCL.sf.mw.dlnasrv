@@ -31,6 +31,7 @@ class CUpnpAVDevice;
 class CUpnpAVDeviceExtended;
 class CUpnpDevice;
 class CUpnpAVControlPoint;
+class CUpnpStateVariable;
 
 /**
  * UPnP Device Repository. Stores UPnP devices with additional (protocolinfo)
@@ -79,7 +80,7 @@ public: // New functions
      *
      * @param aDevice UPnP Device
      */    
-    void AddDeviceL( CUpnpDevice& aDevice );
+    CUpnpAVDeviceExtended& AddDeviceL( CUpnpDevice& aDevice );
     
     /**
      * Adds protoconinfo to a device
@@ -143,8 +144,14 @@ private:
      */    
     void ParseDeviceServicesL( CUpnpDevice& aSource,
         CUpnpAVDeviceExtended& aTarget );
+    
+    void SetMaxVolume(CUpnpStateVariable* aVolumeState, CUpnpAVDeviceExtended& aTarget);
+    
+    void SetSeekCapabilityL(CUpnpStateVariable* seekModeStateVariable,
+        CUpnpAVDeviceExtended& aTarget);
 
-   
+    void SelectDeviceIconL( CUpnpDevice& aSource, CUpnpAVDeviceExtended& aTarget );
+
 private:
 
     CUpnpAVControlPoint&        iControlPoint; // Not own        

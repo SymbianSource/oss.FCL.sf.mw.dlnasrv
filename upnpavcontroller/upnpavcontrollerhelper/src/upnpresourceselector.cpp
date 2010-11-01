@@ -21,10 +21,11 @@
 
 
 // INCLUDE FILES
+// dlnasrv / mediaserver api
 #include <upnpitem.h>
-#include "upnpelement.h"
+#include <upnpelement.h>
 
-// upnpframework / avcontroller helper api
+// dlnasrv / avcontroller helper api
 #include "upnpitemutility.h" // ResourceFromItemL, GetResElements
 #include "upnpconstantdefs.h" // KElementRes
 #include "upnpresourceselector.h"

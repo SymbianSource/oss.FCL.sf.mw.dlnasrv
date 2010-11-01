@@ -20,7 +20,7 @@
 #include <upnpstring.h>
 #include <upnpdlnaprotocolinfo.h>
 #include <pathinfo.h>
-#include <centralrepository.h>
+#include <CentralRepository.h>
 
 #include "upnpmspathutility.h"
 #include "upnpcontentdirectoryglobals.h"
@@ -43,8 +43,12 @@ _LIT8( KMimeVideo,                "video" );
 _LIT8( KMimeImage,                "image" );
 _LIT8( KMimePlaylist,             "audio/mpegurl" );
 
-
+#if defined(__HN_31__) || defined(__HN_32__)
+const TUid KHnCRUidMediaServer = { 0x2000f87f }; //for parallel stack
+#else
 const TUid KCRUidMediaServer   = { 0x101F978F };
+#endif
+
 const TInt KDateStringLength        = 10;
 const TInt KDateTimeStringLength    = 19;
 const TInt KMaxDateStringLength     = 30;
@@ -82,8 +86,12 @@ CUPnPMSPathUtility* CUPnPMSPathUtility::NewLC()
     {
     CUPnPMSPathUtility* self = new( ELeave ) CUPnPMSPathUtility;
     CleanupStack::PushL( self );
+    #if defined(__HN_31__) || defined(__HN_32__)
+    self->ConstructL( KHnCRUidMediaServer );
+    #else
     self->ConstructL( KCRUidMediaServer );
-       return self;
+    #endif    
+    return self;
     }
 
 // ---------------------------------------------------------------------------
@@ -302,17 +310,24 @@ void CUPnPMSPathUtility::AppendYearMonthDayL(
     // Get the date-element
     TXmlEngElement dateElem;
     UpnpDomInterface::GetElementL( aItem, dateElem, KDate8 );
+    
     TTime date; date.HomeTime();
-    if ( !dateElem.IsNull( ) )
+    TInt offsetMonthDay = 1;
+    // Use date element time instead of current time,
+    // if element exist
+    if ( !dateElem.IsNull() )
         {
         UPnPDateAsTTimeL( dateElem.Value(), date );
-        }     
+        offsetMonthDay = 0;
+        }
     
     TDateTime ymd = date.DateTime();
     CheckBufferSpaceL( aPath, 11 ); //4(year)+2(month)+2(day)+3(\)
-    
+        
     aPath.AppendFormat( KYearMonthDayFormat(), 
-            ymd.Year(), ymd.Month()+1, ymd.Day()+1 );
+            ymd.Year(), 
+            ymd.Month() + offsetMonthDay, 
+            ymd.Day() + offsetMonthDay );
     
     }
 

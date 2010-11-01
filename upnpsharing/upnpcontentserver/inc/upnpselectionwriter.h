@@ -62,13 +62,6 @@ public: // Constructors and destructor
     void AppendItemL( const TPtrC aNewObject );
 
     /**
-     * Append index of succesfully shared container
-     * @since S60 3.1
-     * @param aIndex, Index of the container
-     */
-    void AppendStatusL( const TInt aIndex );
-
-    /**
      * Saves sharing state to central repository and updates shared albums
      * @since S60 3.1
      * @param aShareAllSelection, The selections type in UI( Share all \
@@ -107,11 +100,6 @@ private: //data
      * selection type
      */
     TInt                            iShareAllSelection;
-
-    /**
-     * array of succesfully shared containers.
-     */
-    RArray<TInt>           iOkItems;
 
     /**
      * array for albums/playlist

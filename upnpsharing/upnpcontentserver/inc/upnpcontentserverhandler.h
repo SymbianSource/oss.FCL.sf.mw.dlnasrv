@@ -28,24 +28,39 @@
 
 #include "upnpcontentserverdefs.h"
 #include "upnpcontentserverclient.h"
-#include "upnpcontentsharingao.h"
 #include "upnpcontentsharingobserver.h"
 #include "upnpsharingcallback.h"
 #include "upnpsharingrequest.h"
-
-#include "upnpmetadataobserver.h"
-#include "upnpcontainercheckerao.h"
-#include "upnpunsharerao.h"
+#include "upnpmediaserverclient.h"
+#include "upnpcontentsharerao.h"
 
 // FORWARD DECLARATIONS
-
 class CUpnpSelectionReader;
 class CUpnpContentMetadataUtility;
-class CUpnpContentSharingAo;
 class CUpnpSharingRequest;
 class CUpnpContentServer;
-class CUPnPPeriodic;
+class CUpnpCdsLiteObjectArray;
 
+
+/**
+ * Helper class for storing pending request
+ */
+class TUpnpPendingSharingRequest
+    {
+public:
+
+    /**
+     * Kind of operation this information is related to
+     * images&videos or playlists
+     */
+    TInt iMediaType;
+
+    /**
+     * Array containing requested sharing items.
+     */
+    RArray<TInt> iMarkedItems;
+
+    };
 
 /**
  *  A class to schedule the active objects in server
@@ -53,37 +68,22 @@ class CUPnPPeriodic;
  *  @since S60 3.1
  */
 class CUpnpContentServerHandler : public CBase,
-                                  public MUpnpSharingCallback,
-                                  public MUpnpMetadataObserver
+                                  public MUpnpSharingCallback
     {
-    /**
-     * Indicates internal state of the CUpnpContentServerHandler
-     */
-    enum THandlerState
-        {
-        ESchedulingSharing,
-        EWaitingUploads,
-        EProcessingUploads,
-        ENotActive
-        };
-
-    /**
-     * Indicates which active object is running
-     */
-    enum TSharingPhase
-        {
-        ESharingInActive,
-        ECheckDefaults,
-        EUnshare,
-        EShare
-        };
 
 public:
 
     /**
      * 2-phased constructor.
      */
-    static CUpnpContentServerHandler* NewL( CUpnpContentServer* aServer );
+    static CUpnpContentServerHandler* NewL(
+        CUpnpContentServer* aServer );
+
+    /**
+     * Perform initialization of the handler
+     * @since S60 5.2
+     */
+    void InitializeL();
 
     /**
      * C++ destructor.
@@ -95,7 +95,8 @@ public:
      * @since S60 3.1
      * @param aObserver Pointer to observer in session class
      */
-    void SetContentSharingObserverL( MUpnpContentSharingObserver* aObserver );
+    void SetContentSharingObserverL( 
+        MUpnpContentSharingObserver* aObserver );
 
     /**
      * Start the media server upload listener, leave if error
@@ -150,12 +151,6 @@ public:
     TBool CanStop() const;
 
     /**
-     * Callback from metadatautility to inform that refresh is completed
-     * @since S60 3.1
-     */
-    void RefreshDoneL();
-
-    /**
      * Switch media server offline, change internal states accordingly
      * @since S60 3.1
      */
@@ -188,16 +183,6 @@ public:
     void SetProgressL(
         const TInt& aProgress );
 
-    /**
-     * Cancel the current sharing operation
-     * @since S60 3.1
-     * @param aErr Error code
-     */
-    void ValidateDefaultContainersL();
-
-
-
-
 private:
     /**
      * C++ constructor.
@@ -207,9 +192,9 @@ private:
 
     /**
      * The main sharing loop
-     * @since S60 3.1
+     * @since S60 5.2
      */
-    void DoShareL( );
+    void DoShare( );
 
     /**
      * Cleanup  resources, also state variables are cleaned
@@ -231,21 +216,12 @@ private:
     TInt GetContainerId( const TInt aType ) const;
 
     /**
-     * Fill the progress info for aType
-     * @since S60 3.1
-     * @param aArr Array to store progress information
-     * @param aType Determines which container id is returned
-     */
-    void FillProgressInfoL(
-        RArray<TUpnpProgressInfo>& aArr,
-        const TInt aType );
-
-    /**
      * Set the values of the iImageVideoSharingReq or iMusicSharingReq
      * depending of aType
      * @since S60 3.1
      * @param aMarkedItems The new sharing selections
      * @param aType Type of sharing selections
+     * @param aPendingRequest Pending request or not
      */
     void SetSharingRequestL(
         const RArray<TInt>& aMarkedItems,
@@ -257,14 +233,132 @@ private:
      * @param aError Error code
      */
     void HandleError( TInt aError );
+    
+    /**
+     * Get filenames of currently selected playlists/albums
+     * @since S60 5.2
+     * @param aMarkedItems The new sharing selections
+     * @param aType Type of sharing selections (EImageAndVideo 
+     * or EPlaylist)
+     * @param aSharingType Type of sharing (EShareNone, EShareAll,
+     * EShareMany)
+     * @param aFilenames Array containing filenames
+     * @param aClfIds Array containing collection ids
+     */
+    void GetSelectionFilenamesL( const RArray<TInt>& aMarkedItems,
+        const TInt aType,
+        const TInt aSharingType,
+        CDesCArray& aFilenames,
+        CDesCArray& aClfIds );
 
     /**
-     * Perform CLF refresh in background
-     * @param aPtr Pointer to CUpnpContentServerHandler instance
-     * @return EFalse
+     * Get filenames of all image and video files
+     * @since S60 5.2
+     * @param aFilenames Array containing filenames
      */
-    static TInt RefreshClfL( TAny* aPtr );
+    void GetAllImageAndVideoFilenamesL(
+        CDesCArray& aFilenames );
+
+    /**
+     * Get filenames of all music files
+     * @since S60 5.2
+     * @param aFilenames Array containing filenames
+     */
+    void GetAllMusicFilenamesL(
+        CDesCArray& aFilenames );
+
+    /**
+     * Get filenames of currently selected albums
+     * @since S60 5.2
+     * @param aMarkedItems The new sharing selections
+     * @param aFilenames Array containing filenames
+     * @param aClfIds Array containing collection ids
+     */
+    void GetSelectedImgAndVideoFilenamesL(
+        const RArray<TInt>& aMarkedItems,
+        CDesCArray& aFilenames,
+        CDesCArray& aClfIds );
+
+    /**
+     * Get filenames of currently selected playlists
+     * @since S60 5.2
+     * @param aMarkedItems The new sharing selections
+     * @param aFilenames Array containing filenames
+     * @param aClfIds Array containing playlist ids
+     */
+    void GetSelectedMusicFilenamesL(
+        const RArray<TInt>& aMarkedItems,
+        CDesCArray& aFilenames,
+        CDesCArray& aClfIds );
     
+    /**
+     * Resolves files to be shared and unshared lists
+     * @since S60 5.2
+     * @param aClfFilePaths Array containing clf file paths
+     * @param aCdsObjects Array containing cds objects
+     * @param aToBeSharedFiles Array containing files to be shared
+     * @param aToBeUnsharedSharedFiles Array containing files to be unshared
+     * @param aType Type of sharing selections (EImageAndVideo 
+     * or EPlaylist
+     */
+    void CompareCdsToClfL( 
+        CDesCArray& aClfFilePaths, 
+        CUpnpCdsLiteObjectArray& aCdsObjects,
+        RArray<TFileName>& aToBeSharedFiles,
+        RArray<TFileName>& aToBeUnsharedSharedFiles,
+        const UpnpContentServer::TUpnpMediaType aType );
+    
+    /**
+     * Creates sharing request
+     * @since S60 5.2
+     * @param aType Type of sharing selections (EImageAndVideo 
+     * or EPlaylist)
+     * @param aSharingType Type of sharing (EShareNone, EShareAll,
+     * EShareMany)
+     */
+    void CreateSharingRequestL(
+        TInt aType, 
+        TInt aSharingType );
+
+    /**
+     * Sets sharing request information
+     * @since S60 5.2
+     * @param aType Type of sharing selections (EImageAndVideo 
+     * or EPlaylist)
+     * @param aShareArray Array containing filenames to be shared
+     * @param aUnshareArray Array containing filenames to be unshared
+     * @param aClfIds Array containing collection ids
+     */
+    void SetSharingRequestInfo(
+        TInt aType, 
+        RArray<TFileName>* aShareArray,
+        RArray<TFileName>* aUnshareArray,
+        CDesCArray* aClfIds );
+
+    /**
+     * Resets the pending request info
+     * @since S60 5.2
+     */
+    void ResetPendingRequestInfo();
+
+    /**
+     * Saves the pending request info
+     * @since S60 5.2
+     * @param aMarkedItems The new sharing selections
+     * @param aType Type of sharing selections (EImageAndVideo 
+     * or EPlaylist)
+     */
+    void SavePendingRequestInfoL(
+        const RArray<TInt>& aMarkedItems,
+        const TInt aType );
+        
+    /**
+     * Resolves the wanted sharing type based on the marked items
+     * @since S60 5.2
+     * @param aMarkedItems The new sharing selections
+     * @return  Sharing type (EShareNone, EShareAll, EShareMany)
+     */
+    TInt SharingType( const RArray<TInt>& aMarkedItems );
     
 private:
     /**
@@ -283,7 +377,7 @@ private:
      * The sharing engine
      * owned
      */
-    CUpnpContentSharingAo* iAo;
+    CUpnpContentSharerAo* iAo;
 
     /**
      * Pointer to corresponding session observer for returning results
@@ -298,19 +392,10 @@ private:
     CUpnpSelectionReader* iReader;
 
     /**
-     * Used to wait CLF refresh
+     * Currently processed media type, KErrNotFound if no sharing 
+     * ongoing
      */
-    CActiveSchedulerWait iWait;
-
-    /**
-     * Handlers current state
-     */
-    TInt iHandlerState;
-
-    /**
-     * Currently processed request index
-     */
-    TInt iBufferPosition;
+    TInt iOngoingSharingType;
 
     /**
      * The buffer for image and video sharing requests
@@ -325,30 +410,10 @@ private:
     CUpnpSharingRequest* iMusicSharingReq;
 
     /**
-     * The buffer for any sharing request which is not yet scheduled to run
-     * owned
+     * The array for any sharing request which is not yet scheduled 
+     * to run.
      */
-    CUpnpSharingRequest* iPendingSharingReq;
-
-    /**
-     * Ongoing sharing operation. See TSharingPhase
-     */
-    TInt iSharingPhase;
-
-    /**
-     * Active object checking the file structure of the media server
-     */
-    CUpnpContainerCheckerAo* iContainerChecker;
-
-    /**
-     * Active object handling the unsharing of items and containers
-     */
-    CUpnpUnsharerAo* iUnsharer;
-
-    /**
-     * Storage for ids of default containers
-     */
-    RArray<TInt> iDefaultContainerIds;
+    TUpnpPendingSharingRequest iPendingSharingReqInfo;
 
     /**
      * MediaServer Handle
@@ -362,18 +427,19 @@ private:
     TInt iErrorToClient;
 
     /**
-    * Flag to indicate if the iContainerChecker is created in
-    * staring sharing context
-    */
-    TBool iStartupCleaning;
-
-    /**
-     * The Publish subscribe key to deliver progress infromation about sharing
+     * The Publish subscribe key to deliver progress infromation about 
+     * sharing
      */
     RProperty iProgressProperty;
 
-    CUPnPPeriodic* iIdle;
+    /**
+     * Sharing algorithm for handling sharing and unsharing operations
+     * Owned
+     */
+    MUpnpSharingAlgorithm* iSharingAlgorithm;
     
     };
 
 #endif // __UPNPCONTENTSERVERHANDLER_H__
+
+// End of file

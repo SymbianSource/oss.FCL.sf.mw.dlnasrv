@@ -132,8 +132,8 @@ EXPORT_C void CUPnPAlbumServices::ListAlbumsL(
 
     RArray<TMPXAttribute> attrs;
     CleanupClosePushL( attrs );
-    attrs.AppendL( KMPXMediaGeneralId );
-    attrs.AppendL( KMPXMediaGeneralTitle );
+    attrs.Append( KMPXMediaGeneralId );
+    attrs.Append( KMPXMediaGeneralTitle );
 
     // Get album list from collection. Callback to HandleCollectionMediaL
     iCollectionUtility->Collection().MediaL( *path, attrs.Array() );
@@ -368,8 +368,8 @@ EXPORT_C TBool CUPnPAlbumServices::IsValidAlbumL(
 
     RArray<TMPXAttribute> attrs;
     CleanupClosePushL( attrs );
-    attrs.AppendL( KMPXMediaGeneralId );
-    attrs.AppendL( KMPXMediaGeneralTitle );
+    attrs.Append( KMPXMediaGeneralId );
+    attrs.Append( KMPXMediaGeneralTitle );
 
     // Get album data. Callback to HandleCollectionMediaL
     iCollectionUtility->Collection().MediaL( *mediaPath, attrs.Array() );

@@ -65,12 +65,20 @@ public:
 
     /**
      * Notifies that the WLAN connection has been lost. All sessions
-     * are now usable and must be closed.
+     * are now unusable and must be closed.
      *
      * @since Series 60 3.1
      * @return None
      */        
     virtual void WLANConnectionLost() = 0;       
+
+    /**
+     * Notifies that the device icon download has completed and icon is readable by 
+     * MUPnPAVController::GetDeviceIconL().
+     *
+     * @param aDevice CUpnpDevice object
+     */
+    virtual void UPnPDeviceIconDownloaded( const CUpnpAVDevice& /*aDevice*/ ) {}
 
     };
 

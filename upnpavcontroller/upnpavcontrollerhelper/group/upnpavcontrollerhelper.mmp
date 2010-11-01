@@ -21,10 +21,13 @@
 
 
 #include "../../../group/upnpplatformvar.hrh"
+#include "../../../inc/upnpframeworkfeatures_mmp.hrh" // __UPNP_CONSOLE_MT__
 
 TARGET          upnpavcontrollerhelper.dll
 TARGETTYPE      dll
 UID             0x1000008D 0x20009CA8
+
+EPOCALLOWDLLDATA
 
 CAPABILITY      CAP_GENERAL_DLL
 VENDORID        VID_DEFAULT
@@ -44,10 +47,15 @@ SOURCE          upnpresourceselector.cpp
 SOURCE          upnpabstractbrowsingsessionobserver.cpp
 SOURCE          upnpabstractrenderingsessionobserver.cpp
 SOURCE          upnpinternalfileutility.cpp
+SOURCE          upnppushserver.cpp
+#ifdef UPNP_USE_GSTREAMER
+SOURCE          upnptranscodehelper.cpp
+#endif
 
 USERINCLUDE     ../inc
 USERINCLUDE     ../../inc
 
+// System include paths
 MW_LAYER_SYSTEMINCLUDE 
 USERINCLUDE   ../../../inc
 
@@ -61,18 +69,26 @@ LIBRARY         cafutils.lib // WM-DRM
 LIBRARY         efsrv.lib // RFs
 LIBRARY         PlatformEnv.lib // PathInfo
 LIBRARY         insock.lib // TInetAddr
+LIBRARY         esock.lib // TSockAddr 
 
-// S60 upnp stack
+// dlnasrv
 LIBRARY         upnpavobjects.lib // CUpnpObject, ...
 LIBRARY         upnpipserversutils.lib // CUpnpDlnaProtocolInfo
 LIBRARY         avmediaserverclient.lib // file sharing
-
-// other upnp components
 LIBRARY         upnpavcontrollerclient.lib
 LIBRARY         upnpxmlparser.lib // browse response
 LIBRARY         upnputilities.lib // CreateItemFromFileLC
 LIBRARY         upnpsettingsengine.lib // SettingsEngine
 LIBRARY         upnpsecurity.lib // SecAccessController
+LIBRARY         dlnawebserver.lib // MUpnpHttpServerObserver
+LIBRARY         avcontentdirectory.lib //upnpdlnafilter
+LIBRARY         mpxcollectionhelper.lib
+LIBRARY         mpxcommon.lib
+LIBRARY         upnpthumbnailcreator.lib
+LIBRARY         dlnaprofiler.lib
+#ifdef UPNP_USE_GSTREAMER
+LIBRARY         upnpgstwrapper.lib
+#endif
 
 // debug
 DEBUGLIBRARY    flogger.lib

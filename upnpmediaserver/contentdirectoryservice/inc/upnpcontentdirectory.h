@@ -25,7 +25,7 @@
 #include "upnpelementfactory.h"
 
 // new xml
-#include <xml/dom/xmlengdom.h>
+#include <xmlengdom.h>
 
 #include "upnpfiletransfer.h"
 #include "upnpcontentdirectorydatafinder.h"
@@ -515,7 +515,8 @@ private://private methods
     * @param aObjId - objecty id for which title will be retrieved. 
     * @return pointer to HBufC, with specified value. 
     */
-    HBufC* GetFileNameL( TInt aObjId );    
+    HBufC* GetFileNameL( TInt aObjId );   
+    HBufC* GetCopyFileNameL( TInt aObjId );  
     HBufC* GetFileNameWithoutPathL( TInt aObjId );
     
     /**

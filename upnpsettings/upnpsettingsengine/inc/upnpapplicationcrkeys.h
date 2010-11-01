@@ -26,7 +26,7 @@
 #include <e32std.h>
 
 /**
- * Software Installer settings
+ * Common upnp settings
  *
  */
 const TUid KCRUidUPnPApplication = {0x20009cae};

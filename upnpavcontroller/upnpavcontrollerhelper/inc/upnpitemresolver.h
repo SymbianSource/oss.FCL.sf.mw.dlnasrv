@@ -33,7 +33,7 @@ class MUPnPResourceSelector;
 class MUPnPItemResolverObserver;
 class CUpnpItem;
 class CUpnpElement;
-
+class CUpnpAVDevice;
 // CLASS DECLARATION
 
 /**
@@ -72,7 +72,7 @@ public: // the interface
      * @param aSelector selects the desider resource
      */
     virtual void ResolveL(
-        MUPnPItemResolverObserver& aObserver ) = 0;
+        MUPnPItemResolverObserver& aObserver, CUpnpAVDevice* aDevice=NULL ) = 0;
 
     /**
      * access to the resolved item.

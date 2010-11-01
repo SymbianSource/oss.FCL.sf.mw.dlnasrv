@@ -15,17 +15,10 @@
 *
 */
 
-
-
-
-
-
-
 // INCLUDE FILES
 #include "upnpsharingrequest.h"
 #include "upnpcontentserverdefs.h"
 
-const TInt KDefaultItemCount = 2^32; //4294967296
 
 using namespace UpnpContentServer;
 
@@ -38,27 +31,13 @@ using namespace UpnpContentServer;
 // --------------------------------------------------------------------------
 //
 
-CUpnpSharingRequest::CUpnpSharingRequest( TInt aKind )
+CUpnpSharingRequest::CUpnpSharingRequest( 
+    TUpnpMediaType aMediaType, 
+    TInt aSharingType ) :
+    iMediaType( aMediaType ),
+    iSharingType( aSharingType )
     {
-    iKind = aKind;
-    iItemCount = KDefaultItemCount;
-    }
-
-// --------------------------------------------------------------------------
-// CUpnpSharingRequest::ConstructL
-// Symbian 2nd phase constructor can leave.
-// --------------------------------------------------------------------------
-//
-void CUpnpSharingRequest::ConstructL( const RArray<TInt>& aArr, 
-                                      CDesCArray* aIdArray,
-                                      CDesCArray* aNameArray )
-    {
-    for ( TInt i(0); i<aArr.Count();i++ )
-        {
-        iSelections.AppendL( aArr[ i ] );
-        }
-    iObjectIds = aIdArray; // transfer ownership
-    iObjectNames = aNameArray;
+    // empty
     }
 
 // --------------------------------------------------------------------------
@@ -66,30 +45,56 @@ void CUpnpSharingRequest::ConstructL( const RArray<TInt>& aArr,
 // Two-phased constructor.
 // --------------------------------------------------------------------------
 //
-CUpnpSharingRequest* CUpnpSharingRequest::NewL(
-    TInt aKind,
-    const RArray<TInt>& aArr,
-    CDesCArray* aIdArray,
-    CDesCArray* aNameArray )
+CUpnpSharingRequest* CUpnpSharingRequest::NewL( 
+    TUpnpMediaType aMediaType, 
+    TInt aSharingType )
     {
-    CUpnpSharingRequest* self = new (ELeave) CUpnpSharingRequest( aKind );
+    CUpnpSharingRequest* self = 
+        new (ELeave) CUpnpSharingRequest( aMediaType, aSharingType );
     CleanupStack::PushL( self );
-    self->ConstructL( aArr,
-                      aIdArray,
-                      aNameArray );
+    self->ConstructL();
     CleanupStack::Pop( self );
     return self;
     }
 
 // --------------------------------------------------------------------------
-// CUpnpSharingRequest::NewL
+// CUpnpSharingRequest::SetSharingRequestInfoL
+// Sets sharing request information arrays
+// --------------------------------------------------------------------------
+// 
+void CUpnpSharingRequest::SetSharingRequestInfo( 
+    RArray<TFileName>* aShareArr,
+    RArray<TFileName>* aUnshareArr,
+    CDesCArray* aClfIds )
+    {
+    // take ownership of the arrays
+    iShareArr = aShareArr;
+    iUnshareArr = aUnshareArr;
+    iClfIds = aClfIds;
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpSharingRequest::~CUpnpSharingRequest
 // Destructor
 // --------------------------------------------------------------------------
 // 
 CUpnpSharingRequest::~CUpnpSharingRequest()
     {
-    iSelections.Close();
-    delete iObjectIds;
+    // Destructor
+    if ( iShareArr )
+        {
+        iShareArr->Close();
+        delete iShareArr;
+        }
+    if ( iUnshareArr )
+        {
+        iUnshareArr->Close();
+        delete iUnshareArr;
+        }
+    if ( iClfIds )
+        {
+        delete iClfIds;
+        }
     }
 
 

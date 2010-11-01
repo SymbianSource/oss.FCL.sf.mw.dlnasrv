@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -18,24 +18,21 @@
 
 
 
-
-
 #ifndef UPNPLOCALITEMRESOLVER_H
 #define UPNPLOCALITEMRESOLVER_H
 
 //  INCLUDES
 #include <e32base.h>
-#include "upnpavbrowsingsessionobserver.h" // base class
 #include "upnpitemresolver.h" // base class
-#include <upnpmediaserverclient.h> // a member
+#include "upnpthumbnailcreator.h"
 
 // FORWARD DECLARATIONS
 class MUPnPAVController;
-class MUPnPAVBrowsingSession;
-class CUpnpFileSharing;
 class CUpnpItem;
-class CUpnpSecAccessController;
-class CUPnPPeriodic;
+class MUPnPItemResolverObserver;
+class MMPXCollectionHelper;
+class CUpnpAVDevice;
+class CUpnpTranscodeHelper;
 
 // CLASS DECLARATION
 
@@ -48,9 +45,9 @@ class CUPnPPeriodic;
 * @since S60 3.2
 */
 class CUPnPLocalItemResolver
-    : public CActive
-    , public MUPnPAVBrowsingSessionObserver
+    : public CBase
     , public MUPnPItemResolver
+    , public MUpnpThumbnailCreatorObserver
     {
 public: // construction/destruction
 
@@ -97,26 +94,15 @@ private:
      */
     void ConstructL( const TDesC& aFilePath );
 
-private: // Business logic methods
 
-    /**
-     * Allows/denied access to the files to which the given item's res-
-     * elements are pointing.
-     *
-     * @since Series 60 3.2
-     * @param aItem the item
-     * @param aAccessAllowed ETrue to allow and EFalse to deny the access
-     */
-    void SetAccesstoItemResources( CUpnpItem& aItem, TBool aAccessAllowed );
-
-public: // the interface
+private: 
 
     /**
      * see UPnPItemResolver
      */
     void ResolveL(
         MUPnPItemResolverObserver& aObserver
-        );
+        , CUpnpAVDevice* aDevice = NULL);
 
     /**
      * see UPnPItemResolver
@@ -128,124 +114,41 @@ public: // the interface
      * see UPnPItemResolver
      */
     const CUpnpElement& Resource() const;
-    
-protected: // From CActive
-
-    /**
-     * See CActive
-     */
-    void RunL();
-    
-    /**
-     * See CActive
-     */
-    void DoCancel();
-    
-    /**
-     * See CActive
-     */
-    TInt RunError( TInt aError );
-
-protected: // overrides to CUPnPBrowsingSessionObserverProxy
-
-
-    /**
-     * see MUPnPAVSessionObserverBase
-     */
-    void ReserveLocalMSServicesCompleted( TInt aError );
 
 
 private: // private methods
 
-    /**
-     * initiate the sharing process
-     */
-    void DoShareL();
+	/**
+	 * shares upnpitem
+	 */
+    void ShareL();
     
-    /**
-     * initiate the unsharing process
-     */
-    void DoUnshareL();
-
-    /**
-     * Completes ongoing async operation
-     */
-    void Complete( TInt aError );
-
     /**
      * Clean up all resources
      */
     void Cleanup();
 
     /**
-     * internal state machinery
+     * checks if media "song" file has a album art 
+	 *
+     * @param aFileName filepath to media
      */
-    enum TInternalState {
-        EStateIdle,         // no data, ready for starting
-        EStateCreatingItem, // CreateItemFromFileLC called
-        EStateStartingMS,   // starting the local mediaserver
-		EStateSharing,      // sharing the local file
-		EStateUnsharing,    // unsharing the local file
-        EStateReady,        // Ready. Can free.
-		EStateCancel		// command to cancel ongoing process
-    };        
-        
-private: // Call back methods of MUPnPAVBrowsingSessionObserver
-
-    /* Not used */
-    void BrowseResponse(
-        const TDesC8& /*aBrowseResponse*/,
-        TInt /*aError*/,
-        TInt /*aMatches*/,
-        TInt /*aTotalCount*/,
-        const TDesC8& /*aUpdateId*/
-        ) {}
-    void SearchResponse( 
-        const TDesC8& /*aSearchResponse*/,
-        TInt /*aError*/,
-        TInt /*aMatches*/,
-        TInt /*aTotalCount*/,
-        const TDesC8& /*aUpdateId*/
-        ) {}
-    void SearchCapabilitiesResponse( 
-        TInt /*aError*/,
-        const TDesC8& /*aSearchCapabilities*/ 
-        ) {}
-    void CreateContainerResponse( TInt /*aError*/, 
-        const TDesC8& /*aObjectId*/ ) {}
-    void DeleteObjectResponse( TInt /*aError*/ ) {}  
-
-    void MediaServerDisappeared(
-        TUPnPDeviceDisconnectedReason /*aReason*/ ) {}
+    void SetAlbumArtResourceToItemL( const TDesC& aFileName );
     
+private:
+    void ThumbnailCreatorReady( TInt aError);
     
-private: // Timer callback
-    /**
-     * timer callback
-     * unsharing is sometimes jammed and timer is used for cancelling
-     * unshare call
-     */
-   static TInt TimerExpired( TAny* aArg );
+    void AddAlbumArtAndShareL();
+    
+    void AddThumbnailandShareL();
 
 private: // members
-
-    // local file path (Owned).
-    HBufC* iFilePath;
-
-    // avcontroller
-    MUPnPAVController& iAvController;
-
-    // temporary session for starting local mediaserver
-    MUPnPAVBrowsingSession* iTempSession;
 
     // resource selector
     MUPnPResourceSelector& iSelector;
 
-    // observer for this utility. Note: NOT OWNED
-    MUPnPItemResolverObserver* iObserver;
-
-    // state of the class
-    TInternalState iState;
+    // local file path (Owned).
+    HBufC* iFilePath;
 
     // the first level browse result item (Owned).
     CUpnpItem* iSharedItem;
@@ -253,23 +156,19 @@ private: // members
     // The selected resource within the last level item.
     const CUpnpElement* iResource;
 
-    // The mediaserver (required to get the server IP address)
-    RUpnpMediaServerClient iMediaServer;
-
     // optimisation flags
     TInt iOptimisationFlags;
 
-    // S60 file sharing metadata interface
-    CUpnpFileSharing* iFileSharing;
+    CUpnpThumbnailCreator* iThumbnailCreator;
 
-    // security access controller
-    CUpnpSecAccessController* iAccessController;
+    MUPnPItemResolverObserver* iObserver;
     
-    // wait until unshare finishes
-    CActiveSchedulerWait*   iWait;
+    CUpnpItem* iLocalItem;
     
-    // timer to cancel unshare
-    CUPnPPeriodic*          iTimer;
+	// owned
+    MMPXCollectionHelper* iCollectionHelper;
+	
+    CUpnpTranscodeHelper* iTranscodeHelper;
     };
 
 

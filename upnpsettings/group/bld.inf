@@ -22,27 +22,13 @@ PRJ_PLATFORMS
 
 PRJ_EXPORTS
 
+// LOC files
+UPNP_LOC_EXPORT(upnpsettings.loc)
+
 PRJ_MMPFILES
+// none
 
-// settings engine
-#include "../upnpsettingsengine/group/bld.inf"
+    // settings engine
+    #include "../upnpsettingsengine/group/bld.inf"
 
-// Exports for upnpsettings
-#include "../rom/bld.inf"
-
-#ifdef FF_UPNP_FRAMEWORK_2_0  // UPnP feature flag
-    // multiselectionui
-    #include "../multiselectionui/group/bld.inf"
-
-    // upnp setup wizard
-    #include "../appwizard/group/bld.inf"
-
-    // Sharing ui
-    #include "../upnpsharingui/group/bld.inf"
-
-    // GS plugin
-    #include "../upnpgsplugin/group/bld.inf"
-
-#endif // FF_UPNP_FRAMEWORK_2_0
-
-// end of file
+// End of file

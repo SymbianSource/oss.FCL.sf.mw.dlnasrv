@@ -180,7 +180,7 @@ EXPORT_C void RUpnpContentServerClient::GetSelectionContentL(
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
 
- /*   delete iSendBuffer;
+    delete iSendBuffer;
     iSendBuffer = NULL;
     iSendBuffer = CBufFlat::NewL( KTintSize );
 
@@ -200,7 +200,7 @@ EXPORT_C void RUpnpContentServerClient::GetSelectionContentL(
     SendReceive( ERequestSelectionContent,
                  TIpcArgs( &iSendBufferPtr, &iContentBufferPtr ), 
                  aStatus );
-    CleanupStack::PopAndDestroy( &sendstream );*/
+    CleanupStack::PopAndDestroy( &sendstream );
 
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
@@ -298,7 +298,7 @@ EXPORT_C void RUpnpContentServerClient::RefreshSharedContentL(
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
 
- /*   delete iSendBuffer;
+    delete iSendBuffer;
     iSendBuffer = NULL;
     iSendBuffer = CBufFlat::NewL( KTintSize );
 
@@ -312,7 +312,7 @@ EXPORT_C void RUpnpContentServerClient::RefreshSharedContentL(
     SendReceive( ERefreshShareContent,
                  TIpcArgs( &iSendBufferPtr ),
                  aStatus );
-    CleanupStack::PopAndDestroy( &stream );*/
+    CleanupStack::PopAndDestroy( &stream );
 
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
@@ -328,7 +328,7 @@ EXPORT_C void RUpnpContentServerClient::GetSelectionIndexesL(
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
 
-  /*  delete iSendBuffer;
+    delete iSendBuffer;
     iSendBuffer = NULL;
     iSendBuffer = CBufFlat::NewL( KTintSize );
 
@@ -345,7 +345,7 @@ EXPORT_C void RUpnpContentServerClient::GetSelectionIndexesL(
     SendReceive( EGetSelectionIndexes,
                  TIpcArgs( &iSendBufferPtr, &iReceiveBufferPtr ),
                  aStatus );
-    CleanupStack::PopAndDestroy( &sendstream );*/
+    CleanupStack::PopAndDestroy( &sendstream );
 
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
@@ -397,7 +397,7 @@ EXPORT_C void RUpnpContentServerClient::StartConnectionMonitorL(
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
 
-   /* delete iSendBuffer;
+    delete iSendBuffer;
     iSendBuffer = NULL;
     iSendBuffer = CBufFlat::NewL( KTintSize );
 
@@ -411,7 +411,7 @@ EXPORT_C void RUpnpContentServerClient::StartConnectionMonitorL(
     SendReceive( EStartConnectionMonitor,
                  TIpcArgs( &iSendBufferPtr ),
                  aStatus );
-    CleanupStack::PopAndDestroy( &sendstream );*/
+    CleanupStack::PopAndDestroy( &sendstream );
 
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }

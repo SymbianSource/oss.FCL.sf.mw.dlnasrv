@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -21,11 +21,11 @@
 
 
 // INCLUDES
-// upnp stack api
+// dlnasrv / mediaserver api
 #include <upnpitem.h>
 #include <upnpobjectlist.h>
 
-// upnpframework / avcontroller api
+// dlnasrv / avcontroller api
 #include "upnpavdevice.h"
 #include "upnpavcontrollerglobals.h"
 #include "upnpavrenderingsessionobserver.h"
@@ -157,39 +157,6 @@ const CUpnpAVDevice& CUPnPAVRenderingSessionImpl::Device() const
     }
 
 // --------------------------------------------------------------------------
-// CUPnPAVRenderingSessionImpl::ReserveLocalMSServicesL
-// See upnpavrenderingsessionimpl.h
-// --------------------------------------------------------------------------
-void CUPnPAVRenderingSessionImpl::ReserveLocalMSServicesL()
-    {  
-    ResetL();
-    
-    iCommandActive->ReserveLocalMSServicesL();       
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPAVRenderingSessionImpl::CancelReserveLocalMSServicesL
-// See upnpavrenderingsessionimpl.h
-// --------------------------------------------------------------------------
-void CUPnPAVRenderingSessionImpl::CancelReserveLocalMSServicesL()
-    {
-    ResetL();
-    
-    iCommandActive->CancelReserveLocalMSServicesL();  
-    }
-
-// --------------------------------------------------------------------------
-// CUPnPAVRenderingSessionImpl::ReleaseLocalMSServicesL
-// See upnpavrenderingsessionimpl.h
-// --------------------------------------------------------------------------
-void CUPnPAVRenderingSessionImpl::ReleaseLocalMSServicesL()
-    {  
-    ResetL();
-    
-    iCommandActive->ReleaseLocalMSServicesL();
-    }
-
-// --------------------------------------------------------------------------
 // CUPnPAVRenderingSessionImpl::SetURIL
 // See upnpavrenderingsessionimpl.h
 // --------------------------------------------------------------------------
@@ -299,7 +266,59 @@ void CUPnPAVRenderingSessionImpl::GetPositionInfoL()
     {
     ResetL();
     
-    iSettingActive->GetPositionInfoL();               
+    iCommandActive->GetPositionInfoL();               
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPAVRenderingSessionImpl::SeekRelTimeL
+// See upnpavrenderingsessionimpl.h
+// --------------------------------------------------------------------------
+void CUPnPAVRenderingSessionImpl::SeekRelTimeL( const TTime& aDesiredTime ) 
+    {
+    ResetL();
+    
+    iCommandActive->SeekRelTimeL( aDesiredTime );
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPAVRenderingActive::GetRendererStateL
+// See upnpavrenderingactive.h
+// --------------------------------------------------------------------------
+TUPnPAVInteractOperation CUPnPAVRenderingSessionImpl::GetRendererStateL()
+    {
+    __LOG( "CUPnPAVRenderingSessionImpl::GetRendererStateL" );
+    
+    ResetL();
+    
+    TUnsolicitedEventE event;
+    TPckg<TUnsolicitedEventE> pckg( event );
+    User::LeaveIfError( iServer.GetRendererState( (TInt)this, pckg ) );
+    
+    TUPnPAVInteractOperation op( EUPnPAVStopUser );
+    switch( event )
+        {
+        case EPlay:
+            {
+            op = EUPnPAVPlayUser;
+            }
+            break;       
+        case EStop:
+            {
+            op = EUPnPAVStopUser;
+            }
+            break;       
+        case EPause:
+            {
+            op = EUPnPAVPauseUser;
+            }
+            break;    
+        default:
+            {
+            __PANIC( __FILE__, __LINE__ );
+            }
+        }
+    
+    return op;
     }
 
 // --------------------------------------------------------------------------
@@ -384,6 +403,12 @@ void CUPnPAVRenderingSessionImpl::EventReceived( TInt aError,
                 {
                 iObserver->MuteResult( aError, (TBool)aEvent.iValue,
                     EFalse );
+                break;
+                }
+            case ETransition:
+                {
+                iObserver->InteractOperationComplete( aEvent.iValue,
+                    EUPnPAVTransition );                
                 break;
                 }
             default:

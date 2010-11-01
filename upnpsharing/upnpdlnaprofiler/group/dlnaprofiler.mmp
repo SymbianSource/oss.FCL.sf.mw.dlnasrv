@@ -60,8 +60,10 @@ LIBRARY                 3gpmp4lib.lib
 LIBRARY                 inetprotutil.lib // EscapeUtils::ConvertFromUnicodeToUtf8L
 
 // From UPnP Stack
-LIBRARY                 upnpavobjects.lib // CUpnpDlnaProtocolInfo for S60 3.1. Not needed in S60 3.2 platform.
 LIBRARY                 upnpipserversutils.lib // CUpnpDlnaProtocolInfo for S60 3.2. Not needed in S60 3.1 platform.
+
+// dlnasrv
+LIBRARY                 upnpavobjects.lib // CUpnpDlnaProtocolInfo for S60 3.1. Not needed in S60 3.2 platform.
 
 DEBUGLIBRARY            flogger.lib
 

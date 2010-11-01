@@ -148,7 +148,7 @@ private:
      * Inform all sessions that connection has been lost
      * @since S60 3.1
      */
-    void ConnectionLost();
+    void ConnectionLost( TBool aUserOriented );
 
 
 private:

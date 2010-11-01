@@ -22,20 +22,23 @@
 
 // INTERNAL INCLUDES
 // upnp stack api
-#include <upnpitem.h>
-#include <upnpelement.h>
 #include <upnpstring.h>
 
-// upnpframework / avcontroller api
+// dlnasrv / mediaserver api
+#include <upnpitem.h>
+#include <upnpelement.h>
+
+// dlnasrv / avcontroller api
 #include "upnpavdevice.h"
 #include "upnpfiletransfersessionobserver.h"
 
-// upnpframework / avcontroller helper api
+// dlnasrv / avcontroller helper api
 #include "upnpconstantdefs.h" // for upnp-specific stuff
 #include "upnpitemutility.h" // FindAttributeByName
 #include "upnpfileutility.h" // FitsInMemory
+#include "upnppathutility.h" // CreateCopyPath
 
-// avcontroller internal
+// dlnasrv / avcontroller internal
 #include "upnpfiledownloadsessionimpl.h"
 #include "upnpavcontrollerclient.h"
 #include "upnpfiletransferitem.h"
@@ -252,6 +255,13 @@ void CUPnPFileDownloadSessionImpl::StartDownloadL(
 
     item->SetUriL( tmpEl.Value() );    
 
+    CUPnPPathUtility* pathUtil = CUPnPPathUtility::NewLC();
+    HBufC* path = pathUtil->CreateCopyPathL( aItem, tmpEl, EFalse );
+    CleanupStack::PopAndDestroy( pathUtil );
+    CleanupStack::PushL( path );
+    item->SetPathL( *path );
+    CleanupStack::PopAndDestroy( path );
+    
     // Get the protocolinfo-attribute
     const CUpnpAttribute* tmpPInfo = UPnPItemUtility::FindAttributeByName(
         tmpEl, KAttributeProtocolInfo );

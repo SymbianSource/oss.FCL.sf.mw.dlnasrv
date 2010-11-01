@@ -36,7 +36,7 @@
 #include <upnpdevice.h>
 
 // upnpframework / avcontroller helper api
-#include <upnpconstantdefs.h>
+#include "upnpconstantdefs.h"
 
 // utilities internal
 #include "upnpfileutilitytypes.h"
@@ -64,8 +64,12 @@ _LIT16( KMpg16,             ".MPG" );
 _LIT16( KMpeg416,           ".MPEG4" );
 _LIT16( KAvi16,             ".AVI" );
 _LIT16( KMp316,             ".MP3" );
+_LIT16( KMp416,             ".MP4" );
 _LIT16( KAac16,             ".AAC" );
 _LIT16( KWma16,             ".WMA" );
+_LIT16( KTs16,              ".TS" );
+_LIT16( KMts16,             ".MTS" );
+_LIT16( KM2ts16,            ".M2TS" );
 _LIT8( KXHtml,              "application/vnd.pwg-xhtml-print" );
 _LIT8( KHtml,               "text/html" );
 _LIT8( KXml,                "text/xml" );
@@ -76,10 +80,12 @@ _LIT8( KPng,                "image/png" );
 _LIT8( KMpeg,               "video/mpeg" );
 _LIT8( KMpeg4,              "video/mpeg4" );
 _LIT8( KMp3,                "audio/mpeg" );
+_LIT8( KMp4,                "video/mp4" );
 _LIT8( KAac,                "audio/aac" );
 _LIT8( KWma,                "audio/x-ms-wma" );
 _LIT8( KAvi,                "video/x-msvideo" );
-
+_LIT8( KTs,                 "video/mpeg" );
+_LIT8( KM2ts,               "video/vnd.dlna.mpeg-tts" );
 
 _LIT(  KLineFeed,           "\r\n");
 _LIT8( KHttpDes,            "http://" );
@@ -137,6 +143,9 @@ _LIT8( KVideoVmvh,          "=WMVHIGH_" );
 _LIT8( KVideoWmvh,          "=WMVHM_" );
 _LIT8( KVideoWmvspll,       "=WMVSPLL_" );
 _LIT8( KVideoWmvspml,       "=WMVSPML_" );
+
+
+
 // ============================ LOCAL FUNCTIONS =============================
 
 // --------------------------------------------------------------------------
@@ -231,110 +240,9 @@ EXPORT_C HBufC8* UPnPCommonUtils::GetMimeTypeByExtensionL(
     // FindC and length calculation is used,
     // because compareC does not work for undefined reason  
 
-    if ( ext.FindC( KHtml16 ) == 0 && 
-         ext.Length() == KHtml16().Length() )
-        {
-        mimetype = HBufC8::NewLC( KHtml().Length() );
-        mimetype->Des().Zero();
-        mimetype->Des().Append( KHtml() );
-        }
-    else if ( ext.FindC( KXml16 ) == 0 && 
-              ext.Length() == KXml16().Length() )
-        {
-        mimetype = HBufC8::NewLC( KXml().Length() );
-        mimetype->Des().Zero();
-        mimetype->Des().Append( KXml() );
-        }
-    else if ( ext.FindC( KTxt16 ) == 0 && 
-              ext.Length() == KTxt16().Length() )
-        {
-        mimetype = HBufC8::NewLC( KTxt().Length() );
-        mimetype->Des().Zero();
-        mimetype->Des().Append( KTxt() );
-        }
-    else if ( ( ext.FindC( KJpg16 ) == 0 && 
-                ext.Length() == KJpg16().Length() ) ||
-                ( ext.FindC( KJpeg16 ) == 0 && 
-                  ext.Length() == KJpeg16().Length() ) )
-        {
-        mimetype = HBufC8::NewLC( KJpg().Length() );
-        mimetype->Des().Zero();
-        mimetype->Des().Append( KJpg() );
-        }       
-    else if ( ext.FindC( KGif16 ) == 0 && 
-              ext.Length() == KGif16().Length() )
-        {
-        mimetype = HBufC8::NewLC( KGif().Length() );
-        mimetype->Des().Zero();
-        mimetype->Des().Append( KGif() );
-        }   
-    else if ( ext.FindC( KPng16 ) == 0 && 
-              ext.Length() == KPng16().Length() )
-        {
-        mimetype = HBufC8::NewLC( KPng().Length() );
-        mimetype->Des().Zero();
-        mimetype->Des().Append( KPng() );
-        }
-    else if ( ( ext.FindC( KMpg16 ) == 0 &&
-                ext.Length() == KMpg16().Length() ) ||
-                ( ext.FindC( KMpeg16 ) == 0 &&
-                  ext.Length() == KMpeg16().Length() ) )
-        {
-        mimetype = HBufC8::NewLC( KMpeg().Length() );
-        mimetype->Des().Zero();
-        mimetype->Des().Append( KMpeg() );
-        }
-    else if ( ( ext.FindC( KMpeg416 ) == 0 && 
-                ext.Length() == KMpeg416().Length() ) )
-        {
-        mimetype = HBufC8::NewLC( KMpeg4().Length() );
-        mimetype->Des().Zero();
-        mimetype->Des().Append( KMpeg4() );
-        }
-    else if ( ext.FindC( KAvi16 ) == 0 && 
-              ext.Length() == KAvi16().Length() )
-        {
-        mimetype = HBufC8::NewLC( KAvi().Length() );
-        mimetype->Des().Zero();
-        mimetype->Des().Append( KAvi() );
-        }
-    else if ( ext.FindC( KMp316 ) == 0 && 
-              ext.Length() == KMp316().Length() )
-        {
-        mimetype = HBufC8::NewLC( KMp3().Length() );
-        mimetype->Des().Zero();
-        mimetype->Des().Append( KMp3() );
-        }
-    else if ( ext.FindC( KXHtml16 ) == 0 && 
-              ext.Length() == KXHtml16().Length() )
-        {
-        mimetype = HBufC8::NewLC( KXHtml().Length() );
-        mimetype->Des().Zero();
-        mimetype->Des().Append( KXHtml() );
-        }
-    else if ( ext.FindC( KAac16 ) == 0 && 
-              ext.Length() == KAac16().Length() )
-        {
-        mimetype = HBufC8::NewLC( KAac().Length() );
-        mimetype->Des().Zero();
-        mimetype->Des().Append( KAac() );
-        }
-    else if ( ext.FindC( KWma16 ) == 0 && 
-              ext.Length() == KWma16().Length() )
-        {
-        mimetype = HBufC8::NewLC( KWma().Length() );
-        mimetype->Des().Zero();
-        mimetype->Des().Append( KWma() );
-        }
-    else
-        {
-        // Mime type not recognized. Return NULL.        
-        }
-
-    if( mimetype )
-        {
-        CleanupStack::Pop( mimetype );
-        }
+    GetMimeTypeforImageExtensionsL( ext,&mimetype );
+    GetMimeTypeforAudioVideoExtensionsL( ext,&mimetype );
+    GetMimeTypeforExtensionsL( ext,&mimetype );
 
     return mimetype;
     }
@@ -928,177 +836,35 @@ EXPORT_C HBufC* UPnPCommonUtils::FileExtensionByMimeTypeL(
     const TDesC8& aMimeType )
     {
     HBufC* fileExt = NULL;
-
-    // XHTML
-    if( aMimeType.CompareC( KXHtmlMime ) == 0 )
+    
+    GetFileExtensionForImageMimeTypesL( aMimeType,&fileExt );
+    
+    if(!fileExt)
         {
-        fileExt = KXHtmlExt().AllocL();
+        GetFileExtensionForAudioMimeTypesL( aMimeType,&fileExt );
         }
-    // HTML
-    else if( aMimeType.CompareC( KHtmlMime ) == 0 )
+    if(!fileExt)
         {
-        fileExt = KHtmlExt().AllocL();
+        GetFileExtensionForVideoMimeTypesL( aMimeType,&fileExt );
         }
-    // XML
-    else if( aMimeType.CompareC( KXmlMime1 ) == 0 ||
-             aMimeType.CompareC( KXmlMime2 ) == 0 ||
-             aMimeType.CompareC( KXmlMime3 ) == 0  )
+    if(!fileExt)
         {
-        fileExt = KXmlExt().AllocL();
+        GetFileExtensionForMimeTypesL( aMimeType,&fileExt );
         }
-    // TXT    
-    else if( aMimeType.CompareC( KTxtMime )  == 0 ||
-             aMimeType.CompareC( KTxtMime2 ) == 0 ||
-             aMimeType.CompareC( KTxtMime3 ) == 0 ||
-             aMimeType.CompareC( KTxtMime4 ) == 0 ||
-             aMimeType.CompareC( KTxtMime5 ) == 0 ||
-             aMimeType.CompareC( KTxtMime6 ) == 0  )
+    if(!fileExt)
         {
-        fileExt = KTxtExt().AllocL();
+        // AMR
+         if( aMimeType.CompareC( KAudioAMR )  == 0 )
+            {
+            fileExt = KAmrExt().AllocL();
+            }
+        // Real audio    
+        else if ( aMimeType.CompareC( KRAMime8 )  == 0 )
+            {
+            fileExt = KRAExt().AllocL();
+            }
         }
-    // JPEG
-    else if( aMimeType.CompareC( KJpegMime ) == 0 )
-        {
-        fileExt = KJpegExt().AllocL();
-        }
-    // JPG
-    else if( aMimeType.CompareC( KJpegMime2 ) == 0 ||
-             aMimeType.CompareC( KJpegMime3 ) == 0 ||
-             aMimeType.CompareC( KJpegMime4 ) == 0 ||
-             aMimeType.CompareC( KJpegMime5 ) == 0  )
-        {
-        fileExt = KJpgExt().AllocL();
-        }
-    // GIF    
-    else if( aMimeType.CompareC( KGifMime )  == 0 ||
-             aMimeType.CompareC( KGifMime2 ) == 0 ||
-             aMimeType.CompareC( KGifMime3 ) == 0  )
-        {
-        fileExt = KGifExt().AllocL();
-        }
-    // PNG    
-    else if( aMimeType.CompareC( KPngMime )  == 0 ||
-             aMimeType.CompareC( KPngMime2 ) == 0 ||
-             aMimeType.CompareC( KPngMime3 ) == 0  )
-        {
-        fileExt = KPngExt().AllocL();
-        }
-    // MPG    
-    else if( aMimeType.CompareC( KMpgMime1 )  == 0 ||
-             aMimeType.CompareC( KMpgMime2 )  == 0 ||
-             aMimeType.CompareC( KMpgMime3 )  == 0 ||
-             aMimeType.CompareC( KMpgMime4 )  == 0 ||
-             aMimeType.CompareC( KMpgMime5 )  == 0 ||
-             aMimeType.CompareC( KMpgMime6 )  == 0 ||
-             aMimeType.CompareC( KMpgMime7 )  == 0 ||
-             aMimeType.CompareC( KMpgMime10 ) == 0  )
-        {
-        fileExt = KMpgExt1().AllocL();
-        }
-    // MPEG4    
-    else if( aMimeType.CompareC( KMpeg4Mime )  == 0 )
-        {
-        fileExt = KMpeg4Ext().AllocL();
-        }
-    // MP4        
-    else if( aMimeType.CompareC( KMp4Mime )  == 0 ||
-             aMimeType.CompareC( KMp4Mime2 ) == 0 ||
-             aMimeType.CompareC( KMp4Mime3 ) == 0  )
-        {
-        fileExt = KMp4Ext().AllocL();
-        }
-    // AVI
-    else if( aMimeType.CompareC( KAviMime1 ) == 0 ||
-             aMimeType.CompareC( KAviMime2 ) == 0 ||
-             aMimeType.CompareC( KAviMime3 ) == 0 ||
-             aMimeType.CompareC( KAviMime4 ) == 0 ||
-             aMimeType.CompareC( KAviMime5 ) == 0 ||
-             aMimeType.CompareC( KAviMime6 ) == 0 ||
-             aMimeType.CompareC( KAviMime7 ) == 0 ||
-             aMimeType.CompareC( KAviMime8 ) == 0 ||
-             aMimeType.CompareC( KAviMime9 ) == 0 )
-        {
-        fileExt = KAviExt().AllocL();
-        }
-    // MP3
-    else if( aMimeType.CompareC( KMp3Mime1 )  == 0 ||
-             aMimeType.CompareC( KMp3Mime2 )  == 0 ||
-             aMimeType.CompareC( KMp3Mime3 )  == 0 ||
-             aMimeType.CompareC( KMp3Mime4 )  == 0 ||
-             aMimeType.CompareC( KMp3Mime5 )  == 0 ||
-             aMimeType.CompareC( KMp3Mime6 )  == 0 ||
-             aMimeType.CompareC( KMp3Mime7 )  == 0 ||
-             aMimeType.CompareC( KMp3Mime8 )  == 0 ||
-             aMimeType.CompareC( KMp3Mime9 )  == 0 ||
-             aMimeType.CompareC( KMp3Mime10 ) == 0 )
-        {
-        fileExt = KMp3Ext().AllocL();
-        }
-    // AAC    
-    else if( aMimeType.CompareC( KAacMime )   == 0 ||
-             aMimeType.CompareC( KAacMime2 )  == 0 ||
-             aMimeType.CompareC( KAacMime3 )  == 0 ||
-             aMimeType.CompareC( KAacMime4 )  == 0 )
-        {
-        fileExt = KAacExt().AllocL();
-        }
-    //M4a
-    else if( aMimeType.CompareC( KM4aMime )   == 0 )
-       {
-       fileExt = KM4aExt().AllocL();
-       }
-    // WMA    
-    else if( aMimeType.CompareC( KWmaMime )   == 0 ||
-             aMimeType.CompareC( KWmaMime2 )  == 0 )
-        {
-        fileExt = KWmaExt().AllocL();
-        }
-    // BMP
-    else if( aMimeType.CompareC( KBmpMime )  == 0 ||
-             aMimeType.CompareC( KBmpMime2 ) == 0 ||
-             aMimeType.CompareC( KBmpMime3 ) == 0 ||
-             aMimeType.CompareC( KBmpMime4 ) == 0 ||
-             aMimeType.CompareC( KBmpMime5 ) == 0 ||
-             aMimeType.CompareC( KBmpMime6 ) == 0 ||
-             aMimeType.CompareC( KBmpMime7 ) == 0 ||
-             aMimeType.CompareC( KBmpMime8 ) == 0 ||
-             aMimeType.CompareC( KBmpMime9 ) == 0  )
-        {
-        fileExt = KBmpExt().AllocL();
-        }
-    // 3GP
-    else if( aMimeType.CompareC( KAudio3gpp ) == 0 ||
-             aMimeType.CompareC( KVideo3gpp ) == 0 ) 
-        {
-        fileExt = K3gpExt().AllocL();
-        }
-    // AMR
-    else if( aMimeType.CompareC( KAudioAMR )  == 0 )
-        {
-        fileExt = KAmrExt().AllocL();
-        }
-    // WAV
-    else if( aMimeType.CompareC( KAudioWav ) == 0 ||
-             aMimeType.CompareC( KAudioXWav ) == 0 ||
-             aMimeType.FindC( KAudioL16 ) != KErrNotFound )
-        {
-        fileExt = KWavExt().AllocL();
-        }
-    // Real audio    
-    else if ( aMimeType.CompareC( KRAMime8 )  == 0 )
-        {
-        fileExt = KRAExt().AllocL();
-        }
-    // TTS    
-    else if( aMimeType.CompareC( KVideoTts )  == 0 )
-        {
-        fileExt = KTtsExt().AllocL();
-        }
-    // WMV    
-    else if( aMimeType.CompareC( KWmvMime )  == 0 )
-        {
-        fileExt = KWmvExt().AllocL();        
-        }
+    
     return fileExt;
     }
 
@@ -1119,6 +885,432 @@ EXPORT_C HBufC8* UPnPCommonUtils::FixListboxItemTextL( const TDesC8& aText )
                                        KSpace() );   
     CleanupStack::Pop(); // Can't pop by name, name invalid now
     return fixedText;
+    }
+
+// --------------------------------------------------------------------------
+// UPnPCommonUtils::FileTypeByMimeTypeL
+// Get the file type based on MIME type of the file. Leaves in error cases.
+// --------------------------------------------------------------------------
+EXPORT_C TUPnPItemType UPnPCommonUtils::FileTypeByMimeTypeL(
+        const TDesC8& aMimeType )
+    {
+    TUPnPItemType returnValue = ETypeOther;
+
+    if( aMimeType != KNullDesC8 )
+        {
+        if( aMimeType.Find( KMimeImage() ) >= 0 )
+            {
+            returnValue = ETypeImage;
+            }
+        else if( aMimeType.Find( KMimePlaylist() ) >= 0 )
+            {
+            returnValue = ETypePlaylist;
+            }
+        else if( aMimeType.Find( KMimeAudio() ) >= 0 )
+            {
+            returnValue = ETypeAudio;
+            }
+        else if( aMimeType.Find( KMimeVideo() ) >= 0 )
+            {
+            returnValue = ETypeVideo;
+            }
+        else
+            {
+            returnValue = ETypeOther;
+            }
+        }
+    else
+        {
+        User::Leave( KErrArgument );
+        }
+
+    return returnValue;
+    }
+
+void UPnPCommonUtils::GetMimeTypeforImageExtensionsL( const TDesC& aExt , HBufC8** aMimeType)
+    {
+    if(*aMimeType != NULL)
+         return;
+    // FindC and length calculation is used,
+    // because compareC does not work for undefined reason
+    if ( ( aExt.FindC( KJpg16 ) == 0 && 
+            aExt.Length() == KJpg16().Length() ) ||
+                    ( aExt.FindC( KJpeg16 ) == 0 && 
+                            aExt.Length() == KJpeg16().Length() ) )
+            {
+            *aMimeType = HBufC8::NewLC( KJpg().Length() );
+            (*aMimeType)->Des().Zero();
+            (*aMimeType)->Des().Append( KJpg() );
+            }       
+        else if ( aExt.FindC( KGif16 ) == 0 && 
+                aExt.Length() == KGif16().Length() )
+            {
+            *aMimeType = HBufC8::NewLC( KGif().Length() );
+            (*aMimeType)->Des().Zero();
+            (*aMimeType)->Des().Append( KGif() );
+            }   
+        else if ( aExt.FindC( KPng16 ) == 0 && 
+                aExt.Length() == KPng16().Length() )
+            {
+            *aMimeType = HBufC8::NewLC( KPng().Length() );
+            (*aMimeType)->Des().Zero();
+            (*aMimeType)->Des().Append( KPng() );
+            }
+    if( *aMimeType )
+        {
+        CleanupStack::Pop( *aMimeType );
+        }
+    
+    }
+    
+void UPnPCommonUtils::GetMimeTypeforAudioVideoExtensionsL( const TDesC& aExt , HBufC8** aMimeType)
+    {
+    if(*aMimeType != NULL)
+         return;
+    
+    // FindC and length calculation is used,
+    // because compareC does not work for undefined reason
+    if ( ( aExt.FindC( KMpg16 ) == 0 &&
+                aExt.Length() == KMpg16().Length() ) ||
+                ( aExt.FindC( KMpeg16 ) == 0 &&
+                  aExt.Length() == KMpeg16().Length() ) )
+            {
+            *aMimeType = HBufC8::NewLC( KMpeg().Length() );
+            (*aMimeType)->Des().Zero();
+            (*aMimeType)->Des().Append( KMpeg() );
+            }
+        else if ( ( aExt.FindC( KMpeg416 ) == 0 && 
+                    aExt.Length() == KMpeg416().Length() ) )
+            {
+            *aMimeType = HBufC8::NewLC( KMpeg4().Length() );
+            (*aMimeType)->Des().Zero();
+            (*aMimeType)->Des().Append( KMpeg4() );
+            }
+        else if ( aExt.FindC( KAvi16 ) == 0 && 
+                  aExt.Length() == KAvi16().Length() )
+            {
+            *aMimeType = HBufC8::NewLC( KAvi().Length() );
+            (*aMimeType)->Des().Zero();
+            (*aMimeType)->Des().Append( KAvi() );
+            }
+        else if ( aExt.FindC( KMp316 ) == 0 && 
+                  aExt.Length() == KMp316().Length() )
+            {
+            *aMimeType = HBufC8::NewLC( KMp3().Length() );
+            (*aMimeType)->Des().Zero();
+            (*aMimeType)->Des().Append( KMp3() );
+            }
+        else if ( aExt.FindC( KMp416 ) == 0 && 
+                  aExt.Length() == KMp416().Length() )
+            {
+            *aMimeType = HBufC8::NewLC( KMp4().Length() );
+            (*aMimeType)->Des().Zero();
+            (*aMimeType)->Des().Append( KMp4() );
+            }
+        else if ( aExt.FindC( KAac16 ) == 0 && 
+                  aExt.Length() == KAac16().Length() )
+            {
+            *aMimeType = HBufC8::NewLC( KAac().Length() );
+            (*aMimeType)->Des().Zero();
+            (*aMimeType)->Des().Append( KAac() );
+            }
+        else if ( aExt.FindC( KWma16 ) == 0 && 
+                  aExt.Length() == KWma16().Length() )
+            {
+            *aMimeType = HBufC8::NewLC( KWma().Length() );
+            (*aMimeType)->Des().Zero();
+            (*aMimeType)->Des().Append( KWma() );
+            }
+        else if ( aExt.FindC( KTs16 ) == 0 &&
+                  aExt.Length() == KTs16().Length() )
+            {
+            *aMimeType = HBufC8::NewLC( KTs().Length() );
+            (*aMimeType)->Des().Zero();
+            (*aMimeType)->Des().Append( KTs() );            
+            }
+        else if ( ( aExt.FindC( KMts16 ) == 0 &&
+                    aExt.Length() == KMts16().Length() ) ||
+                  ( aExt.FindC( KM2ts16 ) == 0 &&
+                    aExt.Length() == KM2ts16().Length() ) )
+            {
+            *aMimeType = HBufC8::NewLC( KM2ts().Length() );
+            (*aMimeType)->Des().Zero();
+            (*aMimeType)->Des().Append( KM2ts() );            
+            }
+    if( *aMimeType )
+        {
+        CleanupStack::Pop( *aMimeType );
+        }
+    }
+    
+void UPnPCommonUtils::GetMimeTypeforExtensionsL( const TDesC& aExt , HBufC8** aMimeType)
+    {
+    if(*aMimeType != NULL)
+        return;
+    
+    // FindC and length calculation is used,
+    // because compareC does not work for undefined reason
+    if ( aExt.FindC( KHtml16 ) == 0 && 
+            aExt.Length() == KHtml16().Length() )
+        {
+        *aMimeType = HBufC8::NewLC( KHtml().Length() );
+        (*aMimeType)->Des().Zero();
+        (*aMimeType)->Des().Append( KHtml() );
+        }
+    else if ( aExt.FindC( KXml16 ) == 0 && 
+            aExt.Length() == KXml16().Length() )
+        {
+        *aMimeType = HBufC8::NewLC( KXml().Length() );
+        (*aMimeType)->Des().Zero();
+        (*aMimeType)->Des().Append( KXml() );
+        }
+    else if ( aExt.FindC( KTxt16 ) == 0 && 
+            aExt.Length() == KTxt16().Length() )
+        {
+        *aMimeType = HBufC8::NewLC( KTxt().Length() );
+        (*aMimeType)->Des().Zero();
+        (*aMimeType)->Des().Append( KTxt() );
+        }
+    else if ( aExt.FindC( KXHtml16 ) == 0 && 
+                      aExt.Length() == KXHtml16().Length() )
+        {
+        *aMimeType = HBufC8::NewLC( KXHtml().Length() );
+        (*aMimeType)->Des().Zero();
+        (*aMimeType)->Des().Append( KXHtml() );
+        }
+    
+    if( *aMimeType )
+        {
+        CleanupStack::Pop( *aMimeType );
+        }
+    }
+
+void UPnPCommonUtils::GetFileExtensionForMimeTypesL(const TDesC8& aMimeType,HBufC** aFileExt)
+    {
+    if(*aFileExt != NULL)
+          return;
+    // XHTML
+    if( aMimeType.CompareC( KXHtmlMime ) == 0 )
+        {
+        *aFileExt = KXHtmlExt().AllocL();
+        }
+    // HTML
+    else if( aMimeType.CompareC( KHtmlMime ) == 0 )
+        {
+        *aFileExt = KHtmlExt().AllocL();
+        }
+    // XML
+    else if( aMimeType.CompareC( KXmlMime1 ) == 0 ||
+             aMimeType.CompareC( KXmlMime2 ) == 0 ||
+             aMimeType.CompareC( KXmlMime3 ) == 0  )
+        {
+        *aFileExt = KXmlExt().AllocL();
+        }
+    // TXT    
+    else if( aMimeType.CompareC( KTxtMime )  == 0 ||
+             aMimeType.CompareC( KTxtMime2 ) == 0 ||
+             aMimeType.CompareC( KTxtMime3 ) == 0 ||
+             aMimeType.CompareC( KTxtMime4 ) == 0 ||
+             aMimeType.CompareC( KTxtMime5 ) == 0 ||
+             aMimeType.CompareC( KTxtMime6 ) == 0  )
+        {
+        *aFileExt = KTxtExt().AllocL();
+        }
+    }
+   
+void UPnPCommonUtils::GetFileExtensionForImageMimeTypesL(const TDesC8& aMimeType,HBufC** aFileExt)
+    {
+    // JPEG
+    if( aMimeType.CompareC( KJpegMime ) == 0 )
+        {
+        *aFileExt = KJpegExt().AllocL();
+        }
+    // JPG
+    else if( aMimeType.CompareC( KJpegMime2 ) == 0 ||
+             aMimeType.CompareC( KJpegMime3 ) == 0 ||
+             aMimeType.CompareC( KJpegMime4 ) == 0 ||
+             aMimeType.CompareC( KJpegMime5 ) == 0  )
+        {
+        *aFileExt = KJpgExt().AllocL();
+        }
+    // GIF    
+    else if( aMimeType.CompareC( KGifMime )  == 0 ||
+             aMimeType.CompareC( KGifMime2 ) == 0 ||
+             aMimeType.CompareC( KGifMime3 ) == 0  )
+        {
+        *aFileExt = KGifExt().AllocL();
+        }
+    // PNG    
+    else if( aMimeType.CompareC( KPngMime )  == 0 ||
+             aMimeType.CompareC( KPngMime2 ) == 0 ||
+             aMimeType.CompareC( KPngMime3 ) == 0  )
+        {
+        *aFileExt = KPngExt().AllocL();
+        }
+    else
+        {
+        GetFileExtensionForBMPandMP3MimeTypesL( aMimeType,aFileExt );
+        }
+    
+    }
+
+void UPnPCommonUtils::GetFileExtensionForBMPandMP3MimeTypesL(const TDesC8& aMimeType,HBufC** aFileExt)
+    {
+    if( aMimeType.CompareC( KBmpMime )  == 0 ||
+             aMimeType.CompareC( KBmpMime2 ) == 0 ||
+             aMimeType.CompareC( KBmpMime3 ) == 0 ||
+             aMimeType.CompareC( KBmpMime4 ) == 0 ||
+             aMimeType.CompareC( KBmpMime5 ) == 0 ||
+             aMimeType.CompareC( KBmpMime6 ) == 0 ||
+             aMimeType.CompareC( KBmpMime7 ) == 0 ||
+             aMimeType.CompareC( KBmpMime8 ) == 0 ||
+             aMimeType.CompareC( KBmpMime9 ) == 0  )
+        {
+        *aFileExt = KBmpExt().AllocL();
+        }
+    // MP3
+    else if( aMimeType.CompareC( KMp3Mime1 )  == 0 ||
+             aMimeType.CompareC( KMp3Mime2 )  == 0 ||
+             aMimeType.CompareC( KMp3Mime3 )  == 0 ||
+             aMimeType.CompareC( KMp3Mime4 )  == 0 ||
+             aMimeType.CompareC( KMp3Mime5 )  == 0 ||
+             aMimeType.CompareC( KMp3Mime6 )  == 0 ||
+             aMimeType.CompareC( KMp3Mime7 )  == 0 ||
+             aMimeType.CompareC( KMp3Mime8 )  == 0 ||
+             aMimeType.CompareC( KMp3Mime9 )  == 0 ||
+             aMimeType.CompareC( KMp3Mime10 ) == 0 )
+        {
+        *aFileExt = KMp3Ext().AllocL();
+        }
+    
+    }
+
+   
+void UPnPCommonUtils::GetFileExtensionForAudioMimeTypesL(const TDesC8& aMimeType,HBufC** aFileExt)
+    {
+    // MPG
+    if( aMimeType.CompareC( KMpgMime1 )  == 0 ||
+             aMimeType.CompareC( KMpgMime2 )  == 0 ||
+             aMimeType.CompareC( KMpgMime3 )  == 0 ||
+             aMimeType.CompareC( KMpgMime4 )  == 0 ||
+             aMimeType.CompareC( KMpgMime5 )  == 0 ||
+             aMimeType.CompareC( KMpgMime6 )  == 0 ||
+             aMimeType.CompareC( KMpgMime7 )  == 0 ||
+             aMimeType.CompareC( KMpgMime10 ) == 0  )
+        {
+        *aFileExt = KMpgExt1().AllocL();
+        }
+    // AAC    
+    else if( aMimeType.CompareC( KAacMime )   == 0 ||
+             aMimeType.CompareC( KAacMime2 )  == 0 ||
+             aMimeType.CompareC( KAacMime3 )  == 0 ||
+             aMimeType.CompareC( KAacMime4 )  == 0 )
+        {
+        *aFileExt = KAacExt().AllocL();
+        }
+    //M4a
+    else if( aMimeType.CompareC( KM4aMime )   == 0 )
+       {
+       *aFileExt = KM4aExt().AllocL();
+       }
+    // WAV
+    else if( aMimeType.CompareC( KAudioWav ) == 0 ||
+             aMimeType.CompareC( KAudioXWav ) == 0 ||
+             aMimeType.FindC( KAudioL16 ) != KErrNotFound )
+        {
+        *aFileExt = KWavExt().AllocL();
+        }
+    // WMA    
+    else if( aMimeType.CompareC( KWmaMime )   == 0 ||
+             aMimeType.CompareC( KWmaMime2 )  == 0 )
+        {
+        *aFileExt = KWmaExt().AllocL();
+        }
+    
+    }
+
+void UPnPCommonUtils::GetFileExtensionForVideoMimeTypesL(const TDesC8& aMimeType,HBufC** aFileExt)
+    {
+    // MPEG4    
+    if( aMimeType.CompareC( KMpeg4Mime )  == 0 )
+        {
+        *aFileExt = KMpeg4Ext().AllocL();
+        }
+    // MP4        
+    else if( aMimeType.CompareC( KMp4Mime )  == 0 ||
+             aMimeType.CompareC( KMp4Mime2 ) == 0 ||
+             aMimeType.CompareC( KMp4Mime3 ) == 0  )
+        {
+        *aFileExt = KMp4Ext().AllocL();
+        }
+    // AVI
+    else if( aMimeType.CompareC( KAviMime1 ) == 0 ||
+             aMimeType.CompareC( KAviMime2 ) == 0 ||
+             aMimeType.CompareC( KAviMime3 ) == 0 ||
+             aMimeType.CompareC( KAviMime4 ) == 0 ||
+             aMimeType.CompareC( KAviMime5 ) == 0 ||
+             aMimeType.CompareC( KAviMime6 ) == 0 ||
+             aMimeType.CompareC( KAviMime7 ) == 0 ||
+             aMimeType.CompareC( KAviMime8 ) == 0 ||
+             aMimeType.CompareC( KAviMime9 ) == 0 )
+        {
+        *aFileExt = KAviExt().AllocL();
+        }
+    // 3GP
+    else if( aMimeType.CompareC( KAudio3gpp ) == 0 ||
+             aMimeType.CompareC( KVideo3gpp ) == 0 ) 
+        {
+        *aFileExt = K3gpExt().AllocL();
+        }
+    // TTS    
+    else if( aMimeType.CompareC( KVideoTts )  == 0 )
+        {
+        *aFileExt = KTtsExt().AllocL();
+        }
+    // WMV    
+    else if( aMimeType.CompareC( KWmvMime )  == 0 )
+        {
+        *aFileExt = KWmvExt().AllocL();        
+        }
+    }
+
+EXPORT_C HBufC8* UPnPCommonUtils::ReplaceIllegalDirNameCharactersL( 
+                                        const TDesC8& aDirName )
+    {
+    HBufC8* replacedDirName = ReplaceIllegalFilenameCharactersL( aDirName );
+    TPtr8 ptr( replacedDirName->Des() );
+            
+    // In case of a dir name, if the last char is a dot, it must be
+    // replaced
+    TInt length( aDirName.Length() );
+    TChar dot( KCodeDot );
+    if( length > 0 && ptr.LocateReverse( dot ) == length - 1 )        
+        {
+        ptr.Replace( length - 1, 1, KUnderScore() );
+        }
+    
+    return replacedDirName;
+    }
+
+EXPORT_C HBufC* UPnPCommonUtils::ReplaceIllegalDirNameCharactersL( 
+                                        const TDesC& aDirName )
+    {
+    HBufC8* convertedParam = NULL;
+    convertedParam = UpnpString::FromUnicodeL( aDirName );
+    CleanupStack::PushL( convertedParam );
+    
+    HBufC8* replacedDirName8 = NULL;
+    replacedDirName8 = ReplaceIllegalDirNameCharactersL( *convertedParam );
+    CleanupStack::PushL( replacedDirName8 );
+
+    HBufC* replacedDirName16 = NULL;
+    replacedDirName16 = UpnpString::ToUnicodeL( *replacedDirName8 );
+    
+    // Clean up
+    CleanupStack::PopAndDestroy( replacedDirName8 );
+    CleanupStack::PopAndDestroy( convertedParam );
+                                            
+    return replacedDirName16; 
     }
 
 //  End of File

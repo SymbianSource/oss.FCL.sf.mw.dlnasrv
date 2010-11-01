@@ -323,8 +323,9 @@ GetAudioFileInformationL" );
     // delete temporary file
     RFs fs;
     User::LeaveIfError( fs.Connect() );
+    CleanupClosePushL( fs );
     User::LeaveIfError( fs.Delete( KTargetAudioFile() ) );
-    fs.Close();
+    CleanupStack::PopAndDestroy( &fs );
     
     return retval;
     }

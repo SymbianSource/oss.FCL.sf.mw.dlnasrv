@@ -129,7 +129,7 @@ private:
      */  
     TSize GetImageResolutionL( RFile& aFile, const TDesC8& aMimetype );
 
-// from base class MMdaAudioPlayerCallback
+// from base class MMdaAudioPlayerCallback (used from audio resolving thread)
 
     /**
      * From MMdaAudioPlayerCallback.
@@ -150,14 +150,36 @@ private:
      */
     void MapcInitComplete( TInt aError, 
                            const TTimeIntervalMicroSeconds& aDuration );
-           
-private: // data
-    // attributes related to CMdaAudioPlayerUtility usage
-    CActiveSchedulerWait*       iWait; // owned
-    CMdaAudioPlayerUtility*     iAudioplayer; // owned. 
     
+// audio resolving thread    
+    
+    /**
+     * Thread function for audio resolving thread.
+     * 
+     * @param aSelf Pointer to CUpnpResResolver class instance.
+     * @return Possible return values:
+     *  KErrNone: Thread exited ok.
+     *  Otherwise system wide error code.
+     */
+    static TInt ThreadFunction( TAny* aSelf );
+
+    /**
+     * Resolves audio duration from iAVFile.
+     * 
+     * @param None.
+     * @return None.
+     */
+    void ResolveAudioDurationL();
+           
+private: // data    
     // duration of the media file (video or audio)
-    TTimeIntervalMicroSeconds   iDuration;
+    TTimeIntervalMicroSeconds iDuration;
+    
+    // current audio/video file
+    HBufC* iAVFile;
+    
+    // semaphore for keeping sync between main thread and audio resolving thread
+    RSemaphore iSemaphore;
     };
 
 

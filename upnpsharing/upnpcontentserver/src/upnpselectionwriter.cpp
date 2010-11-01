@@ -70,7 +70,6 @@ void CUpnpSelectionWriter::ConstructL(
     iMediaType = aMediaType;
 
     iFileArray = new (ELeave) CDesCArrayFlat(4);
-    iOkItems.Reset();
 
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
@@ -98,7 +97,6 @@ CUpnpSelectionWriter::~CUpnpSelectionWriter()
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
 
     delete iFileArray;
-    iOkItems.Reset();
     delete iRepository;
 
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
@@ -113,18 +111,6 @@ void CUpnpSelectionWriter::AppendItemL( const TPtrC aNewObject)
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
     iFileArray->AppendL( aNewObject  );
-    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
-    }
-
-// --------------------------------------------------------------------------
-// CUpnpSelectionWriter::AppendStatusL
-// ( other items were commented in header )
-// --------------------------------------------------------------------------
-//
-void CUpnpSelectionWriter::AppendStatusL( TInt aIndex )
-    {
-    __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-    iOkItems.AppendL( aIndex  );
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
 
@@ -233,12 +219,7 @@ TInt CUpnpSelectionWriter::StoreSharedContainerIDsL() const
 
             for (TInt index = 0; index < iFileArray->Count(); index++)
                 {
-                // check that sharing of the container was succesful
-                if ( iOkItems.Find( index ) != KErrNotFound )
-                    {
-                    // Write identifiers to the file
-                    writeStream << iFileArray->MdcaPoint(index);
-                    }
+                writeStream << iFileArray->MdcaPoint(index);
                 }
 
             // Clean up

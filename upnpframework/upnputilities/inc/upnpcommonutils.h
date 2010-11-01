@@ -256,8 +256,57 @@ public: // Business logic methods
      * @return HBufC8* fixed text string
      **/
     IMPORT_C static HBufC8* FixListboxItemTextL( 
-                                const TDesC8& aText );    
-    };
+                                const TDesC8& aText );
+    
+    /**
+    * Returns the file type according a mime type
+    *
+    * @param const TDesC8& mime type
+    * @return TUPnPItemType file type
+    */
+   IMPORT_C static TUPnPItemType FileTypeByMimeTypeL(
+       const TDesC8& aMimeType );
+   
+   /**
+    * Same as ReplaceIllegalFilenameCharactersL(), but also replaces the last
+    * character by underscore if it's a dot ('.'). 8bit version.
+    * 
+    * @param aDirName (const TDesC8&) directory name to be checked
+    * @return HBufC8* fixed directory name string
+    */
+   IMPORT_C static HBufC8* ReplaceIllegalDirNameCharactersL( 
+       const TDesC8& aDirName );
+      
+   /**
+    * Same as ReplaceIllegalFilenameCharactersL(), but also replaces the last
+    * character by underscore if it's a dot ('.'). 16bit version.
+    * 
+    * @param aDirName (const TDesC&) directory name to be checked
+    * @return HBufC* fixed directory name string
+    */   
+   IMPORT_C static HBufC* ReplaceIllegalDirNameCharactersL( 
+       const TDesC& aDirName );
+   
+   
+private:
+    
+    static void GetMimeTypeforImageExtensionsL( const TDesC& aExt ,HBufC8** aMimeType);
+    
+    static void GetMimeTypeforAudioVideoExtensionsL(  const TDesC& aExt ,HBufC8** aMimeType);
+    
+    static void GetMimeTypeforExtensionsL(  const TDesC& aExt ,HBufC8** aMimeType);
+    
+    static void GetFileExtensionForMimeTypesL(const TDesC8& aMimeType,HBufC** aFileExt);
+    
+    static void GetFileExtensionForImageMimeTypesL(const TDesC8& aMimeType,HBufC** aFileExt);
+    
+    static void GetFileExtensionForBMPandMP3MimeTypesL(const TDesC8& aMimeType,HBufC** aFileExt);
+    
+    static void GetFileExtensionForAudioMimeTypesL(const TDesC8& aMimeType,HBufC** aFileExt);
+    
+    static void GetFileExtensionForVideoMimeTypesL(const TDesC8& aMimeType,HBufC** aFileExt);
+   
+};
 
 
 #endif  // UPNPCOMMONUTILS_H

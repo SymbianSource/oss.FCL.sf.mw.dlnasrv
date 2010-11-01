@@ -15,32 +15,31 @@
 *
 */
 
-
-
-
-
 // For compatibility with S60 3.2 and IAD branch
 #include "upnpplatformvar.hrh"
 
-// Export domain and SDK headers
-#include "../dlnasrv_plat/group/bld.inf"
+PRJ_EXPORTS
 
-// upnp stack
-#include "../upnpavcontrolpoint/group/bld.inf"
+// --------------------------------------------------------------------------
+// Build the dlnasrv package's collections
+// --------------------------------------------------------------------------
+
+// Build the upnpmediaserver collection
 #include "../upnpmediaserver/group/bld.inf"
 
-// upnp framework
+// Build the upnpavcontroller collection
 #include "../upnpavcontroller/group/bld.inf"
+
+// Build the upnpframework collection
 #include "../upnpframework/group/bld.inf"
+
+// Build the upnpsettings collection
 #include "../upnpsettings/group/bld.inf"
+
+// Build the upnpsharing collection
 #include "../upnpsharing/group/bld.inf"
-#include "../upnpmpxplugins/group/bld.inf"
 
-#ifdef FF_UPNP_FRAMEWORK_2_0  // UPnP feature flag
-#include "../upnpharvester/group/bld.inf"
+// Export the platform headers
+#include "../dlnasrv_plat/group/bld.inf"
 
-// upnp applications
-#include "../homesync/group/bld.inf"
-#include "../homemedia/group/bld.inf"
-#endif // FF_UPNP_FRAMEWORK_2_0
 // End of file

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -65,8 +65,7 @@ private:
         ESearchSize,
         EGetSearchCapabilities,
         ECreateContainer,
-        EDeleteObject,
-        EStartMediaServer
+        EDeleteObject
         };
 
 public:
@@ -128,21 +127,6 @@ protected: // From MUPnPAVBrowser
      * See upnpavbrowsingsession.h
      */
     const CUpnpAVDevice& Device() const;
-
-    /**
-     * See upnpavbrowsingsession.h
-     */
-    void ReserveLocalMSServicesL(); 
-
-    /**
-     * See upnpavbrowsingsession.h
-     */
-    void CancelReserveLocalMSServicesL(); 
-
-    /**
-     * See upnpavbrowsingsession.h
-     */
-    void ReleaseLocalMSServicesL(); 
     
     /**
      * See upnpavbrowsingsession.h
@@ -274,15 +258,10 @@ private:
     HBufC8*                     iBuffer3; // owned
     TPtr8                       iBufferPtr3;
     
-    //CUPnPXMLParser*             iParser; // owned
-    
     CUPnPAVDeviceActive*        iDeviceActive; // owned
     
     TInt                        iRespBufSize;           
     TPckg<TInt>                 iRespBufSizePkg;
-
-//    TInt                        iRespBufSize;           
-//    TPckg<TInt>                 iRespBufSizePkg;
 
     TUpnpAVBrowseRespParams         iRespParams;           
     TPckg<TUpnpAVBrowseRespParams>  iRespParamsPkg;
@@ -291,8 +270,6 @@ private:
     
     TBool iAlive;
     
-    TBool                       iMediaServerResourceReserved;       
-            
     };
 
 

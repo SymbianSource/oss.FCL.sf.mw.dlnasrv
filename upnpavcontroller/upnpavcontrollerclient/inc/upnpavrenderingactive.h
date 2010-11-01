@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -16,10 +16,6 @@
 */
 
 
-
-
-
-
 #ifndef C_UPNPAVRENDERINGACTIVE_H
 #define C_UPNPAVRENDERINGACTIVE_H
 
@@ -29,7 +25,7 @@
 
 class RUPnPAVControllerClient;
 class CUpnpItem;
-//class CUPnPAVRenderingSessionImpl;
+
 
 /**
  *  ?one_line_short_description
@@ -60,7 +56,7 @@ private:
         ESetMute,
         EGetMute,
         EPositionInfo,
-        EStartMediaServer
+        ESeekRelTime
         };
 
 public:
@@ -134,21 +130,6 @@ public: // New functions
     /**
      * See upnpavrenderingsession.h
      */
-    void ReserveLocalMSServicesL(); 
-
-    /**
-     * See upnpavrenderingsession.h
-     */
-    void CancelReserveLocalMSServicesL(); 
-
-    /**
-     * See upnpavrenderingsession.h
-     */
-    void ReleaseLocalMSServicesL(); 
-
-    /**
-     * See upnpavrenderingsession.h
-     */
     void SetURIL( const TDesC8& aURI, const CUpnpItem& aItem );
 
     /**
@@ -195,6 +176,16 @@ public: // New functions
      * See upnpavrenderingsession.h
      */
     void GetPositionInfoL();
+        
+    /**
+     * See upnpavrenderingsession.h
+     */
+    void SeekRelTimeL( const TTime& aDesiredTime );
+    
+    /**
+     * See upnpavrenderingsession.h
+     */
+    TUPnPAVInteractOperation GetRendererStateL();
         
 private:
 
@@ -254,9 +245,9 @@ private:
     void PositionInfoCompleteL();
     
     /**
-     * Start media server response handling
+     * Seek with unit REL_TIME response handling
      */
-    void StartMediaServerCompleteL();    
+    void SeekRelTimeComplete();
 
 private:
 
@@ -273,8 +264,6 @@ private:
     
     TInt                                iRespBufSize;           
     TPckg<TInt>                         iRespBufSizePkg;
-    
-    TBool                               iMediaServerResourceReserved;
     
     TPendingOperation                   iPendingOperation;
     

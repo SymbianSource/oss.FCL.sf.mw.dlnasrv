@@ -21,7 +21,7 @@
 #define CDUTILS_H
 
 //  INCLUDES
-#include <xml/dom/xmlengdom.h>
+#include <xmlengdom.h>
 #include <e32base.h>
 
 
@@ -232,6 +232,10 @@ class UpnpCdUtils
     * @return error status
     */
     static TInt StringToInteger(const TDesC8& aStr, TInt* aInt);
+
+    
+private:
+    static TBool ValidateDateLength(TInt aDateLength);
             
  private:
      enum TPlaces

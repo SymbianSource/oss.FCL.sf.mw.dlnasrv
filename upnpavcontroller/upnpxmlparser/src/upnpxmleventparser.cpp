@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2006,2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -15,17 +15,13 @@
 *
 */
 
-
-
-
-
-
 #include <xml/parser.h>
 #include <xml/parserfeature.h>
 #include <upnpstring.h>
 #include <xml/matchdata.h>
 
 #include "upnpxmleventparser.h"
+#include "upnpavtevent.h"
 
 _LIT( KComponentLogfile, "upnpxmlparser.txt");
 #include "upnplog.h"
@@ -43,6 +39,8 @@ _LIT8( KDlnaDoc,        "X_DLNADOC"     );
 _LIT8( KVal,            "val"           );
 _LIT8( KChannel,        "channel"       );
 _LIT8( KMaster,         "Master"       );
+_LIT8( KTransportState, "TransportState" );
+_LIT8( KTransportURI,   "AVTransportURI" );
 
 // --------------------------------------------------------------------------
 // CUPnPXMLEventParser::CUPnPXMLEventParser()
@@ -50,6 +48,7 @@ _LIT8( KMaster,         "Master"       );
 // --------------------------------------------------------------------------
 CUPnPXMLEventParser::CUPnPXMLEventParser()
     {
+    // No implementation required
     }
 
 // --------------------------------------------------------------------------
@@ -60,6 +59,8 @@ void CUPnPXMLEventParser::ConstructL()
     {
     __LOG( "CUPnPXMLEventParser::CostructL" );
     
+    iAvtEvent = CUPnPAVTEvent::NewL();
+    iAvtResultEvent = CUPnPAVTEvent::NewL();
     }
 
 // --------------------------------------------------------------------------
@@ -84,16 +85,18 @@ CUPnPXMLEventParser::~CUPnPXMLEventParser()
     {
     __LOG( "CUPnPXMLEventParser::~CUPnPXMLEventParser" );
     
+    delete iAvtEvent;
+    delete iAvtResultEvent;
     }
 
 // --------------------------------------------------------------------------
-// CUPnPXMLEventParser::ParseResultDataL
+// CUPnPXMLEventParser::ParseRcEventDataL
 // See upnpxmlparser.h
 // --------------------------------------------------------------------------
-EXPORT_C void CUPnPXMLEventParser::ParseResultDataL( const TDesC8& aData,
-        TInt& aInstanceId, TInt& aVolume, TBool& aMute )
+EXPORT_C CUPnPAVTEvent* CUPnPXMLEventParser::ParseRcEventDataL(
+    const TDesC8& aData, const TInt aInstanceId )
     {
-    __LOG( "CUPnPXMLEventParser::ParseResultDataL, begin" );
+    __LOG( "CUPnPXMLEventParser::ParseRcEventDataL, begin" );
     
     if ( !aData.Length() )
         {
@@ -101,6 +104,8 @@ EXPORT_C void CUPnPXMLEventParser::ParseResultDataL( const TDesC8& aData,
         }
 
     Reset();
+    ResetResult();
+    iSessionInstanceID = aInstanceId;
         
     // Create parser 
     CMatchData* matchData = CMatchData::NewLC();
@@ -114,25 +119,57 @@ EXPORT_C void CUPnPXMLEventParser::ParseResultDataL( const TDesC8& aData,
     CleanupStack::PopAndDestroy( parser );
     CleanupStack::PopAndDestroy( matchData );
     
-    if( iInstanceID != KErrNotFound )
+    if( iAvtResultEvent->InstanceID() == KErrNotFound )
         {
-        aInstanceId = iInstanceID;
-        if( iVolume != KErrNotFound )
-            {
-            aVolume = iVolume;    
-            }
-        if( iMute != KErrNotFound )
-            {
-            aMute = iMute;    
-            }
-        }
-    else
+        __LOG1( "CUPnPXMLEventParser::ParseRcEventDataL \
+instanceid not matching %d",  iSessionInstanceID );
+        User::Leave( KErrNotFound );
+        }  
+        
+    return CUPnPAVTEvent::CloneL( *iAvtResultEvent );
+    }
+
+
+// --------------------------------------------------------------------------
+// CUPnPXMLEventParser::ParseAVTEventDataL
+// See upnpxmlparser.h
+// --------------------------------------------------------------------------
+EXPORT_C CUPnPAVTEvent* CUPnPXMLEventParser::ParseAvtEventDataL(
+    const TDesC8& aData, const TInt aInstanceId )
+    {
+    __LOG( "CUPnPXMLEventParser::ParseAvtEventDataL, begin" );
+    
+    if ( !aData.Length() )
         {
         User::Leave( KErrArgument );
-        }    
+        }
     
-    __LOG( "CUPnPXMLEventParser::ParseResultDataL, end" );
+    Reset();
+    ResetResult();
+    iSessionInstanceID = aInstanceId;
+        
+    // Create parser 
+    CMatchData* matchData = CMatchData::NewLC();
+    matchData->SetMimeTypeL( KXmlMimeType ); 
+    matchData->SetVariantL( KLIB2XML ); 
+    CParser* parser = CParser::NewLC( *matchData, *this ); 
+    parser->EnableFeature( Xml::EReportNamespaceMapping );
+    
+    Xml::ParseL( *parser, aData );    
+    
+    CleanupStack::PopAndDestroy( parser );
+    CleanupStack::PopAndDestroy( matchData );
+    
+    if( iAvtResultEvent->InstanceID() == KErrNotFound )
+        {
+        __LOG1( "CUPnPXMLEventParser::ParseAvtEventDataL \
+instanceid not matching %d", iSessionInstanceID );
+        User::Leave( KErrNotFound );
+        }
+    
+    return CUPnPAVTEvent::CloneL( *iAvtResultEvent );
     }
+
 
 // --------------------------------------------------------------------------
 // CUPnPXMLEventParser::OnStartDocumentL
@@ -161,15 +198,16 @@ void CUPnPXMLEventParser::OnEndDocumentL( TInt /*aErrorCode*/ )
 void CUPnPXMLEventParser::OnStartElementL( const RTagInfo& aElement, 
                                       const RAttributeArray& aAttributes,
                                       TInt aErrorCode )
-    {
-    __LOG1( "CUPnPXMLEventParser::OnStartElementL, error: %d", aErrorCode );
+    {   
     if ( aErrorCode != KErrNone )
         {
+        __LOG1( "CUPnPXMLEventParser::OnStartElementL, error: %d",
+                                                                aErrorCode );
         return;
         }
     const TDesC8& desName = aElement.LocalName().DesC();
-    //const TDesC8& prefix = aElement.Prefix().DesC();
-      
+    __LOG8_1("CUPnPXMLEventParser::OnStartElementL name = %S", &desName );
+  
     if ( !desName.CompareF( KEvent ) )
         {
         iParserState = EEvent;
@@ -179,6 +217,7 @@ void CUPnPXMLEventParser::OnStartElementL( const RTagInfo& aElement,
         iParserState = EInstanceID;
         SetAttributesL( aAttributes );
         }
+    //Rc events
     else if( !desName.CompareF( KVolume ) )
         {
         iParserState = EVolume;
@@ -188,7 +227,19 @@ void CUPnPXMLEventParser::OnStartElementL( const RTagInfo& aElement,
         {
         iParserState = EMute;
         SetAttributesL( aAttributes );
+        }  
+    // Avt events 
+    else if( !desName.CompareF( KTransportState ) )
+        {
+        iParserState = ETransportState;
+        SetAttributesL( aAttributes );
         }
+    else if ( !desName.CompareF( KTransportURI ) )
+        {
+        iParserState = ETransportURI;
+        SetAttributesL( aAttributes );
+        }
+    
     // Ignore DIDL-Lite, desc and X_DLNADOC -elements (DLNA req)
     else if( desName.Compare( KDIDL ) == KErrNone ||
              desName.Compare( KDesc ) == KErrNone ||
@@ -199,21 +250,44 @@ void CUPnPXMLEventParser::OnStartElementL( const RTagInfo& aElement,
         }
     else 
         {
-        __LOG( "OnStartElementL - unknown element!" );
-        __LOG8( desName );
+        // just print attribute values
+        iParserState = ENotSupported;
+        SetAttributesL( aAttributes );
         }
-    
-    __LOG( "CUPnPXMLEventParser::OnStartElementL, end" );
     }
 
 // --------------------------------------------------------------------------
 // CUPnPXMLEventParser::OnEndElementL
 // See upnpxmlparser.h
 // --------------------------------------------------------------------------
-void CUPnPXMLEventParser::OnEndElementL( const RTagInfo& /*aElement*/, 
+void CUPnPXMLEventParser::OnEndElementL( const RTagInfo& aElement, 
                                     TInt /*aErrorCode*/ )
     {
-    __LOG( "CUPnPXMLSAXParser::OnEndElementL(), begin" );
+    // if we have finished parsing one event,
+    // check that it belongs to our session
+    const TDesC8& desName = aElement.LocalName().DesC();
+    
+    if ( !desName.CompareF( KInstanceID ) )
+        {
+        if( iAvtEvent->InstanceID() == iSessionInstanceID )
+            {
+            iAvtResultEvent->Reset();
+            iAvtResultEvent->SetInstanceID( iAvtEvent->InstanceID() );
+            iAvtResultEvent->SetMute( iAvtEvent->Mute() );
+            iAvtResultEvent->SetVolume( iAvtEvent->Volume() );
+            iAvtResultEvent->SetTransportState( iAvtEvent->TransportState() );
+            iAvtResultEvent->SetTransportURIL( iAvtEvent->TransportURI() );
+            
+            __LOG( "CUPnPXMLEventParser::OnEndElementL() valid event" );
+            }
+        else
+            {
+            __LOG2( "CUPnPXMLEventParser OnEndElementL ERROR instanceid not \
+matching session %d, event %d", iSessionInstanceID, iAvtEvent->InstanceID());
+            }
+            
+        Reset();
+        }
     }
 
 // --------------------------------------------------------------------------
@@ -223,7 +297,7 @@ void CUPnPXMLEventParser::OnEndElementL( const RTagInfo& /*aElement*/,
 void CUPnPXMLEventParser::OnContentL( const TDesC8& /*aBytes*/,
     TInt /*aErrorCode*/ )
     {
-    __LOG( "CUPnPXMLSAXParser::OnContentL(), begin" );
+    // No implementation needed
     }
 
 // --------------------------------------------------------------------------
@@ -271,9 +345,8 @@ void CUPnPXMLEventParser::OnSkippedEntityL( const RString& /*aName*/,
 // CUPnPXMLEventParser::OnProcessingInstructionL
 // See upnpxmlparser.h
 // --------------------------------------------------------------------------
-void CUPnPXMLEventParser::OnProcessingInstructionL( const TDesC8& /*aTarget*/, 
-                                                  const TDesC8& /*aData*/, 
-                                                  TInt /*aErrorCode*/ )
+void CUPnPXMLEventParser::OnProcessingInstructionL(
+    const TDesC8& /*aTarget*/, const TDesC8& /*aData*/, TInt /*aErrorCode*/ )
     {
     // No implementation needed
     }
@@ -304,88 +377,115 @@ TAny* CUPnPXMLEventParser::GetExtendedInterface( const TInt32 /*aUid*/ )
 void CUPnPXMLEventParser::SetAttributesL(
     const RAttributeArray& aAttributes )
     {
-    __LOG( "CUPnPXMLEventParser::SetAttributesL" );
-
     RAttribute attribute;
     TInt count = aAttributes.Count();
     TInt volume = KErrNotFound;
     iMasterVolumeState = EFalse;
+    
     for ( TInt i = 0; i < count ; i++ )
         {
         attribute = aAttributes[i];
         const TDesC8& name = attribute.Attribute().LocalName().DesC();
-
+        const TDesC8& value = attribute.Value().DesC();
+        if( value.Length() )
+            {
+            __LOG8_1( "CUPnPXMLEventParser::SetAttributesL value = %S",
+                    &value );
+            }
+        
+        // volume & channel
         if ( iParserState == EVolume )
             {
             // assign the value of Volume to volume 
             if ( name.CompareF( KVal ) == KErrNone )
                 {
-                __LOG( "SetAttributesL - \"val\" found!" );
-                TLex8 lexer( attribute.Value().DesC() );
+                TLex8 lexer( value );
                 User::LeaveIfError( lexer.Val(volume) );
-                __LOG1( "SetAttributesL - volume = %d", volume );
                 }
             else if ( name.CompareF( KChannel ) == KErrNone )
                 {
                 // channel is found, check if is Master
-                const TDesC8& channelname = attribute.Value().DesC();
-                if ( channelname.CompareF( KMaster ) == KErrNone )
+                if ( value.CompareF( KMaster ) == KErrNone )
                     {
-                    __LOG( "SetAttributesL - MasterVolume found!" );
+                    __LOG( "CUPnPXMLEventParser::SetAttributesL - \
+MasterVolume found!" );
                     iMasterVolumeState = ETrue;
                     }
                 }
             }
-        else
+          
+          
+                     
+              
+        // other values
+        else if ( name.Compare( KVal ) == KErrNone )
             {
-
-            if ( name.Compare( KVal ) == KErrNone )
+            TLex8 lexer( value );
+            
+            if ( iParserState == EInstanceID )
                 {
-                __LOG( "SetAttributesL - \"val\" found!" );
-
-                TLex8 lexer( attribute.Value().DesC() );
-                if ( iParserState == EInstanceID )
-                    {
-                    User::LeaveIfError( lexer.Val( iInstanceID ) );
-                    }
-                else
-                    if ( iParserState == EMute )
-                        {
-                        User::LeaveIfError( lexer.Val( iMute ) );
-                        }
-                    else
-                        {
-                        __LOG( "SetAttributesL - unknown state!" );
-                        }
+                TInt id = KErrNotFound;
+                User::LeaveIfError( lexer.Val( id ) );
+                iAvtEvent->SetInstanceID( id );
+                }
+            else if ( iParserState == EMute )
+                {
+                TInt mute = KErrNotFound;
+                User::LeaveIfError( lexer.Val( mute ) );
+                iAvtEvent->SetMute( mute );
+                }
+            else if ( iParserState == ETransportState )
+                {
+                iAvtEvent->SetTransportState( value );
+                }
+            else if ( iParserState == ETransportURI )
+                {
+                iAvtEvent->SetTransportURIL( value );
+                }
+            else
+                {
+                __LOG( "CUPnPXMLEventParser::SetAttributesL - \
+unknown state" );
                 }
             }
         }
     
-    // check Mastervolume if was found, and volume if was found
+    // check Mastervolume and volume
     if ( iParserState == EVolume && 
          iMasterVolumeState && 
          volume != KErrNotFound )
         {
         // all is found ,so assign the iVolume
-        __LOG1( "SetAttributesL - set iVolume : %d", volume );
-        iVolume = volume;       
+        __LOG1( "CUPnPXMLEventParser::SetAttributesL - set iVolume : %d",
+                                                                     volume );
+        iAvtEvent->SetVolume( volume );       
         }
-    
-    __LOG( "CUPnPXMLEventParser::SetAttributesL - End" );
     }
-
+    
 // --------------------------------------------------------------------------
 // CUPnPXMLEventParser::Reset
 // See upnpxmlparser.h
 // --------------------------------------------------------------------------
 void CUPnPXMLEventParser::Reset()
     {
-    iInstanceID = KErrNotFound;
-    iMute = KErrNotFound;
-    iVolume = KErrNotFound;
     iParserState = ENotSupported;
     iMasterVolumeState = EFalse;
+    
+    iAvtEvent->Reset();
     }
-      
+
+// --------------------------------------------------------------------------
+// CUPnPXMLEventParser::ResetResult
+// See upnpxmlparser.h
+// --------------------------------------------------------------------------
+void CUPnPXMLEventParser::ResetResult()
+    {
+    iSessionInstanceID = KErrNotFound;
+    iParserState = ENotSupported;
+    iMasterVolumeState = EFalse;
+    
+    iAvtResultEvent->Reset();
+    }     
+         
 // end of file
 

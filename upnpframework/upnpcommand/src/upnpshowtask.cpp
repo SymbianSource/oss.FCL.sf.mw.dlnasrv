@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2007-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -32,6 +32,7 @@
 #include "upnpitemresolverobserver.h"   // MUPnPItemResolverObserver
 #include "upnpitemresolverfactory.h"    // UPnPItemResolverFactory
 #include "upnpitemutility.h"            // UPnPItemUtility::BelongsToClass
+#include <upnpstring.h>                 // UpnpString::ToUnicodeL
 
 // upnpframework / commonui
 #include "upnpcommonui.h"
@@ -44,6 +45,7 @@
 #include "upnpshowtask.h"
 #include "upnpcommand.h"
 #include "upnpnotehandler.h"            // CUpnpNoteHandler
+#include "upnpavdevice.h"
 
 _LIT( KComponentLogfile, "upnpcommand.log");
 #include "upnplog.h"
@@ -75,13 +77,6 @@ CUpnpShowTask::CUpnpShowTask()
     {
     __LOG( "[UpnpCommand]\t CUpnpShowTask::Constructor" );
 
-    // Initialise member variables
-    iCommonUI = NULL;
-    iPlayingVideo = EFalse;
-    iRenderingSession = NULL;
-    iVideoRenderingSession = NULL;
-    iResourceAllocator = NULL;
-    iRenderingEngine = NULL;
     }
 
 // --------------------------------------------------------------------------
@@ -103,11 +98,8 @@ void CUpnpShowTask::Cleanup()
     {
     __LOG( "[UpnpCommand]\t CUpnpShowTask::Cleanup" );
 
-    if ( iRenderingEngine )
-        {
-        delete iRenderingEngine;
-        iRenderingEngine = NULL;
-        }       
+	delete iRenderingEngine;
+	iRenderingEngine = NULL;
         
     // delete the resource allocator
     // Local mediaserver and AVController resources will be freed.
@@ -140,7 +132,7 @@ void CUpnpShowTask::ConstructL()
     iResourceAllocator = CUpnpTaskResourceAllocator::NewL(
         *iCommonUI,
         CUpnpTaskResourceAllocator::EResourceAvController |
-        CUpnpTaskResourceAllocator::EResourceLocalMediaServer |
+        /*CUpnpTaskResourceAllocator::EResourceLocalMediaServer |*/
         CUpnpTaskResourceAllocator::EResourceSelectImageRenderer );
         
     iShowPlaybackFailedNote = ETrue;
@@ -185,7 +177,7 @@ void CUpnpShowTask::ExecuteL()
     {
     __LOG( "[UpnpCommand]\t CUpnpShowTask::ExecuteL" );
     // assert that required resources exist
-    __ASSERTD( iRenderingEngine, __FILE__, __LINE__ );
+    __ASSERT( iRenderingEngine, __FILE__, __LINE__ );
 
 
     if( iPlayingVideo )
@@ -209,7 +201,10 @@ void CUpnpShowTask::ExecuteL()
 // --------------------------------------------------------------------------
 MUPnPItemResolver* CUpnpShowTask::GetMedia()
     {
-    __ASSERTD( FilePipe(), __FILE__, __LINE__ );
+    __ASSERT( FilePipe(), __FILE__, __LINE__ );
+
+    __LOG1( "[UpnpCommand]\t CUpnpShowTask::GetMedia cnt %d", 
+        FilePipe()->Count() );
 
     MUPnPItemResolver* resolver = 0;
 
@@ -255,16 +250,18 @@ TInt CUpnpShowTask::RenderAck(
         aError = PlayVideo( *aItem );
         }
 
+    // disconnect and renderer busy messages are handled in EngineShutdown
+    // other errors are handled here
     if ( aError != KErrDisconnected )
         {
-        // disconnect message is handled in EngineShutdown
-        // other errors are handled here
         if ( aError == KErrNotSupported || aError == KErrPermissionDenied )
             {
+            // protected file
             TRAP_IGNORE( NoteHandler()->ShowDrmNoteL() );
             }
         else if( aError != KErrNone && iShowPlaybackFailedNote )
             {
+            // unknown error -> show general note
             // note is shown only once per session
             TRAP_IGNORE( NoteHandler()->ShowPlaybackFailedNoteL() );
             iShowPlaybackFailedNote = EFalse;
@@ -273,7 +270,9 @@ TInt CUpnpShowTask::RenderAck(
         // inform observer
         CommandEvent( UpnpCommand::EEventComplete, aError );
         }
-        __LOG1( "[UpnpCommand]\t CUpnpShowTask::RenderAck end, resp=%d", aError );
+    
+    __LOG1( "[UpnpCommand]\t RenderAck end, resp=%d", aError );
+
     return aError;
     }
 
@@ -284,8 +283,6 @@ TInt CUpnpShowTask::RenderAck(
 void CUpnpShowTask::EngineShutdown(
     TInt aError )
     {
-    __ASSERTD( iRenderingEngine, __FILE__, __LINE__ );
-    
     if ( iPlayingVideo )
         {
         __LOG1( "[UpnpCommand]\t CUpnpShowTask::EngineShutdown(%d)\
@@ -300,6 +297,8 @@ while video playing",
             
         if( aError == KErrDisconnected )
             {
+            __ASSERTD( iRenderingEngine, __FILE__, __LINE__ );
+            
             // check from rendering engine if wlan is active
             // note shown only in device disappeared cases
             if( iRenderingEngine->IsWlanActive() )
@@ -307,12 +306,26 @@ while video playing",
                 TRAP_IGNORE( NoteHandler()->ShowConnectionLostNoteL() );
                 }
             }
+        else if( aError == KErrInUse )
+            {
+            // renderer is used by another controlpoint¨
+            if ( iRenderingSession )
+                {
+                TRAP_IGNORE( HBufC* rendererName = UpnpString::ToUnicodeL( 
+                                iRenderingSession->Device().FriendlyName() );
+                    CleanupStack::PushL( rendererName );
+                    iRenderingSession->Device().FriendlyName();
+                    NoteHandler()->ShowRendererInUseNoteL(*rendererName);
+                    CleanupStack::PopAndDestroy( rendererName );
+                    );
+                }
+            }  
             
             
         // Inform the observer
-        __ASSERTD( TaskHandler(), __FILE__, __LINE__ );
+        __ASSERT( TaskHandler(), __FILE__, __LINE__ );
 
-        CommandEvent( UpnpCommand::EEventComplete, aError);
+        CommandEvent( UpnpCommand::EEventComplete, aError, ETrue );
         }
     __LOG( "[UpnpCommand]\t CUpnpShowTask::EngineShutdown END" );
     }

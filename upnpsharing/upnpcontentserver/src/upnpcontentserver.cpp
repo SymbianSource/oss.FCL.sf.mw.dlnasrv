@@ -249,7 +249,7 @@ TBool CUpnpContentServer::CanStop() const
 void CUpnpContentServer::Stop()
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-  /*  if ( iIdle )
+    if ( iIdle )
         {
         iIdle->Cancel();
         }
@@ -261,7 +261,7 @@ void CUpnpContentServer::Stop()
 
     iIdle->Start( KShutdownTimeout, 
                   KShutdownTimeout, 
-                  TCallBack( Shutdown, this ) );*/
+                  TCallBack( Shutdown, this ) );
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
 
@@ -290,14 +290,11 @@ TInt CUpnpContentServer::RequestConnectionLostL(
     const TInt aIapId )
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-    if ( iHandler )
-        {
-        iHandler->ValidateDefaultContainersL();
-        }
     TInt err( KErrNone );
     if ( !iConMon )
         {
-        iConMon = CUPnPConnectionMonitor::NewL( *this, aIapId );
+        iConMon = CUPnPConnectionMonitor::NewL( aIapId );
+        iConMon->SetObserver( *this );
         iActiveIapId = aIapId;
         }
     else if ( iActiveIapId != aIapId )
@@ -329,7 +326,7 @@ void CUpnpContentServer::CancelConnectionLostL()
 // ( other items are commented in header )
 // --------------------------------------------------------------------------
 //
-void CUpnpContentServer::ConnectionLost()
+void CUpnpContentServer::ConnectionLost( TBool /*aUserOriented*/ )
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
 

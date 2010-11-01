@@ -20,23 +20,23 @@
 PRJ_PLATFORMS
 
 PRJ_EXPORTS
-// none
 
 PRJ_MMPFILES
 // none
 
-// upnp xml parser
-#include "../upnpxmlparser/group/bld.inf"
+    // upnp xml parser
+    #include "../upnpxmlparser/group/bld.inf"
 
-// avcontroller server
-#include "../upnpavcontrollerserver/group/bld.inf"
+    // avcontroller server
+    #include "../upnpavcontrollerserver/group/bld.inf"
 
-// avcontroller client
-#include "../upnpavcontrollerclient/group/bld.inf"
+    // avcontroller client
+    #include "../upnpavcontrollerclient/group/bld.inf"
 
-// avcontroller helper
-#include "../upnpavcontrollerhelper/group/bld.inf"
+    // avcontroller helper
+    #include "../upnpavcontrollerhelper/group/bld.inf"
+    
+    // rendering statemachine
+    #include "../upnprenderingstatemachine/group/bld.inf"
 
-// upnpavcontroller ROM
-#include "../rom/bld.inf"
-
+// End of file

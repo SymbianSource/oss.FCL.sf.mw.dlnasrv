@@ -37,6 +37,9 @@ _LIT( KAVControllerName,            "AVController" );
 _LIT( KAVControllerFilename,        "upnpavcontrollerserver" );
 _LIT8( KAVControllerDefaultName,    "Nokia AV Controller" );
 
+// REL_TIME type for seek action.
+_LIT8( KRel_Time,            "REL_TIME" );
+
 //_LIT8( KDownloadMemoryCard,     "e:\\Download\\Media\\" );
 //_LIT8( KDownloadPhoneMemory,    "c:\\Data\\Download\\Media\\" );
 //_LIT8( KDownloadRAMDrive,       "d:\\Download\\Media\\" );
@@ -127,7 +130,16 @@ enum TAVControllerRqst
     EAVControllerCancelDownloadEvent,           // 77
     EAVControllerGetUploadEvent,                // 78
     EAVControllerCancelUploadEvent,             // 79
-    EAVControllerStartDownloadFH                // 80
+    EAVControllerStartDownloadFH,               // 80
+    
+    // seek related opcodes
+    EAVControllerSeekRelTime,                   // 81
+    EAVControllerCancelSeekRelTime,             // 82
+    EAVControllerGetRendererState,              // 83
+
+    EAVControllerGetDeviceIconRequest,          // 84
+
+    EAVControllerRqstLast
     };
     
 enum TAVControllerRsp
@@ -159,13 +171,15 @@ enum TAVControllerRsp
     EAVControllerDeleteObjectCompleted,
     EAVControllerDeviceDisappearedRequestCompleted,
     EAVControllerStartMediaServerCompleted,
-    EAVControllerConnectionLost
+    EAVControllerConnectionLost,
+    EAVControllerSeekCompleted
     };  
 
 enum TAVControllerDeviceDiscovery
     {
     EAVDeviceDisappeared,
-    EAVDeviceDiscovered
+    EAVDeviceDiscovered,
+    EAVDeviceIconDownloaded
     };
 
 enum TAVControllerDeviceListType
@@ -183,7 +197,17 @@ enum TUnsolicitedEventE
     EPause,
     EStop,
     EVolume,
-    EMute
+    EMute,
+    ETransition
+    };
+
+/**
+ * Transition event data.
+ */
+enum TTransitionValue
+    {
+    ETransitionEnter,
+    ETransitionExit
     };
 
 /**

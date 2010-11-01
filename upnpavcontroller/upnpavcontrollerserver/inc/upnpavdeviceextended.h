@@ -30,6 +30,7 @@
 // FORWARD DECLARATIONS
 class CUpnpDlnaProtocolInfo;
 class CUpnpItem;
+class TInetAddr;
 
 /**
  * Extended UPnP device. Contains protocolinfo and a reference count for
@@ -41,6 +42,9 @@ class CUpnpAVDeviceExtended: public CUpnpAVDevice
  
 public:
 
+    /**
+     * Defines DLNA device types.
+     */    
     enum TDLNADeviceType
         {
         EUPnP = 0,
@@ -283,12 +287,57 @@ public: // New functions
      * 
      * @return ETrue if the device has received protocolInfo
      */    
-   TBool PInfoReceived() const;
-   
-   void SetDLNADeviceType( TDLNADeviceType aDeviceType );
-   
-   TDLNADeviceType DLNADeviceType() const;
+    TBool PInfoReceived() const;
+     
+    /**
+     * Setter for CM:PrepareForConnection availibility
+     * 
+     * @param aPrepareForConnection
+     */    
+    void SetPrepareForConnection( TBool aPrepareForConnection );
+
+    /**
+     * Getter for CM:PrepareForConnection availibility
+     * 
+     * @return ETrue if the device supports CM:PrepareForConnection
+     */    
+    TBool PrepareForConnection() const;
     
+    /**
+     * Setter for DLNA device type
+     * 
+     * @param aDeviceType
+     */    
+    void SetDLNADeviceType( TDLNADeviceType aDeviceType );
+   
+    /**
+     * Getter for DLNA device type
+     * 
+     * @return DLNA device type
+     */    
+    TDLNADeviceType DLNADeviceType() const;
+
+    /**
+     * Setter for icon url
+     *
+     * @param aAddress address of device
+     * @param aUrlBase base url for icon url
+     * @param aIconUrl icon url relative to base url
+     */    
+    void SetIconUrlL( const TInetAddr& aAddress, const TDesC8& aUrlBase,
+        const TDesC8& aIconUrl );
+
+    /**
+     * Getter for icon url
+     *
+     * @return Icon url
+     */    
+    TPtrC8 IconUrl() const;
+    
+private: // MUpnpDeviceIconDownloadObserver
+
+    void DeviceIconDownloadCompleted( const TDesC8& aDeviceUuid, TInt aError );
+
 private:
     
     /**
@@ -331,16 +380,44 @@ private:
      */    
     HBufC8* RemoveIllegalCharactersL( const TDesC8& aPtr ) const;
     
+    /**
+     * Match given protocolInfo to source protocolinfo.
+     * 
+     * @param aInfo protocolInfo
+     * @return ETrue if given protocolInfo matches to source protocolInfo
+     */    
     TBool MatchSourceProfileId( const TDesC8& aInfo ) const;
 
+public:
+    
+    /**
+     * Match given protocolInfo to sink protocolinfo
+     * (DLNA profile id based mathing)
+     * 
+     * @param aInfo protocolInfo
+     * @return ETrue if given protocolInfo matches to sink protocolInfo
+     */    
     TBool MatchSinkProfileId( const TDesC8& aInfo ) const;
     
+    /**
+     * Match given protocolInfo to sink protocolinfo.
+     * (MIME type based matching)
+     * 
+     * @param aInfo protocolInfo
+     * @return ETrue if given protocolInfo matches to sink protocolInfo
+     */    
     TBool MatchSinkMime( const TDesC8& aInfo ) const;
        
 private:
     
+    /**
+     * Source protocolinfo. Own.
+     */    
     RPointerArray<CUpnpDlnaProtocolInfo> iSourceProtocolInfo;
     
+    /**
+     * Sink protocolinfo. Own.
+     */    
     RPointerArray<CUpnpDlnaProtocolInfo> iSinkProtocolInfo;
     
     TInt iSubscriptionCount;
@@ -359,7 +436,11 @@ private:
     
     TBool iPInfoReceived;
     
+    TBool iPrepareForConnection;
+    
     TDLNADeviceType iDLNADeviceType;
+
+    HBufC8* iIconUrl; // Own, can be NULL
     };
 
 

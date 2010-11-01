@@ -27,7 +27,7 @@
 #include "upnpstring.h"
 #include "upnpcons.h"
 #include <utf.h>
-#include <xml/dom/xmlengdocument.h>
+#include <xmlengdocument.h>
 #include <e32math.h>
 
 // ============================ MEMBER FUNCTIONS ===============================
@@ -610,6 +610,21 @@ HBufC* UpnpCdUtils::EscapeAposL(const TDesC&  aValue)
     }   
 }
 
+TBool UpnpCdUtils::ValidateDateLength(TInt aDateLength)
+    {
+    TBool retVal = ETrue;
+    
+    if ((aDateLength!=EDay)&&(aDateLength!=ESecond)&&
+            (aDateLength!=ETimeOffset1)&&(aDateLength!=EMiliSecond)&&
+            (aDateLength!=ETimeOffset2)&&(aDateLength!=EZone1)&&
+            (aDateLength!=EZone2))                                     
+        {
+        retVal = EFalse;
+        }
+    
+    return retVal;
+    }
+
 // -----------------------------------------------------------------------------
 // CUpnpElementFactory::ValidateDateL()
 // Only Those date string is validate
@@ -624,16 +639,13 @@ HBufC* UpnpCdUtils::EscapeAposL(const TDesC&  aValue)
 //
 TBool UpnpCdUtils::ValidateDateL( TPtrC8 aValue )
     {         
- /*   TBool wrong = 0;
+    TBool wrong = 0;
 
     TInt dateLength = aValue.Length();                                         
 
-    if ((dateLength!=EDay)&&(dateLength!=ESecond)&&
-        (dateLength!=ETimeOffset1)&&(dateLength!=EMiliSecond)&&
-        (dateLength!=ETimeOffset2)&&(dateLength!=EZone1)&&
-        (dateLength!=EZone2))                                     
+    if (!(ValidateDateLength(dateLength)))
         {
-        return EFalse;                
+        return EFalse;
         }
     else
         {
@@ -824,7 +836,7 @@ TBool UpnpCdUtils::ValidateDateL( TPtrC8 aValue )
         {                        
         return EFalse;      
         }
-*/
+
     return ETrue;
     }
     

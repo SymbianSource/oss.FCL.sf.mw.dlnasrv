@@ -22,8 +22,8 @@
 
 // INCLUDES
 
-#include <xml/dom/xmlengdom.h>
-#include <xml/dom/xmlengdocument.h>
+#include <xmlengdom.h>
+#include <xmlengdocument.h>
 #include "upnpcontentdirectory.h"
 #include "upnpfiletransfer.h"
 #include "upnperrors.h" // Added by ClassView
@@ -290,6 +290,27 @@ private: // New functions
     * @param aElement    
     */
     void CheckSizeOfResElementL(const TXmlEngElement& aElement);
+    
+    /**
+     * Checks if value is restricted
+     * @param restrVal
+     */
+    TBool CheckRestrictedValue (TPtrC8& restrVal);
+    
+    void ValidateAttributeL(TXmlEngElement aElement, TXmlEngElement aObject);
+    
+    void CheckNestedElementsL(RXmlEngNodeList<TXmlEngElement> aNestEls, TXmlEngElement aChild,
+            TBool aLocalSharing);
+    
+    TBool HandleChildrenL (RXmlEngNodeList<TXmlEngElement> aChildren, TBool aNew, TBool aLocalSharing,
+            TBool aElementFound, TXmlEngElement aEl);
+    
+    TBool ValidateElementL (TXmlEngElement aObject, 
+            const TDesC8& aPropertyType, TXmlEngElement aEl, TBool aElementFound, TBool aNew,
+            TBool aLocalSharing);
+    
+    void CheckElementValidity (TXmlEngElement& aElement);
+    
                     
 private: // Data
 

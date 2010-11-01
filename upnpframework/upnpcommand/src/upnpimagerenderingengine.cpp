@@ -34,10 +34,11 @@
 
 // upnpframework / commonui
 #include "upnpcommonui.h"               // common UI for upnp video player dlg
+#include "upnprenderingstatemachine.h"  // rendering state machine
 
 // command internal
 #include "upnpimagerenderingengineobserver.h"   // the observer interface
-#include "upnpimagerenderingengine.h"   // myself
+#include "upnpimagerenderingengine.h"   // self
 #include "upnpperiodic.h"
 
 _LIT( KComponentLogfile, "upnpcommand.log");
@@ -45,7 +46,6 @@ _LIT( KComponentLogfile, "upnpcommand.log");
 
 // CONSTANT DEFINITIONS
 const TInt KReactionTimerMicrosec = 100000; // 100 millisec.
-
 
 // --------------------------------------------------------------------------
 // CUpnpImageRenderingEngine::NewL
@@ -86,7 +86,8 @@ CUpnpImageRenderingEngine::CUpnpImageRenderingEngine(
     iState = EIdle;
     iCurrentResolver = 0;
     iBufferedResolver = 0;
-
+    iRenderingStateMachine = NULL;
+    iWlanActive = ETrue;
     // set observer
     iRenderingSession.SetObserver( *this );
     }
@@ -99,8 +100,10 @@ void CUpnpImageRenderingEngine::ConstructL()
     {
     __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::ConstructL" );
     iTimer = CUPnPPeriodic::NewL( CActive::EPriorityStandard );
-    
-    iWlanActive = ETrue;
+    iRenderingStateMachine = 
+                  CUpnpRenderingStateMachine::NewL( iRenderingSession );
+    iRenderingStateMachine->SetObserver( *this );
+    iRenderingStateMachine->SyncL();
     }
     
 // --------------------------------------------------------------------------
@@ -109,19 +112,27 @@ void CUpnpImageRenderingEngine::ConstructL()
 //
 CUpnpImageRenderingEngine::~CUpnpImageRenderingEngine()
     {
-    __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine: Destructor" );
-
+    __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine:\
+        Destructor" );
     Cleanup();
-
+    
     // Stop observing the rendering session
     iRenderingSession.RemoveObserver();
 
-    __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::~CUpnpImageRenderingEngine delete iCurrentResolver" );
+    __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::\
+~CUpnpImageRenderingEngine delete iCurrentResolver" );
     MUPnPItemResolver* tempCurrentResolver = iCurrentResolver;
     iCurrentResolver = NULL;
     delete tempCurrentResolver;
     
-       if( iTimer )
+    if ( iRenderingStateMachine )
+        {
+        iRenderingStateMachine->RemoveObserver();
+        delete iRenderingStateMachine;
+        iRenderingStateMachine = NULL;
+        }
+
+    if( iTimer )
         {    
         iTimer->Cancel();
         delete iTimer;
@@ -149,7 +160,6 @@ void CUpnpImageRenderingEngine::Cleanup()
         }
 
     iBufferingNewImage = EFalse;
-
     // Delete resolvers
     // Delete for resolvers is done using temporary variables so that we can
     // first nullify the members and then delete the actual objects.
@@ -159,7 +169,8 @@ void CUpnpImageRenderingEngine::Cleanup()
     // if deletion is done the conventional way, the objects get deleted
     // twice, which is not what we want. :-)
     
-    __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::Cleanup delete iBufferedResolver" );
+    __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::\
+Cleanup delete iBufferedResolver" );
     MUPnPItemResolver* tempBufferedResolver = iBufferedResolver;
     iBufferedResolver = NULL;
     delete tempBufferedResolver;
@@ -173,8 +184,7 @@ void CUpnpImageRenderingEngine::Cleanup()
 //
 void CUpnpImageRenderingEngine::PlayL()
     {
-    __LOG1( "[UpnpCommand]\t CUpnpImageRenderingEngine::PlayL in state %d",
-        iState);
+    __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::PlayL" );
 
     if ( iState != EShuttingDown )
         {
@@ -200,8 +210,7 @@ void CUpnpImageRenderingEngine::PlayL()
 //
 void CUpnpImageRenderingEngine::StopL()
     {
-    __LOG1( "[UpnpCommand]\t CUpnpImageRenderingEngine::StopL in state %d",
-        iState);
+    __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::StopL" );
 
     // cancel any timers that are going on
     iTimer->Cancel();
@@ -216,29 +225,15 @@ void CUpnpImageRenderingEngine::StopL()
         case EIdle:
         case EResolvingItem:
         case EResolveComplete:
-        case ESettingUri: // fall through
             {
             // just cancel the sequence and do nothing
             iState = EIdle;
             break;
             }
-        case EStartingPlay:
-            {
-            // wait for PLAY complete, then do STOP
-            // then wait for STOP complete
-            iState = EStopping;
-            break;
-            }
-        case EPlaying:
+        case ERendering: 
             {
             // Send stop action.
-            iRenderingSession.StopL();
-            iState = EStopping;
-            break;
-            }
-        case EStopping:
-            {
-            // already stopping - do nothing
+            iRenderingStateMachine->CommandL( Upnp::EStop, 0, NULL );
             break;
             }
         case EShuttingDown:
@@ -248,7 +243,7 @@ void CUpnpImageRenderingEngine::StopL()
             }
         default:
             {
-            __PANICD( __FILE__, __LINE__ );
+            __PANIC( __FILE__, __LINE__ );
             break;
             }
         }
@@ -265,7 +260,9 @@ TInt CUpnpImageRenderingEngine::Timer( TAny* aArg )
         static_cast<CUpnpImageRenderingEngine*>( aArg );
     TRAPD( error, self->RunTimerL() )
     if ( error != KErrNone )
+        {
         self->RunError( error );
+        }
     return 0; // do not call again
     }
 
@@ -291,35 +288,34 @@ void CUpnpImageRenderingEngine::RunTimerL()
 
     switch( iState )
         {
-        case EIdle: // fall through
+        case EIdle: 
             {
             StartResolvingL();
             break;
             }
         case EResolvingItem: // fall through
-        case EResolveComplete:
-        case ESettingUri: // fall through
-        case EStartingPlay:
+        case EResolveComplete: // fall through
             {
             // indicate that new image is being buffered. It will be popped
             // from buffer in next callback.
             iBufferingNewImage = ETrue;
             break;
             }
-        case EPlaying:
+        case ERendering:
             {
             // indicate that new image is being buffered. Send stop signal.
             // new item will be handled after stop completed.
-            iBufferingNewImage = ETrue;
-            iRenderingSession.StopL();
-            iState = EStopping;
-            break;
-            }
-        case EStopping:
-            {
-            // indicate that new image is being buffered. It will be popped
-            // from buffer in next callback.
-            iBufferingNewImage = ETrue;
+            if( !iBufferingNewImage )
+                {
+                iBufferingNewImage = ETrue;
+                iRenderingStateMachine->CommandL( Upnp::EStop, 0, NULL );
+                }
+            else
+                {
+                // stop already sent, wait for response and do nothing
+                __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::RunTimerL,\
+wait for stop" );
+                }
             break;
             }
         case EShuttingDown:
@@ -329,12 +325,26 @@ void CUpnpImageRenderingEngine::RunTimerL()
             }
         default:
             {
-            __PANICD( __FILE__, __LINE__ );
+            __PANIC( __FILE__, __LINE__ );
             break;
             }
         }
     }
 
+// --------------------------------------------------------------------------
+// CUpnpImageRenderingEngine::RunError
+// Exception occurred in the timer body
+// --------------------------------------------------------------------------
+//
+TInt CUpnpImageRenderingEngine::RunError( TInt aError )
+    {
+    __LOG1( "[UpnpCommand]\t CUpnpImageRenderingEngine::\
+RunError aError %d", aError );
+    Cleanup();
+    SendRenderAck( aError );
+    return KErrNone;
+    }
+    
 // --------------------------------------------------------------------------
 // CUpnpImageRenderingEngine::StartResolvingL
 // Handles the start up of the item resolving.
@@ -378,28 +388,39 @@ void CUpnpImageRenderingEngine::StartResolvingL()
 // --------------------------------------------------------------------------
 //
 void CUpnpImageRenderingEngine::ResolveComplete(
-    const MUPnPItemResolver& aResolver,
-    TInt aError )
+                                    const MUPnPItemResolver& aResolver,
+                                    TInt aError )
     {
     __LOG1( "[UpnpCommand]\t CUpnpImageRenderingEngine::ResolveComplete\
- in state %d", iState );
-
+ aError %d", aError );
+    
     // if engine is shutting down, no need to check these
     if ( iState == EResolvingItem )
         {
-        __ASSERTD( &aResolver == iCurrentResolver, __FILE__, __LINE__ );
+        __ASSERT( &aResolver == iCurrentResolver, __FILE__, __LINE__ );
+        
         if( iBufferingNewImage )
             {
             TRAP( aError, StartResolvingL() );
             }
         else if( aError == KErrNone )
             {
-            iState = EResolveComplete;
-            
-            // Now that we have the full metadata of the item available, we
-            // can start the rendering
-            TRAP( aError, InitiateShowingL() );
+            iState = ERendering;
+            const CUpnpItem& item = iCurrentResolver->Item();
+
+            if ( UPnPItemUtility::BelongsToClass( item, KClassImage ) )
+                {
+                __LOG1( "[UpnpCommand]\t play image item of resolver 0x%d", 
+                                                    TInt(iCurrentResolver) );
+                Cycle();
+                }
+            else if ( UPnPItemUtility::BelongsToClass( item, KClassVideo ) )
+                {
+                __LOG( "[UpnpCommand]\t video, inform observer to play it" );
+                aError = iObserver.RenderAck( KErrNotSupported, &item );
+                }
             }
+            
         // error handling
         if( aError != KErrNone && iState != EShuttingDown )
             {
@@ -421,83 +442,34 @@ void CUpnpImageRenderingEngine::ResolveComplete(
     }
 
 // --------------------------------------------------------------------------
-// CUpnpImageRenderingEngine::InitiateShowingL
-// Handles the initiation of rendering (SetUri or video player launching).
-// --------------------------------------------------------------------------
-void CUpnpImageRenderingEngine::InitiateShowingL()
-    {
-    __LOG1( "[UpnpCommand]\t CUpnpImageRenderingEngine::InitiateShowingL\
- in state %d",
-        iState );
-    __ASSERTD( iCurrentResolver, __FILE__, __LINE__ );
-
-    if ( UPnPItemUtility::BelongsToClass(
-        iCurrentResolver->Item(), KClassImage ) )
-        {
-         // Send the setUri action
-        iRenderingSession.SetURIL(
-            iCurrentResolver->Resource().Value(),
-            iCurrentResolver->Item() );
-        // update the state
-        iState = ESettingUri;
-        }
-    else
-        {
-        User::Leave( KErrNotSupported );
-        }
-    }
-
-
-// --------------------------------------------------------------------------
 // CUpnpImageRenderingEngine::SetURIResult
 // UPnP AV Controller calls this method as a result for the 'set uri' request.
 // --------------------------------------------------------------------------
 //
 void CUpnpImageRenderingEngine::SetURIResult( TInt aError )
-    {
+    {    
     __LOG1( "[UpnpCommand]\t CUpnpImageRenderingEngine::SetURIResult\
- in state %d",
-        iState );
-
-    if ( iState == ESettingUri )
+ in aError %d", aError );
+ 
+    if ( iState == ERendering )
         {
-        //need check the aError in case of SetURIL cause a error.
-        if( aError != KErrNone )
+        if( iBufferingNewImage && aError == KErrNone)
             {
-            Cleanup();
-            return;         
-            }
-        __ASSERTD( iCurrentResolver, __FILE__, __LINE__ );
-        if( iBufferingNewImage )
-            {
-            TRAP( aError, StartResolvingL() );
+            __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::\
+SetURIResult - pass cancel to rendering state machine" );
+            iRenderingStateMachine->SetURIResult( KErrCancel );
             }
         else if( aError == KErrNone )
             {
-            TRAP( aError, iRenderingSession.PlayL() );
-            if( aError == KErrNone )
-                {
-                // Update the state
-                iState = EStartingPlay;
-                }
-            }
-        // error handling
-        if( aError != KErrNone )
-            {
-            SendRenderAck( aError );
+            __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::\
+SetURIResult - pass uri result to rendering state machine" );
+            iRenderingStateMachine->SetURIResult( aError );
             }
         }
     else if ( iState == EShuttingDown )
         {
         // do nothing
         }
-    else
-        {
-        __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine: state error." );
-        __PANICD( __FILE__, __LINE__ );
-        iState = EIdle;
-        }
-
     }
 
 // --------------------------------------------------------------------------
@@ -510,79 +482,15 @@ void CUpnpImageRenderingEngine::InteractOperationComplete(
     TUPnPAVInteractOperation aOperation )
     {
     __LOG2( "[UpnpCommand]\t CUpnpImageRenderingEngine::\
-InteractOperationComplete (%d) in state %d", aOperation, iState );
-
-    if ( iState == EStartingPlay )
+InteractOperationComplete aOperation %d aError %d", aOperation, aError );
+    if ( iState != EShuttingDown )
         {
-        __ASSERTD( iCurrentResolver, __FILE__, __LINE__ );
-        if( aOperation == EUPnPAVPlay && iBufferingNewImage )
-            {
-            // New image in buffer! call stop, then play new item.
-            TRAP( aError, iRenderingSession.StopL() );
-            if ( aError == KErrNone )
-                {
-                iState = EStopping;
-                }
-            }
-        else if ( aOperation == EUPnPAVPlay && aError == KErrNone )
-            {
-            // update status
-            iState = EPlaying;
-            // response for play request
-            SendRenderAck( KErrNone );
-            }
-        // error handling
-        if ( aError != KErrNone )
-            {
-            SendRenderAck( aError );
-            }
+        __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::\
+InteractOperationComplete - pass operation to rendering state machine" );
+        iRenderingStateMachine->InteractOperationComplete( 
+            aError, aOperation );
         }
-    else if ( iState == EPlaying )
-        {
-        if( aOperation == EUPnPAVPlayUser )
-            {
-            // state change event notification
-            // no need to do anything here
-            }
-        else if( aOperation == EUPnPAVStopUser )
-            {
-            // user stop notification
-            // state to idle, so that no stop event will be sent
-            // if starting to process new item
-            iState = EIdle;
-            }
-        }
-    else if ( iState == EStopping )
-        {
-        __ASSERTD( iCurrentResolver, __FILE__, __LINE__ );
-        if( aOperation == EUPnPAVStop && iBufferingNewImage )
-            {
-            TRAP( aError, StartResolvingL() );
-            }
-        else if ( aOperation == EUPnPAVStop && aError == KErrNone )
-            {
-            // succesful stop - go IDLE
-            iState = EIdle;
-            }
-        // error handling
-        if ( aError != KErrNone )
-            {
-            SendRenderAck( aError );
-            }
-        }
-    else if ( iState == EShuttingDown )
-        {
-        if ( aOperation == EUPnPAVStop || aOperation == EUPnPAVPlay )
-            {
-            iState = EIdle;
-            }
-        }
-
-    __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::InteractOperationComplete end " );
     }
-
-
-
 
 // --------------------------------------------------------------------------
 // CUpnpImageRenderingEngine::MediaRendererDisappeared
@@ -611,22 +519,6 @@ MediaRendererDisappeared in state %d", iState );
         iObserver.EngineShutdown( KErrDisconnected );
         }
     }
-
-// --------------------------------------------------------------------------
-// CUpnpImageRenderingEngine::RunError
-// Exception occurred in the timer body
-// --------------------------------------------------------------------------
-//
-TInt CUpnpImageRenderingEngine::RunError( TInt aError )
-    {
-    __LOG2( "[UpnpCommand]\t CUpnpImageRenderingEngine::\
-RunError in state %d aError %d", iState, aError );
-    Cleanup();
-    SendRenderAck( aError );
-    return KErrNone;
-    }
-
-
 
 // --------------------------------------------------------------------------
 // CUpnpImageRenderingEngine::SendRenderAck
@@ -676,8 +568,126 @@ SendRenderAck resp=%d -> EngineShutdown", resp );
 // --------------------------------------------------------------------------
 //
 TBool CUpnpImageRenderingEngine::IsWlanActive()
-    {        
+    {
+    __LOG1( "[UpnpCommand]\t CUpnpImageRenderingEngine::\
+IsWlanActive iWlanActive=%d ", iWlanActive );
     return iWlanActive;
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpImageRenderingEngine::Cycle
+// Cycles next item by checking resolver status. 
+// --------------------------------------------------------------------------
+//
+void CUpnpImageRenderingEngine::Cycle()
+    {
+    __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::Cycle" );
+    
+    TRAPD( err, iRenderingStateMachine->CommandL( 
+            Upnp::EPlay, 0, &iCurrentResolver->Item() ) );
+            
+    if ( KErrNone != err )
+        {
+        SendRenderAck( err );
+        }
+    }
+    
+
+// --------------------------------------------------------------------------
+// CUpnpImageRenderingEngine::RendererSyncReady
+// Callback from rendering state machine when sync is ready.
+// --------------------------------------------------------------------------
+//
+void CUpnpImageRenderingEngine::RendererSyncReady( TInt aError,
+    Upnp::TState aState )
+    {
+    __LOG1( "[UpnpCommand]\t CUpnpImageRenderingEngine::\
+RendererSyncReady aError=%d ", aError );
+
+    if( aState != Upnp::EStopped )
+        {
+        // Renderer is used by another controlpoint. Cannot continue.
+        iState = EShuttingDown; // avoid all callbacks
+        iObserver.EngineShutdown( KErrInUse );
+        }
+    else if ( KErrNone != aError )
+        {
+        // notify observer if error. currently there will not
+        // any error from rendering state machine but may be
+        // in future. 
+        SendRenderAck( aError );
+        }
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpImageRenderingEngine::RenderingStateChanged
+// Callback from rendering state machine when rendering state changes.
+// --------------------------------------------------------------------------
+//
+void CUpnpImageRenderingEngine::RenderingStateChanged( TInt aError, 
+    Upnp::TState aState , TBool aActionResponse, TInt /*aStateParam*/ )
+    {
+    __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::\
+RenderingStateChanged" );
+
+    __LOG3( "[UpnpCommand]\t aError=%d aState=0x%x aActionResponse=%d",
+                                        aError, aState, aActionResponse );
+
+    if ( Upnp::EStopped == aState )
+        {
+        __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::\
+RenderingStateChanged - image play stopped" );
+        
+        iState = EIdle;
+        
+        // new image waiting -> start resolving
+        if( iBufferingNewImage )
+            {
+            __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::\
+RenderingStateChanged - start resolving new image");
+            TRAP( aError, StartResolvingL() );
+            }
+        }
+    else if ( Upnp::EPlaying == aState )
+        {
+        // new image waiting -> wait for stop
+        // stop has already been sent
+        if( iBufferingNewImage )
+            {
+            __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::\
+RenderingStateChanged to play - new image -> wait for stop");
+            }
+            
+        // image playing -> inform observer  
+        else if( aActionResponse &&  KErrNone == aError )
+            {
+            __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::\
+RenderingStateChanged - image play started ");
+            SendRenderAck( aError );
+            }
+        }    
+            
+    // Error handling       
+    if ( KErrNone != aError )
+        {
+        __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::\
+RenderingStateChanged - Error situation" );
+        SendRenderAck( aError );
+        }
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpImageRenderingEngine::RendererSyncReady
+// Callback from rendering state machine when rendering position is sync.
+// --------------------------------------------------------------------------
+//
+void CUpnpImageRenderingEngine::PositionSync( TInt /*aError*/, 
+        Upnp::TPositionMode /*aMode*/,
+        TInt /*aDuration*/,
+        TInt /*aPosition*/ )
+    {
+    __LOG( "[UpnpCommand]\t CUpnpImageRenderingEngine::\
+PositionSync" );
     }
     
 // End of File

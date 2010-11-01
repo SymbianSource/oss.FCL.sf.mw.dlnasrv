@@ -1,5 +1,5 @@
 /** @file
- * Copyright (c) 2005-2006 Nokia Corporation and/or its subsidiary(-ies). 
+ * Copyright (c) 2005-2009 Nokia Corporation and/or its subsidiary(-ies). 
  * All rights reserved.
  * This component and the accompanying materials are made available
  * under the terms of "Eclipse Public License v1.0"
@@ -27,16 +27,66 @@
 #define KLogFile _L("DLNAWebServer.txt")
 #include "upnpcustomlog.h"
 #include "upnphttpfilereceivetransaction.h"
-#include "upnphttpfileservetransaction.h"
+#include "upnphttpdataservetransaction.h"
 #include "upnpdlnafilterheaders.h"
 #include "upnpcommonupnplits.h"
 #include "upnpdlnacorelation.h"
+
 
 // CONSTANTS
 _LIT8( KDlnaFilter, "DLNA");
 _LIT8( KIpPortPlaceholder8, "___.___.___.___:_____" );
 
 // ============================ MEMBER FUNCTIONS ===============================
+
+// -----------------------------------------------------------------------------
+// CUpnpDlnaFilter::NewL
+// Two-phased constructor.
+// -----------------------------------------------------------------------------
+//
+EXPORT_C CUpnpDlnaFilter* CUpnpDlnaFilter::NewL(
+    MUpnpContentDirectoryDataFinder* aFinder,
+    CUpnpSecurityManager* aSecurityManager )
+    {
+    CUpnpDlnaFilter* self =
+            CUpnpDlnaFilter::NewLC( aFinder, aSecurityManager );
+    CleanupStack::Pop( self );
+    return self;
+    }
+
+// -----------------------------------------------------------------------------
+//  CUpnpDlnaFilter::NewTransactionL
+//
+// -----------------------------------------------------------------------------
+//
+EXPORT_C void CUpnpDlnaFilter::NewTransactionL( const TDesC8& aMethod, const TDesC8& aUri, 
+    const TInetAddr& aSender, CUpnpHttpServerTransaction*& aResultTrans )
+    {
+    if ( aMethod == KHttpPost() )
+        {
+        aResultTrans = CUpnpHttpFileReceiveTransaction::NewL( *this, aSender, aUri );
+        }
+    else
+        {
+        aResultTrans = CUpnpHttpDataServeTransaction::NewL( *this, aSender, aUri );
+        }
+    }
+
+// -----------------------------------------------------------------------------
+// CUpnpDlnaFilter::NewLC
+// Two-phased constructor.
+// -----------------------------------------------------------------------------
+//
+EXPORT_C CUpnpDlnaFilter* CUpnpDlnaFilter::NewLC(
+    MUpnpContentDirectoryDataFinder* aFinder,
+    CUpnpSecurityManager* aSecurityManager )
+    {
+    CUpnpDlnaFilter* self = new (ELeave) CUpnpDlnaFilter( aFinder,
+        aSecurityManager );
+    CleanupStack::PushL( self );
+    self->ConstructL();
+    return self;
+    }
 
 // -----------------------------------------------------------------------------
 // CUpnpDlnaFilter::CUpnpDlnaFilter
@@ -61,37 +111,6 @@ CUpnpDlnaFilter::~CUpnpDlnaFilter()
     }
 
 // -----------------------------------------------------------------------------
-// CUpnpDlnaFilter::NewLC
-// Two-phased constructor.
-// -----------------------------------------------------------------------------
-//
-CUpnpDlnaFilter* CUpnpDlnaFilter::NewLC(
-    MUpnpContentDirectoryDataFinder* aFinder,
-    CUpnpSecurityManager* aSecurityManager )
-    {
-    CUpnpDlnaFilter* self = new (ELeave) CUpnpDlnaFilter( aFinder,
-        aSecurityManager );
-    CleanupStack::PushL( self );
-    self->ConstructL();
-    return self;
-    }
-
-// -----------------------------------------------------------------------------
-// CUpnpDlnaFilter::NewL
-// Two-phased constructor.
-// -----------------------------------------------------------------------------
-//
-CUpnpDlnaFilter* CUpnpDlnaFilter::NewL(
-    MUpnpContentDirectoryDataFinder* aFinder,
-    CUpnpSecurityManager* aSecurityManager )
-    {
-    CUpnpDlnaFilter* self =
-            CUpnpDlnaFilter::NewLC( aFinder, aSecurityManager );
-    CleanupStack::Pop( self );
-    return self;
-    }
-
-// -----------------------------------------------------------------------------
 // CUpnpDlnaFilter::ConstructL
 // EPOC default constructor for performing 2nd stage construction.
 // -----------------------------------------------------------------------------
@@ -99,6 +118,7 @@ CUpnpDlnaFilter* CUpnpDlnaFilter::NewL(
 void CUpnpDlnaFilter::ConstructL()
     {
     User::LeaveIfError( iFs.Connect() );
+    User::LeaveIfNull(iCdDataFinder);
     }
 
 // -----------------------------------------------------------------------------
@@ -141,6 +161,7 @@ HBufC8* CUpnpDlnaFilter::ThirdFieldFromCdL( const TDesC8& aContentUri )
     {
     HBufC8* result = NULL;
     CUpnpDlnaProtocolInfo* protocolInfo = ProtocolInfoL( aContentUri );
+    CleanupStack::PushL(protocolInfo);
     if ( protocolInfo )
         {
         TPtrC8 thirdField = protocolInfo->ThirdField();
@@ -149,7 +170,7 @@ HBufC8* CUpnpDlnaFilter::ThirdFieldFromCdL( const TDesC8& aContentUri )
             result = thirdField.AllocL();
             }
         }
-    delete protocolInfo;
+    CleanupStack::PopAndDestroy(protocolInfo);
     return result;
     }
 
@@ -232,11 +253,7 @@ TInt CUpnpDlnaFilter::FindSharedFolderDBL( const TDesC8& aUrlPath,
 //
 TInt CUpnpDlnaFilter::CheckDLNAPostCorrelationsL( CUpnpHttpFileReceiveTransaction& aTransaction )
     {
-    TPtrC8 contentURI = aTransaction.SenderUri();
-    HBufC8* decodedContentURI = HBufC8::NewLC( contentURI.Length() );
-    TPtr8 ptrDecodedContentURI = decodedContentURI->Des();
-    ptrDecodedContentURI.Copy( contentURI );
-    UpnpString::ReplaceHttpCharacters( ptrDecodedContentURI );
+    HBufC8* decodedContentURI = DecodeContentUriLC(aTransaction.SenderUri());
 
     TBool streamingSupport = 0;
     TBool interactiveSupport = 0;
@@ -305,14 +322,9 @@ TInt CUpnpDlnaFilter::CheckDLNAPostCorrelationsL( CUpnpHttpFileReceiveTransactio
 //
 // -----------------------------------------------------------------------------
 //
-TInt CUpnpDlnaFilter::CheckDLNACorrelationsL( CUpnpHttpFileServeTransaction& aTransaction )
+TInt CUpnpDlnaFilter::CheckDLNACorrelationsL( CUpnpHttpDataServeTransaction& aTransaction )
     {
-    TPtrC8 contentURI = aTransaction.SenderUri() ;
-    HBufC8* decodedContentURI = HBufC8::NewL( contentURI.Length() );
-    TPtr8 ptrDecodedContentURI = decodedContentURI->Des();
-    ptrDecodedContentURI.Copy( contentURI );
-    UpnpString::ReplaceHttpCharacters( ptrDecodedContentURI );
-    CleanupStack::PushL( decodedContentURI );
+    HBufC8* decodedContentURI = DecodeContentUriLC(aTransaction.SenderUri());
     delete iProtocolInfo;
     iProtocolInfo = NULL;
     iProtocolInfo = ProtocolInfoL( *decodedContentURI );
@@ -349,32 +361,10 @@ TInt CUpnpDlnaFilter::CheckDLNACorrelationsL( CUpnpHttpFileServeTransaction& aTr
 // CUpnpHttpServer::CheckCorelationL
 // -----------------------------------------------------------------------------
 //    
-TInt CUpnpDlnaFilter::CheckCorelationL(  CUpnpHttpFileServeTransaction& aTransaction,
+TInt CUpnpDlnaFilter::CheckCorelationL(  CUpnpHttpDataServeTransaction& aTransaction,
                                          TUpnpDlnaCorelation& aDlnaCorelation )
     {
     //-------------Checking DLNA correlations, response with HTTPerror if some problem occurs
-    // DLNA v0.75, 7.3.31.1 checking Operations Parameter    
-    if (
-    // We don't support timeSeek and playSpeed at the moment, so according to point 7.4.71.1 (ver 1.5 rev 0.96)
-    ((aTransaction.QueryRequestHeader( UpnpDLNA::KHdrTimeSeekRange ) != KNullDesC8()
-            || aTransaction.QueryRequestHeader( UpnpDLNA::KHdrPlaySpeed )
-                    != KNullDesC8()) &&
-    // 7.4.71.2 - range takes precedence
-                    aTransaction.QueryRequestHeader( UpnpHTTP::KHdrRange ) == KNullDesC8())
-            ||
-            //
-            // or if request mode is Streaming and
-            (aTransaction.QueryRequestHeader( UpnpDLNA::KHdrTransferMode ). CompareC(
-                UpnpDLNA::KTransferModeStreaming ) == 0 && (
-            // if we have no protocolInfo (because for example there is no cdDataFinder )
-                    !iProtocolInfo ||
-                    // Streaming is not supported for this content type
-                            iProtocolInfo -> DlnaFlag(
-                                UpnpDlnaProtocolInfo::TM_S_FLAG ) == EFalse)) )
-        {
-        // we respond with 406 error code - Not Acceptable.
-        return -EHttpNotAcceptable;
-        }
 
     aDlnaCorelation.iStreamingSupport = EFalse;
     aDlnaCorelation.iInteractiveSupport = EFalse;
@@ -382,7 +372,8 @@ TInt CUpnpDlnaFilter::CheckCorelationL(  CUpnpHttpFileServeTransaction& aTransac
     aDlnaCorelation.iGetContentFeaturesExist = EFalse;
     aDlnaCorelation.iGetContentFeaturesIsOK = ETrue;
     
-    // We can only check for getcontentFeaturesExist if we have cdDataFinder ( protocolInfo is not null )
+    /* We can only check for getcontentFeaturesExist if we have cdDataFinder 
+     * ( protocolInfo is not null )*/
     if ( iProtocolInfo )
         {
         aDlnaCorelation.iBackgrondSupport = 1;
@@ -404,6 +395,34 @@ TInt CUpnpDlnaFilter::CheckCorelationL(  CUpnpHttpFileServeTransaction& aTransac
                 }
             }
         }
+
+    // DLNA v0.75, 7.3.31.1 checking Operations Parameter    
+    if (
+		/* We don't support timeSeek and playSpeed at the moment, so according to 
+		 * point 7.4.71.1 (ver 1.5 rev 0.96)*/
+            aDlnaCorelation.iGetContentFeaturesIsOK &&
+		((	(aTransaction.QueryRequestHeader( UpnpDLNA::KHdrTimeSeekRange ) != KNullDesC8()
+			|| aTransaction.QueryRequestHeader( UpnpDLNA::KHdrPlaySpeed )!= KNullDesC8()) 
+			&&
+			// 7.4.71.2 - range takes precedence
+			aTransaction.QueryRequestHeader( UpnpHTTP::KHdrRange ) == KNullDesC8()	)
+		||
+		// or if request mode is Streaming and
+		(	aTransaction.QueryRequestHeader( UpnpDLNA::KHdrTransferMode ). CompareC(
+			UpnpDLNA::KTransferModeStreaming ) == 0 
+			&& 
+			(
+			/* if we have no protocolInfo (because for example there is 
+			no cdDataFinder )*/
+			!iProtocolInfo ||
+			// Streaming is not supported for this content type
+			iProtocolInfo -> DlnaFlag(UpnpDlnaProtocolInfo::TM_S_FLAG ) == EFalse)	)) 
+		)
+        {
+        // we respond with 406 error code - Not Acceptable.
+        return -EHttpNotAcceptable;
+        }
+
     
     // Append contentFeatures.dlna.org
     if ( aDlnaCorelation.iGetContentFeaturesExist )
@@ -421,7 +440,7 @@ TInt CUpnpDlnaFilter::CheckCorelationL(  CUpnpHttpFileServeTransaction& aTransac
 // CUpnpHttpServer::CheckTransferMode
 // -----------------------------------------------------------------------------
 //        
-TInt CUpnpDlnaFilter::CheckTransferModeL( CUpnpHttpFileServeTransaction& aTransaction,
+TInt CUpnpDlnaFilter::CheckTransferModeL( CUpnpHttpDataServeTransaction& aTransaction,
                                          TUpnpDlnaCorelation& aDlnaCorelation )
     {
      TDesC8& transferMode = aTransaction.QueryRequestHeader( UpnpDLNA::KHdrTransferMode );
@@ -469,7 +488,7 @@ TInt CUpnpDlnaFilter::CheckTransferModeL( CUpnpHttpFileServeTransaction& aTransa
 // CUpnpHttpServer::AppendCorelationHeaders
 // -----------------------------------------------------------------------------
 //        
-TInt CUpnpDlnaFilter::AppendCorelationHeadersL( CUpnpHttpFileServeTransaction& aTransaction,
+TInt CUpnpDlnaFilter::AppendCorelationHeadersL( CUpnpHttpDataServeTransaction& aTransaction,
                              TUpnpDlnaCorelation& aDlnaCorelation, TDesC8& aTransferMode )
     {
     if ( aTransferMode.Length() > 0 && ((aTransferMode.CompareC(
@@ -505,7 +524,7 @@ TInt CUpnpDlnaFilter::AppendCorelationHeadersL( CUpnpHttpFileServeTransaction& a
 //
 // -----------------------------------------------------------------------------
 //
-void CUpnpDlnaFilter::FormatPathL( CUpnpHttpFileServeTransaction *aTransaction, TDes &aPath )
+void CUpnpDlnaFilter::FormatPathL( CUpnpHttpDataServeTransaction *aTransaction, TDes &aPath )
     {
     LOGS( "%i, CUpnpHttpSession::FormatPathL " );
 
@@ -554,7 +573,7 @@ void CUpnpDlnaFilter::FormatPathL( CUpnpHttpFileServeTransaction *aTransaction, 
 // Retrieves a mime type from the third field of the protocol info read from CD
 // -----------------------------------------------------------------------------
 //
-TInt CUpnpDlnaFilter::GetContentTypeL( CUpnpHttpFileServeTransaction &aTransaction,
+TInt CUpnpDlnaFilter::GetContentTypeL( CUpnpHttpDataServeTransaction &aTransaction,
     HBufC8*& aMime, const TDesC16& aFilename )
     {
     TInt error = KErrNone;
@@ -574,12 +593,7 @@ TInt CUpnpDlnaFilter::GetContentTypeL( CUpnpHttpFileServeTransaction &aTransacti
         }
 
     //decoding content URI
-    TPtrC8 contentURI = aTransaction.SenderUri();
-    HBufC8* decodedContentURI = HBufC8::NewL( contentURI.Length() );
-    TPtr8 ptrDecodedContentURI = decodedContentURI->Des();
-    ptrDecodedContentURI.Copy( contentURI );
-    UpnpString::ReplaceHttpCharacters( ptrDecodedContentURI );
-    CleanupStack::PushL( decodedContentURI );
+    HBufC8* decodedContentURI = DecodeContentUriLC( aTransaction.SenderUri());
 
     //getting 3rd field
     aMime = ThirdFieldFromCdL( *decodedContentURI );
@@ -659,7 +673,7 @@ HBufC* CUpnpDlnaFilter::DetermineDownloadPathL(
 //
 // -----------------------------------------------------------------------------
 //
-TInt CUpnpDlnaFilter::PrepareHeaderL( CUpnpHttpFileServeTransaction& aTransaction )
+TInt CUpnpDlnaFilter::PrepareHeaderL( CUpnpHttpDataServeTransaction& aTransaction )
     {    
     HBufC8* mimetype = NULL;
     HBufC16* fileName = aTransaction.PathWithNewMethodL();
@@ -687,9 +701,9 @@ TInt CUpnpDlnaFilter::PrepareHeaderL( CUpnpHttpFileServeTransaction& aTransactio
     
     AddHeaderIfNotEmptyL( UpnpDLNA::KHdrContentFeatures(), aTransaction );
     
-        // 7.4.42.2 HTTP Server Endpoints that transfer Non-Cacheable Content using · HTTP/1.0, and· GET responses.
+        // 7.4.42.2 HTTP Server Endpoints that transfer Non-Cacheable Content using ?HTTP/1.0, and?GET responses.
         // These devices must prevent intermediate caching by including among the HTTP response headers
-        // the directive:· Pragma:  no-cache
+        // the directive:?Pragma:  no-cache
     aTransaction.AddResponseHeaderL( UpnpHTTP::KHdrPragma(),
                                      UpnpHTTP::KNoCache() );   
     aTransaction.AddResponseHeaderL( UpnpHTTP::KHdrCacheControl(),
@@ -717,30 +731,12 @@ TInt CUpnpDlnaFilter::PrepareHeaderL( CUpnpHttpFileServeTransaction& aTransactio
 // -----------------------------------------------------------------------------
 //
 void CUpnpDlnaFilter::AddHeaderIfNotEmptyL( const TDesC8& aHeaderName, 
-    CUpnpHttpFileServeTransaction& aTransaction )
+    CUpnpHttpDataServeTransaction& aTransaction )
     {
     if ( aTransaction.FilterHeaders().QueryHeader( aHeaderName ).Length() > 0 )
         {
         aTransaction.AddResponseHeaderL( aHeaderName,
             aTransaction.FilterHeaders().QueryHeader( aHeaderName ) );            
-        }
-    }
-
-// -----------------------------------------------------------------------------
-//  CUpnpDlnaFilter::NewTransactionL
-//
-// -----------------------------------------------------------------------------
-//
-void CUpnpDlnaFilter::NewTransactionL( const TDesC8& aMethod, const TDesC8& aUri, 
-    const TInetAddr& aSender, CUpnpHttpServerTransaction*& aResultTrans )
-    {
-    if ( aMethod == KHttpPost() )
-        {
-        aResultTrans = CUpnpHttpFileReceiveTransaction::NewL( *this, aSender, aUri );
-        }
-    else
-        {
-        aResultTrans = CUpnpHttpFileServeTransaction::NewL( *this, aSender, aUri );
         }
     }
 
@@ -897,5 +893,18 @@ HBufC* CUpnpDlnaFilter::MakeFileNameUniqueL( const TDesC& aFilename, RFs& aFs )
     return fileToServe;
     }
 
-
+// -----------------------------------------------------------------------------
+// CUpnpDlnaFilter::DecodeContentUriLC
+// -----------------------------------------------------------------------------
+//
+HBufC8* CUpnpDlnaFilter::DecodeContentUriLC( const TPtrC8& contentURI)
+	{
+	HBufC8* decodedContentURI = HBufC8::NewL( contentURI.Length() );
+	TPtr8 ptrDecodedContentURI = decodedContentURI->Des();
+	ptrDecodedContentURI.Copy( contentURI );
+	UpnpString::ReplaceHttpCharacters( ptrDecodedContentURI );
+	CleanupStack::PushL( decodedContentURI );
+	return decodedContentURI;
+	
+	}
 //  End of File

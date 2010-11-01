@@ -24,12 +24,12 @@
 // upnp stack api
 #include <upnpsettings.h>
 
-// upnpframework / avcontroller api
+// dlnasrv / avcontroller api
 #include "upnpavdevice.h"
 #include "upnpavdeviceobserver.h"
 #include "upnpavdevicelist.h"
 
-// avcontroller internal
+// dlnasrv / avcontroller internal
 #include "upnpavcontrolleractive.h"
 #include "upnpavrenderingsessionimpl.h"
 #include "upnpavbrowsingsessionimpl.h"
@@ -141,13 +141,9 @@ void CUPnPAVControllerActive::ConstructL()
     
     iConnectionActive = CUPnPAVConnectionActive::NewL( iServer, *this );
     iConnectionActive->StartMonitoring();
-    
-    iServer.StartUp( iStatus ); // Start up the AV Control Point and wait
-    // until it has been started. 
-    SetActive();
-    iWait.Start();
-    __LOG1( "ConstructL - iStatus = %d", iStatus.Int() );
-    User::LeaveIfError( iStatus.Int() );
+
+    // Startup AV control point
+    User::LeaveIfError( iServer.StartUp() );
     }
 
 // --------------------------------------------------------------------------
@@ -157,13 +153,6 @@ void CUPnPAVControllerActive::ConstructL()
 void CUPnPAVControllerActive::RunL()
     {
     __LOG( "CUPnPAVControllerActive::RunL" );
-    
-    if( iWait.IsStarted() )
-        {
-        iWait.AsyncStop(); // AV Control Point has been started, continue
-        // Construction
-        return;
-        }    
     
     switch( iStatus.Int() )
         {
@@ -185,6 +174,11 @@ void CUPnPAVControllerActive::RunL()
                     // Discovered a device
                     iDeviceObserver->UPnPDeviceDiscovered( *tempDev );
                     }
+                else if ( iDiscovered == EAVDeviceIconDownloaded )
+                    {
+                    // Device icon download completed
+                    iDeviceObserver->UPnPDeviceIconDownloaded( *tempDev );
+                    }
                 else
                     {
                     // Device disappeared
@@ -195,7 +189,7 @@ void CUPnPAVControllerActive::RunL()
                 // Activate again if needed (it's possible to remove and set
                 // the device obs from the UPnPDeviceDiscovered or
                 // UPnPDeviceDisappeared callbacks  
-                if( !IsActive() )
+                if( iDeviceObserver )
                     {
                     iServer.DeviceRequest( iDiscoveredPkg, iRespBufSizePkg,
                         iStatus ); 
@@ -208,6 +202,12 @@ void CUPnPAVControllerActive::RunL()
                 __LOG1( "RunL - error: %d", iStatus.Int() );
                 }
             CleanupStack::PopAndDestroy( tempBuf );
+            }
+            break;
+            
+        case KErrServerTerminated:
+            {
+            __LOG( "RunL - ServerTerminated" );
             }
             break;
             
@@ -313,7 +313,7 @@ CUpnpAVDeviceList* CUPnPAVControllerActive::GetMediaServersL()
     
     CUpnpAVDeviceList* tempList = NULL;
     
-    TPckg<TAVControllerDeviceListType> type( EAVMediaServer );
+    TPckgBuf<TAVControllerDeviceListType> type( EAVMediaServer );
     
     TInt respBufSize = 0;           
     TPckg<TInt> respBufSizePkg( respBufSize );        
@@ -416,7 +416,7 @@ MUPnPAVBrowsingSession& CUPnPAVControllerActive::StartBrowsingSessionL(
         }
     CUPnPAVBrowsingSessionImpl* sessionImpl =
         CUPnPAVBrowsingSessionImpl::NewL( iServer, aDevice );
-    iBrowsingSessions.AppendL( sessionImpl );
+    iBrowsingSessions.Append( sessionImpl );
     return *sessionImpl;
     }
 
@@ -463,7 +463,7 @@ MUPnPAVRenderingSession& CUPnPAVControllerActive::StartRenderingSessionL(
         }
     CUPnPAVRenderingSessionImpl* sessionImpl =
         CUPnPAVRenderingSessionImpl::NewL( iServer, aDevice );
-    iRenderingSessions.AppendL( sessionImpl );
+    iRenderingSessions.Append( sessionImpl );
     return *sessionImpl;
     }
     
@@ -510,7 +510,7 @@ MUPnPFileUploadSession& CUPnPAVControllerActive::StartUploadSessionL(
         }
     CUPnPFileUploadSessionImpl* sessionImpl =
         CUPnPFileUploadSessionImpl::NewL( iServer, aDevice );
-    iUploadSessions.AppendL( sessionImpl );
+    iUploadSessions.Append( sessionImpl );
     return *sessionImpl;
     }
     
@@ -558,7 +558,7 @@ MUPnPFileDownloadSession& CUPnPAVControllerActive::StartDownloadSessionL(
         }
     CUPnPFileDownloadSessionImpl* sessionImpl =
         CUPnPFileDownloadSessionImpl::NewL( iServer, aDevice );
-    iDownloadSessions.AppendL( sessionImpl );
+    iDownloadSessions.Append( sessionImpl );
     return *sessionImpl;
     }   
 
@@ -588,10 +588,30 @@ void CUPnPAVControllerActive::StopDownloadSession(
     }
 
 // --------------------------------------------------------------------------
+// CUPnPAVControllerActive::GetDeviceIconL
+// --------------------------------------------------------------------------
+HBufC8* CUPnPAVControllerActive::GetDeviceIconL( const TDesC8& aUuid )
+    {
+    __LOG( "CUPnPAVControllerActive::GetDeviceIconL" );
+
+    RFile file;
+    CleanupClosePushL( file );
+    User::LeaveIfError( iServer.GetDeviceIcon( aUuid, file ) );
+    TInt fileSize( 0 );
+    User::LeaveIfError( file.Size( fileSize ) );
+    HBufC8* ret = HBufC8::NewLC( fileSize );
+    TPtr8 ptr( ret->Des() );
+    User::LeaveIfError( file.Read( ptr ) );
+    CleanupStack::Pop( ret );
+    CleanupStack::PopAndDestroy( &file );
+    return ret;
+    }
+
+// --------------------------------------------------------------------------
 // CUPnPAVControllerActive::ConnectionLost
 // Wlan disconnected
 // --------------------------------------------------------------------------
-void CUPnPAVControllerActive::ConnectionLost()
+void CUPnPAVControllerActive::ConnectionLost( TBool /*aUserOriented*/ )
     {
     __LOG( "CUPnPAVControllerActive::ConnectionLost" );
     

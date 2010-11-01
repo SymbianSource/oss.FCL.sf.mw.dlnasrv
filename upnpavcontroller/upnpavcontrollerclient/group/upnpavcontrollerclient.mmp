@@ -66,6 +66,9 @@ LIBRARY         efsrv.lib
 // XML
 LIBRARY         upnpxmlparser.lib
 
+//utf
+LIBRARY         charconv.lib
+
 DEBUGLIBRARY    flogger.lib
 
 // End of file

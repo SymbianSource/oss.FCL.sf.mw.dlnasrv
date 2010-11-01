@@ -89,7 +89,7 @@ void CUPnPAVConnectionActive::RunL()
     // Connection is lost
     if( iStatus.Int() == EAVControllerConnectionLost )
         {
-        iObserver.ConnectionLost();
+        iObserver.ConnectionLost( EFalse );
         }
     }
     

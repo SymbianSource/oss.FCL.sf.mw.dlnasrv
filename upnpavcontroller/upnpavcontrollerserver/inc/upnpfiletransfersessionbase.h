@@ -27,9 +27,13 @@
 // System
 #include <e32base.h>
 
-// upnpframework
+// upnp stack api's
+#include <httptransferobserver.h>
+
+// dlnasrv / avcontroller api
 #include "upnpavcontroller.h"
-#include "httptransferobserver.h"
+
+// dlnasrv/ avcontroller client internal
 #include "tupnpfiletransferevent.h"
 
 // FORWARD DECLARATIONS

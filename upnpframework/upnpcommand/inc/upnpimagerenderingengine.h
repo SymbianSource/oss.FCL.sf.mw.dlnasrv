@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -23,12 +23,14 @@
 #include <e32base.h>
 #include "upnpavrenderingsessionobserver.h" // base class
 #include "upnpitemresolverobserver.h" // base class
+#include "upnprenderingstatemachineobserver.h" // base class
 
 // FORWARD DECLARATIONS
 class MUPnPAVController;
 class MUPnPAVRenderingSession;
 class MUpnpImageRenderingEngineObserver;
 class MUPnPItemResolver;
+class CUpnpRenderingStateMachine;
 class CUPnPPeriodic;
 
 /**
@@ -40,7 +42,9 @@ class CUpnpImageRenderingEngine
     : public CBase
     , public MUPnPItemResolverObserver
     , public MUPnPAVRenderingSessionObserver
+    , public MUpnpRenderingStateMachineObserver
     {
+    
 
     public: // construction
 
@@ -75,12 +79,6 @@ class CUpnpImageRenderingEngine
          * Second phase constructor
          */
         void ConstructL();
-        
-        
-        /**
-         * Cleans up used resources
-         */
-        void Cleanup();
 
     public: // the interface
 
@@ -94,7 +92,7 @@ class CUpnpImageRenderingEngine
         void PlayL();
 
         /**
-         * Requests to stop rendering. This method can be called in all states.
+         * Requests to stop rendering.
          */
         void StopL();
 
@@ -159,7 +157,47 @@ class CUpnpImageRenderingEngine
          */
         void ResolveComplete(
             const MUPnPItemResolver& aResolver, TInt aError );
-
+    
+    protected: // from MUpnpRenderingStateMachineObserver
+        
+         /**
+          * Indicates state machine has been synchronised with the renderer
+          *
+          * @since Series 60 3.2
+          * @param aError error that occurred during sync
+          */
+        void RendererSyncReady( TInt aError,
+                            Upnp::TState aState );
+        
+        /**
+         * Indicates renderer state has changed either by request 
+         * or spontanelously.
+         *
+         * @since Series 60 3.2
+         * @param aError the error code
+         * @param aState the new state
+         * @param aUserOriented ETrue if this responds to a request
+         * @param aStateParam extra info depending on the state change
+         */
+        void RenderingStateChanged(
+                            TInt aError,
+                            Upnp::TState aState,
+                            TBool aUserOriented,
+                            TInt aStateParam );
+        /**
+         * Synchronises UI with media duration and current position
+         * this callback can be either automatic or explicitly requested
+         *
+         * @since Series 60 3.2
+         * @param aError error that occurred during position sync
+         * @param aMode mode in which the track is progressing
+         * @param aDuration media duration in milliseconds
+         * @param aPosition current position in milliseconds
+         */
+        void PositionSync( TInt aError,
+                            Upnp::TPositionMode aMode,
+                            TInt aDuration, TInt aPosition );
+            
     public: // methods for the timer
 
         /**
@@ -175,43 +213,59 @@ class CUpnpImageRenderingEngine
         /**
          * handles errors in the timeout callback body
          */
-        TInt RunError( TInt );
+        TInt RunError( TInt aError );
         
          /**
-         * checks if wlan is active
-         */       
+          * checks if wlan is active
+          */
         TBool IsWlanActive();
         
     private: // Private methods
 
         /**
-         * Handles the initiation of rendering (SetUri or video player 
-         * launching).
-         *
-         * @since S60 3.2
-         */
-        void InitiateShowingL();
-
-        /**
          * Handles the start up of the item resolving.
          *
          * @since S60 3.2
+         * @param none
+         * @return none
          */
         void StartResolvingL();
         
         
         /**
          * Sends an acknowledgement
-		 */
-		void SendRenderAck( TInt aError );
-
+         *
+         * @since S60 3.2
+         * @param aError error code
+         * @return none
+        */
+        void SendRenderAck( TInt aError );
+        
+        /**
+         * Cycles next item by checking resolver status
+         *
+         * @since S60 3.2
+         * @param none
+         * @return none
+         */
+        void Cycle();
+        
+        /**
+         * Cleans up used resources
+         *
+         * @since S60 3.2
+         * @param none
+         * @return none
+         */
+        void Cleanup();
+        
     private: // Data members
 
         // avcontroller
-        MUPnPAVController&          iAVController;
+        MUPnPAVController&                  iAVController;
     
         // the rendering session
-        MUPnPAVRenderingSession&    iRenderingSession;
+        MUPnPAVRenderingSession&            iRenderingSession;
 
         // The observer interface
         MUpnpImageRenderingEngineObserver&  iObserver;
@@ -219,34 +273,35 @@ class CUpnpImageRenderingEngine
         // internal states
         enum TRenderingState
             {
-            EIdle = 100,            // doing nothing
-            EResolvingItem,         // resolving (preparing the item to be played)
-            EResolveComplete,       // resolve done succesfully. Starting to play
-            EStopping,              // calling Stop (for previoysly playing item)
-            ESettingUri,            // calling SetAVTransportURI
-            EStartingPlay,          // calling Play
-            EPlaying,               // play OK, just displaying the image :-)
+            EIdle = 100,     // doing nothing
+            EResolvingItem,  // resolving (preparing the item to be played)
+            EResolveComplete,// resolve done succesfully. Starting to play
+            ERendering,      // Check accurate state from statemachine
             EShuttingDown
             };
 
         // internal state
-        TRenderingState             iState;
-
+        TRenderingState                     iState;
         // current resolver. owned.
-        MUPnPItemResolver*          iCurrentResolver;
+        MUPnPItemResolver*                  iCurrentResolver;
 
         // Buffered next resolver. Owned.
-        MUPnPItemResolver*          iBufferedResolver;
+        MUPnPItemResolver*                  iBufferedResolver;
 
         // flag that indicates a new image is in buffer
-        TBool                       iBufferingNewImage;
+        TBool                               iBufferingNewImage;
 
-		// timer support
-		CUPnPPeriodic*              iTimer;
-		
-		TBool                       iWlanActive;
+        // timer support
+        CUPnPPeriodic*                      iTimer;
 
-	};
+        // Flag if WLan active or not
+        TBool                               iWlanActive;
+        
+
+        // the rendering state machine
+        CUpnpRenderingStateMachine*         iRenderingStateMachine;
+
+    };
 
 
 #endif // UPNP_IMAGERENDERINGENGINE_H

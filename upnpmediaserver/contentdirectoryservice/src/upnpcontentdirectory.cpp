@@ -20,9 +20,9 @@
 #include <fbs.h>
 #include <uri8.h>
 #include <pathinfo.h>
-#include <xml/dom/xmlengdom.h>
-#include <xml/dom/xmlengserializationoptions.h>
-#include <xml/dom/xmlengdomparser.h>
+#include <xmlengdom.h>
+#include <xmlengserializationoptions.h>
+#include <xmlengdomparser.h>
 #include <sysutil.h>
 #include <bautils.h>
 #include <caf/caf.h>
@@ -62,6 +62,7 @@
 #include "upnptransfercontroller.h"
 #include "upnptransferinterface.h"
 #include "upnpdlnafilter.h"
+#include "upnpmspathutility.h"
 #include "upnphttpserversession.h"
 #include "upnphttpserverruntime.h"
 #include "upnpsettings.h"
@@ -1301,7 +1302,7 @@ TUpnpErrorCode CUpnpContentDirectory::ImportResourceL( CUpnpAction*& aAction )
         User::Leave( EInvalidArgs );
         }
 
-    HBufC* name = GetFileNameL( objId );
+    HBufC* name = GetCopyFileNameL( objId );
     CleanupStack::PushL( name );
     if ( !name )
         {
@@ -1413,7 +1414,7 @@ TUpnpErrorCode CUpnpContentDirectory::ImportResourceL( CUpnpAction*& aAction )
 //
 TUpnpErrorCode CUpnpContentDirectory::ExportResourceL( CUpnpAction*& aAction )
     {
- /*   if ( iTransferController->IsMaxImportExportTransfers( ) )
+    if ( iTransferController->IsMaxImportExportTransfers( ) )
         {
         return ETransferBusy;
         }
@@ -1530,7 +1531,7 @@ TUpnpErrorCode CUpnpContentDirectory::ExportResourceL( CUpnpAction*& aAction )
     CleanupStack::PopAndDestroy( srcNoEsc );
     CleanupStack::PopAndDestroy( rscBean );
     CleanupStack::PopAndDestroy( srcBuf );
-*/
+
     return EHttpOk;
     }
 
@@ -2352,7 +2353,7 @@ CUpnpThumbnailCreator* CUpnpContentDirectory::CreateThumbnailCreatorL(
         iThumbnailCreators.AppendL( thumbCreator );
         TInt index = iThumbnailCreators.Find( thumbCreator );
         User::LeaveIfError( index );
-        iThObjectIds.InsertL( aObjectId, index );
+        iThObjectIds.Insert( aObjectId, index );
         CleanupStack::Pop( thumbCreator );
         }
     return thumbCreator;
@@ -2661,12 +2662,142 @@ HBufC* CUpnpContentDirectory::GetFileNameL( TInt aObjId )
     // forbidden chars
     UpnpCdUtils::ValidateFilePath( resPtr );
 
-    HBufC* basePath = HBufC::NewL( iDownloadDir->Des().Length( ) + result->Des().Length( ) );
+    HBufC* basePath = HBufC::NewL( iDownloadDir->Des().Length( ) + 
+            result->Des().Length( ) );
     basePath -> Des().Append( iDownloadDir->Des( ) );
     basePath -> Des().Append( result->Des( ) );
 
     CleanupStack::PopAndDestroy( title );
     CleanupStack::PopAndDestroy( result );
+    CleanupStack::PopAndDestroy( &objDidl );
+
+    if ( BaflUtils::FileExists( iFs, *basePath ) )
+        {
+        CleanupStack::PushL( basePath );
+        HBufC* fileName = CreateFileNameL( basePath->Des( ) );
+        CleanupStack::PopAndDestroy( basePath );
+        return fileName;
+        }
+
+    return basePath;
+    }
+
+// -----------------------------------------------------------------------------
+// CUpnpContentDirectory::GetCopyFileNameL
+// -----------------------------------------------------------------------------
+//
+HBufC* CUpnpContentDirectory::GetCopyFileNameL( TInt aObjId )
+    {
+    TInt objId = aObjId;
+    HBufC* result = NULL;
+    RXmlEngDocument objDidl;
+    iContentDirectoryDb->GetObjectL( objId, objDidl, KAsterisk8( ) );
+    CleanupClosePushL( objDidl );
+    TXmlEngElement obj = objDidl.DocumentElement().FirstChild().AsElement( );
+    if ( obj.IsNull( ) )
+        {
+        CleanupStack::PopAndDestroy( &objDidl );
+         return NULL;
+        }
+
+    // file name
+    TXmlEngElement objTitle;
+    UpnpDomInterface::GetElementL( obj, objTitle, KObjTiltleColName8( ) );
+    if ( objTitle.IsNull( ) )
+        {
+        CleanupStack::PopAndDestroy( &objDidl );
+        return NULL;
+        }
+  
+    // mime type
+    RArray<TXmlEngElement> reses;
+    CleanupClosePushL( reses );
+    UpnpDomInterface::GetElementListL( obj, reses, KRes );
+    HBufC8* mimeType = NULL;
+    CUpnpDlnaProtocolInfo* prInfo = NULL;
+    for ( TInt i = 0; i < reses.Count( ); i++ )
+        { // should be only one importUri
+        TXmlEngAttr impUri;
+        impUri = reses[i].AttributeNodeL( KImportUri );
+        if ( impUri.NotNull( ) )
+            {
+            TXmlEngAttr prInfoAttr = reses[i].AttributeNodeL(KprotocolInfo );
+            prInfo = CUpnpDlnaProtocolInfo::NewL( prInfoAttr.Value( ) );
+            CleanupStack::PushL( prInfo );
+            mimeType = prInfo->ThirdField().AllocL( );
+            //prInfo is pushed and destroyed later on
+            break;
+            }
+        }
+    // Destroy resources first
+    if ( NULL != prInfo )
+        {
+        CleanupStack::Pop( prInfo );
+        }
+    CleanupStack::PopAndDestroy( &reses );  
+    // prInfo is needed for creating the basePath
+    if ( NULL == prInfo )
+        {
+        CleanupStack::PopAndDestroy( &objDidl );
+        return NULL;
+        }
+    CleanupStack::PushL( prInfo );
+    
+    TPtrC ext;
+    if ( mimeType )
+        {
+        TPtrC8 mimeTypeCut( *mimeType);
+        TInt position = mimeType->Des().Find( KSemicolon8 );
+        if ( position != KErrNotFound )
+            {
+            mimeTypeCut.Set( mimeType->Des().Left( position ) );
+            }
+
+        const HBufC* tmp = iMimeToExtMap->Get( mimeTypeCut );
+        if ( tmp )
+            {
+            ext.Set( tmp->Ptr( ), tmp->Length( ) ); // do not delete
+            }
+        delete mimeType;
+        }
+
+    result = HBufC::NewLC( objTitle.Value().Length( ) + ext.Length( ) );
+    TPtr resPtr(result->Des( ) );
+    HBufC* title = UpnpCdUtils::Des8ToDesLC( objTitle.Value( ) );
+
+    resPtr.Copy( *title );
+
+    TInt wholeNameLength = title->Des().LocateReverse( '.' );
+    TInt extenLength = title->Length( )-wholeNameLength;
+    TPtrC exten;
+    if ( extenLength )
+        {
+        exten.Set( title->Right( extenLength ) );
+        }
+
+    if ( ext.CompareF( exten ) != 0 )
+        {
+        resPtr.Append( ext );
+        }
+
+    // forbidden chars
+    UpnpCdUtils::ValidateFilePath( resPtr );
+
+    // Create basePath   
+    CUPnPMSPathUtility* pathUtility = CUPnPMSPathUtility::NewLC();
+    HBufC* copyPath = pathUtility->GetCopyPathL( obj, *prInfo );
+    CleanupStack::PopAndDestroy( pathUtility );
+    CleanupStack::PushL( copyPath );
+    
+    HBufC* basePath = HBufC::NewL( copyPath->Des().Length( ) + 
+            result->Des().Length( ) );
+    basePath -> Des().Append( copyPath->Des( ) );
+    basePath -> Des().Append( result->Des( ) );
+
+    CleanupStack::PopAndDestroy( copyPath );
+    CleanupStack::PopAndDestroy( title );
+    CleanupStack::PopAndDestroy( result );
+    CleanupStack::PopAndDestroy( prInfo );
     CleanupStack::PopAndDestroy( &objDidl );
 
     if ( BaflUtils::FileExists( iFs, *basePath ) )

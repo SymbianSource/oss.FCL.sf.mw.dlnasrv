@@ -24,12 +24,10 @@
 #define UPNPSELECTIONREADER_H
 
 // INCLUDES
-
-#include "upnpcontentmetadatautility.h"
+#include <badesca.h> 
 #include "upnpcontentserverdefs.h"
 
-// FORWARD DECLARATIONS
-class CUpnpContentMetadataUtility;
+using namespace UpnpContentServer;
 
 // CLASS DECLARATION
 
@@ -44,10 +42,8 @@ public:
     /**
      * Two-phased constructor.
      * @since S60 3.1
-     * @param aUtility Pointer to CLF interface
      */
-    IMPORT_C static CUpnpSelectionReader* NewL(
-        CUpnpContentMetadataUtility* aUtility );
+    IMPORT_C static CUpnpSelectionReader* NewL();
 
     /**
      * Destructor.
@@ -131,21 +127,40 @@ public:
         CDesCArray& aCollectionNames );
 
     /**
-     * Set the metadata utility pointer
-     * @since S60 3.1
-     * @param aMetaData Pointer to CUpnpContentMetadataUtility instance
+     * Get the collection content. Filenames includes also path.
+     * @since S60 5.2
+     * @param aSelectionIndex Selected index
+     * @param aFilenames Array containing filenames of the collection
+     * @return Collection id (if not found, empty string is returned)
      */
-    void SetMetadata( CUpnpContentMetadataUtility*
-                      aMetaData );
+    TPtrC GetCollectionItemsL( const TInt aSelectionIndex, 
+        CDesCArray& aFilenames );
+    /**
+     * Get the playlist content. Filenames includes also path.
+     * @since S60 5.2
+     * @param aSelectionIndex Selected index
+     * @param aFilenames Array containing filenames of the playlist
+     * @return Playlist id (if not found, empty string is returned)
+     */
+    TPtrC GetPlaylistItemsL( const TInt aSelectionIndex, 
+        CDesCArray& aFilenames );
+
+    /**
+     * Get the playlist content. Filenames includes also path.
+     * @since S60 5.2
+     * @param aType Mediatype (EImageAndVideo or EPlaylist)
+     * @param aClfId Album/Playlist id in the clf structure
+     * @return Selection index (if not found, KErrNotFound is returned)
+     */
+    TInt GetSelectionIndexL( const TUpnpMediaType& aType,
+            TPtrC aClfId );
 
 protected:  // New functions
     /**
      * Two-phased constructor.
      * @since S60 3.1
-     * @param aUtility Pointer to CLF interface
      */
-    void ConstructL(
-        CUpnpContentMetadataUtility* aUtility);
+    void ConstructL();
 
     /**
      * Searches playlist files
@@ -190,13 +205,7 @@ private: //data
     /**
      *  Mediatype selected from listbox
      */
-    TUpnpMediaType                            iMediaType;
-
-    /**
-     * Pointer to CLF interface
-     * not owned
-     */
-    CUpnpContentMetadataUtility*         iMetadataUtility;
+    TUpnpMediaType iMediaType;
 
     /**
      * Selection value for images and videos
@@ -212,37 +221,37 @@ private: //data
      * selected image and video indexes
      * owned
      */
-    RArray<TInt>*            iSelectedImages;
+    RArray<TInt>* iSelectedImages;
 
     /**
      * selected music indexes
      * owned
      */
-    RArray<TInt>*            iSelectedMusic;
+    RArray<TInt>* iSelectedMusic;
 
     /** 
      * array for playlists
      * owned
      */
-    CDesCArrayFlat*                 iPlIdArray;
+    CDesCArrayFlat* iPlIdArray;
 
     /** 
      * array for collection Ids
      * owned
      */
-    CDesCArrayFlat*                 iCollIdArray;
+    CDesCArrayFlat* iCollIdArray;
 
     /**
      * array for image and video containers shown in ui
      * owned
      */
-    CDesCArrayFlat*                 iImageContainers;
+    CDesCArrayFlat* iImageContainers;
 
     /**
      * array for playlists shown in ui
      * owned
      */
-    CDesCArrayFlat*                 iPlaylistNames;
+    CDesCArrayFlat* iPlaylistNames;
 
     /**
      * array for collections shown in ui
@@ -256,5 +265,7 @@ private: //data
     TInt iContainerCount;
 
     };
-#endif
+
+#endif // UPNPSELECTIONREADER_H
+
 // End of File

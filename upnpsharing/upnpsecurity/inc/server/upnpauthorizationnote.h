@@ -51,6 +51,7 @@ public:
 class CUpnpAuthorizationNote : public CActive,
         public MUpnpNotifyTimerObserver
     {
+    friend class CUpnpAuthorizationNoteTest;
 public:
     /**
      * Destructor.

@@ -56,7 +56,7 @@ const TInt KMaxSlashAmount              = 4;
 const TInt KCharLen						= 1;   
 
 // files
-_LIT(  KObjectsXmlFileName,             "z:objects.xml"                     );
+_LIT(  KObjectsXmlFileName,             "objects.xml"                     );
 _LIT(  KDefaultMediaDrive,              "C:"                                );
 _LIT(  KMediaPath,                      "Media"                             );
 _LIT(  KDownloadPath,                   "Download"                          );

@@ -21,18 +21,20 @@
 
 
 // INCLUDES
-// upnp stack api
+#include <in_sock.h>
+
+// dlnasrv / mediaserver api
 #include <upnpdlnaprotocolinfo.h>
 #include <upnpitem.h>
 
-// upnpframework / avcontroller helper api
+// dlnasrv / avcontroller helper api
 #include "upnpitemutility.h"
 #include "upnpconstantdefs.h" // for upnp-specific stuff
 
-// upnpframework / internal api's
+// dlnasrv / internal api's
 #include "upnpcommonutils.h"
 
-// avcontroller internal
+// dlnasrv / avcontroller internal
 #include "upnpavdeviceextended.h"
 
 
@@ -51,8 +53,34 @@ const TInt KSlash = 92;
 _LIT8( KProtocolInfo,       "protocolInfo" );
 _LIT8( KAsterisk,           "*" );
 
+const TInt KUrlIpBufLen = 16; // For IP address e.g. xxx.xxx.xxx.xxx
+const TInt KUrlPortLen = 11; // For HTTP port e.g. yyyyy
+_LIT8( KUrlColon, ":" );
+_LIT8( KUrlSlash, "/" );
+_LIT8( KUrlHttp, "http://" );
+
 _LIT( KComponentLogfile, "upnpavcontrollerserver.txt");
 #include "upnplog.h"
+
+// --------------------------------------------------------------------------
+// EnsureFinalSlash
+// --------------------------------------------------------------------------
+static void EnsureFinalSlash( TDes8& aUrl )
+    {
+    TInt len( aUrl.Length() );
+    if ( len > 0 && aUrl[ len - 1 ] != KUrlSlash()[ 0 ] )
+        {
+        aUrl.Append( KUrlSlash );
+        }
+    }
+
+// --------------------------------------------------------------------------
+// RemoveInitial
+// --------------------------------------------------------------------------
+static TPtrC8 RemoveInitial( const TDesC8& aUrl, const TDesC8& aInitial )
+    {
+    return aUrl.Find( aInitial ) == 0 ? aUrl.Mid( aInitial.Length() ) : aUrl;
+    }
 
 // ============================ MEMBER FUNCTIONS ============================
 
@@ -80,6 +108,7 @@ CUpnpAVDeviceExtended* CUpnpAVDeviceExtended::NewL(
     dev->iNextAVTransportUri = aDevice.NextAVTransportUri();
     dev->iMaxVolume = aDevice.MaxVolume();
     dev->iDlnaCompatible = aDevice.DlnaCompatible();
+    dev->iSeekCapability = aDevice.SeekCapability();
            
     dev->ConstructL();
     CleanupStack::Pop();
@@ -110,6 +139,7 @@ CUpnpAVDeviceExtended* CUpnpAVDeviceExtended::NewL(
     dev->iNextAVTransportUri = aDevice.NextAVTransportUri();
     dev->iMaxVolume = aDevice.MaxVolume();
     dev->iDlnaCompatible = aDevice.DlnaCompatible();
+    dev->iSeekCapability = aDevice.SeekCapability();
         
     dev->SetSinkProtocolInfoL( aDevice.SinkProtocolInfo() );
     dev->SetSourceProtocolInfoL( aDevice.SourceProtocolInfo() );
@@ -122,6 +152,7 @@ CUpnpAVDeviceExtended* CUpnpAVDeviceExtended::NewL(
     dev->iDestroyObject = aDevice.DestroyObject();
     dev->iPInfoReceived = aDevice.PInfoReceived();
     dev->iDLNADeviceType = aDevice.DLNADeviceType();
+    dev->iPrepareForConnection = aDevice.PrepareForConnection();
     
     dev->ConstructL();
     CleanupStack::Pop();
@@ -146,7 +177,8 @@ CUpnpAVDeviceExtended* CUpnpAVDeviceExtended::NewL()
 // See upnpavdeviceextended.h
 // --------------------------------------------------------------------------
 CUpnpAVDeviceExtended::~CUpnpAVDeviceExtended()
-    {     
+    {
+    delete iIconUrl;
     iSinkProtocolInfo.ResetAndDestroy();
     iSourceProtocolInfo.ResetAndDestroy();
     }
@@ -225,7 +257,7 @@ void CUpnpAVDeviceExtended::SetSinkProtocolInfoL(
             if( err == KErrNone && tmpInfo )
                 {
                 // Transfer ownership of tmpInfo
-                iSinkProtocolInfo.AppendL( tmpInfo );
+                iSinkProtocolInfo.Append( tmpInfo );
                 }
             else
                 {
@@ -276,7 +308,7 @@ void CUpnpAVDeviceExtended::SetSourceProtocolInfoL(
             if( err == KErrNone && tmpInfo )
                 {
                 // Transfer ownership of tmpInfo
-                iSourceProtocolInfo.AppendL( tmpInfo );
+                iSourceProtocolInfo.Append( tmpInfo );
                 }
             else
                 {
@@ -331,7 +363,7 @@ TBool CUpnpAVDeviceExtended::MatchSinkProtocolInfo(
 
     TBool match = EFalse;
 
-    if( DlnaCompatible() )
+    if( DlnaCompatible() && DLNADeviceType() == CUpnpAVDeviceExtended::EDMR )
         {
         // The device is DLNA compatible
         
@@ -342,6 +374,11 @@ TBool CUpnpAVDeviceExtended::MatchSinkProtocolInfo(
 is DLNA compatible, start matching..." );
 
             match = MatchSinkProfileId( aInfo );
+            if( !match )
+                {
+                // if profile id was not found try matching mime 
+                match = MatchSinkMime( aInfo );
+                }
             }
         else
             {
@@ -398,8 +435,7 @@ TBool CUpnpAVDeviceExtended::MatchSinkProfileId(
         for( TInt i = 0; i < count; i++ )
             {
             if( iSinkProtocolInfo[ i ]->PnParameter() ==
-                tmpInfo->PnParameter() ||
-                iSinkProtocolInfo[ i ]->FourthField() == KAsterisk )
+                tmpInfo->PnParameter() )
                 {
                 // PN parameter matches, try matching the first
                 // parameter
@@ -610,23 +646,23 @@ void CUpnpAVDeviceExtended::SetCapabilitiesBySupportedMimeTypesL(
     
     if( aListOfMimeTypes != KNullDesC8 )
         {
- 	    // Update the audio media capability
+        // Update the audio media capability
         if( UPnPCommonUtils::IsAudioSupported( aListOfMimeTypes ) )
             {
             iAudioMediaCapability = ETrue;
             }
         else
-            {	
+            {
             iAudioMediaCapability = EFalse;
             }
 
-	    // Update the audio media capability
+        // Update the audio media capability
         if( UPnPCommonUtils::IsImageSupported( aListOfMimeTypes ) )
             {
             iImageMediaCapability = ETrue;
             }
         else
-            {	
+            {
             iImageMediaCapability = EFalse;
             }
   
@@ -636,7 +672,7 @@ void CUpnpAVDeviceExtended::SetCapabilitiesBySupportedMimeTypesL(
             iVideoMediaCapability = ETrue;
             }
         else
-            {	
+            {
             iVideoMediaCapability = EFalse;
             }
         }
@@ -655,7 +691,7 @@ void CUpnpAVDeviceExtended::SetSourceProtocolInfoL(
         {
         CUpnpDlnaProtocolInfo* tmpInfo = CUpnpDlnaProtocolInfo::NewL(
             aProtocolInfo[ i ]->ProtocolInfoL() );
-        iSourceProtocolInfo.AppendL( tmpInfo ); // Ownership is transferred
+        iSourceProtocolInfo.Append( tmpInfo ); // Ownership is transferred
         }    
     }
     
@@ -672,7 +708,7 @@ void CUpnpAVDeviceExtended::SetSinkProtocolInfoL(
         {
         CUpnpDlnaProtocolInfo* tmpInfo = CUpnpDlnaProtocolInfo::NewL(
             aProtocolInfo[ i ]->ProtocolInfoL() );
-        iSinkProtocolInfo.AppendL( tmpInfo ); // Ownership is transferred
+        iSinkProtocolInfo.Append( tmpInfo ); // Ownership is transferred
         }
     }
     
@@ -683,28 +719,26 @@ void CUpnpAVDeviceExtended::SetSinkProtocolInfoL(
 void CUpnpAVDeviceExtended::ParseToDelimeter( TLex8& aLex, TChar aDelimeter )
     {
     aLex.Mark();
-        
+
     TChar chr = 0;
-	TChar edchr = 0;
-		
-	while( !aLex.Eos() )
-		{
-		edchr = chr;
-		
-		chr = aLex.Peek();
-		if( chr == aDelimeter && edchr != TChar( KSlash ) )
-			{
-			break;
-			}
-			
-		aLex.Inc();		
-		}
+    TChar edchr = 0;
+
+    while( !aLex.Eos() )
+        {
+        edchr = chr;
+        chr = aLex.Peek();
+        if( chr == aDelimeter && edchr != TChar( KSlash ) )
+            {
+            break;
+            }
+        aLex.Inc();
+        }
     }
-    
+
 // --------------------------------------------------------------------------
 // CUpnpAVDeviceExtended::RemoveIllegalCharactersL
 // See upnpavdeviceextended.h
-// --------------------------------------------------------------------------   
+// --------------------------------------------------------------------------
  HBufC8* CUpnpAVDeviceExtended::RemoveIllegalCharactersL(
     const TDesC8& aPtr ) const
     {
@@ -858,17 +892,90 @@ TBool CUpnpAVDeviceExtended::PInfoReceived() const
     return iPInfoReceived;
     }
 
+// --------------------------------------------------------------------------
+// CUpnpAVDeviceExtended::PrepareForConnection
+// See upnpavdeviceextended.h
+// --------------------------------------------------------------------------
+TBool CUpnpAVDeviceExtended::PrepareForConnection() const
+    {
+    return iPrepareForConnection;
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpAVDeviceExtended::SetPrepareForConnection
+// See upnpavdeviceextended.h
+// --------------------------------------------------------------------------
+void CUpnpAVDeviceExtended::SetPrepareForConnection(
+    TBool aPrepareForConnection )
+    {
+    iPrepareForConnection = aPrepareForConnection;
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpAVDeviceExtended::SetDLNADeviceType
+// See upnpavdeviceextended.h
+// --------------------------------------------------------------------------
 void CUpnpAVDeviceExtended::SetDLNADeviceType( TDLNADeviceType aDeviceType )
     {
     iDLNADeviceType = aDeviceType;
     }
    
+// --------------------------------------------------------------------------
+// CUpnpAVDeviceExtended::DLNADeviceType
+// See upnpavdeviceextended.h
+// --------------------------------------------------------------------------
 CUpnpAVDeviceExtended::TDLNADeviceType
     CUpnpAVDeviceExtended::DLNADeviceType() const
     {
     return iDLNADeviceType;
     }
 
+// --------------------------------------------------------------------------
+// CUpnpAVDeviceExtended::SetIconUrlL
+// See upnpavdeviceextended.h
+// --------------------------------------------------------------------------
+void CUpnpAVDeviceExtended::SetIconUrlL( const TInetAddr& aAddress,
+    const TDesC8& aUrlBase, const TDesC8& aIconUrl )
+    {
+    __LOG8_1( "CUpnpAVDeviceExtended::SetIconUrlL - Base: %S", &aUrlBase );
+    __LOG8_1( "CUpnpAVDeviceExtended::SetIconUrlL - Icon: %S", &aIconUrl );
+    TBuf< KUrlIpBufLen > ip;
+    aAddress.Output( ip );
+    HBufC8* iconUrl = HBufC8::NewL( KUrlHttp().Length() + ip.Length() + 1 + // 1 for colon
+                                    KUrlPortLen + 1 + // 1 for slash
+                                    aUrlBase.Length() + 1 + // 1 for slash
+                                    aIconUrl.Length() );
+    TPtr8 ptr( iconUrl->Des() );
+    if ( aUrlBase.Find( KUrlHttp ) == KErrNotFound )
+        {
+        ptr.Copy( KUrlHttp );
+        ptr.Append( ip );
+        ptr.Append( KUrlColon );
+        ptr.AppendNumUC( aAddress.Port() );
+        }
+    EnsureFinalSlash( ptr );
 
-    
+    TPtrC8 urlBase( RemoveInitial( aUrlBase, KUrlSlash ) ); // Url base without initial slash
+    ptr.Append( urlBase );
+    EnsureFinalSlash( ptr );
+
+    TPtrC8 icon( RemoveInitial( aIconUrl, KUrlSlash ) ); // Icon url without initial slash
+    ptr.Append( RemoveInitial( icon, urlBase ) ); // Remove base from icon url if it already contains base
+
+    delete iIconUrl;
+    iIconUrl = iconUrl;
+
+    __LOG8_1( "CUpnpAVDeviceExtended::SetIconUrlL - Device: %S", &( FriendlyName() ) );
+    __LOG8_1( "CUpnpAVDeviceExtended::SetIconUrlL - Url: %S", iIconUrl );
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpAVDeviceExtended::IconUrl
+// See upnpavdeviceextended.h
+// --------------------------------------------------------------------------
+TPtrC8 CUpnpAVDeviceExtended::IconUrl() const
+    {
+    return ( iIconUrl ? *iIconUrl : KNullDesC8() );
+    }
+
 // end of file

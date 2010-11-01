@@ -29,7 +29,7 @@
 #include <upnpstring.h>
 
 // upnpframework / avcontroller helper api
-#include <upnpconstantdefs.h>
+#include "upnpconstantdefs.h"
 
 // utilities internal
 #include "upnpmetadatautility.h"
@@ -102,100 +102,32 @@ EXPORT_C void UPnPMetadataFetcher::FetchMetadataL( CUpnpObject& aObject,
         strippedFilename = NULL;
         }
 
-    const RUPnPElementsArray& elms = aObject.GetElements();
-    TInt count = elms.Count();
-    TInt i;
-    TBool found;
-    
     if( aMimeType.Find( KMimeAudio ) >= 0 )
         {
         // Set object class
         aObject.SetObjectClassL( KClassAudioMusicTrack );
         
-        // Artist
-        // Try to find the artist element and update it if found
-        tempBuf = UpnpString::FromUnicodeL( utility->Artist() );
-        if( tempBuf )
-            {
-            CleanupStack::PushL( tempBuf );
-            found = EFalse;
-            for( i = 0; i < count; i++)
-                {
-                if( elms[ i ]->Name() == KElementArtist )
-                    {
-                    elms[ i ]->SetValueL( *tempBuf );
-                    found = ETrue;
-                    i = count;
-                    }
-                }
-            if( !found )
-                {
-                // Not found, create a new artist element and add it to the 
-                // item
-                CUpnpElement* element = CUpnpElement::NewLC( KElementArtist );
-                element->SetValueL( *tempBuf );
-                aObject.AddElementL( element );
-                CleanupStack::Pop( element );
-                }
-            CleanupStack::PopAndDestroy( tempBuf ); tempBuf = NULL;    
-                
-            }
+        AddElementToObjectL(aObject,
+                        utility->Artist(), 
+                        KElementArtist() );
+        
         
         // Genre
         // Try to find the genre element and update it if found
-        tempBuf = UpnpString::FromUnicodeL( utility->Genre() );
-        if( tempBuf )
-            {
-            CleanupStack::PushL( tempBuf );
-            found = EFalse;
-            for( i = 0; i < count; i++)
-                {
-                if( elms[ i ]->Name() == KElementGenre )
-                    {
-                    elms[ i ]->SetValueL( *tempBuf );
-                    found = ETrue;
-                    i = count;
-                    }
-                }
-            if( !found )
-                {
-                // Not found, create a new genre element and add it to the 
-                // item
-                CUpnpElement* element = CUpnpElement::NewLC( KElementGenre );
-                element->SetValueL( *tempBuf );
-                aObject.AddElementL( element );
-                CleanupStack::Pop( element );
-                }
-            CleanupStack::PopAndDestroy( tempBuf ); tempBuf = NULL;
-            }
+        
+        AddElementToObjectL(aObject,
+                        utility->Genre(), 
+                        KElementGenre() );
+        
         
         // Album
         // Try to find the album element and update it if found
-        tempBuf = UpnpString::FromUnicodeL( utility->Album() );
-        if( tempBuf )
-            {
-            CleanupStack::PushL( tempBuf );
-            found = EFalse;
-            for( i = 0; i < count; i++)
-                {
-                if( elms[ i ]->Name() == KElementAlbum )
-                    {
-                    elms[ i ]->SetValueL( *tempBuf );
-                    found = ETrue;
-                    i = count;
-                    }
-                }
-            if( !found )
-                {
-                // Not found, create a new album element and add it to the 
-                // item
-                CUpnpElement* element = CUpnpElement::NewLC( KElementAlbum );
-                element->SetValueL( *tempBuf );
-                aObject.AddElementL( element );
-                CleanupStack::Pop( element );
-                }
-            CleanupStack::PopAndDestroy( tempBuf ); tempBuf = NULL;
-            }
+        
+        AddElementToObjectL(aObject,
+                        utility->Album(), 
+                        KElementAlbum() );
+        
+       
         }
     else if( aMimeType.Find( KMimeVideo ) >= 0 )
         {
@@ -223,30 +155,11 @@ EXPORT_C void UPnPMetadataFetcher::FetchMetadataL( CUpnpObject& aObject,
 
     // Date
     // Try to find the date element and update it if found
-    tempBuf = UpnpString::FromUnicodeL( utility->Date() );
-    if( tempBuf )
-        {
-        CleanupStack::PushL( tempBuf );
-        found = EFalse;
-        for( i = 0; i < count; i++)
-            {
-            if( elms[ i ]->Name() == KElementDate )
-                {
-                elms[ i ]->SetValueL( *tempBuf );
-                found = ETrue;
-                i = count;
-                }
-            }
-        if( !found )
-            {
-            // Not found, create a new date element and add it to the item
-            CUpnpElement* element = CUpnpElement::NewLC( KElementDate );
-            element->SetValueL( *tempBuf );
-            aObject.AddElementL( element );
-            CleanupStack::Pop( element );
-            }
-        CleanupStack::PopAndDestroy( tempBuf ); tempBuf = NULL;
-        }       
+    
+    AddElementToObjectL(aObject,
+                    utility->Date(), 
+                    KElementDate() );
+    
                          
     CUpnpElement* element = CUpnpElement::NewLC( KElementCreator );
     element->SetValueL( KItemCreator );
@@ -313,6 +226,43 @@ EXPORT_C CUpnpItem* UPnPMetadataFetcher::CreateItemFromFileL(
     CUpnpItem* item = CreateItemFromFileLC( aFilePath );
     CleanupStack::Pop( item );
     return item;
+    }
+
+
+void UPnPMetadataFetcher::AddElementToObjectL(CUpnpObject& aObject,
+                                        const TDesC& aMetaDataUtilityName, 
+                                        const TDesC8& aElementName )
+    {
+    HBufC8* tempBuf = NULL;
+    const RUPnPElementsArray& elms = aObject.GetElements();
+    TInt count = elms.Count();
+    TInt i;
+    TBool found;
+    tempBuf = UpnpString::FromUnicodeL( aMetaDataUtilityName );
+        if( tempBuf )
+            {
+            CleanupStack::PushL( tempBuf );
+            found = EFalse;
+            for( i = 0; i < count; i++)
+                {
+                if( elms[ i ]->Name() == aElementName )
+                    {
+                    elms[ i ]->SetValueL( *tempBuf );
+                    found = ETrue;
+                    i = count;
+                    }
+                }
+            if( !found )
+                {
+                // Not found, create a new element and add it to the item
+                CUpnpElement* element = CUpnpElement::NewLC( aElementName );
+                element->SetValueL( *tempBuf );
+                aObject.AddElementL( element );
+                CleanupStack::Pop( element );
+                }
+            CleanupStack::PopAndDestroy( tempBuf ); tempBuf = NULL;
+            }
+    
     }
 
 // End of File

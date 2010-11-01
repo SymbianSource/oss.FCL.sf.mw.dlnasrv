@@ -29,7 +29,7 @@
 #include <upnpprotocolinfo.h>
 
 // upnpframework / avcontroller helper api
-#include <upnpconstantdefs.h> // for upnp class defs
+#include "upnpconstantdefs.h" // for upnp class defs
 
 // upnpframework internal api's
 #include "upnpresresolver.h" // CUpnpResResolver
@@ -77,13 +77,15 @@ EXPORT_C void UpnpCdsResElementUtility::AddResElementL(
     	_LIT8( KStar8, "*");
     	_LIT8( KColon8, ":");
     	HBufC8* mimetype = UPnPCommonUtils::ResolveMimeTypeL(aFilename);
+    	CleanupStack::PushL( mimetype );
     	mimetype->Des().Trim();		// needs to be trimmed
 
         TInt resultLen = KProtInfo1().Length() + KStar8().Length() + 
     	KColon8().Length() + mimetype->Des().Length() + KColon8().Length() +
         KStar8().Length();
     	HBufC8* resValue = HBufC8::NewLC( resultLen );
-
+        CleanupStack::Pop( resValue ); // temporarily pop so that mimetype can be destroyed
+        
     // construct final value
 	    resValue->Des().Append( KProtInfo1 );
 	    resValue->Des().Append( KStar8 );
@@ -91,19 +93,24 @@ EXPORT_C void UpnpCdsResElementUtility::AddResElementL(
 	    resValue->Des().Append( *mimetype );
 	    resValue->Des().Append( KColon8 );
 	    resValue->Des().Append( KStar8 );
-
+        
+        CleanupStack::PopAndDestroy( mimetype );
+        mimetype = NULL;
+        CleanupStack::PushL( resValue );
+        
 		CUpnpProtocolInfo* pInfo = CUpnpProtocolInfo::NewL(*resValue);
+		CleanupStack::PushL( pInfo );
 		CUpnpAttribute* attribute = CUpnpAttribute::NewLC( KAttributeProtocolInfo() );
 		attribute->SetValueL( pInfo->ProtocolInfoL() );
 		elRes->AddAttributeL( attribute );    
     	aItem.AddElementL(elRes);
 
 		CleanupStack::Pop( attribute );
+		CleanupStack::PopAndDestroy( pInfo );
 		CleanupStack::PopAndDestroy( resValue );
 		CleanupStack::PopAndDestroy( resolver );
     	CleanupStack::Pop( elRes );
   		resValue = NULL;
-    	mimetype = NULL;
     	
     	return;
     }

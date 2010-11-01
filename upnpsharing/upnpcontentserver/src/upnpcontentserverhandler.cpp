@@ -21,23 +21,31 @@
 
 #include <e32debug.h>
 #include <e32property.h>
+#include "upnpsharingalgorithmfactory.h"
+#include "upnpcdsliteobject.h"
+#include "upnpcdsliteobjectarray.h"
+#include <mclfitemlistmodel.h>
+#include <escapeutils.h>            // ConvertFromUnicodeToUtf8L
+
 #include "upnpcommonutils.h"
 #include "upnpcontentserverdefs.h"
 #include "upnpcontentserverhandler.h"
 #include "upnpselectionreader.h"
 #include "upnpcontentserverclient.h"
-#include "upnpcontainercheckerao.h"
 #include "upnpcontentserver.h"
-#include "upnpperiodic.h"
+#include "upnpcontentmetadatautility.h"
 
 _LIT( KComponentLogfile, "contentserver.txt");
 #include "upnplog.h"
 
 // CONSTANTS
-const TInt KNoProgress = 0;
-const TInt KMaxProgress = 100;
-const TInt KRequestBufferSize = 2;
+const TInt KNoProgress = -1;
+const TInt KZeroProgress = 0;
+const TInt KArrayGranularity = 10;
 
+_LIT8( KAudio, "audio" );
+_LIT8( KVideo, "video" );
+_LIT8( KImage, "image" );
 
 using namespace UpnpContentServer;
 
@@ -68,10 +76,14 @@ CUpnpContentServerHandler::CUpnpContentServerHandler(
     CUpnpContentServer* aServer ) :
     iServer( aServer ),
     iContentSharingObserver( NULL ),
-    iDefaultContainerIds( 3 )
+    iOngoingSharingType( KErrNotFound ),
+    iErrorToClient( KErrNone ),
+    iSharingAlgorithm( NULL )
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-    iHandlerState = ENotActive;
+
+    ResetPendingRequestInfo();
+
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
 
@@ -83,7 +95,7 @@ CUpnpContentServerHandler::CUpnpContentServerHandler(
 void CUpnpContentServerHandler::ConstructL()
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
- /*   static _LIT_SECURITY_POLICY_PASS(KAllowAllPolicy);
+    static _LIT_SECURITY_POLICY_PASS(KAllowAllPolicy);
     static _LIT_SECURITY_POLICY_S0(KThisProcessPolicy,
                                    KUpnpContentServerCat.iUid );
 
@@ -103,35 +115,42 @@ void CUpnpContentServerHandler::ConstructL()
         User::LeaveIfError( err );
         }
 
-    iIdle = CUPnPPeriodic::NewL( CActive::EPriorityIdle );
-    TCallBack cb( RefreshClfL, this );
-    const TInt KRefreshDelay( 500000 );
-    iIdle->Start( KRefreshDelay, KRefreshDelay, cb );
-    iReader = CUpnpSelectionReader::NewL( NULL ); // metadata set later
-    SetProgressL( KNoProgress );*/
+    // Create selection reader
+    iReader = CUpnpSelectionReader::NewL();
+
+    // reset progress information
+    SetProgressL( KNoProgress );
+
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
 
 // --------------------------------------------------------------------------
-// CUpnpContentServerHandler::RefreshClfL
+// CUpnpContentServerHandler::InitializeL
 // ( other items are commented in header )
 // --------------------------------------------------------------------------
 //
-TInt CUpnpContentServerHandler::RefreshClfL( TAny* aPtr )
+void CUpnpContentServerHandler::InitializeL()
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-    CUpnpContentServerHandler* handler( NULL );
-    handler = static_cast<CUpnpContentServerHandler*>( aPtr );
-    handler->iMetadata = CUpnpContentMetadataUtility::NewL();
-    handler->iMetadata->SetCallback( handler );
-    handler->iReader->SetMetadata( handler->iMetadata );
 
-    handler->iIdle->Cancel();
-    delete handler->iIdle;
-    handler->iIdle = NULL;
+    // Create MUpnpSharingAlgorithm
+    if ( !iSharingAlgorithm )
+        {
+        iSharingAlgorithm = 
+                CUPnPSharingAlgorithmFactory::NewSharingApiL();
+        }
+    // Create CUpnpContentSharerAo
+    if ( !iAo )
+        {
+        iAo = CUpnpContentSharerAo::NewL( this, iSharingAlgorithm );
+        }
+    // Create CUpnpContentMetadataUtility
+    if ( !iMetadata )
+        {
+        iMetadata = CUpnpContentMetadataUtility::NewL();
+        }
 
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
-    return KErrNone;
     }
 
 // --------------------------------------------------------------------------
@@ -143,29 +162,23 @@ CUpnpContentServerHandler::~CUpnpContentServerHandler()
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
 
+    if ( iSharingAlgorithm )
+        {
+        iSharingAlgorithm->Close();
+        }
+    
     delete iAo;
-    delete iUnsharer;
-    delete iContainerChecker;
     delete iMetadata;
     delete iReader;
     delete iMediaServer;
 
-    if ( iWait.IsStarted() )
-        {
-        iWait.AsyncStop();
-        }
-    iDefaultContainerIds.Close();
-    delete iPendingSharingReq;
+    iPendingSharingReqInfo.iMarkedItems.Close();
     delete iMusicSharingReq;
     delete iVisualSharingReq;
     iProgressProperty.Delete( KUpnpContentServerCat, ESharingProgress );
     iProgressProperty.Close();
     iServer = NULL;
-    if ( iIdle )
-        {
-        iIdle->Cancel();
-        delete iIdle;
-        }
+        
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
 
@@ -179,10 +192,6 @@ void CUpnpContentServerHandler::SetContentSharingObserverL(
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
     iContentSharingObserver = aObserver; // can be NULL
-    if( iContentSharingObserver )
-        {
-        SetProgressL( KNoProgress );
-        }
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
 // --------------------------------------------------------------------------
@@ -195,38 +204,28 @@ void CUpnpContentServerHandler::GetSelectionContentL(
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
     // There might be many containers -> 10 is OK for granularity
-    CDesCArray* containers = new ( ELeave ) CDesCArrayFlat( 10 );
+    CDesCArray* containers = 
+        new ( ELeave ) CDesCArrayFlat( KArrayGranularity );
     CleanupStack::PushL( containers );
-    if ( iMetadata->RefreshOngoing() )
-        {
-        if ( !iWait.IsStarted() )
-            {
-            iWait.Start();
-            }
-        else
-            {
-            __LOG1( "Error: %d", __LINE__ );
-            }
-        }
 
     switch ( aContainerType )
         {
-    case EImageAndVideo :
-        {
-        iReader->FetchCollectionsL( containers );
-        }
-        break;
-    case EPlaylist :
-        {
-        iReader->FetchPlaylistsL( containers );
-        }
-        break;
-    default :
-        {
-        CleanupStack::PopAndDestroy( containers );
-        __LOG1( "Error: %d", __LINE__ );
-        }
-        break;
+        case EImageAndVideo :
+            {
+            iReader->FetchCollectionsL( containers );
+            break;
+            }
+        case EPlaylist :
+            {
+            iReader->FetchPlaylistsL( containers );
+            break;
+            }
+        default :
+            {
+            CleanupStack::PopAndDestroy( containers );
+            __LOG1( "Error: %d", __LINE__ );
+            break;
+            }
         }
     if ( iContentSharingObserver )
         {
@@ -250,34 +249,43 @@ void CUpnpContentServerHandler::GetSelectionIndexesL(
     CUpnpSharingRequest* sharingReq( NULL );
     switch ( aType )
         {
-    case EImageAndVideo :
-        {
-        if ( iVisualSharingReq )
+        case EImageAndVideo :
             {
-            sharingReq = iVisualSharingReq;
+            if ( iVisualSharingReq )
+                {
+                sharingReq = iVisualSharingReq;
+                }
+            break;
+            }
+        case EPlaylist :
+            {
+            if ( iMusicSharingReq )
+                {
+                sharingReq = iMusicSharingReq;
+                }
+            break;
+            }
+        default :
+            {
+            __LOG1( "Error: %d", __LINE__ );
+            break;
             }
         }
-        break;
-    case EPlaylist :
-        {
-        if ( iMusicSharingReq )
-            {
-            sharingReq = iMusicSharingReq;
-            }
-        }
-        break;
-    default :
-        {
-        __LOG1( "Error: %d", __LINE__ );
-        }
-        break;
-        }
-    if ( sharingReq )
+    
+    if ( sharingReq && 
+        sharingReq->iClfIds && 
+        sharingReq->iSharingType == EShareMany )
         {
         // There is sharing ongoing, return the buffered selections
-        for( TInt i(0); i < sharingReq->iSelections.Count(); i++ )
+        for( TInt i(0); i < sharingReq->iClfIds->MdcaCount(); i++ )
             {
-            aMarkedItems.AppendL( sharingReq->iSelections[ i ] );
+            TInt index = iReader->GetSelectionIndexL( 
+                    (TUpnpMediaType)aType, 
+                    sharingReq->iClfIds->MdcaPoint( i ) );
+            if ( index != KErrNotFound )
+                {
+                aMarkedItems.AppendL( index );
+                }
             }
         }
     else
@@ -285,7 +293,7 @@ void CUpnpContentServerHandler::GetSelectionIndexesL(
         if ( !iReader )
             {
             __LOG1( "Error: %d", __LINE__ );
-            iReader = CUpnpSelectionReader::NewL( iMetadata );
+            iReader = CUpnpSelectionReader::NewL();
             }
         iReader->GetSelectionIndexesL( aMarkedItems, (TUpnpMediaType)aType );
         }
@@ -307,97 +315,33 @@ void CUpnpContentServerHandler::ChangeShareContentL(
         {
         __LOG2("CUpnpContentServerHandler: received index[%d] = %d",
             e, aMarkedItems[e] );
-        }
-
-    switch ( iHandlerState )
+        }    
+    
+    if ( iOngoingSharingType != KErrNotFound )
         {
-    case ESchedulingSharing :
-        {
-        if ( aType == iBufferPosition )
+        // sharing process ongoing, check that if selection is changed
+        // to ongoing sharing type
+        if ( aType == iOngoingSharingType && iAo->SharingOngoing() )
             {
-            if ( iSharingPhase != EShare )
-                {
-                SetSharingRequestL( aMarkedItems, aType );
-                }
-            else // iSharingPhase == EShare
-                {
-                // sanity checks
-                delete iUnsharer;
-                iUnsharer = NULL;
-                delete iContainerChecker;
-                iContainerChecker = NULL;
-
-                if ( iAo )
-                    {
-                    // iAo cannot be deleted here, request stop instead
-                    iAo->RequestStop(
-                        MUpnpSharingCallback::ESharingFullStop );
-                    }
-                // Get playlist Ids
-                CDesCArray* ids = new (ELeave) CDesCArrayFlat(4);
-                CleanupStack::PushL( ids );
-                CDesCArray* names = new (ELeave) CDesCArrayFlat(4);
-                CleanupStack::PushL( names );
-                if ( aType == EImageAndVideo )
-                    {
-                    iReader->CollectionIdsL( *ids, *names );
-                    }
-                else
-                    {
-                    iReader->PlayListIdsL( *ids, *names );
-                    }
-                // pendingSharingReq will be handled from callback
-                delete iPendingSharingReq;
-                iPendingSharingReq = NULL;
-                iPendingSharingReq = CUpnpSharingRequest::NewL( aType,
-                                                                aMarkedItems,
-                                                                ids,
-                                                                names );
-                CleanupStack::Pop( names ); // ownership transferred
-                CleanupStack::Pop( ids ); // ownership transferred
-                }
+            // save pending request info
+            SavePendingRequestInfoL( aMarkedItems, aType );
+            // cancel Ao and create new sharing request in callback
+            iAo->StopSharing();
             }
         else
             {
             SetSharingRequestL( aMarkedItems, aType );
             }
         }
-        break;
-    case ENotActive :
+    else
         {
-
-        delete iMetadata;
-        iMetadata = NULL;
-        iMetadata = CUpnpContentMetadataUtility::NewL();
-        iMetadata->SetCallback( this );
-        iReader->SetMetadata( iMetadata );
-
-
-        if ( iMetadata->RefreshOngoing() )
-            {
-            __LOG("CUpnpContentServerHandler: Waiting refresh 3");
-            iWait.Start();
-            }
+        // Not active, ie. no sharing ongoing        
         SetSharingRequestL( aMarkedItems, aType );
+        iOngoingSharingType = aType;
 
-        iBufferPosition = aType;
-        // Start sharing
-        iHandlerState = ESchedulingSharing;
-
-        iSharingPhase = ECheckDefaults;
         // start the sharing
-        DoShareL();
-
+        DoShare();
         }
-        break;
-    default :
-        {
-        __LOG1( "Error: %d", __LINE__ );
-        }
-        break;
-
-        }
-    SetProgressL( KNoProgress );
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
 
@@ -419,154 +363,46 @@ void CUpnpContentServerHandler::RefreshShareContentL(
         User::Leave( KErrServerBusy );
         }
 
-    if ( iMetadata->RefreshOngoing() )
-        {
-        __LOG("CUpnpContentServerHandler: Waiting refresh 1");
-        iWait.Start();
-        }
-
     delete iReader;
     iReader = NULL;
-    iReader = CUpnpSelectionReader::NewL( iMetadata );
-
-    RArray<TInt> selectedItems;
-    CleanupClosePushL( selectedItems );
-    CDesCArray* containers = new ( ELeave ) CDesCArrayFlat( 10 );
-    CleanupStack::PushL( containers );
-    iReader->FetchCollectionsL( containers );
-    GetSelectionIndexesL( selectedItems, aType );
-    CDesCArray* ids = new (ELeave) CDesCArrayFlat(4);
-    CleanupStack::PushL( ids );
-    CDesCArray* names = new (ELeave) CDesCArrayFlat(4);
-    CleanupStack::PushL( names );
-    iReader->CollectionIdsL( *ids, *names );
+    iReader = CUpnpSelectionReader::NewL();
 
     if ( aType == EImageAndVideo )
         {
-        iVisualSharingReq = CUpnpSharingRequest::NewL( aType,
-                                                       selectedItems,
-                                                       ids,
-                                                       names );
+        RArray<TInt> markedItems;
+        CleanupClosePushL( markedItems );
+        
+        // Get selected indexes and create new sharing request
+        GetSelectionIndexesL( markedItems, aType );
+        SetSharingRequestL( markedItems, aType );
+
+        CleanupStack::PopAndDestroy( &markedItems );
         }
     else if ( aType == EPlaylist )
         {
-        iMusicSharingReq = CUpnpSharingRequest::NewL( aType,
-                                                      selectedItems,
-                                                      ids,
-                                                      names );
+        RArray<TInt> markedItems;
+        CleanupClosePushL( markedItems );
+        
+        // Get selected indexes and create new sharing request
+        GetSelectionIndexesL( markedItems, aType );
+        SetSharingRequestL( markedItems, aType );
+        
+        CleanupStack::PopAndDestroy( &markedItems );
         }
     else
         {
         User::Leave( KErrArgument );
         }
 
-    CleanupStack::Pop( names ); // ownership transferred
-    CleanupStack::Pop( ids ); // ownership transferred
-    ChangeShareContentL( selectedItems, aType );
+    // if no refreshes ongoing, start sharing
+    if ( iOngoingSharingType == KErrNotFound )
+        {
+        iOngoingSharingType = aType;
+        DoShare();
+        }
 
-    selectedItems.Reset();
-    containers->Reset();
-
-    CleanupStack::PopAndDestroy( containers );
-    CleanupStack::PopAndDestroy( &selectedItems );
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
-
-// --------------------------------------------------------------------------
-// CUpnpContentServerHandler::FillProgressInfoL
-// ( other items are commented in header )
-// --------------------------------------------------------------------------
-//
-void CUpnpContentServerHandler::FillProgressInfoL(
-    RArray<TUpnpProgressInfo>& aArr,
-    const TInt aType )
-    {
-    __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-    CUpnpSharingRequest* sharingReq( NULL );
-    if( iPendingSharingReq && iPendingSharingReq->iKind == aType )
-        {
-        sharingReq = iPendingSharingReq;
-        }
-    else
-        {
-        if ( aType == EImageAndVideo )
-            {
-            sharingReq = iVisualSharingReq;
-            }
-        else if ( aType == EPlaylist )
-            {
-            sharingReq = iMusicSharingReq;
-            }
-        }
-    TUpnpProgressInfo progress;
-    progress.iProgressKind = UpnpContentServer::TUpnpMediaType( aType );
-    if ( sharingReq )
-        {
-        progress.iProgressType = TUpnpProgressInfo::ESharingProgress;
-        if ( iBufferPosition == aType &&
-             iHandlerState == ESchedulingSharing &&
-             ( iAo || iUnsharer || iContainerChecker ))
-            {
-            // sharing ongoing for images
-            TInt prog ( 0 );
-            TInt progRel( 0 );
-            if ( iAo && iSharingPhase == EShare )
-                {
-                prog = iAo->SharingProgress(
-                    (TUpnpMediaType&)progress.iProgressKind );
-                progRel = ( prog * KMaxProgress ) / sharingReq->iItemCount;      
-                }
-            if ( iUnsharer &&  iSharingPhase == EUnshare  )
-                {
-                prog = iUnsharer->UnSharingProgress();
-                TInt itemNum = iUnsharer->TotalItemsForUnShare();
-                if( itemNum > 0 )
-                    {     
-                    progRel = ( prog * KMaxProgress ) / itemNum;          
-                    }
-                }   
-
-            // check that progress is between 0 and 100 %
-            if ( progRel < 0 )
-                {
-                progRel = KNoProgress;
-                __LOG1( "Error: %d", __LINE__ );
-                }
-            else if ( progRel > KMaxProgress )
-                {
-                progRel = KMaxProgress;
-                __LOG1( "Error: %d", __LINE__ );
-                }
-            progress.iProgress = progRel;
-            }
-        else
-            {
-            // buffer is pending
-            progress.iProgressType = TUpnpProgressInfo::ESharingProgress;
-            progress.iProgress = KNoProgress;
-            }
-        }
-    else
-        {
-        progress.iProgressType = TUpnpProgressInfo::EVisualStatus;
-        TInt state( EShareNone );
-
-        if ( aType == EImageAndVideo )
-            {
-            iReader->GetVisualSharingStateL( state );
-            }
-        else
-            {
-            iReader->GetMusicSharingStateL( state );
-            }
-
-        progress.iProgress = state;
-        }
-    aArr.AppendL( progress );
-    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
-    }
-
-
 
 // --------------------------------------------------------------------------
 // CUpnpContentServerHandler::CanStop
@@ -587,23 +423,6 @@ TBool CUpnpContentServerHandler::CanStop() const
     }
 
 // --------------------------------------------------------------------------
-// CUpnpContentServerHandler::RefreshDoneL
-// ( other items are commented in header )
-// --------------------------------------------------------------------------
-//
-void CUpnpContentServerHandler::RefreshDoneL()
-    {
-    __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-
-    iMetadata->SetCallback( this );
-    if ( iWait.IsStarted() )
-        {
-        iWait.AsyncStop();
-        }
-    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
-    }
-
-// --------------------------------------------------------------------------
 // CUpnpContentServerHandler::CompleteSharingOperationL
 // This should be called from active objects owned by handler
 // --------------------------------------------------------------------------
@@ -612,122 +431,104 @@ void CUpnpContentServerHandler::CompleteSharingOperationL(
     const TInt& aErr, const TInt& aType )
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-    if ( aErr != KErrNone )
-        {
-        __LOG1( "Error: %d", aErr );
-        }
-    if ( iWait.IsStarted() )
-        {
-        iWait.AsyncStop();
-        }
-    else if ( iStartupCleaning )
-        {
-        iStartupCleaning = EFalse;
-        }
 
-    else if ( aErr && aErr != KErrCancel )
+    switch ( aErr )
         {
-        // Cancel is handled below
-        HandleError( aErr );
-        }
-    else
-        {
-        if ( iSharingPhase == ECheckDefaults )
+        case KErrNone:
             {
-            iHandlerState = ESchedulingSharing;
-            iSharingPhase = EUnshare;
-            }
-        else if ( iSharingPhase == EUnshare )
-            {
-            iHandlerState = ESchedulingSharing;
-            iSharingPhase = EShare;
-
-            }
-        else if ( iSharingPhase == EShare )
-            {
-            switch ( aType )
+            iErrorToClient = KErrNone;
+            if ( aType == EImageAndVideo )
                 {
-            case EImageAndVideo :
-                {
+                // Reset sharing request object 
                 delete iVisualSharingReq;
                 iVisualSharingReq = NULL;
-                SetProgressL( KNoProgress );
+                
+                // If there is pending music request, process it next 
+                if ( iMusicSharingReq )
+                    {
+                    iOngoingSharingType = EPlaylist;
+                    DoShare();
+                    }
+                else
+                    {
+                    iOngoingSharingType = KErrNotFound;
+                    }
                 }
-                break;
-            case EPlaylist :
+            else if ( aType == EPlaylist )
                 {
+                // Reset sharing request object 
                 delete iMusicSharingReq;
                 iMusicSharingReq = NULL;
-                SetProgressL( KNoProgress );
-                }
-                break;
-            default :
-                {
-                __LOG1( "Error: %d", __LINE__ );
-                }
-                break;
-                }
-            if ( aType != iBufferPosition )
-                {
-                __LOG1( "Error: %d", __LINE__ );
-                }
-
-            if ( aErr == KErrNone )
-                {
-                iErrorToClient = aErr;
-                iBufferPosition = (iBufferPosition + 1)%KRequestBufferSize;
-                SetProgressL( KNoProgress );
-                }
-            else
-                {
-                if ( iPendingSharingReq )
+                
+                // If there is pending music request, process it next 
+                if ( iVisualSharingReq )
                     {
-                    if ( iPendingSharingReq->iKind == EImageAndVideo )
-                        {
-                        delete iVisualSharingReq;
-                        iVisualSharingReq = NULL;
-                        iVisualSharingReq = iPendingSharingReq;
-                        }
-                    else
-                        {
-                        delete iMusicSharingReq;
-                        iMusicSharingReq = NULL;
-                        iMusicSharingReq = iPendingSharingReq;
-                        }
-                    iPendingSharingReq = NULL;
+                    iOngoingSharingType = EImageAndVideo;
+                    DoShare();
+                    }
+                else
+                    {
+                    iOngoingSharingType = KErrNotFound;
                     }
                 }
-
-            iDefaultContainerIds.Reset();
-            if ( ! ( iVisualSharingReq || iMusicSharingReq ))
+            else 
                 {
-                iHandlerState = ENotActive;
-                iSharingPhase = ESharingInActive;
-                if ( CanStop() && iServer && !iContentSharingObserver )
+                iOngoingSharingType = KErrNotFound;
+                }
+            break;
+            }
+        case KErrCancel:
+            {
+            // User reselected currently ongoing sharing, handle it next
+            if ( iPendingSharingReqInfo.iMarkedItems.Count() )
+                {
+                // create sharing request from pending info
+                TRAPD( 
+                    err, 
+                    SetSharingRequestL( 
+                        iPendingSharingReqInfo.iMarkedItems,
+                        iPendingSharingReqInfo.iMediaType ) 
+                    );
+                if ( err )
                     {
-                    // client application is exited, no sharing ongoing
-                    // -> stop the server
-                    iServer->Stop();
+                    HandleError( err );
+                    }
+                else
+                    {
+                    // no errors, reset the pending request info and start 
+                    // sharing
+                    ResetPendingRequestInfo();
+                    DoShare();
                     }
                 }
             else
                 {
-                iSharingPhase = ECheckDefaults;
-                iHandlerState = ESchedulingSharing;
+                iOngoingSharingType = KErrNotFound;
                 }
+            break;
             }
-        else
+        default:
             {
-            __LOG1( "Error: %d", __LINE__ );
+            __LOG1( "CompleteSharingOperationL: %d", aErr );
+            HandleError( aErr );
+            break;
             }
-
-        if ( iHandlerState != ENotActive )
-            {
-            DoShareL();
-            }
-
         }
-
+    
+    if ( iOngoingSharingType == KErrNotFound )
+        {
+        // Reset the progress info to no progress.
+        TRAP_IGNORE( 
+            SetProgressL( KNoProgress )
+            );
+        if ( CanStop() && iServer && !iContentSharingObserver )
+            {
+            // client application is exited, no sharing ongoing
+            // -> stop the server
+            iServer->Stop();
+            }
+        }
+    
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
 
@@ -741,7 +542,6 @@ void CUpnpContentServerHandler::CancelSharingOperationL(
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
 
-
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
 
@@ -750,46 +550,64 @@ void CUpnpContentServerHandler::CancelSharingOperationL(
 // This should be called from active objects owned by handler
 // --------------------------------------------------------------------------
 //
-void CUpnpContentServerHandler::SetProgressL(
-    const TInt& aProgress )
+void CUpnpContentServerHandler::SetProgressL( const TInt& aProgress )
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-    CUpnpSharingRequest* sharingReq( NULL );
-    if( iPendingSharingReq && iPendingSharingReq->iKind == iBufferPosition )
+    
+    // Initilialize music sharing progress information
+    TUpnpProgressInfo playlistProg;
+    playlistProg.iProgress = KZeroProgress;
+    playlistProg.iProgressKind = EPlaylist;
+    playlistProg.iProgressType = TUpnpProgressInfo::EVisualStatus;
+    
+    // Set music sharing progress information
+    if ( iMusicSharingReq && aProgress != KNoProgress )
         {
-        sharingReq = iPendingSharingReq;
+        playlistProg.iProgressType = TUpnpProgressInfo::ESharingProgress;
+        if ( iOngoingSharingType == EPlaylist )
+            {
+            playlistProg.iProgress = aProgress;
+            }
         }
     else
         {
-        if ( iBufferPosition == EPlaylist )
-            {
-            sharingReq = iMusicSharingReq;
-            }
-        else if ( iBufferPosition == EImageAndVideo )
-            {
-            sharingReq = iVisualSharingReq;
-            }
+        TInt state( EShareNone );
+        iReader->GetMusicSharingStateL( state );
+        playlistProg.iProgress = state;
         }
-
-    if ( sharingReq )
+    
+    // Initilialize visual sharing progress information
+    TUpnpProgressInfo visualProg;
+    visualProg.iProgress = KZeroProgress;
+    visualProg.iProgressKind = EImageAndVideo;
+    visualProg.iProgressType = TUpnpProgressInfo::EVisualStatus;
+    
+    // Set visual sharing progress information
+    if ( iVisualSharingReq && aProgress != KNoProgress )
         {
-        sharingReq->iProgress = aProgress;
+        visualProg.iProgressType = TUpnpProgressInfo::ESharingProgress;
+        if ( iOngoingSharingType == EImageAndVideo)
+            {
+            visualProg.iProgress = aProgress;
+            }
+        }
+    else
+        {
+        TInt state( EShareNone );
+        iReader->GetVisualSharingStateL( state );
+        visualProg.iProgress = state;
         }
 
-    TProgressInfos progressArr;
-    CleanupClosePushL( progressArr );
-
-    FillProgressInfoL( progressArr, EImageAndVideo );
-    FillProgressInfoL( progressArr, EPlaylist );
-
-    TUpnpProgress finalProg;
-    finalProg.iError = iErrorToClient;
+    // Create total progress
+    TUpnpProgress totalProg;
+    totalProg.iError = iErrorToClient;
     iErrorToClient = KErrNone;
-    finalProg.iImageVideoProgress = progressArr[ 0 ];
-    finalProg.iMusicProgress = progressArr[ 1 ];
+    
+    totalProg.iImageVideoProgress = visualProg;
+    totalProg.iMusicProgress = playlistProg;
 
-    TPckgBuf<TUpnpProgress> progressBuf( finalProg );
-
+    // Set the progress property so that Ui updates itself
+    TPckgBuf<TUpnpProgress> progressBuf( totalProg );
     TInt err = iProgressProperty.Set( KUpnpContentServerCat,
                                       ESharingProgress,
                                       progressBuf  );
@@ -797,105 +615,39 @@ void CUpnpContentServerHandler::SetProgressL(
         {
         __LOG1( "Error: %d", err );
         }
-    CleanupStack::PopAndDestroy( &progressArr );
 
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
 
 // --------------------------------------------------------------------------
-// CUpnpContentServerHandler::DoShareL
+// CUpnpContentServerHandler::DoShare
 // ( other items are commented in header )
 // --------------------------------------------------------------------------
 //
-void CUpnpContentServerHandler::DoShareL( )
+void CUpnpContentServerHandler::DoShare()
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-    TInt err( KErrNone );
 
-    iHandlerState = ESchedulingSharing;
-
-    if ( iSharingPhase == ECheckDefaults )
+    switch( iOngoingSharingType )
         {
-        iDefaultContainerIds.Reset();
-        delete iContainerChecker;
-        iContainerChecker = NULL;
-        iContainerChecker = new (ELeave) CUpnpContainerCheckerAo( this );
-        iContainerChecker->ValidateContainerStructureL(
-            &iDefaultContainerIds );
-        }
-    else if ( iSharingPhase == EUnshare )
-        {
-        delete iContainerChecker;
-        iContainerChecker = NULL;
-        delete iUnsharer;
-        iUnsharer = NULL;
-        iUnsharer = new ( ELeave ) CUpnpUnsharerAo(
-            this,
-            CActive::EPriorityStandard );
-        TInt id = GetContainerId( iBufferPosition );
-        if ( id == KErrNotFound )
-            {
-            User::Leave( KErrCorrupt );
-            }
-        iUnsharer->EmptyContainer( id );
-        }
-    else if ( iSharingPhase == EShare )
-        {
-        delete iUnsharer;
-        iUnsharer = NULL;
-        delete iAo;
-        iAo = NULL;
-        iAo = CUpnpContentSharingAo::NewL( this, iMetadata );
-        TInt id = GetContainerId( iBufferPosition );
-        if ( id == KErrNotFound )
-            {
-            User::Leave( KErrCorrupt );
-            }
-        // iBufferPosition is updated in CompleteSharingOperationL
-        switch( iBufferPosition )
-            {
         case EImageAndVideo :
             {
-            TRAP( err, iAo->InitializeL( ( TUpnpMediaType )
-                                         iVisualSharingReq->iKind,
-                                         iVisualSharingReq->iSelections,
-                                         *iVisualSharingReq->iObjectIds,
-                                         *iVisualSharingReq->iObjectNames,
-                                         id ));
-            // always show something in progress dialog -> add 1
-            TRAP( err, iVisualSharingReq->iItemCount =
-                  iAo->SelectionObjectCountL(
-                      ( TUpnpMediaType )iBufferPosition ) +1 );
-            iAo->ShareFiles(); // start sharing
-            }
+            // start sharing and put progress
+            iAo->StartSharing( iVisualSharingReq );
             break;
+            }
         case EPlaylist :
             {
-            TRAP( err, iAo->InitializeL( ( TUpnpMediaType )
-                                         iMusicSharingReq->iKind,
-                                         iMusicSharingReq->iSelections,
-                                         *iMusicSharingReq->iObjectIds,
-                                         *iMusicSharingReq->iObjectNames,
-                                         id ));
-            // always show something in progress dialog -> add 1
-            TRAP( err, iMusicSharingReq->iItemCount =
-                  iAo->SelectionObjectCountL(
-                      ( TUpnpMediaType )iBufferPosition ) +1);
-            iAo->ShareFiles(); // start sharing
-            }
+            // start sharing and put progress
+            iAo->StartSharing( iMusicSharingReq );
             break;
+            }
         default:
             {
             __LOG1( "Error: %d", __LINE__ );
-            }
             break;
             }
         }
-    else
-        {
-        __LOG1( "Error: %d", __LINE__ );
-        }
-
 
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
@@ -908,53 +660,21 @@ void CUpnpContentServerHandler::DoShareL( )
 void CUpnpContentServerHandler::Cleanup()
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-    if( iSharingPhase == EShare )
+    if( iAo->SharingOngoing() )
         {
-        if( iAo )
-            {
-            iAo->RequestStop(
-                MUpnpSharingCallback::ESharingFullStop );
-            }
+        iAo->StopSharing();
         }
-    delete iContainerChecker;
-    iContainerChecker = NULL;
-    delete iUnsharer;
-    iUnsharer = NULL;
 
     delete iVisualSharingReq;
     iVisualSharingReq = NULL;
     delete iMusicSharingReq;
     iMusicSharingReq = NULL;
-    delete iPendingSharingReq;
-    iPendingSharingReq = NULL;
+    ResetPendingRequestInfo();
 
     // reset state variables
-    iHandlerState = ENotActive;
-    iSharingPhase = ESharingInActive;
-
+    iOngoingSharingType = KErrNotFound;
+    
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
-    }
-
-// --------------------------------------------------------------------------
-// CUpnpContentServerHandler::GetContainerId
-// get id from list
-// --------------------------------------------------------------------------
-//
-TInt CUpnpContentServerHandler::GetContainerId( const TInt aType ) const
-    {
-    __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-    TInt id( KErrNotFound );
-    if ( aType == EImageAndVideo )
-        {
-        id = iDefaultContainerIds[
-            CUpnpContainerCheckerAo::EImageAndVideo ];
-        }
-    else if ( aType == EPlaylist )
-        {
-        id = iDefaultContainerIds[ CUpnpContainerCheckerAo::EMusic ];
-        }
-    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
-    return id;
     }
 
 // --------------------------------------------------------------------------
@@ -966,31 +686,17 @@ TBool CUpnpContentServerHandler::ConnectionLostL( )
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
     TBool ret( EFalse );
-    if ( iHandlerState != ENotActive )
-        {
-        if ( iSharingPhase == EShare )
-            {
-            __LOG("iSharingPhase == EShare");
-            ret = ETrue;
-            iAo->RequestStop( MUpnpSharingCallback::ESharingPause );
-            }
-        else if ( iSharingPhase == ECheckDefaults )
-            {
-            __LOG("iSharingPhase == ECheckDefaults");
-            iContainerChecker->RequestStop(
-                MUpnpSharingCallback::ESharingPause );
-            }
-        else if ( iSharingPhase == EUnshare )
-            {
-            __LOG("iSharingPhase == EUnshare");
-            iUnsharer->RequestStop( MUpnpSharingCallback::ESharingPause );
-            }
 
+    if ( iOngoingSharingType != KErrNotFound )
+        {
+        ret = ETrue;
+        if ( iAo->SharingOngoing() )
+            {
+            iAo->StopSharing();
+            }
         }
     else
         {
-        __LOG("else ");
-        iMediaServer = new (ELeave) RUpnpMediaServerClient();
         TInt err( iMediaServer->Connect() );
         TInt stat( RUpnpMediaServerClient::EStopped );
         if ( !err )
@@ -1019,54 +725,56 @@ void CUpnpContentServerHandler::SetSharingRequestL(
     const TInt aType )
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-    CDesCArray* ids = new (ELeave) CDesCArrayFlat(4);
-    CleanupStack::PushL( ids );
-    CDesCArray* names = new (ELeave) CDesCArrayFlat(4);
-    CleanupStack::PushL( names );
-    if ( aType == EImageAndVideo )
-        {
-        iReader->CollectionIdsL( *ids, *names );
-        delete iVisualSharingReq;
-        iVisualSharingReq = NULL;
-        iVisualSharingReq = CUpnpSharingRequest::NewL( aType,
-                                                       aMarkedItems,
-                                                       ids,
-                                                       names );
-        }
-    else
-        {
-        iReader->PlayListIdsL( *ids, *names );
-        delete iMusicSharingReq;
-        iMusicSharingReq = NULL;
-        iMusicSharingReq = CUpnpSharingRequest::NewL( aType,
-                                                      aMarkedItems,
-                                                      ids,
-                                                      names );
-        }
-    CleanupStack::Pop( names ); // ownership transferred
-    CleanupStack::Pop( ids ); // ownership transferred
-    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
-    }
 
-// --------------------------------------------------------------------------
-// CUpnpContentServerHandler::ValidateDefaultContainersL
-// ( other items are commented in header )
-// --------------------------------------------------------------------------
-//
-void CUpnpContentServerHandler::ValidateDefaultContainersL( )
-    {
-    __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-    if ( iSharingPhase != ECheckDefaults )
-        {
-        iStartupCleaning = ETrue;
-        delete iContainerChecker;
-        iContainerChecker = NULL;
-        iContainerChecker = new (ELeave) CUpnpContainerCheckerAo( this );
-        iContainerChecker->SetPriority( CActive::EPriorityUserInput );
-        iContainerChecker->ValidateContainerStructureL(
-            NULL );
+    // Create sharing request
+    CreateSharingRequestL( aType, SharingType( aMarkedItems ) );
 
-        }
+    // Get user selected filenames to be shared
+    CDesCArray* filenamesToBeShared = 
+        new (ELeave) CDesCArrayFlat( KArrayGranularity );
+    CleanupStack::PushL( filenamesToBeShared );
+    CDesCArray* clfIds =
+        new (ELeave) CDesCArrayFlat( KArrayGranularity );
+    CleanupStack::PushL( clfIds );
+
+    GetSelectionFilenamesL( 
+            aMarkedItems, 
+            aType, 
+            SharingType( aMarkedItems ), 
+            *filenamesToBeShared,
+            *clfIds );
+
+    // Get currently shared filenames
+    CUpnpCdsLiteObjectArray& currentlySharedContent = 
+        iSharingAlgorithm->ReadSharedContent();
+        
+    // Compare and create unshare/share arrays
+    RArray<TFileName>* shareArr = new ( ELeave ) RArray<TFileName>;
+    CleanupStack::PushL( shareArr );
+    RArray<TFileName>* unshareArr = new ( ELeave ) RArray<TFileName>;
+    CleanupStack::PushL( unshareArr );
+
+    CompareCdsToClfL( 
+            *filenamesToBeShared, 
+            currentlySharedContent,
+            *shareArr,
+            *unshareArr,
+            (TUpnpMediaType)aType );    
+    
+    // Set sharing request information arrays:
+    // shareArr, unshareArr and clfIds ownership transferred.
+    SetSharingRequestInfo( 
+        aType, 
+        shareArr, 
+        unshareArr, 
+        clfIds );
+
+    // cleanup
+    CleanupStack::Pop( unshareArr ); // ownership transferred to shar.request
+    CleanupStack::Pop( shareArr );   // ownership transferred to shar.request
+    CleanupStack::Pop( clfIds );     // ownership transferred to shar.request
+    CleanupStack::PopAndDestroy( filenamesToBeShared );
+    
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
 
@@ -1079,15 +787,510 @@ void CUpnpContentServerHandler::ValidateDefaultContainersL( )
 void CUpnpContentServerHandler::HandleError( TInt aError )
     {
     __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
-    if( iHandlerState != ENotActive )
+    
+    // cleanup if some error occurred while sharing
+    if( iOngoingSharingType != KErrNotFound )
         {
         Cleanup();
-        iHandlerState = ENotActive;
-        iSharingPhase = ECheckDefaults;
         iErrorToClient = aError;
+        // reset progress information
         TRAP_IGNORE( SetProgressL( KNoProgress ) );
         }
     __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
     }
 
+// --------------------------------------------------------------------------
+// CUpnpContentServerHandler::GetSelectionFilenamesL
+// ( other items are commented in header )
+// --------------------------------------------------------------------------
+//
+
+void CUpnpContentServerHandler::GetSelectionFilenamesL(
+    const RArray<TInt>& aMarkedItems,
+    const TInt aType,
+    const TInt aSharingType,
+    CDesCArray& aFilenames,
+    CDesCArray& aClfIds )
+    {
+    __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
+
+    // Collect all the necessary filenames and clfIds depending on 
+    // the user selection.
+    switch ( aSharingType )
+        {
+        case EShareAll:
+            {
+            // All files of the selected playlists/albums should be 
+            // shared
+            if ( aType == EImageAndVideo )
+                {
+                GetAllImageAndVideoFilenamesL( aFilenames );
+                }
+            else if ( aType == EPlaylist )
+                {
+                GetAllMusicFilenamesL( aFilenames );
+                }
+            break;
+            }
+        case EShareMany:
+            {
+            // Selected some of the playlists/albums
+            if ( aType == EImageAndVideo )
+                {
+                GetSelectedImgAndVideoFilenamesL( 
+                    aMarkedItems, 
+                    aFilenames,
+                    aClfIds );
+                }
+            else if ( aType == EPlaylist )
+                {
+                GetSelectedMusicFilenamesL( 
+                    aMarkedItems,
+                    aFilenames,
+                    aClfIds );
+                }
+            break;
+            }
+        case EShareNone:
+            {
+            // No selections, do nothing
+            break;
+            }
+        default:
+            {
+            // do nothing
+            break;
+            }
+        }
+
+    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpContentServerHandler::GetAllImageAndVideoFilenamesL
+// ( other items are commented in header )
+// --------------------------------------------------------------------------
+//
+
+void CUpnpContentServerHandler::GetAllImageAndVideoFilenamesL(
+    CDesCArray& aFilenames )
+    {
+    __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
+
+    // Fetch all the image files
+    const MCLFItemListModel* imageFiles = iMetadata->ImageFiles();
+    if ( imageFiles )
+        {
+        TInt imageCount = imageFiles->ItemCount();
+        __LOG1( "CUpnpContentServerHandler::GetAllImageAndVideoFilenamesL \
+                    imageCount=%d", imageCount );
+                    
+        // Append all image files to aFilenames
+        for ( TInt i=0; i < imageCount; i++ )
+            {
+            // get the filename from clf item
+            TPtrC fullFilename;
+            imageFiles->Item(i).GetField( 
+                ECLFFieldIdFileNameAndPath,
+                fullFilename );
+            aFilenames.AppendL( fullFilename );
+            }    
+        }
+        
+    // Fetch all the video files
+    const MCLFItemListModel* videoFiles = iMetadata->VideoFiles();
+    if ( videoFiles )
+        {
+        TInt videoCount = videoFiles->ItemCount();
+        __LOG1( "CUpnpContentServerHandler::GetAllImageAndVideoFilenamesL \
+                    videoCount=%d", videoCount );
+                    
+        // Append all video files to aFilenames
+        for ( TInt i=0; i < videoCount; i++ )
+            {
+            // get the filename from clf item
+            TPtrC fullFilename;
+            videoFiles->Item(i).GetField( 
+                ECLFFieldIdFileNameAndPath,
+                fullFilename );
+            aFilenames.AppendL( fullFilename );
+            }
+        }
+        
+    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpContentServerHandler::GetAllMusicFilenamesL
+// ( other items are commented in header )
+// --------------------------------------------------------------------------
+//
+
+void CUpnpContentServerHandler::GetAllMusicFilenamesL(
+    CDesCArray& aFilenames )
+    {
+    __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
+
+    // Fetch all the music files...
+    const MCLFItemListModel* musicFiles = iMetadata->MusicFiles();
+    if ( musicFiles )
+        {
+        TInt musicCount = musicFiles->ItemCount();
+        __LOG1( "CUpnpContentServerHandler::GetAllMusicFilenamesL \
+                    musicCount=%d", musicCount );
+                    
+        // Append all music files to aFilenames
+        for ( TInt i=0; i < musicCount; i++ )
+            {
+            // get the filename from clf item
+            TPtrC fullFilename;
+            musicFiles->Item(i).GetField( 
+                ECLFFieldIdFileNameAndPath,
+                fullFilename );
+            aFilenames.AppendL( fullFilename );
+            }
+        }
+        
+    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpContentServerHandler::GetSelectedImgAndVideoFilenamesL
+// ( other items are commented in header )
+// --------------------------------------------------------------------------
+//
+
+void CUpnpContentServerHandler::GetSelectedImgAndVideoFilenamesL(
+    const RArray<TInt>& aMarkedItems,
+    CDesCArray& aFilenames,
+    CDesCArray& aClfIds )
+    {
+    __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
+
+    // Go though all the selected collections and fetch collection ids and 
+    // items.
+    TInt markedCount = aMarkedItems.Count();
+    for ( TInt i=0; i < markedCount; i++ )
+        {
+        CDesCArray* collFilenames = 
+            new (ELeave) CDesCArrayFlat( KArrayGranularity );
+        CleanupStack::PushL( collFilenames );
+
+        // find out collection id and items
+        TPtrC collId = iReader->GetCollectionItemsL( 
+                            aMarkedItems[i], 
+                            *collFilenames );        
+        if ( collId.Length() )
+            {
+            // collection id found, append it to aClfIds
+            aClfIds.AppendL( collId );
+
+            // append all collection items to aFilenames
+            TInt collFileCount = collFilenames->Count();
+            for (TInt j=0; j < collFileCount; j++ )
+                {
+                aFilenames.AppendL( collFilenames->MdcaPoint( j ) );
+                }
+            }
+        CleanupStack::PopAndDestroy( collFilenames );
+        }
+
+    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpContentServerHandler::GetSelectedMusicFilenamesL
+// ( other items are commented in header )
+// --------------------------------------------------------------------------
+//
+
+void CUpnpContentServerHandler::GetSelectedMusicFilenamesL(
+    const RArray<TInt>& aMarkedItems,
+    CDesCArray& aFilenames,
+    CDesCArray& aClfIds )
+    {
+    __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
+    
+    // Go though all the selected playlists and fetch playlist ids and 
+    // items.
+    TInt markedCount = aMarkedItems.Count();
+    for ( TInt i=0; i < markedCount; i++ )
+        {
+        CDesCArray* plFilenames = 
+            new (ELeave) CDesCArrayFlat( KArrayGranularity );
+        CleanupStack::PushL( plFilenames );
+
+        // find out playlist id and items
+        TPtrC plId = iReader->GetPlaylistItemsL( 
+                            aMarkedItems[i],
+                            *plFilenames );
+        
+        if ( plId.Length() )
+            {
+            // playlist id found, append it to aClfIds
+            aClfIds.AppendL( plId );
+
+            // append all playlist items to aFilenames
+            TInt plFileCount = plFilenames->Count();
+            for (TInt j=0; j < plFileCount; j++ )
+                {
+                aFilenames.AppendL( plFilenames->MdcaPoint( j ) );
+                }            
+            }
+
+        CleanupStack::PopAndDestroy( plFilenames );
+        }
+
+    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpContentServerHandler::CompareCdsToClfL
+// ( other items are commented in header )
+// --------------------------------------------------------------------------
+//
+
+void CUpnpContentServerHandler::CompareCdsToClfL( 
+    CDesCArray& aClfFilePaths, 
+    CUpnpCdsLiteObjectArray& aCdsObjects,
+    RArray<TFileName>& aToBeSharedFiles,
+    RArray<TFileName>& aToBeUnsharedSharedFiles,
+    const TUpnpMediaType aType )
+    {
+    __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
+    
+    // See if files in the clffilenames can be found from cds structure.
+    // if they cna they are already shared. In they can't they need to be 
+    // added to the list of "to be shared" items.
+    for (TInt i(0); i<aClfFilePaths.MdcaCount(); i++)
+        {        
+        RBuf8 fileName;
+        CleanupClosePushL( fileName );
+        fileName.CreateMaxL( aClfFilePaths.MdcaPoint(i).Length() );
+        fileName.Copy( aClfFilePaths.MdcaPoint(i) );
+        if(  KErrNotFound == aCdsObjects.FindByName( fileName ))
+            {
+            // Not found cds-structure, so needs to be added to 
+            // toBeSharedFiles.
+            aToBeSharedFiles.AppendL( aClfFilePaths.MdcaPoint(i) );
+            }
+        else
+            {
+            // Shared already
+            }    
+        CleanupStack::PopAndDestroy( &fileName );
+        }
+    
+    // See if items in cds structure can be found from clffilenames. If 
+    // they are found they need to be shared. If they are not found they 
+    // need to be added to the list of "to be unshared" items.
+    for ( TInt j( 0 ); j<aCdsObjects.Count(); j++ )
+        {
+        CUpnpCdsLiteObject& cdsObject = aCdsObjects.ObjectAtL( j );
+        // resolve filetype in cds
+        const TDesC8& itemType = cdsObject.ObjectClass(); 
+        
+        // compare only right type
+        if ( cdsObject.Type() == CUpnpCdsLiteObject::EItem && 
+            ( ( ( itemType.Find( KVideo ) != KErrNotFound || 
+                itemType.Find( KImage ) != KErrNotFound ) &&
+                aType == EImageAndVideo ) || 
+            ( itemType.Find( KAudio ) != KErrNotFound && 
+                aType == EPlaylist ) ) )
+            {
+            // get filename
+            HBufC* fileName = EscapeUtils::ConvertToUnicodeFromUtf8L( 
+                cdsObject.Name() );
+            CleanupStack::PushL( fileName );
+            
+            TInt clfCount = aClfFilePaths.Count();
+            TInt clfIndex( KErrNotFound );
+            aClfFilePaths.Find( *fileName, clfIndex );
+            if ( clfCount < 1 || clfIndex >= clfCount )
+                {
+                // Must not be shared so add to the toBeUnsharedSharedFiles.
+                aToBeUnsharedSharedFiles.AppendL( *fileName );
+                }            
+            else
+                {
+                // Sharing wanted to that item
+                }
+            CleanupStack::PopAndDestroy( fileName );
+            }
+        }
+        
+    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpContentServerHandler::CreateSharingRequestL
+// ( other items are commented in header )
+// --------------------------------------------------------------------------
+//
+
+void CUpnpContentServerHandler::CreateSharingRequestL(
+    TInt aType, 
+    TInt aSharingType )
+    {
+    __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
+
+    // flag for indicating is it needed to set progress property
+    TBool setProgress( EFalse );
+    
+    // Create the appropriate request depending on the sharing type.    
+    if ( aType == EImageAndVideo )
+        {
+        // if music sharing is not ongoing, set progress
+        if ( !iMusicSharingReq || iOngoingSharingType != EPlaylist )
+            {
+            setProgress = ETrue;
+            }
+        else
+            {
+            // force AO to set progress as soon as possible
+            iAo->ForceSetProgress();
+            }
+            
+        // create image and video request 
+        delete iVisualSharingReq;
+        iVisualSharingReq = NULL;
+        iVisualSharingReq = CUpnpSharingRequest::NewL(
+                                                    (TUpnpMediaType)aType, 
+                                                    aSharingType );
+        if ( setProgress )
+            {
+            // set progress so that ui updates itself
+            SetProgressL( KZeroProgress );
+            }
+        }
+    else if ( aType == EPlaylist )
+        {
+        // if visual sharing is not ongoing, set progress
+        if ( !iVisualSharingReq || iOngoingSharingType != EImageAndVideo )
+            {
+            setProgress = ETrue;
+            }
+        else
+            {
+            // force AO to set progress as soon as possible
+            iAo->ForceSetProgress();
+            }
+            
+        // create music request 
+        delete iMusicSharingReq;
+        iMusicSharingReq = NULL;
+        iMusicSharingReq = CUpnpSharingRequest::NewL(
+                                                    (TUpnpMediaType)aType, 
+                                                    aSharingType );
+        if ( setProgress )
+            {
+            // set progress so that ui updates itself
+            SetProgressL( KZeroProgress );
+            }
+        }
+    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpContentServerHandler::SetSharingRequestInfo
+// ( other items are commented in header )
+// --------------------------------------------------------------------------
+//
+
+void CUpnpContentServerHandler::SetSharingRequestInfo(
+    TInt aType, 
+    RArray<TFileName>* aShareArray,
+    RArray<TFileName>* aUnshareArray,
+    CDesCArray* aClfIds )
+    {
+    __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
+
+    // Sets the appropriate sharing request information arrays.
+    // aShareArray, UnshareArray and aClfIds ownership transferred.
+    if ( aType == EImageAndVideo && iVisualSharingReq )
+        {
+        // image and video request 
+        iVisualSharingReq->SetSharingRequestInfo(
+            aShareArray,
+            aUnshareArray,
+            aClfIds );
+        }
+    else if ( aType == EPlaylist && iMusicSharingReq )
+        {
+        // music request 
+        iMusicSharingReq->SetSharingRequestInfo(
+            aShareArray,
+            aUnshareArray,
+            aClfIds );
+        }
+
+    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpContentServerHandler::ResetPendingRequestInfo
+// ( other items are commented in header )
+// --------------------------------------------------------------------------
+//
+
+void CUpnpContentServerHandler::ResetPendingRequestInfo()
+    {
+    __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
+
+    // Reset iPendingSharingReqInfo object
+    iPendingSharingReqInfo.iMediaType = KErrNotFound;
+    iPendingSharingReqInfo.iMarkedItems.Reset();
+    
+    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpContentServerHandler::SavePendingRequestInfoL
+// ( other items are commented in header )
+// --------------------------------------------------------------------------
+//
+
+void CUpnpContentServerHandler::SavePendingRequestInfoL(
+    const RArray<TInt>& aMarkedItems,
+    const TInt aType )
+    {
+    __LOG8_1( "%s begin.", __PRETTY_FUNCTION__ );
+
+    // reset pending request object
+    ResetPendingRequestInfo();
+    
+    // Fill info of pending sharing request
+    iPendingSharingReqInfo.iMediaType = aType;
+    for ( TInt i = 0; i < aMarkedItems.Count(); i++ )
+        {
+        iPendingSharingReqInfo.iMarkedItems.AppendL( aMarkedItems[i] );
+        }
+    
+    __LOG8_1( "%s end.", __PRETTY_FUNCTION__ );
+    }
+
+// --------------------------------------------------------------------------
+// CUpnpContentServerHandler::ResolveSharingType
+// ( other items are commented in header )
+// --------------------------------------------------------------------------
+//
+
+TInt CUpnpContentServerHandler::SharingType( 
+    const RArray<TInt>& aMarkedItems )
+    {
+    // Resolve sharing type
+    TInt sharingType( EShareMany );
+    if ( aMarkedItems.Find(0) != KErrNotFound )
+        {
+        // share nothing marked
+        sharingType = EShareNone;
+        }
+    else if ( aMarkedItems.Find(1) != KErrNotFound )
+        {
+        // share all marked
+        sharingType = EShareAll;
+        }
+    return sharingType;
+    }
+    
 // End of file

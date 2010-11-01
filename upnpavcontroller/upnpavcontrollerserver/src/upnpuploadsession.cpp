@@ -15,36 +15,32 @@
 *
 */
 
-
-
-
-
-
 // INCLUDE FILES
 // System
 #include <mmf/common/mmfcontrollerpluginresolver.h>
 
 // upnp stack api
+#include <upnpstring.h>
+
+// dlnasrv / mediaserver api
 #include <upnpitem.h>
 #include <upnpattribute.h>
-#include <upnpstring.h>
 #include <upnpdlnaprotocolinfo.h>
-#include <upnpavcontrolpoint.h>
 
-// upnpframework / avcontroller helper api
+// dlnasrv / avcontroller helper api
 #include "upnpconstantdefs.h" // for upnp-specific stuff
 #include "upnpitemutility.h" // FindElementByNameL, GetResElements
 
-// upnpframework / xmlparser api
+// dlnasrv / xmlparser api
 #include "upnpxmlparser.h"
 
-// upnpframework / internal api's
+// dlnasrv / internal api's
 #include "upnpcdsreselementutility.h"
 #include "httpuploader.h"
 #include "upnpmetadatafetcher.h"
 #include "upnpcommonutils.h"
 
-// INTERNAL INCLUDES
+// dlnasrv / avcontroller internal api's
 #include "upnpuploadsession.h"
 #include "upnpfiletransferitem.h"
 #include "upnpavcontrollerserver.h"
@@ -52,7 +48,11 @@
 #include "upnpavdeviceextended.h"
 #include "upnpavdispatcher.h"
 #include "upnpaverrorhandler.h"
+#include "upnpavcpstrings.h"
 #include "upnpresourcehelper.h"
+#include "upnpavcontrolpoint.h"
+
+using namespace UpnpAVCPStrings;
 
 _LIT( KComponentLogfile, "upnpavcontrollerserver.txt");
 #include "upnplog.h"
@@ -120,6 +120,69 @@ void CUPnPUploadSession::ConstructL( const TDesC8& aUuid )
 
     iUploader = CHttpUploader::NewL( *this, (TUint32)iServer.IAP(),
         KBufferSize, KParallerTransfers );
+    
+    // Gets related ControlPoint device (CUpnpDevice).
+    // It is needed for CUpnpAVControlPoint.
+    iCpDevice = iServer.ControlPoint().Device( aUuid );
+    if ( !iCpDevice ) 
+        {
+        User::Leave( KErrNotFound );
+        }
+    
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPUploadSession::ActionResponseL
+// From MUpnpAVControlPointObserver
+// --------------------------------------------------------------------------
+void CUPnPUploadSession::ActionResponseL( CUpnpAction* aAction )
+    {
+    if (aAction->Name().Compare(KCreateObject) == 0)
+        {
+        __ASSERT( iIPSessionId == aAction->SessionId(),
+            __FILE__, __LINE__ );
+        CdsCreateObjectResponse(
+            aAction->Error(),
+            aAction->ArgumentValue(KObjectID), 
+            aAction->ArgumentValue(KResult)
+            );
+        }
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPUploadSession::ActionResponseL
+// From MUpnpAVControlPointObserver
+// --------------------------------------------------------------------------
+void CUPnPUploadSession::StateUpdatedL( CUpnpService* /*aService*/ )
+    {
+    // No implementation required
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPUploadSession::ActionResponseL
+// From MUpnpAVControlPointObserver
+// --------------------------------------------------------------------------
+void CUPnPUploadSession::HttpResponseL( CUpnpHttpMessage* /*aMessage*/ )
+    {
+    // No implementation required
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPUploadSession::ActionResponseL
+// From MUpnpAVControlPointObserver
+// --------------------------------------------------------------------------
+void CUPnPUploadSession::DeviceDiscoveredL( CUpnpDevice* /*aDevice*/ )
+    {
+    // No implementation required
+    }
+
+// --------------------------------------------------------------------------
+// CUPnPUploadSession::ActionResponseL
+// From MUpnpAVControlPointObserver
+// --------------------------------------------------------------------------
+void CUPnPUploadSession::DeviceDisappearedL( CUpnpDevice* /*aDevice*/ )
+    {
+    // No implementation required
     }
 
 // --------------------------------------------------------------------------
@@ -237,8 +300,7 @@ void CUPnPUploadSession::TransferCompleted( TAny* aKey, TInt aStatus )
                 {
                 // Send destroyobject
                 __LOG( "CancelAllUploadsL - sending destroyobject" );
-                TRAP_IGNORE( iServer.ControlPoint().CdsDestroyObjectActionL(
-                    iDevice->Uuid(), *iResources[ i ]->ItemId() ) );  
+                TRAP_IGNORE( DestroyObjectL( *iResources[ i ]->ItemId() ) );
                 }
             }
         iResources.ResetAndDestroy();    
@@ -251,18 +313,12 @@ void CUPnPUploadSession::TransferCompleted( TAny* aKey, TInt aStatus )
 // See upnpbrowsingsession.h
 // --------------------------------------------------------------------------
 void CUPnPUploadSession::CdsCreateObjectResponse(
-    const TDesC8& /*aUuid*/,
-    TInt aSessionId,
     TInt aErr,
-    const TDesC8& /*aContainerID*/, 
-    const TDesC8& /*aElements*/, 
     const TDesC8& aObjectID, 
     const TDesC8& aResult )
     {
     __LOG1( "CUPnPUploadSession::CdsCreateObjectResponse: %d" , aErr );
-    
-    __ASSERTD( iIPSessionId == aSessionId, __FILE__, __LINE__ );
-    
+
     __ASSERTD( iTransferItems.Count() == iResources.Count(), __FILE__, 
                __LINE__ );
     
@@ -378,8 +434,13 @@ as UPnP content" );
     
     CUPnPResourceHelper* helper = CUPnPResourceHelper::NewL();
     CleanupStack::Pop( tmpUpnpItem );
+    CleanupStack::PushL( helper );
     helper->SetItem( tmpUpnpItem ); // Transfer ownership
-    iResources.AppendL( helper );
+    if( iResources.Append( helper )!= KErrNone  )
+        {
+        CleanupStack::PopAndDestroy( helper );
+        }
+    CleanupStack::Pop( helper );
     
     iUploader->MoveToTransferQueueL( (TAny*)transferItem.iKey );
     
@@ -412,8 +473,7 @@ void CUPnPUploadSession::CancelUploadL( const RMessage2& aMessage )
         if( iResources[ index ]->ItemId() )
             {
             // Send destroyobject
-            iServer.ControlPoint().CdsDestroyObjectActionL( iDevice->Uuid(),
-                *iResources[ index ]->ItemId() );
+            DestroyObjectL( *iResources[ index ]->ItemId() );
             }
         delete iResources[index ];
         iResources.Remove( index );   
@@ -446,8 +506,7 @@ void CUPnPUploadSession::CancelAllUploadsL( const RMessage2& aMessage )
             {
             // Send destroyobject
             __LOG( "CancelAllUploadsL - sending destroyobject" );
-            iServer.ControlPoint().CdsDestroyObjectActionL( iDevice->Uuid(),
-                *iResources[ i ]->ItemId() );  
+            DestroyObjectL( *iResources[ i ]->ItemId() );
             }
         }
     iResources.ResetAndDestroy();
@@ -622,19 +681,11 @@ void CUPnPUploadSession::ReadyForTransferL( TUpnpFileTransferEvent& aEvent )
     
     HBufC8* xmlDoc = CUPnPXMLParser::XmlForCreateObjectLC(
         *tmpUpnpItem );
-    
-    iIPSessionId = iServer.ControlPoint().CdsCreateObjectActionL(
-        iDevice->Uuid(), KContainerIdAny, *xmlDoc );
 
-    if( iIPSessionId > 0 )
-        {
-        // Register
-        iServer.Dispatcher().RegisterL( iIPSessionId, *this );
-        }
-    else
-        {
-        User::Leave( iIPSessionId );
-        }                             
+    iIPSessionId = CreateObjectL( KContainerIdAny, *xmlDoc );
+
+    // Register
+    iServer.Dispatcher().RegisterL( iIPSessionId, *this );
     
     CleanupStack::PopAndDestroy( xmlDoc );
     
@@ -674,7 +725,8 @@ void CUPnPUploadSession::ReadyForTransferL( TUpnpFileTransferEvent& aEvent )
             {
             // Background is not available for some reason.
             // Check if media specific transfer mode is available
-            if( UPnPCommonUtils::IsImageSupported( tmpInfo->ProtocolInfoL() ) )
+            if( UPnPCommonUtils::IsImageSupported( 
+                    tmpInfo->ProtocolInfoL() ) )
                 {
                 // Uploading image, alternative for background is interactive
                 if( tmpInfo->DlnaFlag( UpnpDlnaProtocolInfo::TM_I_FLAG ) )
@@ -933,6 +985,48 @@ void CUPnPUploadSession::DoSchedulerStoppedCallBack()
     {
     __LOG( "ProtocolInfoToUPnPL::DoSchedulerStoppedCallBack" );
     iSchedulerStopped = ETrue;
+    }
+
+//---------------------------------------------------------------------------
+// CUPnPUploadSession::CreateObjectL()
+//---------------------------------------------------------------------------
+//
+int CUPnPUploadSession::CreateObjectL( const TDesC8& aContainerId,
+    const TDesC8& aElements )
+    {
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            iCpDevice, KContentDirectory, KCreateObject );
+    
+    action->SetArgumentL( KContainerID, aContainerId );
+    action->SetArgumentL( KElements, aElements );
+
+    iServer.ControlPoint().SendL( action );
+    CleanupStack::Pop( action );
+    if (action->SessionId() < 0)
+        {
+        User::Leave( action->SessionId() );    
+        }
+    return action->SessionId();
+    }
+
+//---------------------------------------------------------------------------
+// CUPnPUploadSession::DestroyObjectL()
+//---------------------------------------------------------------------------
+//
+int CUPnPUploadSession::DestroyObjectL( const TDesC8& aObjectId )
+    {
+    CUpnpAction* action = iServer.ControlPoint().CreateActionLC( 
+            iCpDevice, KContentDirectory, KDestroyObject );
+    
+    action->SetArgumentL( KObjectID, aObjectId );
+
+    iServer.ControlPoint().SendL( action );
+    CleanupStack::Pop( action );
+    if (action->SessionId() < 0)
+        {
+        User::Leave( action->SessionId() );    
+        }
+    return action->SessionId();
     }
 
 // End of file

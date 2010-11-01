@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies).
+* Copyright (c) 2006-2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -31,16 +31,17 @@
 #include <upnpservice.h>
 #include <upnpdevice.h>
 #include <e32base.h>
-#include <upnpmediaserverclient.h>
 #include "upnpconnectionmonitorobserver.h"
-
+#include "upnpavcontrolpointobserver.h"
 #include "upnpavtimer.h"
+#include "upnpdeviceicondownloader.h"
 
 // FORWARD DECLARATIONS
 class CUpnpAVControlPoint;
 class CUPnPAVDispatcher;
 class CUPnPConnectionMonitor;
 class CUPnPDeviceRepository;
+class CUpnpSettings;
 
 // CLASS DECLARATION
 
@@ -51,9 +52,11 @@ class CUPnPDeviceRepository;
 *  @lib - 
 *  @since Series 60 3.1
 */
-class CUpnpAVControllerServer :  public CPolicyServer,
-                                 public MUPnPAVTimerCallback,
-                                 public MUPnPConnectionMonitorObserver
+NONSHARABLE_CLASS ( CUpnpAVControllerServer ) :  public CPolicyServer,
+                                 private MUPnPAVTimerCallback,
+                                 private MUPnPConnectionMonitorObserver,
+                                 private MUpnpAVControlPointObserver,
+                                 private MUpnpDeviceIconDownloadObserver
     {
 
 private: // Internal server state
@@ -61,9 +64,11 @@ private: // Internal server state
     enum TAVControllerServerState
         {
         EStateUndefined = 0,
-        EStateStartingUp,
+        EStateStartingServer,
+        EStateStartingControlPoint,
         EStateRunning,
-        EStateShuttingDown
+        EStateShuttingDown,
+        EStateShutDown
         };    
     
 public:  // Constructors and destructor
@@ -77,7 +82,7 @@ public:  // Constructors and destructor
      * Destructor.
      */
     virtual ~CUpnpAVControllerServer();
-    
+
 public: // New functions        
      
     /**
@@ -118,13 +123,7 @@ public: // New functions
      */
     CUpnpAVControlPoint& ControlPoint();
 
-    /**
-     * Return a reference to the s60 MS session
-     *
-     * @return reference to the s60 MS session
-     */
-    RUpnpMediaServerClient& MediaServer();
-    
+
     /**
      * Return a reference to the callback dispatcher
      *
@@ -139,8 +138,12 @@ public: // New functions
      */
     CUPnPDeviceRepository& DeviceRepository();
     
+    /**
+     * Return a IAP
+     *
+     * @return a IAP
+     */
     TInt IAP();
-    
          
     /**
      * First stage startup for the server thread
@@ -148,35 +151,7 @@ public: // New functions
      * @return return KErrNone or panics thread
      */
     static TInt ThreadFunction();
-    
-    /**
-     * Starts the s60 MS if not started. Increments the reference ocunt
-     * 
-     * @param aMessage message
-     */
-    void StartMediaServerL( const RMessage2& aMessage );
-    
-    /**
-     * Cancels the start
-     * 
-     * @param aMessage message
-     */
-    void CancelStartMediaServerL( const RMessage2& aMessage );
-
-    /**
-     * Stops the s60 MS if reference count hits 0
-     * 
-     * @param aMessage message
-     */
-    void StopMediaServerL( const RMessage2& aMessage );
-
-    /**
-     * Returns ETrue if someone is using the local Media Server
-     * 
-     * @param aMessage message
-     */
-    void MSServicesInUse( const RMessage2& aMessage );
-    
+        
     /**
      * Observer callback for Connection Manager GetProtocolInfo function.
      * 
@@ -188,12 +163,21 @@ public: // New functions
      */ 
     void CmProtocolInfoResponse(
         const TDesC8& aUuid,
-        TInt aSessionId,
         TInt aErr,
         const TDesC8& aSource, 
         const TDesC8& aSink );
-    
-protected:  // From CActive
+
+    /**
+     * Transfers device icon file to the client
+     * 
+     * @param aMessage message from client
+     * @param aSlot message slot to be used
+     * @param aDeviceUuid the device that's icon is transferred
+     */
+    void TransferDeviceIconFileToClientL( const RMessage2& aMessage, TInt aSlot,
+        const TDesC8& aDeviceUuid );
+
+private:  // From CActive
 
     /**
      * Process any errors
@@ -202,19 +186,19 @@ protected:  // From CActive
      */
     TInt RunError( TInt aError );
     
-protected: // From MUPnPAVTimerCallback
+private: // From MUPnPAVTimerCallback
 
     /**
      * See upnpavtimercallback.h
      */
     void UPnPAVTimerCallback( CUPnPAVTimer::TAVTimerType aType ); 
 
-protected: // From CUPnPConnectionMonitorObserver
+private: // From CUPnPConnectionMonitorObserver
 
     /**
      * See upnpconnectionmonitorobserver.h
      */
-    void ConnectionLost();
+    void ConnectionLost( TBool aUserOriented );
 
 private: // 2nd phase construct
 
@@ -244,6 +228,33 @@ public:
      */
     void CancelStartUp();
     
+private: // MUpnpAVControlPointObserver
+
+    /**
+    * @see MUpnpAVControlPointObserver::ActionResponseL
+    */
+    void ActionResponseL( CUpnpAction* aAction );
+    
+    /**
+    * @see MUpnpAVControlPointObserver::StateUpdatedL
+    */
+    void StateUpdatedL( CUpnpService* aService );
+    
+    /**
+    * @see MUpnpAVControlPointObserver::HttpResponseL
+    */
+    void HttpResponseL( CUpnpHttpMessage* aMessage );
+    
+    /**
+    * @see MUpnpAVControlPointObserver::DeviceDiscoveredL
+    */
+    void DeviceDiscoveredL( CUpnpDevice* aDevice );
+    
+    /**
+    * @see MUpnpAVControlPointObserver::DeviceDisappearedL
+    */
+    void DeviceDisappearedL( CUpnpDevice* aDevice );
+    
 private: // New methods 
 
     /**
@@ -267,25 +278,7 @@ private: // New methods
      * Second stage startup for the server thread 
      */
     static void ThreadFunctionL();
-    
-    /**
-     * Handles embedded discovered device. Recoursive.
-     *
-     * @param aDevice device
-     * @param aDepth device depth
-     */
-    void HandleEmbeddedDiscoveredDevicesL( CUpnpDevice& aDevice,
-        TInt aDepth );
-    
-    /**
-     * Handles embedded disappeared device. Recoursive.
-     *
-     * @param aDevice device
-     * @param aDepth device depth
-     */
-    void HandleEmbeddedDisappearedDevicesL( CUpnpDevice& aDevice,
-        TInt aDepth );
-        
+            
     /**
      * Stops the local media server
      */
@@ -297,7 +290,12 @@ private: // New methods
      * @param aUuid device uuid
      * @param aDev pointer to the device in repository
      */
-    void HandleFailedProtocolInfoResponse( const TDesC8& aUuid );                  
+    void HandleFailedProtocolInfoResponse( const TDesC8& aUuid );
+    
+    /**
+     * Change server state.
+     */
+    void ChangeState( TAVControllerServerState aState );
 
 private: // From CServer
 
@@ -310,45 +308,35 @@ private: // From CServer
     CSession2* NewSessionL( const TVersion& aVersion,
         const RMessage2& aMessage )  const;
     
+
+private: // MUpnpDeviceIconDownloadObserver
+
+    void DeviceIconDownloadedL( const TDesC8& aDeviceUuid, TInt aError );
+
 private:
     
     /** @var iSessionCount the number of session owned by this server */
     TInt iSessionCount;
     
     CUpnpAVControlPoint*        iAVControlPoint; // Own
-    RUpnpMediaServerClient      iMediaServer; // Own
     
     CUPnPAVDispatcher*          iDispatcher; // Own
 
     CUPnPAVTimer*               iServerTimer; // Own
     
-    CUPnPAVTimer*               iMSTimer; // Own
-
     CUPnPConnectionMonitor*     iMonitor; // Own
-    
-    TInt                        iServerUserCount;
-    
-    TBool                       iMediaServerOnline;
-    
-    TBool                       iStartingMS;
-    
-    TBool                       iMSActivatedBeforeStart;
-    
-    RPointerArray<RMessage2>    iStartMessages; // Own
-    
+            
     CUPnPDeviceRepository*      iDeviceRepository; // Own
-    
-    TInt                        iDiscoveredDeviceCount;    
-    
-    TInt                        iDisappearedDeviceCount;
-    
+        
     TInt                        iShutdownTimeoutValue;
     
     TInt                        iIAP;    
 
-    TAVControllerServerState    iServerState;
-
+    TAVControllerServerState    iState;
     
+    CUpnpSettings*              iUpnpSettings; // Own
+
+    CUpnpDeviceIconDownloader*  iIconDownloader; // Own
     };
 
 

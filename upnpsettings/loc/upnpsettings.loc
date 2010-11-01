@@ -101,7 +101,7 @@
 //l:popup_info_list_pane_t1
 //r:1.0
 //
-#define qtn_iupnp_wizard_4                  "Define your Home access point or choose %U to select it manually each time"
+#define qtn_iupnp_wizard_4                  "Define your Home access point or choose \"%U\" to select it manually each time"
 
 //d:Header for wizard step 5
 //l:heading_pane_t1

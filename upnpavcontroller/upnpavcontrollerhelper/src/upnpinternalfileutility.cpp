@@ -24,20 +24,21 @@
 // System
 #include <e32std.h>
 #include <upnpelement.h>
-#include <DRMCommon.h>              // OEM-DRM
 #include <caf/content.h>                // CAF (WM-DRM check)
 #include <caf/agent.h>                  // CAF (WM-DRM check)
+#include <caf/rightsinfo.h>
+#include <DRMCommon.h>              // OEM-DRM
 #include <pathinfo.h>               // PathInfo
 #include <upnpitem.h>
 #include <upnpattribute.h>          // for getting resource protocol info
 #include <upnpdlnaprotocolinfo.h>   // for resolving object mimetypE
 
-// upnpframework / avcontroller helper api
+// dlnasrv / avcontroller helper api
 #include "upnpitemutility.h"        // FindAttributeByName
 #include "upnpconstantdefs.h"       // KAttributeSize
-#include "upnpinternalfileutility.h"
 
-// upnpframework / internal api's
+// dlnasrv / internal api's
+#include "upnpinternalfileutility.h"
 #include "upnpsettingsengine.h"     // get target drive
 #include "upnpcommonutils.h"        // for FileExtensionByMimeTypeL
 

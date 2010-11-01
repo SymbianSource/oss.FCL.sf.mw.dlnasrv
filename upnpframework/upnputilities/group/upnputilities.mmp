@@ -46,9 +46,9 @@ SOURCE          upnpcommonutils.cpp
 SOURCE          upnpmetadatautility.cpp
 SOURCE          upnpmetadatafetcher.cpp
 SOURCE          upnpcdsreselementutility.cpp
-SOURCE          upnpconnectionmonitor.cpp
 SOURCE          upnpgallerynotifier.cpp
 SOURCE          upnpperiodic.cpp
+SOURCE          upnppathutility.cpp
 
 // Core platform
 LIBRARY         euser.lib
@@ -60,7 +60,9 @@ LIBRARY         esock.lib
 LIBRARY         insock.lib
 LIBRARY         commdb.lib
 LIBRARY         PlatformEnv.lib
-LIBRARY         connmon.lib
+
+// Settings Engine
+LIBRARY         upnpsettingsengine.lib
 
 // Meta data
 LIBRARY         MetaDataUtility.lib
@@ -77,10 +79,10 @@ LIBRARY         cafutils.lib
 LIBRARY         ContentListingFramework.lib
 
 // S60 Upnp Stack
-LIBRARY         upnpavobjects.lib
 LIBRARY         upnpipserversutils.lib
 
-// Upnp FW
+// dlnasrv
+LIBRARY         upnpavobjects.lib
 LIBRARY         dlnaprofiler.lib
 
 // debug logging facilities
