@@ -1,6 +1,0 @@
-EXPORTS
-	_ZN14CUPnPAppWizard4NewLERK7TDesC16P22CUPnPFileSharingEngine @ 1 NONAME
-	_ZN14CUPnPAppWizard6StartLEv @ 2 NONAME
-	_ZTI14CUPnPAppWizard @ 3 NONAME ; #<TI>#
-	_ZTV14CUPnPAppWizard @ 4 NONAME ; #<VT>#
-

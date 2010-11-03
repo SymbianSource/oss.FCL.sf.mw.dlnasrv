@@ -1,0 +1,86 @@
+;
+; Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
+; All rights reserved.
+; This component and the accompanying materials are made available
+; under the terms of "Eclipse Public License v1.0"
+; which accompanies this distribution, and is available
+; at the URL "http://www.eclipse.org/legal/epl-v10.html".
+;
+; Initial Contributors:
+; Nokia Corporation - initial contribution.
+;
+; Contributors:
+;
+; Description: Package file for DLNA services
+;
+
+; Languages
+&EN
+
+; Standard SIS file header
+#{"DLNA Services"},(0x2000F8DB),1,1,0, TYPE=SA, RU
+
+; Localized Vendor name
+%{"Nokia"}
+
+; Unique Vendor name
+:"Nokia"
+
+; Supports Series 60 v 3.0
+[0x101F7961], 0, 0, 0, {"S60ProductID"}
+
+; ---------------------------------------------------------------------------
+; upnpavcontroller
+; ---------------------------------------------------------------------------
+"\epoc32\release\armv5\urel\upnpavcontrollerclient.dll" -                   "!:\sys\bin\upnpavcontrollerclient.dll"
+"\epoc32\release\armv5\urel\upnpavcontrollerserver.exe" -                   "!:\sys\bin\upnpavcontrollerserver.exe"
+"\epoc32\release\armv5\urel\upnpavcontrollerhelper.dll" -                   "!:\sys\bin\upnpavcontrollerhelper.dll"
+"\epoc32\release\armv5\urel\upnprenderingstatemachine.dll" -                "!:\sys\bin\upnprenderingstatemachine.dll"
+"\epoc32\release\armv5\urel\upnpxmlparser.dll" -                            "!:\sys\bin\upnpxmlparser.dll"
+
+; ---------------------------------------------------------------------------
+; upnpframework
+; ---------------------------------------------------------------------------
+"\epoc32\release\armv5\urel\upnputilities.dll" -                            "!:\sys\bin\upnputilities.dll"
+"\epoc32\release\armv5\urel\upnpcommand.dll" -                              "!:\sys\bin\upnpcommand.dll"
+"\epoc32\release\armv5\urel\upnpconnmon.dll" -                              "!:\sys\bin\upnpconnmon.dll"
+"\epoc32\release\armv5\urel\upnpthumbnailcreator.dll" -                     "!:\sys\bin\upnpthumbnailcreator.dll"
+"\epoc32\release\armv5\urel\upnpfiletransferengine.dll" -                   "!:\sys\bin\upnpfiletransferengine.dll"
+"\epoc32\release\armv5\urel\upnpmusicadapter.dll" -                         "!:\sys\bin\upnpmusicadapter.dll"
+
+; ---------------------------------------------------------------------------
+; upnpmediaserver
+; ---------------------------------------------------------------------------
+"\epoc32\release\armv5\urel\avconnectionmanager.dll" -                      "!:\sys\bin\avconnectionmanager.dll"
+"\epoc32\release\armv5\urel\avcontentdirectory.dll" -                       "!:\sys\bin\avcontentdirectory.dll"
+"\epoc32\release\armv5\urel\avmediaserverclient.dll" -                      "!:\sys\bin\avmediaserverclient.dll"
+"\epoc32\release\armv5\urel\upnpavobjects.dll" -                            "!:\sys\bin\upnpavobjects.dll"
+"\epoc32\release\armv5\urel\avmediaserver.exe" -                            "!:\sys\bin\avmediaserver.exe"
+"\epoc32\data\z\private\101f977c\objects.xml" -                             "!:\private\101f977c\objects.xml"
+"\epoc32\data\z\private\101f977c\public\MediaServer1\ConnectionManager1.xml" - "!:\private\101f977c\public\MediaServer1\ConnectionManager1.xml"
+"\epoc32\data\z\private\101f977c\public\MediaServer1\ContentDirectory1.xml" - "!:\private\101f977c\public\MediaServer1\ContentDirectory1.xml"
+"\epoc32\data\z\private\101f977c\public\MediaServer1\MediaServer1.xml" -    "!:\private\101f977c\public\MediaServer1\MediaServer1.xml"
+"\epoc32\data\z\private\101f977c\backup_registration.xml" -                 "!:\private\101f977c\backup_registration.xml"
+"\epoc32\data\z\private\101f977d\backup_registration.xml" -                 "!:\private\101f977d\backup_registration.xml"
+
+; ---------------------------------------------------------------------------
+; upnpsettings
+; ---------------------------------------------------------------------------
+"\epoc32\release\armv5\urel\upnpsettingsengine.dll" -                       "!:\sys\bin\upnpsettingsengine.dll"
+
+; ---------------------------------------------------------------------------
+; upnpsharing
+; ---------------------------------------------------------------------------
+"\epoc32\release\armv5\urel\upnpsecuritymanagerclient.dll" -                "!:\sys\bin\upnpsecuritymanagerclient.dll"
+"\epoc32\release\armv5\urel\upnpsecuritymanagerserver.exe" -                "!:\sys\bin\upnpsecuritymanagerserver.exe"
+"\epoc32\data\Z\resource\UPnPNotifier.RSC" -                                "!:\resource\UPnPNotifier.RSC"
+"\epoc32\release\armv5\urel\upnpsecurity.dll" -                             "!:\sys\bin\upnpsecurity.dll"
+"\epoc32\release\armv5\urel\upnpsecuritymanagerplugin.dll" -                "!:\sys\bin\upnpsecuritymanagerplugin.dll"
+"\epoc32\data\Z\resource\plugins\upnpsecuritymanagerplugin.rsc" -           "!:\resource\plugins\upnpsecuritymanagerplugin.rsc"
+"\epoc32\release\armv5\urel\dlnaprofiler.dll" -                             "!:\sys\bin\dlnaprofiler.dll"
+"\epoc32\release\armv5\urel\upnpsharingalgorithm.dll" -                     "!:\sys\bin\upnpsharingalgorithm.dll"
+"\epoc32\data\Z\resource\upnpsharingalgorithm.rsc" -                        "!:\resource\upnpsharingalgorithm.rsc"
+"\epoc32\release\armv5\urel\upnpcontentserverclient.dll" -                  "!:\sys\bin\upnpcontentserverclient.dll"
+"\epoc32\release\armv5\urel\upnpcontentserver.exe" -                        "!:\sys\bin\upnpcontentserver.exe"
+
+; End of file

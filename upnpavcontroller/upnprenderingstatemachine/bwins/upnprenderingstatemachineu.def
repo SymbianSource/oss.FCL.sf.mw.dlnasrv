@@ -1,0 +1,41 @@
+EXPORTS
+	?SetOptions@CUpnpRenderingStateMachine@@QAEXH@Z @ 1 NONAME ; void CUpnpRenderingStateMachine::SetOptions(int)
+	?SetURIResult@CUpnpRenderingStateMachine@@QAEXH@Z @ 2 NONAME ; void CUpnpRenderingStateMachine::SetURIResult(int)
+	?PositionInfoResult@CUpnpRenderingStateMachine@@QAEXHABVTDesC8@@0@Z @ 3 NONAME ; void CUpnpRenderingStateMachine::PositionInfoResult(int, class TDesC8 const &, class TDesC8 const &)
+	?CommandL@CUpnpRenderingStateMachine@@QAEXW4TCommand@Upnp@@HPBVCUpnpItem@@@Z @ 4 NONAME ; void CUpnpRenderingStateMachine::CommandL(enum Upnp::TCommand, int, class CUpnpItem const *)
+	?SyncL@CUpnpRenderingStateMachine@@QAEXXZ @ 5 NONAME ; void CUpnpRenderingStateMachine::SyncL(void)
+	?Position@CUpnpRenderingStateMachine@@QBEHXZ @ 6 NONAME ; int CUpnpRenderingStateMachine::Position(void) const
+	?SetResourceSelector@CUpnpRenderingStateMachine@@QAEXAAVMUPnPResourceSelector@@@Z @ 7 NONAME ; void CUpnpRenderingStateMachine::SetResourceSelector(class MUPnPResourceSelector &)
+	?State@CUpnpRenderingStateMachine@@QBE?AW4TState@Upnp@@XZ @ 8 NONAME ; enum Upnp::TState CUpnpRenderingStateMachine::State(void) const
+	?SetOffSync@CUpnpRenderingStateMachine@@QAEXXZ @ 9 NONAME ; void CUpnpRenderingStateMachine::SetOffSync(void)
+	?NewL@CUpnpRenderingStateMachine@@SAPAV1@AAVMUPnPAVRenderingSession@@@Z @ 10 NONAME ; class CUpnpRenderingStateMachine * CUpnpRenderingStateMachine::NewL(class MUPnPAVRenderingSession &)
+	?Duration@CUpnpRenderingStateMachine@@QBEHXZ @ 11 NONAME ; int CUpnpRenderingStateMachine::Duration(void) const
+	?IsInSync@CUpnpRenderingStateMachine@@QBEHXZ @ 12 NONAME ; int CUpnpRenderingStateMachine::IsInSync(void) const
+	?Options@CUpnpRenderingStateMachine@@QBEHXZ @ 13 NONAME ; int CUpnpRenderingStateMachine::Options(void) const
+	?InteractOperationComplete@CUpnpRenderingStateMachine@@QAEXHW4TUPnPAVInteractOperation@@@Z @ 14 NONAME ; void CUpnpRenderingStateMachine::InteractOperationComplete(int, enum TUPnPAVInteractOperation)
+	?SetNextURIResult@CUpnpRenderingStateMachine@@QAEXH@Z @ 15 NONAME ; void CUpnpRenderingStateMachine::SetNextURIResult(int)
+	?IsBusy@CUpnpRenderingStateMachine@@QBEHXZ @ 16 NONAME ; int CUpnpRenderingStateMachine::IsBusy(void) const
+	?SetObserver@CUpnpRenderingStateMachine@@QAEXAAVMUpnpRenderingStateMachineObserver@@@Z @ 17 NONAME ; void CUpnpRenderingStateMachine::SetObserver(class MUpnpRenderingStateMachineObserver &)
+	?HasPauseCapability@CUpnpRenderingStateMachine@@QBEHXZ @ 18 NONAME ; int CUpnpRenderingStateMachine::HasPauseCapability(void) const
+	??1CUpnpRenderingStateMachine@@UAE@XZ @ 19 NONAME ; CUpnpRenderingStateMachine::~CUpnpRenderingStateMachine(void)
+	?RemoveObserver@CUpnpRenderingStateMachine@@QAEXXZ @ 20 NONAME ; void CUpnpRenderingStateMachine::RemoveObserver(void)
+	?Cancel@CUpnpVolumeStateMachine@@QAEXXZ @ 21 NONAME ; void CUpnpVolumeStateMachine::Cancel(void)
+	?VolumeResult@CUpnpVolumeStateMachine@@QAEXHHH@Z @ 22 NONAME ; void CUpnpVolumeStateMachine::VolumeResult(int, int, int)
+	??1CUpnpVolumeStateMachine@@UAE@XZ @ 23 NONAME ; CUpnpVolumeStateMachine::~CUpnpVolumeStateMachine(void)
+	?Options@CUpnpVolumeStateMachine@@QBEHXZ @ 24 NONAME ; int CUpnpVolumeStateMachine::Options(void) const
+	?NewL@CUpnpVolumeStateMachine@@SAPAV1@AAVMUPnPAVRenderingSession@@@Z @ 25 NONAME ; class CUpnpVolumeStateMachine * CUpnpVolumeStateMachine::NewL(class MUPnPAVRenderingSession &)
+	?IsBusy@CUpnpVolumeStateMachine@@QBEHXZ @ 26 NONAME ; int CUpnpVolumeStateMachine::IsBusy(void) const
+	?SetVolumeL@CUpnpVolumeStateMachine@@QAEXH@Z @ 27 NONAME ; void CUpnpVolumeStateMachine::SetVolumeL(int)
+	?Mute@CUpnpVolumeStateMachine@@QBEHXZ @ 28 NONAME ; int CUpnpVolumeStateMachine::Mute(void) const
+	?RemoveObserver@CUpnpVolumeStateMachine@@QAEXXZ @ 29 NONAME ; void CUpnpVolumeStateMachine::RemoveObserver(void)
+	?SetObserver@CUpnpVolumeStateMachine@@QAEXAAVMUpnpVolumeStateMachineObserver@@@Z @ 30 NONAME ; void CUpnpVolumeStateMachine::SetObserver(class MUpnpVolumeStateMachineObserver &)
+	?Volume@CUpnpVolumeStateMachine@@QBEHXZ @ 31 NONAME ; int CUpnpVolumeStateMachine::Volume(void) const
+	?MuteResult@CUpnpVolumeStateMachine@@QAEXHHH@Z @ 32 NONAME ; void CUpnpVolumeStateMachine::MuteResult(int, int, int)
+	?SetOffSync@CUpnpVolumeStateMachine@@QAEXXZ @ 33 NONAME ; void CUpnpVolumeStateMachine::SetOffSync(void)
+	?IsInSync@CUpnpVolumeStateMachine@@QBEHXZ @ 34 NONAME ; int CUpnpVolumeStateMachine::IsInSync(void) const
+	?SyncL@CUpnpVolumeStateMachine@@QAEXXZ @ 35 NONAME ; void CUpnpVolumeStateMachine::SyncL(void)
+	?SetMuteL@CUpnpVolumeStateMachine@@QAEXH@Z @ 36 NONAME ; void CUpnpVolumeStateMachine::SetMuteL(int)
+	?HasVolumeCapability@CUpnpVolumeStateMachine@@QBEHXZ @ 37 NONAME ; int CUpnpVolumeStateMachine::HasVolumeCapability(void) const
+	?SetOptions@CUpnpVolumeStateMachine@@QAEXH@Z @ 38 NONAME ; void CUpnpVolumeStateMachine::SetOptions(int)
+	?CopyValues@CUpnpVolumeStateMachine@@QAEXABV1@@Z @ 39 NONAME ; void CUpnpVolumeStateMachine::CopyValues(class CUpnpVolumeStateMachine const &)
+

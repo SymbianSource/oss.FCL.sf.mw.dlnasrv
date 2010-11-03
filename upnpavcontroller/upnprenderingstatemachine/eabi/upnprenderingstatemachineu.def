@@ -1,0 +1,49 @@
+EXPORTS
+	_ZN26CUpnpRenderingStateMachine10SetOffSyncEv @ 1 NONAME
+	_ZN26CUpnpRenderingStateMachine10SetOptionsEi @ 2 NONAME
+	_ZN26CUpnpRenderingStateMachine11SetObserverER34MUpnpRenderingStateMachineObserver @ 3 NONAME
+	_ZN26CUpnpRenderingStateMachine12SetURIResultEi @ 4 NONAME
+	_ZN26CUpnpRenderingStateMachine14RemoveObserverEv @ 5 NONAME
+	_ZN26CUpnpRenderingStateMachine16SetNextURIResultEi @ 6 NONAME
+	_ZN26CUpnpRenderingStateMachine18PositionInfoResultEiRK6TDesC8S2_ @ 7 NONAME
+	_ZN26CUpnpRenderingStateMachine19SetResourceSelectorER21MUPnPResourceSelector @ 8 NONAME
+	_ZN26CUpnpRenderingStateMachine25InteractOperationCompleteEi24TUPnPAVInteractOperation @ 9 NONAME
+	_ZN26CUpnpRenderingStateMachine4NewLER23MUPnPAVRenderingSession @ 10 NONAME
+	_ZN26CUpnpRenderingStateMachine5SyncLEv @ 11 NONAME
+	_ZN26CUpnpRenderingStateMachine8CommandLEN4Upnp8TCommandEiPK9CUpnpItem @ 12 NONAME
+	_ZN26CUpnpRenderingStateMachineD0Ev @ 13 NONAME
+	_ZN26CUpnpRenderingStateMachineD1Ev @ 14 NONAME
+	_ZN26CUpnpRenderingStateMachineD2Ev @ 15 NONAME
+	_ZNK26CUpnpRenderingStateMachine18HasPauseCapabilityEv @ 16 NONAME
+	_ZNK26CUpnpRenderingStateMachine5StateEv @ 17 NONAME
+	_ZNK26CUpnpRenderingStateMachine6IsBusyEv @ 18 NONAME
+	_ZNK26CUpnpRenderingStateMachine7OptionsEv @ 19 NONAME
+	_ZNK26CUpnpRenderingStateMachine8DurationEv @ 20 NONAME
+	_ZNK26CUpnpRenderingStateMachine8IsInSyncEv @ 21 NONAME
+	_ZNK26CUpnpRenderingStateMachine8PositionEv @ 22 NONAME
+	_ZTI26CUpnpRenderingStateMachine @ 23 NONAME ; #<TI>#
+	_ZTV26CUpnpRenderingStateMachine @ 24 NONAME ; #<VT>#
+	_ZN23CUpnpVolumeStateMachine10MuteResultEiii @ 25 NONAME
+	_ZN23CUpnpVolumeStateMachine10SetOffSyncEv @ 26 NONAME
+	_ZN23CUpnpVolumeStateMachine10SetOptionsEi @ 27 NONAME
+	_ZN23CUpnpVolumeStateMachine10SetVolumeLEi @ 28 NONAME
+	_ZN23CUpnpVolumeStateMachine11SetObserverER31MUpnpVolumeStateMachineObserver @ 29 NONAME
+	_ZN23CUpnpVolumeStateMachine12VolumeResultEiii @ 30 NONAME
+	_ZN23CUpnpVolumeStateMachine14RemoveObserverEv @ 31 NONAME
+	_ZN23CUpnpVolumeStateMachine4NewLER23MUPnPAVRenderingSession @ 32 NONAME
+	_ZN23CUpnpVolumeStateMachine5SyncLEv @ 33 NONAME
+	_ZN23CUpnpVolumeStateMachine6CancelEv @ 34 NONAME
+	_ZN23CUpnpVolumeStateMachine8SetMuteLEi @ 35 NONAME
+	_ZN23CUpnpVolumeStateMachineD0Ev @ 36 NONAME
+	_ZN23CUpnpVolumeStateMachineD1Ev @ 37 NONAME
+	_ZN23CUpnpVolumeStateMachineD2Ev @ 38 NONAME
+	_ZNK23CUpnpVolumeStateMachine19HasVolumeCapabilityEv @ 39 NONAME
+	_ZNK23CUpnpVolumeStateMachine4MuteEv @ 40 NONAME
+	_ZNK23CUpnpVolumeStateMachine6IsBusyEv @ 41 NONAME
+	_ZNK23CUpnpVolumeStateMachine6VolumeEv @ 42 NONAME
+	_ZNK23CUpnpVolumeStateMachine7OptionsEv @ 43 NONAME
+	_ZNK23CUpnpVolumeStateMachine8IsInSyncEv @ 44 NONAME
+	_ZTI23CUpnpVolumeStateMachine @ 45 NONAME ; #<TI>#
+	_ZTV23CUpnpVolumeStateMachine @ 46 NONAME ; #<VT>#
+	_ZN23CUpnpVolumeStateMachine10CopyValuesERKS_ @ 47 NONAME
+

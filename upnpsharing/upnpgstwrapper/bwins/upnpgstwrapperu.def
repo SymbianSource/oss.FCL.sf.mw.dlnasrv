@@ -1,0 +1,32 @@
+EXPORTS
+	??1CUpnpGstWrapper@@EAE@XZ @ 1 NONAME ; CUpnpGstWrapper::~CUpnpGstWrapper(void)
+	??1CUpnpRendererCfg@@UAE@XZ @ 2 NONAME ; CUpnpRendererCfg::~CUpnpRendererCfg(void)
+	??1CUpnpRendererCfgParser@@UAE@XZ @ 3 NONAME ; CUpnpRendererCfgParser::~CUpnpRendererCfgParser(void)
+	?AudioInfo@CUpnpGstWrapper@@QAEABVTDesC16@@XZ @ 4 NONAME ; class TDesC16 const & CUpnpGstWrapper::AudioInfo(void)
+	?Close@CUpnpGstWrapper@@QAEXXZ @ 5 NONAME ; void CUpnpGstWrapper::Close(void)
+	?Duration@CUpnpGstWrapper@@QAE_JXZ @ 6 NONAME ; long long CUpnpGstWrapper::Duration(void)
+	?ErrorMsg@CUpnpGstWrapper@@QAEABVTDesC16@@XZ @ 7 NONAME ; class TDesC16 const & CUpnpGstWrapper::ErrorMsg(void)
+	?FeatureListL@CUpnpGstWrapper@@QAEPAVCDesC16Array@@XZ @ 8 NONAME ; class CDesC16Array * CUpnpGstWrapper::FeatureListL(void)
+	?GetInstanceL@CUpnpGstWrapper@@SAPAV1@XZ @ 9 NONAME ; class CUpnpGstWrapper * CUpnpGstWrapper::GetInstanceL(void)
+	?InitAppsinkL@CUpnpGstWrapper@@QAEXXZ @ 10 NONAME ; void CUpnpGstWrapper::InitAppsinkL(void)
+	?NewL@CUpnpRendererCfg@@SAPAV1@ABVTDesC16@@ABVTDesC8@@1@Z @ 11 NONAME ; class CUpnpRendererCfg * CUpnpRendererCfg::NewL(class TDesC16 const &, class TDesC8 const &, class TDesC8 const &)
+	?NewL@CUpnpRendererCfgParser@@SAPAV1@XZ @ 12 NONAME ; class CUpnpRendererCfgParser * CUpnpRendererCfgParser::NewL(void)
+	?NewLC@CUpnpRendererCfg@@SAPAV1@ABVTDesC16@@ABVTDesC8@@1@Z @ 13 NONAME ; class CUpnpRendererCfg * CUpnpRendererCfg::NewLC(class TDesC16 const &, class TDesC8 const &, class TDesC8 const &)
+	?NewLC@CUpnpRendererCfgParser@@SAPAV1@XZ @ 14 NONAME ; class CUpnpRendererCfgParser * CUpnpRendererCfgParser::NewLC(void)
+	?ParseRendererCfgL@CUpnpRendererCfgParser@@QAEXAAVCUpnpRendererCfg@@@Z @ 15 NONAME ; void CUpnpRendererCfgParser::ParseRendererCfgL(class CUpnpRendererCfg &)
+	?Pipeline@CUpnpRendererCfg@@QBEABVTDesC8@@XZ @ 16 NONAME ; class TDesC8 const & CUpnpRendererCfg::Pipeline(void) const
+	?PipelinePtr@CUpnpGstWrapper@@QAEPAXXZ @ 17 NONAME ; void * CUpnpGstWrapper::PipelinePtr(void)
+	?Position@CUpnpGstWrapper@@QAE_JXZ @ 18 NONAME ; long long CUpnpGstWrapper::Position(void)
+	?ProtocolInfo@CUpnpRendererCfg@@QBEABVTDesC8@@XZ @ 19 NONAME ; class TDesC8 const & CUpnpRendererCfg::ProtocolInfo(void) const
+	?PullBufferL@CUpnpGstWrapper@@QAEHAAVTPtr8@@HPAVRBuf8@@@Z @ 20 NONAME ; int CUpnpGstWrapper::PullBufferL(class TPtr8 &, int, class RBuf8 *)
+	?RemoveObserver@CUpnpGstWrapper@@QAEXAAVMUpnpGstWrapperObserver@@@Z @ 21 NONAME ; void CUpnpGstWrapper::RemoveObserver(class MUpnpGstWrapperObserver &)
+	?SetObserverL@CUpnpGstWrapper@@QAEXAAVMUpnpGstWrapperObserver@@@Z @ 22 NONAME ; void CUpnpGstWrapper::SetObserverL(class MUpnpGstWrapperObserver &)
+	?SetPipelineL@CUpnpGstWrapper@@QAEXABVTDesC8@@@Z @ 23 NONAME ; void CUpnpGstWrapper::SetPipelineL(class TDesC8 const &)
+	?SetTranscodedFileSize@CUpnpGstWrapper@@QAEXH@Z @ 24 NONAME ; void CUpnpGstWrapper::SetTranscodedFileSize(int)
+	?SizeMultiplier@CUpnpRendererCfg@@QBENXZ @ 25 NONAME ; double CUpnpRendererCfg::SizeMultiplier(void) const
+	?StartL@CUpnpGstWrapper@@QAEXXZ @ 26 NONAME ; void CUpnpGstWrapper::StartL(void)
+	?Stop@CUpnpGstWrapper@@QAEXXZ @ 27 NONAME ; void CUpnpGstWrapper::Stop(void)
+	?TranscodedBytes@CUpnpGstWrapper@@QAEHXZ @ 28 NONAME ; int CUpnpGstWrapper::TranscodedBytes(void)
+	?TranscodedFileSize@CUpnpGstWrapper@@QAEHXZ @ 29 NONAME ; int CUpnpGstWrapper::TranscodedFileSize(void)
+	?VideoInfo@CUpnpGstWrapper@@QAEABVTDesC16@@XZ @ 30 NONAME ; class TDesC16 const & CUpnpGstWrapper::VideoInfo(void)
+

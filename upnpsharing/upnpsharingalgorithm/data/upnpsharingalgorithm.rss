@@ -1,0 +1,110 @@
+﻿/*
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: Main resource file
+*
+*/
+
+//  INCLUDES
+#include <uikon.rh>
+#include "upnpsharing.loc"
+
+//----------------------------------------------------------------------------
+//
+//    r_upnp_share_music_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE LBUF r_upnp_share_music_text
+    {
+    txt=qtn_iupnp_share_music;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_upnp_share_image_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE LBUF r_upnp_share_image_text
+    {
+    txt=qtn_iupnp_share_images;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_upnp_share_video_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE LBUF r_upnp_share_video_text
+    {
+    txt=qtn_iupnp_share_videos;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_upnp_share_all_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE LBUF r_upnp_share_all_text
+    {
+    txt=qtn_iupnp_share_all;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_upnp_share_by_date_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE LBUF r_upnp_share_by_date_text
+    {
+    txt=qtn_iupnp_share_by_date;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_upnp_share_by_album_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE LBUF r_upnp_share_by_album_text
+    {
+    txt=qtn_iupnp_share_by_album;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_upnp_share_by_artist_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE LBUF r_upnp_share_by_artist_text
+    {
+    txt=qtn_iupnp_share_by_artist;
+    }
+
+//----------------------------------------------------------------------------
+//
+//    r_upnp_share_by_genre_text
+//
+//----------------------------------------------------------------------------
+//
+RESOURCE LBUF r_upnp_share_by_genre_text
+    {
+    txt=qtn_iupnp_share_by_genre;
+    }
+
+// End of File

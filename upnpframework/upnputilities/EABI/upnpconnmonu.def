@@ -1,0 +1,8 @@
+EXPORTS
+	_ZN22CUPnPConnectionMonitor11SetObserverER30MUPnPConnectionMonitorObserver @ 1 NONAME
+	_ZN22CUPnPConnectionMonitor15NotifyIapCancelEv @ 2 NONAME
+	_ZN22CUPnPConnectionMonitor4NewLEi @ 3 NONAME
+	_ZN22CUPnPConnectionMonitor9NotifyIapEi @ 4 NONAME
+	_ZTI22CUPnPConnectionMonitor @ 5 NONAME
+	_ZTV22CUPnPConnectionMonitor @ 6 NONAME
+

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <!-- All Sony Bravia models -->
+  <renderer exactMatch="0" modelName="KDL-">
+    <transcoding srcMimeType="video/mp4">
+      <pipeline>mpegtsmux output-buf-size=0x19000 name=mux ! appsink max-buffers=50 name=sinkbuffer filesrc location=%S ! qtdemux name=demux ! queue max-size-bytes=0xAAAA ! mux. demux. ! queue max-size-bytes=0xAAAA ! mux.</pipeline>
+      <protocolInfo>http-get:*:video/mpeg:DLNA.ORG_PN=MPEG_TS_SD_EU_ISO;DLNA.ORG_FLAGS=8d700000000000000000000000000000</protocolInfo>
+      <sizeMultiplier>1.2</sizeMultiplier>
+    </transcoding>
+  </renderer>
+</config>

@@ -1,0 +1,66 @@
+/*
+* Copyright (c) 2010 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project specification file for upnpgstwrapper component
+*
+*/
+
+// For compatibility with IAD branch
+#include "../../../group/upnpplatformvar.hrh"
+#include <data_caging_paths.hrh>
+
+TARGET          upnpgstwrapper.dll
+TARGETTYPE      dll
+UID             0x1000008D 0x20009C9D
+
+VENDORID        VID_DEFAULT
+CAPABILITY      CAP_GENERAL_DLL
+
+// SIS installation + IAD support
+VERSION 10.1
+paged
+
+// User include paths, own headers
+USERINCLUDE     ../inc
+USERINCLUDE     ../../../inc
+
+// System include paths
+OS_LAYER_LIBC_SYSTEMINCLUDE
+OS_LAYER_GLIB_SYSTEMINCLUDE
+MW_LAYER_SYSTEMINCLUDE
+
+/* 
+ * temporary systeminclude, the real path will be used once gstream has done 
+ * the export to the epoc32/include...
+ */
+SYSTEMINCLUDE   /sf/mw/gstreamer/include/gstreamer
+
+// Source files
+SOURCEPATH      ../src
+SOURCE          upnpgstwrapper.cpp
+SOURCE          upnprenderercfgparser.cpp
+SOURCE          upnprenderercfg.cpp
+
+// Platform and UI libraries
+LIBRARY         euser.lib
+LIBRARY         bafl.lib
+LIBRARY         efsrv.lib
+LIBRARY         xmlframework.lib
+LIBRARY         flogger.lib
+
+LIBRARY         libgstreamer.lib
+LIBRARY         libglib.lib
+LIBRARY         libgobject.lib
+LIBRARY         libgstapp.lib
+
+// End of file

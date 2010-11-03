@@ -1,0 +1,7 @@
+EXPORTS
+	?MdeObjectId@CUpnpThumbnailCreator@@QBEHXZ @ 1 NONAME ; int CUpnpThumbnailCreator::MdeObjectId(void) const
+	?NewL@CUpnpThumbnailCreator@@SAPAV1@AAVMUpnpThumbnailCreatorObserver@@ABVTDesC16@@W4TThumbnailDlnaSize@@@Z @ 2 NONAME ; class CUpnpThumbnailCreator * CUpnpThumbnailCreator::NewL(class MUpnpThumbnailCreatorObserver &, class TDesC16 const &, enum TThumbnailDlnaSize)
+	?NewLC@CUpnpThumbnailCreator@@SAPAV1@AAVMUpnpThumbnailCreatorObserver@@ABVTDesC16@@W4TThumbnailDlnaSize@@@Z @ 3 NONAME ; class CUpnpThumbnailCreator * CUpnpThumbnailCreator::NewLC(class MUpnpThumbnailCreatorObserver &, class TDesC16 const &, enum TThumbnailDlnaSize)
+	?Thumbnail@CUpnpThumbnailCreator@@QBEAAVCFbsBitmap@@XZ @ 4 NONAME ; class CFbsBitmap & CUpnpThumbnailCreator::Thumbnail(void) const
+	?ThumbnailFilePath@CUpnpThumbnailCreator@@QBEABVTDesC16@@XZ @ 5 NONAME ; class TDesC16 const & CUpnpThumbnailCreator::ThumbnailFilePath(void) const
+

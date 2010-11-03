@@ -1,0 +1,40 @@
+EXPORTS
+	_ZN18CUpnpCdsLiteObject11ObjectClassEv @ 1 NONAME
+	_ZN18CUpnpCdsLiteObject15OriginalItemIdLEv @ 2 NONAME
+	_ZN18CUpnpCdsLiteObject18SetOriginalItemIdLERK6TDesC8 @ 3 NONAME
+	_ZN18CUpnpCdsLiteObject4NameEv @ 4 NONAME
+	_ZN18CUpnpCdsLiteObject4NewLERK6TDesC8NS_18TCdsLiteObjectTypeES2_S2_S2_ @ 5 NONAME
+	_ZN18CUpnpCdsLiteObject4TypeEv @ 6 NONAME
+	_ZN18CUpnpCdsLiteObject8ObjectIdEv @ 7 NONAME
+	_ZN18CUpnpCdsLiteObject8ParentIdEv @ 8 NONAME
+	_ZN18CUpnpCdsLiteObjectD0Ev @ 9 NONAME
+	_ZN18CUpnpCdsLiteObjectD1Ev @ 10 NONAME
+	_ZN18CUpnpCdsLiteObjectD2Ev @ 11 NONAME
+	_ZN23CUpnpCdsLiteObjectArray10ChildCountERK6TDesC8 @ 12 NONAME
+	_ZN23CUpnpCdsLiteObjectArray10FindByNameER6TDesC8 @ 13 NONAME
+	_ZN23CUpnpCdsLiteObjectArray14FindByObjectIdERK6TDesC8 @ 14 NONAME
+	_ZN23CUpnpCdsLiteObjectArray15RemoveObjectAtLEj @ 15 NONAME
+	_ZN23CUpnpCdsLiteObjectArray21FindByNameAndParentIdERK6TDesC8S2_ @ 16 NONAME
+	_ZN23CUpnpCdsLiteObjectArray26FindRefItemIdByOriginalIdLERK6TDesC8 @ 17 NONAME
+	_ZN23CUpnpCdsLiteObjectArray27FindByMediaClassAndParentIdERK6TDesC8S2_ @ 18 NONAME
+	_ZN23CUpnpCdsLiteObjectArray4NewLEv @ 19 NONAME
+	_ZN23CUpnpCdsLiteObjectArray5CountEv @ 20 NONAME
+	_ZN23CUpnpCdsLiteObjectArray7AppendLEP18CUpnpCdsLiteObject @ 21 NONAME
+	_ZN23CUpnpCdsLiteObjectArray7AppendLEPK11CUpnpObject @ 22 NONAME
+	_ZN23CUpnpCdsLiteObjectArray7RemoveLEPK11CUpnpObject @ 23 NONAME
+	_ZN23CUpnpCdsLiteObjectArray9ObjectAtLEj @ 24 NONAME
+	_ZN23CUpnpCdsLiteObjectArrayD0Ev @ 25 NONAME
+	_ZN23CUpnpCdsLiteObjectArrayD1Ev @ 26 NONAME
+	_ZN23CUpnpCdsLiteObjectArrayD2Ev @ 27 NONAME
+	_ZN28CUPnPSharingAlgorithmFactory14NewSharingApiLEv @ 28 NONAME
+	_ZTI14CUpnpSharingAO @ 29 NONAME ; #<TI>#
+	_ZTI16CUpnpCdsReaderAO @ 30 NONAME ; #<TI>#
+	_ZTI18CUpnpCdsLiteObject @ 31 NONAME ; #<TI>#
+	_ZTI22CUpnpContainerResolver @ 32 NONAME ; #<TI>#
+	_ZTI23CUpnpCdsLiteObjectArray @ 33 NONAME ; #<TI>#
+	_ZTV14CUpnpSharingAO @ 34 NONAME ; #<VT>#
+	_ZTV16CUpnpCdsReaderAO @ 35 NONAME ; #<VT>#
+	_ZTV18CUpnpCdsLiteObject @ 36 NONAME ; #<VT>#
+	_ZTV22CUpnpContainerResolver @ 37 NONAME ; #<VT>#
+	_ZTV23CUpnpCdsLiteObjectArray @ 38 NONAME ; #<VT>#
+

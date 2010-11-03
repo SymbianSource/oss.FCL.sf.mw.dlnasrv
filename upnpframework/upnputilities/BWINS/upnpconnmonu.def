@@ -1,0 +1,6 @@
+EXPORTS
+	?NewL@CUPnPConnectionMonitor@@SAPAV1@H@Z @ 1 NONAME ; class CUPnPConnectionMonitor * CUPnPConnectionMonitor::NewL(int)
+	?NotifyIap@CUPnPConnectionMonitor@@QAEXH@Z @ 2 NONAME ; void CUPnPConnectionMonitor::NotifyIap(int)
+	?NotifyIapCancel@CUPnPConnectionMonitor@@QAEXXZ @ 3 NONAME ; void CUPnPConnectionMonitor::NotifyIapCancel(void)
+	?SetObserver@CUPnPConnectionMonitor@@QAEXAAVMUPnPConnectionMonitorObserver@@@Z @ 4 NONAME ; void CUPnPConnectionMonitor::SetObserver(class MUPnPConnectionMonitorObserver &)
+

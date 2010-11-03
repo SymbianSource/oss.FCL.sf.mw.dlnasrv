@@ -1,0 +1,67 @@
+/**
+ * Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
+ * All rights reserved.
+ * This component and the accompanying materials are made available
+ * under the terms of "Eclipse Public License v1.0"
+ * which accompanies  this distribution, and is available
+ * at the URL "http://www.eclipse.org/legal/epl-v10.html".
+ *
+ * Initial Contributors:
+ * Nokia Corporation - initial contribution.
+ *
+ * Contributors:
+ *
+ * Description: Project definition file for UpnpSharingAlgorithm component
+ *
+ */
+
+#include "../../../group/upnpplatformvar.hrh"
+#include "../inc/upnpsharingalgorithmuids.hrh"
+#include <data_caging_paths.hrh>
+
+TARGET upnpsharingalgorithm.dll
+TARGETTYPE dll
+UID 0x1000008d KUPnPSharingAlgorithmDllUid
+
+// Capabilities
+CAPABILITY CAP_GENERAL_DLL
+
+VENDORID VID_DEFAULT
+
+USERINCLUDE ../inc
+USERINCLUDE ../../loc
+
+MW_LAYER_SYSTEMINCLUDE
+SYSTEMINCLUDE   ../../../inc        // ADO internal interfaces
+
+SOURCEPATH ../src
+SOURCE upnpsharingalgorithmfactory.cpp
+SOURCE upnpcdsliteobject.cpp
+SOURCE upnpcdsliteobjectarray.cpp
+SOURCE upnpsharingalgorithmimpl.cpp
+SOURCE upnpcdsreaderao.cpp
+SOURCE upnpsharingao.cpp
+SOURCE upnpcontainerresolver.cpp
+
+// LIBRARIES
+LIBRARY euser.lib
+LIBRARY avmediaserverclient.lib     // for file sharing
+LIBRARY dlnaprofiler.lib            // for resolving dlna profile
+LIBRARY upnputilities.lib           // for metadata fetching
+LIBRARY inetprotutil.lib            // for EscapeUtils
+LIBRARY upnpavobjects.lib           // for UpnpObjects
+LIBRARY efsrv.lib                   // for TParse
+LIBRARY bafl.lib                    // for file check and BaflUtils
+LIBRARY charconv.lib                // for CnvUtfConverter
+LIBRARY platformenv.lib             // for PathInfo
+LIBRARY upnpavcontrollerhelper.lib  // for UPnPItemUtility
+
+DEBUGLIBRARY flogger.lib
+
+START RESOURCE      ../data/upnpsharingalgorithm.rss
+HEADER
+TARGETPATH          RESOURCE_FILES_DIR
+LANGUAGE_IDS
+END
+
+// End of file
