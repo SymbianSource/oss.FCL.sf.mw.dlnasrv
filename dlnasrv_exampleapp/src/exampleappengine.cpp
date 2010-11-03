@@ -22,6 +22,13 @@
 /*!
     /class ExampleAppEngine
     /brief Implements the playback engine and DLNA interface for the UI.
+    In general this class calls the private implementation functions for
+    a minimal implementation required to enable media rendering on a
+    DLNA rendering device.
+
+    For a real application implementing this functionality, more robust
+    error handling should be applied, this version mostly relies on the
+    function calls to return succesfully.
 */
 
 /*!
@@ -48,10 +55,7 @@ ExampleAppEngine::~ExampleAppEngine()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Checks for connected IAP.
 */
 void ExampleAppEngine::construct()
 {
@@ -64,10 +68,7 @@ void ExampleAppEngine::construct()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Returns the id of the currently connected IAP.
 */
 int ExampleAppEngine::getIap() const
 {
@@ -84,10 +85,7 @@ int ExampleAppEngine::getIap() const
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Returns the name of the currently connected IAP
 */
 QString ExampleAppEngine::getIapName() const
 {
@@ -104,10 +102,8 @@ QString ExampleAppEngine::getIapName() const
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Returns a boolean describing whether the selected renderer
+    supports seek functionality.
 */
 bool ExampleAppEngine::isSeekSupported() const
 {
@@ -124,10 +120,7 @@ bool ExampleAppEngine::isSeekSupported() const
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Returns the playback state of the selected renderer.
 */
 int ExampleAppEngine::getPlaybackState() const
 {
@@ -144,10 +137,8 @@ int ExampleAppEngine::getPlaybackState() const
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Returns a boolean describing whether the selected renderer
+    supports pause functionality.
 */
 bool ExampleAppEngine::isPauseSupported() const
 {
@@ -164,10 +155,8 @@ bool ExampleAppEngine::isPauseSupported() const
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Initiate renderer search. Each renderer found from the current
+    IAP will cause a renderingDeviceFound() signal to be emitted
 */
 void ExampleAppEngine::searchRenderingDevices()
 {
@@ -180,10 +169,10 @@ void ExampleAppEngine::searchRenderingDevices()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Prepares the renderer for accepting further commands. When this function
+    returns, there should be a rendering session opened to the renderer whose
+    uuid was passed in /a uuid.
+
 */
 void ExampleAppEngine::prepareRenderingDevice(const QString &uuid)
 {
@@ -196,10 +185,10 @@ void ExampleAppEngine::prepareRenderingDevice(const QString &uuid)
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Calls the private implementation of the engine, which will cause
+    the /a file to be shared as a DLNA item on the local push server.
+    When the file is ready to be shared, an initComplete() signal is
+    emitted.
 */
 int ExampleAppEngine::initFile(const QString& file)
 {
@@ -216,10 +205,7 @@ int ExampleAppEngine::initFile(const QString& file)
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Issues the play() command to the renderer.
 */
 void ExampleAppEngine::play()
 {
@@ -232,10 +218,7 @@ void ExampleAppEngine::play()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Issues the pause() command to the renderer.
 */
 void ExampleAppEngine::pause()
 {
@@ -248,10 +231,7 @@ void ExampleAppEngine::pause()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Issues the stop() command to the renderer.
 */
 void ExampleAppEngine::stop()
 {
@@ -264,10 +244,7 @@ void ExampleAppEngine::stop()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Issues the volumeUp() command to the renderer.
 */
 void ExampleAppEngine::volumeUp()
 {
@@ -280,10 +257,7 @@ void ExampleAppEngine::volumeUp()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Issues the volumeDown() command to the renderer.
 */
 void ExampleAppEngine::volumeDown()
 {
@@ -296,10 +270,7 @@ void ExampleAppEngine::volumeDown()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Issues the rew() command to the renderer.
 */
 void ExampleAppEngine::rew()
 {
@@ -312,10 +283,7 @@ void ExampleAppEngine::rew()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Issues the ff() command to the renderer.
 */
 void ExampleAppEngine::ff()
 {

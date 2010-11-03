@@ -35,6 +35,10 @@
 /*!
     /class ExampleAppEnginePrivate
     /brief Implements interface to Symbian side DLNA APIs.
+
+    This is the "rendering engine" class, implementing various UPnP callback
+    interfaces. Some of the callbacks are lacking implementation because this
+    simple example application does not require all that functionality.
 */
 
 /*!
@@ -98,10 +102,7 @@ ExampleAppEnginePrivate::~ExampleAppEnginePrivate()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Checks for connected IAP.
 */
 void ExampleAppEnginePrivate::construct()
 {
@@ -112,10 +113,7 @@ void ExampleAppEnginePrivate::construct()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Returns currently connected IAP.
 */
 int ExampleAppEnginePrivate::getConnectedIap() const
 {
@@ -125,10 +123,7 @@ int ExampleAppEnginePrivate::getConnectedIap() const
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Returns the name of the currently connected IAP.
 */
 QString ExampleAppEnginePrivate::getConnectedIapName() const
 {
@@ -138,10 +133,7 @@ QString ExampleAppEnginePrivate::getConnectedIapName() const
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Returns the current playback state.
 */
 int ExampleAppEnginePrivate::getPlaybackState() const
 {
@@ -151,10 +143,7 @@ int ExampleAppEnginePrivate::getPlaybackState() const
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Returns whether the currently selected renderer supports seek functionality.
 */
 bool ExampleAppEnginePrivate::isSeekSupported() const
 {
@@ -166,10 +155,7 @@ bool ExampleAppEnginePrivate::isSeekSupported() const
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Returns whether the currently selected renderer supports pause functionality.
 */
 bool ExampleAppEnginePrivate::isPauseSupported() const
 {
@@ -186,10 +172,11 @@ bool ExampleAppEnginePrivate::isPauseSupported() const
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    This function causes renderingDeviceFound() signals to be emitted in two different ways:
+    first the current device list in UPnP AV Controller is gone through and for each
+    renderer device found from there one signal is emitted. Also, this object is set as a
+    device observer to the UPnP AV Controller, causing it to call this class's callback
+    function UPnPDeviceDiscovered() upon every new device that is discovered from the current network.
 */
 void ExampleAppEnginePrivate::searchRenderingDevices()
 {
@@ -214,10 +201,7 @@ void ExampleAppEnginePrivate::searchRenderingDevices()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Start a rendering session with the renderer provided in /a uuid.
 */
 void ExampleAppEnginePrivate::prepareRenderingDevice(const QString &uuid)
 {
@@ -227,10 +211,7 @@ void ExampleAppEnginePrivate::prepareRenderingDevice(const QString &uuid)
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Start file initialization for sharing.
 */
 int ExampleAppEnginePrivate::initFile(const QString& file)
 {
@@ -242,10 +223,7 @@ int ExampleAppEnginePrivate::initFile(const QString& file)
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Issues the play() command to the renderer.
 */
 void ExampleAppEnginePrivate::play()
 {
@@ -255,10 +233,7 @@ void ExampleAppEnginePrivate::play()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Issues the pause() command to the renderer.
 */
 void ExampleAppEnginePrivate::pause()
 {
@@ -268,10 +243,7 @@ void ExampleAppEnginePrivate::pause()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Issues the stop() command to the renderer.
 */
 void ExampleAppEnginePrivate::stop()
 {
@@ -281,10 +253,7 @@ void ExampleAppEnginePrivate::stop()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Issues the volumeUp() command to the renderer.
 */
 void ExampleAppEnginePrivate::volumeUp()
 {
@@ -294,10 +263,7 @@ void ExampleAppEnginePrivate::volumeUp()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Issues the volumeDown() command to the renderer.
 */
 void ExampleAppEnginePrivate::volumeDown()
 {
@@ -307,10 +273,7 @@ void ExampleAppEnginePrivate::volumeDown()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Issues the rew() command to the renderer.
 */
 void ExampleAppEnginePrivate::rew()
 {
@@ -320,10 +283,7 @@ void ExampleAppEnginePrivate::rew()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Issues the ff() command to the renderer.
 */
 void ExampleAppEnginePrivate::ff()
 {
@@ -332,11 +292,10 @@ void ExampleAppEnginePrivate::ff()
     // TODO: implement
 }
 
-/*!
-    description
-    
-    /a
-    /return
+/*!    
+    Callback function that UPnP AV Controller calls when a new UPnP AV Device is
+    found from the network.
+    From MUPnPAVDeviceObserver
 */
 void ExampleAppEnginePrivate::UPnPDeviceDiscovered(const CUpnpAVDevice& aDevice)
 {
@@ -346,10 +305,9 @@ void ExampleAppEnginePrivate::UPnPDeviceDiscovered(const CUpnpAVDevice& aDevice)
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Callback function that UPnP AV Controller calls when a UPnP AV Device has
+    disappeared from the network.
+    From MUPnPAVDeviceObserver
 */
 void ExampleAppEnginePrivate::UPnPDeviceDisappeared(const CUpnpAVDevice& aDevice)
 {
@@ -389,10 +347,10 @@ void ExampleAppEnginePrivate::UPnPDeviceDisappeared(const CUpnpAVDevice& aDevice
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Callback function that UPnP AV Controller calls when the WLAN
+    connection has been lost. All existing sessions should be considered
+    invalid.
+    From MUPnPAVDeviceObserver
 */
 void ExampleAppEnginePrivate::WLANConnectionLost()
 {
@@ -402,10 +360,8 @@ void ExampleAppEnginePrivate::WLANConnectionLost()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Just pass to volume state machine
+    From MUPnPAVRenderingSessionObserver
 */
 void ExampleAppEnginePrivate::VolumeResult(TInt aError,
     TInt aVolumeLevel,
@@ -420,10 +376,8 @@ void ExampleAppEnginePrivate::VolumeResult(TInt aError,
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Just pass to volume state machine
+    From MUPnPAVRenderingSessionObserver
 */
 void ExampleAppEnginePrivate::MuteResult(TInt aError,
     TBool aMute,
@@ -438,10 +392,8 @@ void ExampleAppEnginePrivate::MuteResult(TInt aError,
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Just pass to rendering state machine
+    From MUPnPAVRenderingSessionObserver
 */
 void ExampleAppEnginePrivate::InteractOperationComplete(TInt aError,
     TUPnPAVInteractOperation aOperation)
@@ -455,10 +407,8 @@ void ExampleAppEnginePrivate::InteractOperationComplete(TInt aError,
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Just pass to rendering state machine
+    From MUPnPAVRenderingSessionObserver
 */
 void ExampleAppEnginePrivate::PositionInfoResult(TInt aError,
     const TDesC8& aTrackPosition,
@@ -473,10 +423,8 @@ void ExampleAppEnginePrivate::PositionInfoResult(TInt aError,
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Just pass to rendering state machine
+    From MUPnPAVRenderingSessionObserver
 */
 void ExampleAppEnginePrivate::SetURIResult(TInt aError)
 {
@@ -489,10 +437,8 @@ void ExampleAppEnginePrivate::SetURIResult(TInt aError)
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Just pass to rendering state machine
+    From MUPnPAVRenderingSessionObserver
 */
 void ExampleAppEnginePrivate::SetNextURIResult(TInt aError)
 {
@@ -505,10 +451,9 @@ void ExampleAppEnginePrivate::SetNextURIResult(TInt aError)
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Renderer to which there was an active session has disappeared. The session should be
+    considered invalid.
+    From MUPnPAVRenderingSessionObserver
 */
 void ExampleAppEnginePrivate::MediaRendererDisappeared(TUPnPDeviceDisconnectedReason /*aReason*/)
 {
@@ -518,10 +463,9 @@ void ExampleAppEnginePrivate::MediaRendererDisappeared(TUPnPDeviceDisconnectedRe
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Callback for telling that the rendering state machine is in synch with
+    the rendering device.
+    From MUpnpRenderingStateMachineObserver
 */
 void ExampleAppEnginePrivate::RendererSyncReady(TInt /*aError*/, Upnp::TState /*aState*/)
 {
@@ -531,10 +475,8 @@ void ExampleAppEnginePrivate::RendererSyncReady(TInt /*aError*/, Upnp::TState /*
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Rendering device's state has been changed.
+    From MUpnpRenderingStateMachineObserver
 */
 void ExampleAppEnginePrivate::RenderingStateChanged(TInt aError,
     Upnp::TState aState,
@@ -578,10 +520,9 @@ void ExampleAppEnginePrivate::RenderingStateChanged(TInt aError,
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    For synchronizing UI with the progress of the playback on the
+    rendering device.
+    From MUpnpRenderingStateMachineObserver
 */
 void ExampleAppEnginePrivate::PositionSync(TInt /*aError*/,
     Upnp::TPositionMode /*aMode*/,
@@ -594,10 +535,9 @@ void ExampleAppEnginePrivate::PositionSync(TInt /*aError*/,
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Callback for telling that the volume state machine is in synch with
+    the rendering device.
+    From MUpnpVolumeStateMachineObserver
 */
 void ExampleAppEnginePrivate::VolumeSyncReady(TInt /*aError*/)
 {
@@ -607,10 +547,8 @@ void ExampleAppEnginePrivate::VolumeSyncReady(TInt /*aError*/)
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Rendering device's volume has changed.
+    From MUpnpVolumeStateMachineObserver
 */
 void ExampleAppEnginePrivate::VolumeChanged(TInt /*aError*/,
     TInt /*aVolume*/,
@@ -622,10 +560,8 @@ void ExampleAppEnginePrivate::VolumeChanged(TInt /*aError*/,
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Mute status of the rendering device has changed.
+    From MUpnpVolumeStateMachineObserver
 */
 void ExampleAppEnginePrivate::MuteChanged(TInt /*aError*/,
     TBool /*aMuteState*/,
@@ -637,10 +573,8 @@ void ExampleAppEnginePrivate::MuteChanged(TInt /*aError*/,
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Resolving a file as an URI to be shared on media server has been completed.
+    From MUPnPItemResolverObserver
 */
 void ExampleAppEnginePrivate::ResolveComplete(const MUPnPItemResolver& /*aResolver*/,
     TInt aError)
@@ -653,10 +587,8 @@ void ExampleAppEnginePrivate::ResolveComplete(const MUPnPItemResolver& /*aResolv
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    WLAN connection has been lost.
+    From MUPnPConnectionMonitorObserver
 */
 void ExampleAppEnginePrivate::ConnectionLost(TBool /*aUserOriented*/)
 {
@@ -672,10 +604,8 @@ void ExampleAppEnginePrivate::ConnectionLost(TBool /*aUserOriented*/)
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    WLAN connection has been created.
+    From MUPnPConnectionMonitorObserver
 */
 void ExampleAppEnginePrivate::ConnectionCreated(TInt /*aConnectionId*/)
 {
@@ -689,10 +619,8 @@ void ExampleAppEnginePrivate::ConnectionCreated(TInt /*aConnectionId*/)
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Iterate through the AV Devices of the UPnP AV Controller,
+    i.e. the already found devices stored in the AV Controller.
 */
 void ExampleAppEnginePrivate::searchRenderingDevicesL()
 {
@@ -711,10 +639,8 @@ void ExampleAppEnginePrivate::searchRenderingDevicesL()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Iterate through found AV Devices, and signal renderingDeviceFound()
+    for each renderer.
 */
 void ExampleAppEnginePrivate::upnpDeviceDiscoveredL(const CUpnpAVDevice& aDevice)
 {
@@ -753,10 +679,8 @@ void ExampleAppEnginePrivate::upnpDeviceDiscoveredL(const CUpnpAVDevice& aDevice
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Ensure that there is an active rendering session for the device
+    passed in as /a uuid.
 */
 void ExampleAppEnginePrivate::prepareRenderingDeviceL(const QString &uuid)
 {
@@ -798,10 +722,9 @@ void ExampleAppEnginePrivate::prepareRenderingDeviceL(const QString &uuid)
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Start rendering session to /a device. Rendering state machine and
+    volume state machine will call observer interface once they are in
+    synch.
 */
 void ExampleAppEnginePrivate::startRenderingSessionL(const CUpnpAVDevice &device)
 {
@@ -823,10 +746,7 @@ void ExampleAppEnginePrivate::startRenderingSessionL(const CUpnpAVDevice &device
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Stop rendering session and perform needed cleanup.
 */
 void ExampleAppEnginePrivate::stopRenderingSession()
 {
@@ -858,10 +778,12 @@ void ExampleAppEnginePrivate::stopRenderingSession()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Start file initialization for sharing. If a renderer device is selected,
+    instruct local item resolver to to resolve the /a file passed as a
+    parameter, i.e. prepare the URI that can be used to locate the shared
+    file on the push server. When resolving is done, the callback function
+    ResolveComplete() is called.
+
 */
 void ExampleAppEnginePrivate::initFileL(const QString &file)
 {
@@ -887,10 +809,7 @@ void ExampleAppEnginePrivate::initFileL(const QString &file)
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Check if it's ok to issue playback commands.
 */
 bool ExampleAppEnginePrivate::isReadyForPlayback() const
 {
@@ -910,10 +829,7 @@ bool ExampleAppEnginePrivate::isReadyForPlayback() const
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Issues the play command to the renderer.
 */
 void ExampleAppEnginePrivate::playL()
 {
@@ -930,10 +846,7 @@ void ExampleAppEnginePrivate::playL()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Issues the pause command to the renderer.
 */
 void ExampleAppEnginePrivate::pauseL()
 {
@@ -958,10 +871,7 @@ void ExampleAppEnginePrivate::pauseL()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Issues the stop command to the renderer.
 */
 void ExampleAppEnginePrivate::stopL()
 {
@@ -978,10 +888,9 @@ void ExampleAppEnginePrivate::stopL()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Check that there is an active connection and store that IAP for further
+    usage. Note that there is no functionality in this application to
+    initialize connection setup, if no active connection exists.
 */
 void ExampleAppEnginePrivate::resolveIapL()
 {
@@ -1022,10 +931,8 @@ void ExampleAppEnginePrivate::resolveIapL()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Resolve the IAP name that's stored in UPnP Settings Engine as the
+    currently active IAP.
 */
 void ExampleAppEnginePrivate::resolveIapNameL()
 {
@@ -1041,10 +948,7 @@ void ExampleAppEnginePrivate::resolveIapNameL()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Helper function for Symbian descriptor to Qt string conversion.
 */
 QString ExampleAppEnginePrivate::asString(const TDesC &desc) const
 {
@@ -1052,10 +956,7 @@ QString ExampleAppEnginePrivate::asString(const TDesC &desc) const
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Helper function for Symbian descriptor to Qt string conversion.
 */
 QString ExampleAppEnginePrivate::asString8(const TDesC8 &desc) const
 {

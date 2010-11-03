@@ -31,6 +31,24 @@
 /*!
     \class ExampleAppUi
     \brief Implements the application UI for Dlnasrv example application.
+
+    The application provides a simple UI for selecting a renderer device
+    (from a connected WLAN AP, if none is connected that needs to be done
+    outside the application UI) and selecting a file to be rendered and
+    control buttons for controlling the playback on the renderer device.
+
+    So the first step is to have a WLAN connection active. Only then the
+    renderer search and selection can be done.
+
+    The next step is to select a rendering device. When rendering device
+    search is initiated, the underlying UPnP AV control server is queried
+    for existing renderers. Also all new renderers appearing in the AP
+    get signalled with renderingDeviceFound()
+
+    When a renderer is selected, the next step is to select a file to be
+    pushed to the renderer. When selecting a file, it gets published in
+    the push server as a DLNA item. When that is done, the controls for
+    playback are enabled and the renderer can be controlled with those.
 */
 
 /*!
@@ -64,10 +82,8 @@ ExampleAppUi::~ExampleAppUi()
 }
 
 /*!
-    description
- 
-    /a
-    /return
+    Creates application engine and the UI. Also the state of the WLAN AP
+    connection gets queried and updated on the UI.
  */
 void ExampleAppUi::construct()
 {
@@ -78,10 +94,7 @@ void ExampleAppUi::construct()
 }
 
 /*!
-    description
- 
-    /a
-    /return
+    Creates the UI components.
  */
 void ExampleAppUi::createUi()
 {
@@ -117,10 +130,7 @@ void ExampleAppUi::createUi()
 }
 
 /*!
-    description
- 
-    /a
-    /return
+    Creates the UI for showing and selecting WLAN AP connection status.
  */
 QLayout *ExampleAppUi::createApSelectionUi()
 {
@@ -152,10 +162,7 @@ QLayout *ExampleAppUi::createApSelectionUi()
 }
 
 /*!
-    description
- 
-    /a
-    /return
+    Creates the UI for showing and selecting renderer device.
  */
 QLayout *ExampleAppUi::createRendererSelectionUi()
 {
@@ -201,10 +208,7 @@ QLayout *ExampleAppUi::createRendererSelectionUi()
 }
 
 /*!
-    description
- 
-    /a
-    /return
+    Creates the UI for showing and selecting media file to be rendered.
  */
 QLayout *ExampleAppUi::createFileSelectionUi()
 {
@@ -242,10 +246,7 @@ QLayout *ExampleAppUi::createFileSelectionUi()
 }
 
 /*!
-    description
- 
-    /a
-    /return
+    Creates the push buttons for controlling the playback.
  */
 QLayout *ExampleAppUi::createPlaybackUi()
 {
@@ -299,10 +300,7 @@ QLayout *ExampleAppUi::createPlaybackUi()
 }
 
 /*!
-    description
- 
-    /a
-    /return
+    Creates the application engine and resolves the current connection status.
  */
 void ExampleAppUi::createEngine()
 {
@@ -320,10 +318,7 @@ void ExampleAppUi::createEngine()
 }
 
 /*!
-    description
- 
-    /a
-    /return
+    This function gets called by the engine, when the renderer changes its state.
  */
 void ExampleAppUi::updateState(int newState)
 {
@@ -360,10 +355,9 @@ void ExampleAppUi::updateState(int newState)
 }
 
 /*!
-    description
- 
-    /a
-    /return
+    Launches QFile dialog for selecting a media file from the local
+    file system. Then the file is sent to the engine for sharing, i.e.
+    it will get resolved as an URI on the UPnP push server.
  */
 void ExampleAppUi::selectFile()
 {
@@ -407,10 +401,7 @@ void ExampleAppUi::selectFile()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Shows searching string on UI during search if no renderers are found yet.
 */
 void ExampleAppUi::deviceSearchStarted()
 {
@@ -423,10 +414,7 @@ void ExampleAppUi::deviceSearchStarted()
 }
 
 /*!
-    description
- 
-    /a
-    /return
+    Adds a renderer to the UI's model.
  */
 void ExampleAppUi::addRenderingDevice(const QString &name, const QString &uuid)
 {
@@ -436,10 +424,7 @@ void ExampleAppUi::addRenderingDevice(const QString &name, const QString &uuid)
 }
 
 /*!
-    description
- 
-    /a
-    /return
+    Removes a renderer from the UI's model.
  */
 void ExampleAppUi::removeRenderingDevice(const QString &/*name*/, const QString &uuid)
 {
@@ -458,10 +443,7 @@ void ExampleAppUi::removeRenderingDevice(const QString &/*name*/, const QString 
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Set the renderer selected from the UI as the current renderer on the engine side.
 */
 void ExampleAppUi::selectRenderingDevice(int index)
 {
@@ -478,10 +460,8 @@ void ExampleAppUi::selectRenderingDevice(int index)
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Enables/disables the pushbuttons for renderer control according to the
+    current state.
 */
 void ExampleAppUi::enablePlayback(int result)
 {
@@ -536,10 +516,7 @@ void ExampleAppUi::enablePlayback(int result)
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Disables all renderer control pushbuttons.
 */
 void ExampleAppUi::disablePlayback()
 {
@@ -553,10 +530,7 @@ void ExampleAppUi::disablePlayback()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Enables file selection button. Called when a renderer is selected.
 */
 void ExampleAppUi::enableFileSelection()
 {
@@ -566,10 +540,7 @@ void ExampleAppUi::enableFileSelection()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Disables file selection.
 */
 void ExampleAppUi::disableFileSelection()
 {
@@ -579,10 +550,7 @@ void ExampleAppUi::disableFileSelection()
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Enables the rendering device selection pushbutton. Called when a WLAN AP is in use.
 */
 void ExampleAppUi::enableRenderingDeviceSelection(int iap)
 {
@@ -596,10 +564,7 @@ void ExampleAppUi::enableRenderingDeviceSelection(int iap)
 }
 
 /*!
-    description
-    
-    /a
-    /return
+    Disables the rendering device selection pushbutton.
 */
 void ExampleAppUi::disableRenderingDeviceSelection()
 {
