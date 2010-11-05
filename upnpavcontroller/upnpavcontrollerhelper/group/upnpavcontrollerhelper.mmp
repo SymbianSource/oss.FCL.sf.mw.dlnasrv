@@ -67,7 +67,7 @@ LIBRARY         drmcommon.lib  // OEM-DRM
 LIBRARY         caf.lib // WM-DRM
 LIBRARY         cafutils.lib // WM-DRM
 LIBRARY         efsrv.lib // RFs
-LIBRARY         PlatformEnv.lib // PathInfo
+LIBRARY         platformenv.lib // PathInfo
 LIBRARY         insock.lib // TInetAddr
 LIBRARY         esock.lib // TSockAddr 
 

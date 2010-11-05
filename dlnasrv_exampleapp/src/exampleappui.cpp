@@ -375,9 +375,9 @@ void ExampleAppUi::selectFile()
         
         // update text to ui
         QFileInfo fileInfo(mSelectedFile);
-        // use only 20 characters to fit text on screen 
+        // use only 16 characters to fit text on screen 
         // since otherwise qt will panic with bad alloc
-        mSelectedFileLabel->setText(fileInfo.fileName().left(20));
+        mSelectedFileLabel->setText(fileInfo.fileName().left(16));
        
         // resolve and init file for rendering
         int err = mEngine->initFile(mSelectedFile);

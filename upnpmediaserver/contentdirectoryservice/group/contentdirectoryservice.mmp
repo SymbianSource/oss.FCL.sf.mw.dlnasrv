@@ -100,7 +100,7 @@ LIBRARY         estor.lib
 LIBRARY         edbms.lib 
 LIBRARY         ecom.lib
 LIBRARY         sysutil.lib
-LIBRARY         PlatformEnv.lib
+LIBRARY         platformenv.lib
 LIBRARY         estlib.lib 
 LIBRARY         inetprotutil.lib
 LIBRARY         imageconversion.lib

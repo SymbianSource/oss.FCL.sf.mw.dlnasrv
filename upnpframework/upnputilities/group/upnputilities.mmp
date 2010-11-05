@@ -59,13 +59,11 @@ LIBRARY         charconv.lib
 LIBRARY         esock.lib
 LIBRARY         insock.lib
 LIBRARY         commdb.lib
-LIBRARY         PlatformEnv.lib
-
-// Settings Engine
+LIBRARY         platformenv.lib
 LIBRARY         upnpsettingsengine.lib
 
 // Meta data
-LIBRARY         MetaDataUtility.lib
+LIBRARY         metadatautility.lib
 
 // MIME 
 LIBRARY         apmime.lib
@@ -76,7 +74,7 @@ LIBRARY         caf.lib
 LIBRARY         cafutils.lib
 
 // CLF
-LIBRARY         ContentListingFramework.lib
+LIBRARY         contentlistingframework.lib
 
 // S60 Upnp Stack
 LIBRARY         upnpipserversutils.lib

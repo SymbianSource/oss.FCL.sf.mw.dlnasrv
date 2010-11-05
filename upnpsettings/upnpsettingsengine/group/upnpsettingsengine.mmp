@@ -57,7 +57,7 @@ LIBRARY efsrv.lib
 LIBRARY estor.lib
 
 // PathInfo
-LIBRARY PlatformEnv.lib
+LIBRARY platformenv.lib
 LIBRARY commdb.lib
 
 // Connection Manager, new APIs for getting IAPs, etc.

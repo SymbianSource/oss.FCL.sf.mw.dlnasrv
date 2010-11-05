@@ -55,6 +55,6 @@ LIBRARY         upnpavobjects.lib
 LIBRARY         upnpserviceframework.lib
 
 DEBUGLIBRARY    flogger.lib
-DEFFILE         AVMediaServerClient
+DEFFILE         avmediaserverclient
 
 // End of file

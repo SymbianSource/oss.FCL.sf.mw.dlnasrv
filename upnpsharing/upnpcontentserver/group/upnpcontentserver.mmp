@@ -59,7 +59,7 @@ LIBRARY bafl.lib
 LIBRARY estor.lib 
 LIBRARY ws32.lib 
 LIBRARY efsrv.lib 
-LIBRARY PlatformEnv.lib
+LIBRARY platformenv.lib
 LIBRARY centralrepository.lib
 LIBRARY inetprotutil.lib            // for EscapeUtils
 // Content listing framework (metadata)
