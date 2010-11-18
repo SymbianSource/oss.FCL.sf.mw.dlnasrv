@@ -1,17 +1,17 @@
 <?xml version="1.0" ?>
-<api id="71017ac67649c84e150cbfc46b1bf6f1" dataversion="1.0">
+<api id="71017ac67649c84e150cbfc46b1bf6f1" dataversion="2.0">
   <name>UPnP Command API</name>
   <description>API for UPnP commands</description>
   <type>c++</type>
-  <subsystem>upnpframework</subsystem>
+  <collection>upnpframework</collection>
   <libs>
     <lib name="upnpcommand.lib" />
   </libs>
-  <release category="domain"/>
+  <release category="platform"/>
   <attributes>
-     <!-- This indicates wether the api provedes separate html documentation -->
+     <!-- This indicates whether the api provides separate html documentation -->
      <!-- or is the additional documentation generated from headers. -->
-     <!-- If you are unsuere then the value is "no" -->
+     <!-- If you are unsure then the value is "no" -->
      <htmldocprovided>no</htmldocprovided>
      <adaptation>no</adaptation>
   </attributes>

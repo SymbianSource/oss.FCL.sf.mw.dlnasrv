@@ -57,7 +57,10 @@
    </component>
   </collection>
   <collection id="upnpframework" name="UPnP Framework" level="framework">
-   <unit bldFile="upnpframework/group"/>
+   <!-- collection level group's export done via a fake component -->
+   <component id="upnpframework_collection" filter="s60" name="UPnP Framework" introduced="^2">
+     <unit bldFile="upnpframework/group"/>
+   </component>
    <component id="upnpcommand" filter="s60" name="UPnP Command" introduced="^2">
     <unit bldFile="upnpframework/upnpcommand/group"/>
    </component>
@@ -75,6 +78,10 @@
    </component>
   </collection>   
   <collection id="upnpmediaserver" name="UPnP Media Server" level="server">
+   <!-- collection level group's export done via a fake component --> 
+   <component id="upnpmediaserver_collection" filter="s60" name="UPnP Media Server" introduced="^2">
+    <unit bldFile="upnpmediaserver/group"/>
+   </component>
    <component id="avobjects" filter="s60" name="A/V Objects">
     <unit bldFile="upnpmediaserver/avobjects/group" filter="!test"/>
     <unit bldFile="upnpmediaserver/avobjects/tsrc/public/basic/group" filter="test,api_test"/>
@@ -94,11 +101,19 @@
    </component>
   </collection>  
   <collection id="upnpsettings" name="UPnP Settings" level="framework">
+   <!-- collection level group's export done via a fake component -->
+   <component id="upnpsettings_collection" filter="s60" name="UPnP Settings" introduced="^2">
+    <unit bldFile="upnpsettings/group"/>
+   </component>
    <component id="upnpsettingsengine" filter="s60" name="UPnP Settings Engine" introduced="^2">
     <unit bldFile="upnpsettings/upnpsettingsengine/group"/>
    </component>
   </collection>
   <collection id="upnpsharing" name="UPnP Sharing" level="server">
+   <!-- collection level group's export done via a fake component --> 
+   <component id="upnpsharing_collection" filter="s60" name="UPnP Sharing" introduced="^2">
+    <unit bldFile="upnpsharing/group"/>
+   </component>
    <component id="upnpcontentserver" filter="s60" name="UPnP Content Server" introduced="^2">
     <unit bldFile="upnpsharing/upnpcontentserver/group"/>
    </component>    

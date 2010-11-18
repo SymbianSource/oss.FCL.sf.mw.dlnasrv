@@ -1,17 +1,17 @@
 <?xml version="1.0" ?>
-<api id="0a0d900cb82f4c2eb37477cf77133cac" dataversion="1.0">
+<api id="0a0d900cb82f4c2eb37477cf77133cac" dataversion="2.0">
   <name>UPnP AV Objects API</name>
   <description>This API is used to create UPnP AV objects</description>
   <type>c++</type>
-  <subsystem>upnpmediaserver</subsystem>
+  <collection>upnpmediaserver</collection>
   <libs>
     <lib name="upnpavobjects.lib" />
   </libs>
-  <release category="domain"/>
+  <release category="platform"/>
   <attributes>
-     <!-- This indicates wether the api provedes separate html documentation -->
+     <!-- This indicates whether the api provides separate html documentation -->
      <!-- or is the additional documentation generated from headers. -->
-     <!-- If you are unsuere then the value is "no" -->
+     <!-- If you are unsure then the value is "no" -->
      <htmldocprovided>no</htmldocprovided>
      <adaptation>no</adaptation>
   </attributes>

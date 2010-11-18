@@ -139,13 +139,12 @@ CUpnpAction* CUpnpAVControlPoint::CreateActionLC(
 //
 void CUpnpAVControlPoint::StartUpL()
     {
-    //_LIT8( KMediaServer, "urn:schemas-upnp-org:device:MediaServer" );
+    _LIT8( KMediaServer, "urn:schemas-upnp-org:device:MediaServer" );
     _LIT8( KMediaRenderer, "urn:schemas-upnp-org:device:MediaRenderer" );
 
     CDesC8ArrayFlat* targetDeviceTypes = new(ELeave) CDesC8ArrayFlat(1);
     CleanupStack::PushL( targetDeviceTypes );
-    // We only have push use case, no need to ask stack to find media servers: 
-    //targetDeviceTypes->AppendL( KMediaServer() );
+    targetDeviceTypes->AppendL( KMediaServer() );
     targetDeviceTypes->AppendL( KMediaRenderer() );    
     CUpnpControlPoint::ConstructL( *targetDeviceTypes );
     CleanupStack::Pop( targetDeviceTypes );

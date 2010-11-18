@@ -1,17 +1,17 @@
 <?xml version="1.0" ?>
-<api id="8b21ead1e12a955ec0a81da1fe3b392e" dataversion="1.0">
+<api id="8b21ead1e12a955ec0a81da1fe3b392e" dataversion="2.0">
   <name>UPnP Media Server Settings API</name>
   <description>The setting and configuration API for controlling the settings of UPnP Media Server.</description>
   <type>c++</type>
-  <subsystem>upnpmediaserver</subsystem>
+  <collection>upnpmediaserver</collection>
   <libs>
     <lib name="avmediaserverclient.lib" />
   </libs>
-  <release category="domain"/>
+  <release category="platform"/>
   <attributes>
-     <!-- This indicates wether the api provedes separate html documentation -->
+     <!-- This indicates whether the api provides separate html documentation -->
      <!-- or is the additional documentation generated from headers. -->
-     <!-- If you are unsuere then the value is "no" -->
+     <!-- If you are unsure then the value is "no" -->
      <htmldocprovided>no</htmldocprovided>
      <adaptation>no</adaptation>
   </attributes>

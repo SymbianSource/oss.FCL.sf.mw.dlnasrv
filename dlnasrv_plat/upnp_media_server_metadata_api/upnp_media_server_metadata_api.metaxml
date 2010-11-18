@@ -1,17 +1,17 @@
 <?xml version="1.0" ?>
-<api id="5b2da54cb04654dadce172d8f15171b3" dataversion="1.0">
+<api id="5b2da54cb04654dadce172d8f15171b3" dataversion="2.0">
   <name>UPnP Media Server Metadata API</name>
   <description>The API to create, delete and read metadata in order to share, unshare and browse local media server content.</description>
   <type>c++</type>
-  <subsystem>upnpmediaserver</subsystem>
+  <collection>upnpmediaserver</collection>
   <libs>
     <lib name="avmediaserverclient.lib" />
   </libs>
-  <release category="domain"/>
+  <release category="platform"/>
   <attributes>
-     <!-- This indicates wether the api provedes separate html documentation -->
+     <!-- This indicates whether the api provides separate html documentation -->
      <!-- or is the additional documentation generated from headers. -->
-     <!-- If you are unsuere then the value is "no" -->
+     <!-- If you are unsure then the value is "no" -->
      <htmldocprovided>no</htmldocprovided>
      <adaptation>no</adaptation>
   </attributes>

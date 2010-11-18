@@ -1,17 +1,17 @@
 <?xml version="1.0" ?>
-<api id="c151325b6098d0d1e3295dbaeea0836b" dataversion="1.0">
+<api id="c151325b6098d0d1e3295dbaeea0836b" dataversion="2.0">
   <name>UPnP Media Server API</name>
   <description>The API to start and stop UPnP Media Server.</description>
   <type>c++</type>
-  <subsystem>upnpmediaserver</subsystem>
+  <collection>upnpmediaserver</collection>
   <libs>
     <lib name="avmediaserverclient.lib" />
   </libs>
-  <release category="domain"/>
+  <release category="platform"/>
   <attributes>
-     <!-- This indicates wether the api provedes separate html documentation -->
+     <!-- This indicates whether the api provides separate html documentation -->
      <!-- or is the additional documentation generated from headers. -->
-     <!-- If you are unsuere then the value is "no" -->
+     <!-- If you are unsure then the value is "no" -->
      <htmldocprovided>no</htmldocprovided>
      <adaptation>no</adaptation>
   </attributes>
