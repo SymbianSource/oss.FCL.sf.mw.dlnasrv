@@ -18,10 +18,10 @@
 &EN
 
 ; Standard SIS file header
-#{"DLNA Services cenrep keys"}, (0x10202BE9), 1, 1, 0, TYPE=SP
+#{"DLNA Services cenrep keys"}, (0x10202BE9), 1, 1, 2, TYPE=SP
 
-; Supports Series 60 v3.0
-[0x101F7961], 0, 0, 0, {"S60ProductID"}
+; Supports S^3
+[0x20022E6D], 0, 0, 0, {"S60ProductID"}
 
 ; Localised vendor name
 %{"Nokia-EN"}

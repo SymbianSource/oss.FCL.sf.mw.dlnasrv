@@ -1,6 +1,6 @@
 EXPORTS
 	??1CUPnPSettingsEngine@@UAE@XZ @ 1 NONAME ; CUPnPSettingsEngine::~CUPnPSettingsEngine(void)
-	?CreateAccessPointL@CUPnPSettingsEngine@@SAXXZ @ 2 NONAME ; void CUPnPSettingsEngine::CreateAccessPointL(void)
+	?CreateAccessPointL@CUPnPSettingsEngine@@SAXXZ @ 2 NONAME ABSENT; void CUPnPSettingsEngine::CreateAccessPointL(void)
 	?GetAccessPoint@CUPnPSettingsEngine@@QAEHAAH@Z @ 3 NONAME ; int CUPnPSettingsEngine::GetAccessPoint(int &)
 	?GetAccessPointSetting@CUPnPSettingsEngine@@QAEHAAH@Z @ 4 NONAME ; int CUPnPSettingsEngine::GetAccessPointSetting(int &)
 	?GetCopyLocationDriveL@CUPnPSettingsEngine@@QBEXAAW4TDriveNumber@@@Z @ 5 NONAME ; void CUPnPSettingsEngine::GetCopyLocationDriveL(enum TDriveNumber &) const

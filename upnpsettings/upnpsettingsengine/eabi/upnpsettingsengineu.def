@@ -3,7 +3,7 @@ EXPORTS
 	_ZN19CUPnPSettingsEngine13SetFirstStartEi @ 2 NONAME
 	_ZN19CUPnPSettingsEngine14GetAccessPointERi @ 3 NONAME
 	_ZN19CUPnPSettingsEngine14SetAccessPointEi @ 4 NONAME
-	_ZN19CUPnPSettingsEngine18CreateAccessPointLEv @ 5 NONAME
+	_ZN19CUPnPSettingsEngine18CreateAccessPointLEv @ 5 NONAME ABSENT
 	_ZN19CUPnPSettingsEngine18GetCurrentIapNameLEi @ 6 NONAME
 	_ZN19CUPnPSettingsEngine19IsAccessPointValidLEi @ 7 NONAME
 	_ZN19CUPnPSettingsEngine20GetWLANAccessPointsLEP12CDesC16ArrayR6RArrayIxE @ 8 NONAME

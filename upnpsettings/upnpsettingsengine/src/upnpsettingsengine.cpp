@@ -682,20 +682,6 @@ EXPORT_C void CUPnPSettingsEngine::GetWLANAccessPointsL(
 
     }
 
-
-// --------------------------------------------------------------------------
-// CUPnPSettingsEngine::CreateAccessPointL
-// Create AP modifying window
-// --------------------------------------------------------------------------
-//
-EXPORT_C void CUPnPSettingsEngine::CreateAccessPointL()
-    {
-    CCmSettingsUi* settings = CCmSettingsUi::NewL();    
-    CleanupStack::PushL( settings );
-    settings->RunSettingsL();
-    CleanupStack::PopAndDestroy( settings );
-    }
-    
 //---------------------------------------------------------------------------
 // CUPnPSettingsEngine::IsWLANAccessPointValidL
 // Checks if the given access point is valid.

@@ -215,15 +215,6 @@ public: // new functions
     IMPORT_C static void GetWLANAccessPointsL( CDesCArray* aNameArray,
                                                RArray<TInt64>& aIapIdArr );
     
-    /**
-     * Static helper method to create the iap editing window
-     * arrays.
-     * 
-     * @since S60 5.1
-     * @param none
-     */        
-    IMPORT_C static void CreateAccessPointL();
-    
 private:
 
     /**
